@@ -79,11 +79,13 @@
     "production episode reconstruction remains disabled until an explicit bounded history-observation strategy is approved"
   ],
   "next_gate": {
-    "phase": "Phase 4 Canonical Schema Freeze",
+    "phase": "Phase 5 Canonical Parent Transformation",
     "permit_parent_schema": "schemas/permit_parent.v1.json",
     "permit_parent_schema_status": "FROZEN",
     "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
     "permit_status_episode_schema_status": "FROZEN",
-    "goal": "implement deterministic current-snapshot to PERMIT parent transformation on synthetic fixtures first; keep production episode reconstruction disabled"
+    "permit_parent_transformer": "src/korea_business_lifecycle/canonical_permit.py",
+    "permit_parent_transformer_status": "SYNTHETIC_VALIDATED",
+    "goal": "perform bounded real-snapshot compatibility validation without exposing row-level values or writing production canonical output; keep episode reconstruction disabled"
   }
 }

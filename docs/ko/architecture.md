@@ -13,12 +13,14 @@
       ↳ PERMIT parent: frozen
       ↳ PERMIT_STATUS_EPISODE: frozen
   → deterministic PERMIT parent transformation
+      ↳ synthetic 39-column fixture: validated
+      ↳ bounded real-snapshot compatibility: next gate
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → 별도 공개 검토
 ```
 
-v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 두 schema 계약을 모두 동결했습니다. 다음 구현 gate는 합성 fixture에서 current snapshot → `PERMIT` parent 변환을 결정론적으로 구현하는 것입니다. full-history ingestion, production episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
+v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 두 schema 계약을 모두 동결했습니다. current snapshot → `PERMIT` 변환 코어도 frozen 39컬럼 합성 fixture에서 검증했습니다. 다음 gate는 row-level 값을 노출하지 않는 bounded real-snapshot compatibility validation입니다. production canonical materialization, full-history ingestion, episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
 
 ## 데이터 저장 원칙
 

@@ -371,4 +371,10 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit status episode schema gate reference changed")
     if next_gate.get("permit_status_episode_schema_status") != "FROZEN":
         errors.append("permit status episode schema gate must remain frozen")
+    if next_gate.get("phase") != "Phase 5 Canonical Parent Transformation":
+        errors.append("next gate must remain Phase 5 canonical parent transformation")
+    if next_gate.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
+        errors.append("permit parent transformer reference changed")
+    if next_gate.get("permit_parent_transformer_status") != "SYNTHETIC_VALIDATED":
+        errors.append("permit parent transformer must remain synthetic-validated at this gate")
     return errors
