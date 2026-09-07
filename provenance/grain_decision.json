@@ -112,6 +112,10 @@
     "permit_geospatial_materialization_plan": "provenance/permit_geospatial_materialization_plan.json",
     "permit_geospatial_materialization": "provenance/permit_geospatial_materialization.json",
     "permit_geospatial_materialization_status": "COMPLETED_PASS_VERIFIED",
-    "goal": "define and validate a privacy-minimized public projection candidate while redistribution remains a separate unresolved gate; keep episode reconstruction disabled"
+    "public_permit_aggregate_schema": "schemas/public_permit_aggregate.v1.json",
+    "public_permit_aggregate_schema_status": "FROZEN_CANDIDATE",
+    "public_permit_aggregate_plan": "provenance/public_permit_aggregate_plan.json",
+    "public_permit_aggregate_status": "IMPLEMENTED_NOT_EXECUTED",
+    "goal": "execute and independently verify the privacy-minimized aggregate candidate while redistribution remains unresolved; keep row-level publication and episode reconstruction disabled"
   }
 }

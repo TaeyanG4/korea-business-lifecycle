@@ -1,0 +1,77 @@
+{
+  "schema_name": "public_permit_aggregate",
+  "schema_version": 1,
+  "checked_at": "2026-09-07",
+  "grain": "PRIVACY_MINIMIZED_PERMIT_AGGREGATE_CELL",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "parent_schema": "schemas/permit_parent.v1.json",
+    "parent_build_id": "permit-v1-9908225df465e2ff",
+    "parent_rows": 3010802,
+    "row_level_public_projection_approved": false,
+    "aggregate_publication_approved": false,
+    "redistribution_status": "UNRESOLVED"
+  },
+  "privacy_policy": {
+    "minimum_cell_count": 10,
+    "minimum_cell_count_is_legal_privacy_guarantee": false,
+    "cells_below_threshold": "SUPPRESS_ENTIRE_CELL",
+    "exact_dates_included": false,
+    "precise_coordinates_included": false,
+    "business_names_included": false,
+    "addresses_included": false,
+    "management_numbers_included": false,
+    "source_row_numbers_included": false,
+    "telephone_or_homepage_included": false,
+    "publication_requires_separate_redistribution_clearance": true
+  },
+  "semantic_policy": {
+    "permit_year_is_physical_open_year": false,
+    "closure_year_is_irreversible_terminal_event": false,
+    "canonical_status_mapping_enabled": false,
+    "status_code_03_irreversible": false,
+    "status_code_05_semantics_resolved": false
+  },
+  "grouping_columns": [
+    "source_key",
+    "authority_code",
+    "source_status_code",
+    "source_detail_status_code",
+    "permit_year",
+    "closure_year"
+  ],
+  "columns": [
+    {"name": "source_key", "logical_type": "string", "nullable": false, "role": "source_group"},
+    {"name": "authority_code", "logical_type": "string", "nullable": false, "role": "coarse_location_group"},
+    {"name": "source_status_code", "logical_type": "string", "nullable": true, "role": "source_status_group"},
+    {"name": "source_detail_status_code", "logical_type": "string", "nullable": true, "role": "source_status_group"},
+    {"name": "permit_year", "logical_type": "int32", "nullable": true, "role": "coarsened_source_date"},
+    {"name": "closure_year", "logical_type": "int32", "nullable": true, "role": "coarsened_source_date_context"},
+    {"name": "cell_count", "logical_type": "int64", "nullable": false, "role": "aggregate_measure", "constraints": [">= 10"]}
+  ],
+  "explicitly_excluded_parent_fields": [
+    "source_row_number",
+    "source_artifact_sha256",
+    "source_retrieved_at_utc",
+    "management_number",
+    "permit_date",
+    "permit_date_quality",
+    "source_status_name",
+    "source_detail_status_name",
+    "closure_date",
+    "closure_date_quality",
+    "business_name",
+    "business_type_name",
+    "hygiene_business_type_name",
+    "lot_postal_code",
+    "road_postal_code",
+    "lot_address",
+    "road_address",
+    "source_coordinate_x",
+    "source_coordinate_y",
+    "source_data_update_type",
+    "source_data_updated_at_raw",
+    "source_last_modified_at_raw"
+  ],
+  "next_gate": "materialize and independently verify the local aggregate candidate; do not publish until redistribution review passes"
+}

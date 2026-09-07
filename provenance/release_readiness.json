@@ -45,11 +45,22 @@
       "privacy_public_allowlist_approved": false,
       "kaggle_redistribution": "UNRESOLVED",
       "row_level_public_build_allowed": false,
+      "privacy_minimized_aggregate_candidate": "IMPLEMENTED_NOT_EXECUTED",
+      "aggregate_candidate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+      "aggregate_candidate_minimum_cell_count": 10,
+      "aggregate_publication_approved": false,
       "local_materialization_completion_does_not_change_publication_status": true
     }
   },
-  "next_long_local_actions": [],
-  "next_product_action": "define and validate a privacy-minimized public projection candidate; redistribution remains a separate gate",
+  "next_long_local_actions": [
+    {
+      "priority": 1,
+      "name": "materialize_public_permit_aggregate",
+      "command": "python scripts/materialize_public_permit_aggregate.py --execute",
+      "follow_up": "python scripts/verify_public_permit_aggregate.py"
+    }
+  ],
+  "next_product_action": "execute and verify the local privacy-minimized aggregate candidate; publication still requires redistribution clearance",
   "hard_blocks": [
     "do not publish row-level data until privacy allowlist and redistribution review pass",
     "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

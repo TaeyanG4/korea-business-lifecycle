@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "PRIVACY_MINIMIZED_PERMIT_AGGREGATE_IMPLEMENTED_USER_EXECUTION_REQUIRED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+    "aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+    "expected_parent_rows": 3010802,
+    "output_root": "data/local/public_candidate/permit_aggregate/v1/permit-public-agg-v1-bedd874de6619bee",
+    "execution_status": "NOT_EXECUTED",
+    "row_level_public_projection_approved": false,
+    "aggregate_publication_approved": false,
+    "redistribution_status": "UNRESOLVED",
+    "network_access_required": false
+  },
+  "contracts": {
+    "schema": "schemas/public_permit_aggregate.v1.json",
+    "schema_sha256": "35b3145a3e6aace98881b9d0efb8c6298c740130f71f57b78f45aee74a480a45",
+    "minimum_cell_count": 10,
+    "grouping_columns": [
+      "source_key",
+      "authority_code",
+      "source_status_code",
+      "source_detail_status_code",
+      "permit_year",
+      "closure_year"
+    ],
+    "minimum_cell_count_is_legal_privacy_guarantee": false,
+    "publication_requires_separate_redistribution_clearance": true
+  },
+  "excluded_row_level_fields": [
+    "management_number",
+    "business_name",
+    "lot_address",
+    "road_address",
+    "lot_postal_code",
+    "road_postal_code",
+    "source_coordinate_x",
+    "source_coordinate_y",
+    "wgs84_longitude",
+    "wgs84_latitude",
+    "source_row_number",
+    "source_artifact_sha256",
+    "source_retrieved_at_utc",
+    "source_data_updated_at_raw",
+    "source_last_modified_at_raw"
+  ],
+  "semantic_safety": {
+    "permit_year_is_physical_open_year": false,
+    "closure_year_is_irreversible_terminal_event": false,
+    "canonical_status_mapping_enabled": false,
+    "status_code_03_irreversible": false,
+    "status_code_05_semantics_resolved": false
+  },
+  "writer_contract": {
+    "pyarrow_version": "21.0.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000,
+    "minimum_cell_count": 10
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/public_aggregate.py",
+    "script": "scripts/materialize_public_permit_aggregate.py",
+    "verification_module": "src/korea_business_lifecycle/public_aggregate_verify.py",
+    "verification_script": "scripts/verify_public_permit_aggregate.py",
+    "default_mode": "PLAN_ONLY",
+    "execute_flag": "--execute"
+  },
+  "execution": {
+    "plan_command": "python scripts/materialize_public_permit_aggregate.py",
+    "execute_command": "python scripts/materialize_public_permit_aggregate.py --execute",
+    "verify_command": "python scripts/verify_public_permit_aggregate.py",
+    "progress_stream": "stderr",
+    "final_aggregate_json_stream": "stdout"
+  },
+  "next_gate": "user executes and verifies the local aggregate candidate; publication remains blocked until redistribution review and final release policy pass"
+}

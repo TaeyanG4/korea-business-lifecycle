@@ -26,12 +26,17 @@
       ↳ frozen PERMIT parent mutation: prohibited; use separate enrichment
   → PERMIT_GEOSPATIAL_ENRICHMENT
       ↳ 7-column schema: frozen
+      ↳ production build: completed/verified (3,010,802 rows)
+  → privacy-minimized aggregate candidate
+      ↳ direct/linkable row-level fields: excluded
+      ↳ exact dates: year-only derivation
+      ↳ minimum cell count: 10; smaller cells suppressed
       ↳ builder + independent verifier: implemented/tested
       ↳ production execution: pending user run
-  → 별도 공개 검토
+      ↳ publication/redistribution: still blocked
 ```
 
-v1 parent/lifecycle 계약은 동결됐고, current snapshot → `PERMIT` transformer와 production Parquet/ZSTD build가 모두 3,010,802행 기준으로 완료·검증됐습니다. full geospatial QA도 2,811,767 coordinate pair 전체를 검사해 source X=easting/Y=northing 해석을 현재 승인된 v1 artifact 범위에서 채택했습니다. 기존 frozen `PERMIT` schema hash와 parent build는 변경하지 않고, 별도 7컬럼 `PERMIT_GEOSPATIAL_ENRICHMENT` schema와 deterministic builder/verifier를 구현했습니다. production WGS84 sidecar 실행만 사용자 장시간 작업으로 남아 있으며 public release, episode reconstruction, Kaggle publication은 계속 차단 상태입니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. 다음 publication-safety 단계는 row-level data를 공개하지 않고, business/address/identifier/precise-coordinate를 제거하며 exact date를 연도로만 축약하고 k=10 미만 셀을 suppress하는 local aggregate 후보입니다. 이 aggregate builder/verifier는 구현·테스트됐지만 production scan은 아직 미실행이며, 완료하더라도 redistribution과 public release는 별도 gate입니다. episode reconstruction도 계속 차단 상태입니다.
 
 ## 데이터 저장 원칙
 

@@ -99,6 +99,25 @@ REQUIRED_GEOSPATIAL_COLUMNS = {
 
 GEOSPATIAL_QUALITY_VALUES = ["TRANSFORMED", "MISSING_SOURCE_COORDINATES"]
 
+REQUIRED_PUBLIC_AGGREGATE_COLUMNS = {
+    "source_key",
+    "authority_code",
+    "source_status_code",
+    "source_detail_status_code",
+    "permit_year",
+    "closure_year",
+    "cell_count",
+}
+
+PUBLIC_AGGREGATE_GROUPING_COLUMNS = [
+    "source_key",
+    "authority_code",
+    "source_status_code",
+    "source_detail_status_code",
+    "permit_year",
+    "closure_year",
+]
+
 REQUIRED_EPISODE_COLUMNS = {
     "source_key",
     "management_number",
@@ -167,6 +186,10 @@ def load_permit_status_episode_schema() -> dict[str, Any]:
 
 def load_permit_geospatial_schema() -> dict[str, Any]:
     return load_json("schemas/permit_geospatial.v1.json")
+
+
+def load_public_permit_aggregate_schema() -> dict[str, Any]:
+    return load_json("schemas/public_permit_aggregate.v1.json")
 
 
 def validate_permit_parent_schema(schema: dict[str, Any]) -> list[str]:
@@ -324,6 +347,98 @@ def validate_permit_geospatial_schema(schema: dict[str, Any]) -> list[str]:
             errors.append(f"{name} must remain nullable float64")
     if by_name.get("coordinate_quality", {}).get("allowed_values") != GEOSPATIAL_QUALITY_VALUES:
         errors.append("permit geospatial quality enum changed")
+    return errors
+
+
+def validate_public_permit_aggregate_schema(schema: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if schema.get("schema_name") != "public_permit_aggregate" or schema.get("schema_version") != 1:
+        errors.append("public permit aggregate schema identity/version changed")
+    if schema.get("grain") != "PRIVACY_MINIMIZED_PERMIT_AGGREGATE_CELL":
+        errors.append("public permit aggregate grain changed")
+
+    scope = schema.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("public permit aggregate scope must exactly match v1 sources")
+    if scope.get("parent_schema") != "schemas/permit_parent.v1.json":
+        errors.append("public permit aggregate parent schema changed")
+    if scope.get("parent_build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("public permit aggregate parent build changed")
+    if scope.get("parent_rows") != 3_010_802:
+        errors.append("public permit aggregate parent row count changed")
+    for key in ("row_level_public_projection_approved", "aggregate_publication_approved"):
+        if scope.get(key) is not False:
+            errors.append(f"public permit aggregate must keep {key}=false")
+    if scope.get("redistribution_status") != "UNRESOLVED":
+        errors.append("public permit aggregate redistribution must remain unresolved")
+
+    privacy = schema.get("privacy_policy", {})
+    if privacy.get("minimum_cell_count") != 10:
+        errors.append("public permit aggregate minimum cell count changed")
+    if privacy.get("minimum_cell_count_is_legal_privacy_guarantee") is not False:
+        errors.append("minimum cell count must not be represented as a legal privacy guarantee")
+    if privacy.get("cells_below_threshold") != "SUPPRESS_ENTIRE_CELL":
+        errors.append("public permit aggregate suppression policy changed")
+    for key in (
+        "exact_dates_included",
+        "precise_coordinates_included",
+        "business_names_included",
+        "addresses_included",
+        "management_numbers_included",
+        "source_row_numbers_included",
+        "telephone_or_homepage_included",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"public permit aggregate must keep {key}=false")
+    if privacy.get("publication_requires_separate_redistribution_clearance") is not True:
+        errors.append("public permit aggregate must require separate redistribution clearance")
+
+    semantics = schema.get("semantic_policy", {})
+    for key in (
+        "permit_year_is_physical_open_year",
+        "closure_year_is_irreversible_terminal_event",
+        "canonical_status_mapping_enabled",
+        "status_code_03_irreversible",
+        "status_code_05_semantics_resolved",
+    ):
+        if semantics.get(key) is not False:
+            errors.append(f"public permit aggregate semantic policy must keep {key}=false")
+
+    if schema.get("grouping_columns") != PUBLIC_AGGREGATE_GROUPING_COLUMNS:
+        errors.append("public permit aggregate grouping columns changed")
+    columns = schema.get("columns", [])
+    names = [item.get("name") for item in columns]
+    if len(columns) != 7 or len(set(names)) != 7 or set(names) != REQUIRED_PUBLIC_AGGREGATE_COLUMNS:
+        errors.append("public permit aggregate schema must contain exactly the frozen seven columns")
+    by_name = {item.get("name"): item for item in columns}
+    for name in ("source_key", "authority_code"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "string" or item.get("nullable") is not False:
+            errors.append(f"{name} public aggregate contract changed")
+    for name in ("source_status_code", "source_detail_status_code"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "string" or item.get("nullable") is not True:
+            errors.append(f"{name} public aggregate contract changed")
+    for name in ("permit_year", "closure_year"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "int32" or item.get("nullable") is not True:
+            errors.append(f"{name} public aggregate contract changed")
+    cell_count = by_name.get("cell_count", {})
+    if cell_count.get("logical_type") != "int64" or cell_count.get("nullable") is not False:
+        errors.append("cell_count public aggregate contract changed")
+    if cell_count.get("constraints") != [">= 10"]:
+        errors.append("cell_count minimum constraint changed")
+
+    parent_columns = REQUIRED_CANONICAL_COLUMNS
+    excluded = set(schema.get("explicitly_excluded_parent_fields", []))
+    directly_retained_parent = {
+        "source_key",
+        "authority_code",
+        "source_status_code",
+        "source_detail_status_code",
+    }
+    if excluded | directly_retained_parent != parent_columns or excluded & directly_retained_parent:
+        errors.append("public permit aggregate parent-field partition changed")
     return errors
 
 

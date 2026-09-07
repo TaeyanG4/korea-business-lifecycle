@@ -20,6 +20,7 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `geospatial_full_axis.json`: reviewed aggregate-only evidence from all 2,811,767 current-v1 coordinate pairs; X=easting/Y=northing is approved for local derivation on the exact current artifacts, while public release remains blocked.
 - `permit_geospatial_materialization_plan.json`: local-only, separately versioned WGS84 enrichment writer/verifier contract, now marked completed-pass-verified.
 - `permit_geospatial_materialization.json`: aggregate-only evidence for the verified 3,010,802-row WGS84 sidecar build; no row-level coordinates or identifiers are tracked here.
+- `public_permit_aggregate_plan.json`: local-only privacy-minimized aggregate candidate contract with k=10 cell suppression; implementation is complete, publication remains unapproved, and redistribution remains unresolved.
 - `release_readiness.json`: current product-track gate summary derived from the evidence above; the local PERMIT parent and WGS84 enrichment are completed/verified, while lifecycle/publication gates remain separately blocked.
 - `feasibility.json`: current project gate state.
 

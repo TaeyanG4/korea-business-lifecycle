@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 두 `03→01` source-state reversal이 확인되어 `03`을 irreversible terminal closure로 사용하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했습니다. current snapshot → `PERMIT` transformer와 local Parquet/ZSTD production build `permit-v1-9908225df465e2ff`는 **전체 3,010,802행** 기준으로 완료·독립 검증됐습니다. geospatial full QA는 2,811,767 coordinate pair 전체를 검사해 현재 승인 artifact에 대해 `X=easting/Y=northing`을 채택했습니다. frozen 26컬럼 parent는 그대로 유지하면서 별도 7컬럼 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`도 **3,010,802행 전체**로 materialize·독립 검증 완료했습니다. 2,811,767건은 변환됐고 199,035건은 source 좌표 누락으로 null 보존됩니다. public row-level release와 episode reconstruction은 계속 차단합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. `PERMIT` parent build `permit-v1-9908225df465e2ff`와 별도 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`는 모두 **3,010,802행** 기준 production materialization·독립 검증까지 완료했습니다. lifecycle semantic hard rules도 유지합니다: `03`은 irreversible terminal이 아니고 `05`는 unmapped입니다. publication-safety 단계에서는 row-level 공개를 계속 금지한 채 business/address/identifier/precise-coordinate를 제거하고 exact date를 연도로 축약하며 k=10 미만 셀을 suppress하는 local aggregate 후보를 구현·테스트했습니다. actual aggregate scan과 redistribution review는 아직 남아 있으며 episode reconstruction도 계속 차단합니다.
 
 ## 문서
 
@@ -56,6 +56,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [Canonical PERMIT production materialization](docs/ko/canonical-permit-materialization.md)
 - [Geospatial source X/Y axis QA](docs/ko/geospatial-axis-qa.md)
 - [Canonical PERMIT WGS84 enrichment](docs/ko/canonical-permit-geospatial.md)
+- [Privacy-minimized public aggregate candidate](docs/ko/public-permit-aggregate.md)
 - [History 표본 확장 계획](docs/ko/history-sample-expansion.md)
 - [5개 자치단체 History 표본 확장 결과](docs/ko/expanded-history-findings.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)

@@ -18,6 +18,7 @@ from korea_business_lifecycle.provenance import (
     load_permit_parent_materialization,
     load_permit_geospatial_materialization_plan,
     load_permit_geospatial_materialization,
+    load_public_permit_aggregate_plan,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -39,6 +40,7 @@ from korea_business_lifecycle.provenance import (
     validate_permit_parent_materialization,
     validate_permit_geospatial_materialization_plan,
     validate_permit_geospatial_materialization,
+    validate_public_permit_aggregate_plan,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -187,6 +189,14 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
         "provenance/permit_geospatial_materialization.json"
     )
     assert decision["next_gate"]["permit_geospatial_materialization_status"] == "COMPLETED_PASS_VERIFIED"
+    assert decision["next_gate"]["public_permit_aggregate_schema"] == (
+        "schemas/public_permit_aggregate.v1.json"
+    )
+    assert decision["next_gate"]["public_permit_aggregate_schema_status"] == "FROZEN_CANDIDATE"
+    assert decision["next_gate"]["public_permit_aggregate_plan"] == (
+        "provenance/public_permit_aggregate_plan.json"
+    )
+    assert decision["next_gate"]["public_permit_aggregate_status"] == "IMPLEMENTED_NOT_EXECUTED"
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -303,3 +313,18 @@ def test_permit_geospatial_materialization_result_is_verified_and_private() -> N
     assert review["verification"]["parent_build_verified"] is True
     assert review["verification"]["coordinate_invariants_verified"] is True
     assert review["privacy"]["public_row_level_release_status_changed"] is False
+
+
+def test_public_permit_aggregate_plan_is_privacy_minimized_but_not_publishable() -> None:
+    plan = load_public_permit_aggregate_plan()
+    assert validate_public_permit_aggregate_plan(plan) == []
+    assert plan["scope"]["aggregate_build_id"] == "permit-public-agg-v1-bedd874de6619bee"
+    assert plan["scope"]["expected_parent_rows"] == 3_010_802
+    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["contracts"]["minimum_cell_count"] == 10
+    assert plan["contracts"]["minimum_cell_count_is_legal_privacy_guarantee"] is False
+    assert plan["scope"]["row_level_public_projection_approved"] is False
+    assert plan["scope"]["aggregate_publication_approved"] is False
+    assert plan["scope"]["redistribution_status"] == "UNRESOLVED"
+    assert "management_number" in plan["excluded_row_level_fields"]
+    assert "wgs84_longitude" in plan["excluded_row_level_fields"]

@@ -93,6 +93,10 @@ def load_permit_geospatial_materialization() -> dict[str, Any]:
     return load_json("provenance/permit_geospatial_materialization.json")
 
 
+def load_public_permit_aggregate_plan() -> dict[str, Any]:
+    return load_json("provenance/public_permit_aggregate_plan.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -475,6 +479,14 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit geospatial materialization result reference changed")
     if next_gate.get("permit_geospatial_materialization_status") != "COMPLETED_PASS_VERIFIED":
         errors.append("permit geospatial materialization status changed")
+    if next_gate.get("public_permit_aggregate_schema") != "schemas/public_permit_aggregate.v1.json":
+        errors.append("public permit aggregate schema reference changed")
+    if next_gate.get("public_permit_aggregate_schema_status") != "FROZEN_CANDIDATE":
+        errors.append("public permit aggregate schema status changed")
+    if next_gate.get("public_permit_aggregate_plan") != "provenance/public_permit_aggregate_plan.json":
+        errors.append("public permit aggregate plan reference changed")
+    if next_gate.get("public_permit_aggregate_status") != "IMPLEMENTED_NOT_EXECUTED":
+        errors.append("public permit aggregate status changed")
     return errors
 
 
@@ -1219,4 +1231,119 @@ def validate_permit_geospatial_materialization(review: dict[str, Any]) -> list[s
     ):
         if privacy.get(key) is not False:
             errors.append(f"permit geospatial provenance must keep {key}=false")
+    return errors
+
+
+def validate_public_permit_aggregate_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "PRIVACY_MINIMIZED_PERMIT_AGGREGATE_IMPLEMENTED_USER_EXECUTION_REQUIRED":
+        errors.append("public permit aggregate plan decision changed")
+
+    scope = plan.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("public permit aggregate plan scope must exactly match v1 sources")
+    if scope.get("parent_permit_build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("public permit aggregate parent build id changed")
+    if scope.get("aggregate_build_id") != "permit-public-agg-v1-bedd874de6619bee":
+        errors.append("public permit aggregate deterministic build id changed")
+    if scope.get("expected_parent_rows") != 3_010_802:
+        errors.append("public permit aggregate expected parent row count changed")
+    if scope.get("execution_status") != "NOT_EXECUTED":
+        errors.append("public permit aggregate plan must remain not executed until user run")
+    for key in ("row_level_public_projection_approved", "aggregate_publication_approved", "network_access_required"):
+        if scope.get(key) is not False:
+            errors.append(f"public permit aggregate plan must keep {key}=false")
+    if scope.get("redistribution_status") != "UNRESOLVED":
+        errors.append("public permit aggregate redistribution status changed")
+
+    contracts = plan.get("contracts", {})
+    if contracts.get("schema") != "schemas/public_permit_aggregate.v1.json":
+        errors.append("public permit aggregate schema contract changed")
+    if contracts.get("schema_sha256") != "35b3145a3e6aace98881b9d0efb8c6298c740130f71f57b78f45aee74a480a45":
+        errors.append("public permit aggregate schema SHA-256 changed")
+    if contracts.get("minimum_cell_count") != 10:
+        errors.append("public permit aggregate minimum cell count changed")
+    if contracts.get("minimum_cell_count_is_legal_privacy_guarantee") is not False:
+        errors.append("public permit aggregate k threshold must not be a legal privacy guarantee")
+    if contracts.get("publication_requires_separate_redistribution_clearance") is not True:
+        errors.append("public permit aggregate must require separate redistribution clearance")
+    expected_grouping = [
+        "source_key",
+        "authority_code",
+        "source_status_code",
+        "source_detail_status_code",
+        "permit_year",
+        "closure_year",
+    ]
+    if contracts.get("grouping_columns") != expected_grouping:
+        errors.append("public permit aggregate grouping contract changed")
+
+    excluded = set(plan.get("excluded_row_level_fields", []))
+    required_excluded = {
+        "management_number",
+        "business_name",
+        "lot_address",
+        "road_address",
+        "lot_postal_code",
+        "road_postal_code",
+        "source_coordinate_x",
+        "source_coordinate_y",
+        "wgs84_longitude",
+        "wgs84_latitude",
+        "source_row_number",
+        "source_artifact_sha256",
+        "source_retrieved_at_utc",
+        "source_data_updated_at_raw",
+        "source_last_modified_at_raw",
+    }
+    if excluded != required_excluded:
+        errors.append("public permit aggregate excluded row-level field set changed")
+
+    semantics = plan.get("semantic_safety", {})
+    for key in (
+        "permit_year_is_physical_open_year",
+        "closure_year_is_irreversible_terminal_event",
+        "canonical_status_mapping_enabled",
+        "status_code_03_irreversible",
+        "status_code_05_semantics_resolved",
+    ):
+        if semantics.get(key) is not False:
+            errors.append(f"public permit aggregate semantic safety must keep {key}=false")
+
+    writer = plan.get("writer_contract", {})
+    expected_writer = {
+        "pyarrow_version": "21.0.0",
+        "format": "PARQUET",
+        "parquet_version": "2.6",
+        "compression": "ZSTD",
+        "compression_level": 9,
+        "data_page_version": "2.0",
+        "rows_per_batch": 50_000,
+        "rows_per_row_group": 50_000,
+        "minimum_cell_count": 10,
+    }
+    if writer != expected_writer:
+        errors.append("public permit aggregate writer contract changed")
+
+    implementation = plan.get("implementation", {})
+    if implementation.get("module") != "src/korea_business_lifecycle/public_aggregate.py":
+        errors.append("public permit aggregate implementation module changed")
+    if implementation.get("script") != "scripts/materialize_public_permit_aggregate.py":
+        errors.append("public permit aggregate materialization script changed")
+    if implementation.get("verification_module") != "src/korea_business_lifecycle/public_aggregate_verify.py":
+        errors.append("public permit aggregate verification module changed")
+    if implementation.get("verification_script") != "scripts/verify_public_permit_aggregate.py":
+        errors.append("public permit aggregate verification script changed")
+    if implementation.get("default_mode") != "PLAN_ONLY" or implementation.get("execute_flag") != "--execute":
+        errors.append("public permit aggregate execution defaults changed")
+
+    execution = plan.get("execution", {})
+    if execution.get("execute_command") != "python scripts/materialize_public_permit_aggregate.py --execute":
+        errors.append("public permit aggregate execute command changed")
+    if execution.get("verify_command") != "python scripts/verify_public_permit_aggregate.py":
+        errors.append("public permit aggregate verify command changed")
+    if execution.get("progress_stream") != "stderr":
+        errors.append("public permit aggregate progress stream changed")
+    if execution.get("final_aggregate_json_stream") != "stdout":
+        errors.append("public permit aggregate final JSON stream changed")
     return errors

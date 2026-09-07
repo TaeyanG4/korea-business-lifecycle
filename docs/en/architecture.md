@@ -26,12 +26,17 @@ official source evidence
       ↳ frozen PERMIT parent mutation: prohibited; use separate enrichment
   → PERMIT_GEOSPATIAL_ENRICHMENT
       ↳ seven-column schema: frozen
+      ↳ production build: completed/verified (3,010,802 rows)
+  → privacy-minimized aggregate candidate
+      ↳ direct/linkable row-level fields: excluded
+      ↳ exact dates: year-only derivation
+      ↳ minimum cell count: 10; smaller cells suppressed
       ↳ builder + independent verifier: implemented/tested
       ↳ production execution: pending user run
-  → separate publication review
+      ↳ publication/redistribution: still blocked
 ```
 
-The v1 parent/lifecycle contracts remain frozen. The current-snapshot → `PERMIT` transformer and production Parquet/ZSTD build are complete and verified at 3,010,802 rows. Full geospatial QA inspected all 2,811,767 coordinate pairs and adopted source X=easting/Y=northing for the approved current-v1 artifacts. The frozen `PERMIT` schema hash and parent build remain unchanged; a separate seven-column `PERMIT_GEOSPATIAL_ENRICHMENT` schema plus deterministic builder/verifier are now implemented. Only the long production WGS84 sidecar execution remains user-run. Publication and episode reconstruction remain blocked.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The next publication-safety step does not expose row-level data: it removes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10 in a local aggregate candidate. Its builder/verifier are implemented and tested, but the production aggregate scan has not run yet. Redistribution/public release and episode reconstruction remain separately blocked.
 
 ## Data storage rule
 

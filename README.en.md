@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and two `03→01` source-state reversals are confirmed, so code `03` is not treated as irreversible terminal closure. The current-snapshot → `PERMIT` transformer and local Parquet/ZSTD production build `permit-v1-9908225df465e2ff` are complete and independently verified across all **3,010,802 rows**. Full geospatial QA inspected all 2,811,767 coordinate pairs and adopted `X=easting/Y=northing` for the approved current artifacts. Separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` is also materialized and independently verified across all **3,010,802 rows** without changing the frozen 26-column parent: 2,811,767 coordinates were transformed and 199,035 rows preserve null WGS84 because source coordinates are missing. Public row-level release and episode reconstruction remain blocked.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. Production `PERMIT` build `permit-v1-9908225df465e2ff` and separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` are both materialized and independently verified across all **3,010,802 rows**. Lifecycle semantic hard rules remain unchanged: `03` is not irreversible terminal closure and `05` remains unmapped. The publication-safety stage keeps row-level release blocked and introduces a local aggregate candidate that excludes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10. The aggregate builder/verifier are implemented and tested; the production scan and redistribution review remain outstanding, and episode reconstruction is still blocked.
 
 ## Documentation
 
@@ -56,6 +56,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Canonical PERMIT production materialization](docs/en/canonical-permit-materialization.md)
 - [Geospatial source X/Y axis QA](docs/en/geospatial-axis-qa.md)
 - [Canonical PERMIT WGS84 enrichment](docs/en/canonical-permit-geospatial.md)
+- [Privacy-minimized public aggregate candidate](docs/en/public-permit-aggregate.md)
 - [History sample expansion plan](docs/en/history-sample-expansion.md)
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)

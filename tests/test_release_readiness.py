@@ -34,7 +34,17 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["geospatial_derivation"]["transformed_coordinates"] == 2_811_767
     assert readiness["tracks"]["geospatial_derivation"]["missing_source_coordinates"] == 199_035
     assert readiness["tracks"]["geospatial_derivation"]["output_bytes"] == 50_805_782
-    assert readiness["next_long_local_actions"] == []
+    assert readiness["tracks"]["public_kaggle"]["privacy_minimized_aggregate_candidate"] == (
+        "IMPLEMENTED_NOT_EXECUTED"
+    )
+    assert readiness["tracks"]["public_kaggle"]["aggregate_candidate_build_id"] == (
+        "permit-public-agg-v1-bedd874de6619bee"
+    )
+    assert readiness["tracks"]["public_kaggle"]["aggregate_candidate_minimum_cell_count"] == 10
+    assert readiness["tracks"]["public_kaggle"]["aggregate_publication_approved"] is False
+    assert readiness["next_long_local_actions"][0]["command"] == (
+        "python scripts/materialize_public_permit_aggregate.py --execute"
+    )
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
     assert readiness["tracks"]["public_kaggle"]["status"] == "BLOCKED"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False
