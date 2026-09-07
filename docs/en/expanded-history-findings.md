@@ -29,9 +29,9 @@ The expanded sample contains **two `03→01` reverse transitions**.
 | `3830000` | Rest cafes | `03→01` | value → blank |
 | `4530000` | General restaurants | `03→01` | value → blank |
 
-Permit date, business name, address and coordinates are unchanged in both cases. The current evidence therefore cannot distinguish a reopening from an administrative correction.
+The three-date follow-up reproduced both transitions as `closed (03) → operating/normal (01)` with the closure-date field changing from populated to blank. Permit date, business name, address and coordinates remain unchanged. The source-level reversal is therefore confirmed, while reopening versus administrative correction remains unresolved.
 
-This prevents the project from freezing code `03` as an irreversible terminal closure for survival analysis.
+This rejects code `03` as an assumed irreversible terminal closure for survival analysis.
 
 ## Status-vocabulary drift
 
@@ -50,12 +50,12 @@ Business name, address and coordinates all changed together for 42 common `MNG_N
 
 ```text
 MNG_NO continuity: CONSISTENT_ACROSS_SAMPLE
-lifecycle: REVERSIBLE_OR_CORRECTION_SIGNAL_PRESENT
-terminal closure semantics: NOT FROZEN
+lifecycle: SOURCE_STATE_REVERSAL_CONFIRMED
+terminal closure irreversibility: REJECTED
 source PK: NOT DECLARED
 establishment identity: NOT DECLARED
 ```
 
-The next gate is a narrow additional-date review around the two `03→01` cases to distinguish reopening from correction. A nationwide daily-history crawl is not required.
+The next gate is to freeze an analysis grain that can represent reversible status episodes, then review status code `05` and selected simultaneous identity-attribute changes. A nationwide daily-history crawl is not required.
 
 Machine-readable results are in `provenance/expanded_history_audit.json`. No raw `MNG_NO`, business-name, address or coordinate values are committed to public provenance.

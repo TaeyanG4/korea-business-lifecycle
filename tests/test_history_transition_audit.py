@@ -77,8 +77,17 @@ def test_transition_audit_emits_no_identifier_or_raw_identity_values(
     _write_snapshot(root, "rest_cafes", "3830000", "20260902", [end])
     result = audit_reverse_transition_windows(data_root=root)
     assert result["results"][0]["assessment"] == "REVERSAL_OBSERVED_IN_THREE_DATE_WINDOW"
+    assert result["decision"] == "SOURCE_STATE_REVERSALS_CONFIRMED_TERMINAL_IRREVERSIBILITY_REJECTED"
+    assert result["terminal_closure_irreversibility_supported"] is False
+    assert result["results"][0]["transition_boundary"] == {
+        "last_observed_closed_date": "20260831",
+        "first_observed_active_date": "20260901",
+        "status_transition": "03->01",
+        "detail_status_transition": "->",
+        "closure_transition": "value->blank",
+    }
+    assert result["results"][0]["identity_attributes_stable_across_probe"] is True
     rendered = json.dumps(result)
     assert "secret-id" not in rendered
     assert "Private Name" not in rendered
     assert "Private Address" not in rendered
-

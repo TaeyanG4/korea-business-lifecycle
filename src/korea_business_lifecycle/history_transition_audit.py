@@ -97,6 +97,9 @@ def audit_reverse_transition_windows(
                     "date": str(date),
                     "present": True,
                     "status_code": str(row.get("SALS_STTS_CD") or ""),
+                    "status_name": str(row.get("SALS_STTS_NM") or ""),
+                    "detail_status_code": str(row.get("DTL_SALS_STTS_CD") or ""),
+                    "detail_status_name": str(row.get("DTL_SALS_STTS_NM") or ""),
                     "closure_present": bool(str(row.get("CLSBIZ_YMD") or "").strip()),
                     "permit_date_same_as_start": _same(row, reference, ("LCPMT_YMD",)),
                     "business_name_same_as_start": _same(row, reference, ("BPLC_NM",)),
@@ -105,10 +108,37 @@ def audit_reverse_transition_windows(
                 }
             )
 
-        observed_statuses = [item.get("status_code") for item in sequence if item.get("present")]
-        reversal_observed = any(
-            left == "03" and right == "01"
-            for left, right in zip(observed_statuses, observed_statuses[1:])
+        present_sequence = [item for item in sequence if item.get("present")]
+        reversal_index: int | None = None
+        for index, (left, right) in enumerate(zip(present_sequence, present_sequence[1:])):
+            if left.get("status_code") == "03" and right.get("status_code") == "01":
+                reversal_index = index
+                break
+        reversal_observed = reversal_index is not None
+        transition_boundary = None
+        if reversal_index is not None:
+            before = present_sequence[reversal_index]
+            after = present_sequence[reversal_index + 1]
+            transition_boundary = {
+                "last_observed_closed_date": before["date"],
+                "first_observed_active_date": after["date"],
+                "status_transition": "03->01",
+                "detail_status_transition": (
+                    f"{before.get('detail_status_code', '')}->{after.get('detail_status_code', '')}"
+                ),
+                "closure_transition": (
+                    "value->blank"
+                    if before.get("closure_present") and not after.get("closure_present")
+                    else "other"
+                ),
+            }
+        identity_stable_across_probe = all(
+            item.get("present")
+            and item.get("permit_date_same_as_start")
+            and item.get("business_name_same_as_start")
+            and item.get("address_same_as_start")
+            and item.get("coordinates_same_as_start")
+            for item in sequence
         )
         if not all(item.get("present") for item in sequence):
             assessment = "CANDIDATE_MISSING_IN_PROBE_WINDOW"
@@ -122,16 +152,31 @@ def audit_reverse_transition_windows(
                 "authority_code": authority,
                 "candidate_date": str(case["candidate_date"]),
                 "sequence": sequence,
+                "transition_boundary": transition_boundary,
+                "identity_attributes_stable_across_probe": identity_stable_across_probe,
                 "assessment": assessment,
+                "semantic_interpretation": (
+                    "SOURCE_STATE_REVERSAL_CONFIRMED_REOPENING_OR_CORRECTION_UNRESOLVED"
+                    if reversal_observed
+                    else "NO_CONFIRMED_REVERSAL_IN_BOUNDED_WINDOW"
+                ),
                 "sensitive_values_emitted": False,
             }
         )
+    all_reversals_confirmed = all(
+        item["assessment"] == "REVERSAL_OBSERVED_IN_THREE_DATE_WINDOW" for item in results
+    )
     return {
         "case_count": len(results),
         "results": results,
+        "decision": (
+            "SOURCE_STATE_REVERSALS_CONFIRMED_TERMINAL_IRREVERSIBILITY_REJECTED"
+            if all_reversals_confirmed
+            else "REVERSE_TRANSITION_REVIEW_INCOMPLETE"
+        ),
+        "terminal_closure_irreversibility_supported": False if all_reversals_confirmed else None,
         "scope_note": (
             "MNG_NO is used only in local memory to follow the two previously observed reverse cases. "
             "No identifier, business name, address, coordinate value, or closure-date value is emitted."
         ),
     }
-

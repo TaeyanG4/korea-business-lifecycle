@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐지만 `03→01` 역전이 2건이 확인되어 terminal closure semantics는 아직 동결하지 않습니다. 인증키는 활성화됐으며 프로젝트는 Encoding/Decoding serviceKey를 모두 지원합니다. 실제 키는 Git에 커밋하지 않고 로컬 `.env` 또는 `KBL_DATA_GO_KR_SERVICE_KEY` 환경변수로만 전달합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 후속 3일 probe에서 두 `03→01` 사례가 실제 `폐업→영업/정상` source-state reversal로 확인됐습니다. 따라서 `03`을 irreversible terminal closure로 사용하는 규칙은 채택하지 않습니다. 인증키는 활성화됐으며 프로젝트는 Encoding/Decoding serviceKey를 모두 지원합니다. 실제 키는 Git에 커밋하지 않고 로컬 `.env` 또는 `KBL_DATA_GO_KR_SERVICE_KEY` 환경변수로만 전달합니다.
 
 ## 문서
 

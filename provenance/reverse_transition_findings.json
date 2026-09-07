@@ -1,0 +1,112 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "SOURCE_STATE_REVERSALS_CONFIRMED_TERMINAL_IRREVERSIBILITY_REJECTED",
+  "scope": {
+    "case_count": 2,
+    "sources": ["rest_cafes", "general_restaurants"],
+    "authorities": ["3830000", "4530000"],
+    "probe_snapshot_count": 6,
+    "network_request_cap": 411,
+    "scope_note": "Only three dates around each previously observed 03->01 case were queried. This is not a nationwide history crawl."
+  },
+  "evidence": {
+    "aggregate_audit_sha256": "4fc8b9667891b31d5f29de67a786960bbcaf11b570667ecc893a09905ab7bb9f",
+    "probe_manifest_sha256": [
+      {
+        "source_key": "rest_cafes",
+        "authority_code": "3830000",
+        "base_date": "20260831",
+        "sha256": "a740000458cbcd459d8bb92e16c59172cd42776ed0b9d578df7402a6f3c6e547"
+      },
+      {
+        "source_key": "rest_cafes",
+        "authority_code": "3830000",
+        "base_date": "20260901",
+        "sha256": "b851b28034bfb15d44a3ef502b24711c8f6b0da7a434ac831d587c5d599ba22a"
+      },
+      {
+        "source_key": "rest_cafes",
+        "authority_code": "3830000",
+        "base_date": "20260902",
+        "sha256": "e9dc2cec3500e52a3b767f46974ee60a96c2ed04dadf9d77becb1957cc9a7de4"
+      },
+      {
+        "source_key": "general_restaurants",
+        "authority_code": "4530000",
+        "base_date": "20260316",
+        "sha256": "f0cf2bc721653a3f05679dbef45c69eefb96d9d25c6276b4bfdd855053a44ca7"
+      },
+      {
+        "source_key": "general_restaurants",
+        "authority_code": "4530000",
+        "base_date": "20260317",
+        "sha256": "8daa5f1e0ccc8b8f79d750f1ff1e3a873bbbfb6e7fd2aadb09656ae92e74c1f4"
+      },
+      {
+        "source_key": "general_restaurants",
+        "authority_code": "4530000",
+        "base_date": "20260318",
+        "sha256": "58d19163082fcd4f1cae3753a0cbb4272c7c05ad62933946f1ce14fbb122016d"
+      }
+    ],
+    "raw_identifiers_committed": false,
+    "raw_business_names_committed": false,
+    "raw_addresses_committed": false,
+    "raw_coordinates_committed": false,
+    "raw_closure_dates_committed": false
+  },
+  "cases": [
+    {
+      "source_key": "rest_cafes",
+      "authority_code": "3830000",
+      "last_observed_closed_date": "20260831",
+      "first_observed_active_date": "20260901",
+      "status_transition": "03->01",
+      "status_name_transition": "폐업->영업/정상",
+      "detail_status_transition": "02->01",
+      "detail_status_name_transition": "폐업->영업",
+      "closure_transition": "value->blank",
+      "permit_date_stable": true,
+      "business_name_stable": true,
+      "address_stable": true,
+      "coordinates_stable": true,
+      "semantic_interpretation": "SOURCE_STATE_REVERSAL_CONFIRMED_REOPENING_OR_CORRECTION_UNRESOLVED"
+    },
+    {
+      "source_key": "general_restaurants",
+      "authority_code": "4530000",
+      "last_observed_closed_date": "20260316",
+      "first_observed_active_date": "20260317",
+      "status_transition": "03->01",
+      "status_name_transition": "폐업->영업/정상",
+      "detail_status_transition": "02->01",
+      "detail_status_name_transition": "폐업->영업",
+      "closure_transition": "value->blank",
+      "permit_date_stable": true,
+      "business_name_stable": true,
+      "address_stable": true,
+      "coordinates_stable": true,
+      "semantic_interpretation": "SOURCE_STATE_REVERSAL_CONFIRMED_REOPENING_OR_CORRECTION_UNRESOLVED"
+    }
+  ],
+  "lifecycle_conclusion": {
+    "code_03_can_be_assumed_irreversible_terminal": false,
+    "closure_date_can_be_assumed_permanent_terminal_event": false,
+    "recommended_model_direction": "reopening-aware lifecycle episodes or multi-state/recurrent-event analysis; do not use 03 as an irreversible terminal event without additional episode rules",
+    "reopening_vs_correction_resolved": false
+  },
+  "identity_conclusion": {
+    "mng_no_primary_key_declared": false,
+    "establishment_identity_declared": false,
+    "interpretation": "The same MNG_NO retained permit date, business name, address and coordinates across each confirmed source-state reversal, strengthening bounded continuity evidence without proving official PK or establishment identity."
+  },
+  "next_gate": {
+    "required": true,
+    "items": [
+      "freeze an analysis grain that can represent reversible status episodes rather than irreversible terminal closure",
+      "resolve status code 05 semantics before canonical lifecycle-state mapping",
+      "review selected simultaneous name+address+coordinate changes for relocation/correction/entity-replacement risk",
+      "do not create terminal survival labels from status code 03 alone"
+    ]
+  }
+}

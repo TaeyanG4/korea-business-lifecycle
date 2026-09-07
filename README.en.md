@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, but two `03→01` reverse transitions prevent irreversible terminal-closure semantics from being frozen. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and a three-date follow-up confirmed both `03→01` cases as source-level `closed→operating/normal` reversals. The project therefore rejects code `03` as an assumed irreversible terminal closure. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
 
 ## Documentation
 

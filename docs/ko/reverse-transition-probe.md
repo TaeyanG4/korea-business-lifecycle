@@ -29,5 +29,18 @@ python scripts/acquire_reverse_transition_probes.py --execute
 python scripts/audit_reverse_transition_probes.py
 ```
 
-세 날짜 안에서 전환이 보이지 않으면 범위를 자동 확장하지 않습니다. 별도의 새 bounded plan을 수립해야 합니다.
+## 실행 결과
 
+6개 snapshot 수집과 aggregate-only audit이 완료됐습니다.
+
+- 휴게음식점 / `3830000`: `2026-08-31`에는 `03 / 폐업`, `2026-09-01`부터 `01 / 영업/정상`
+- 일반음식점 / `4530000`: `2026-03-16`에는 `03 / 폐업`, `2026-03-17`부터 `01 / 영업/정상`
+- 두 사례 모두 상세상태도 `02 / 폐업 → 01 / 영업`
+- 두 사례 모두 폐업일자는 `값 → 빈값`
+- 두 사례 모두 인허가일·사업장명·주소·좌표는 probe 전체에서 유지
+
+따라서 **source-level 상태 역전 자체는 확인**됐습니다. `03 / 폐업`을 영구적인 terminal closure로 가정하는 규칙은 반증됐습니다.
+
+다만 이 상태 역전이 실제 현실의 **재개업**인지, 행정 데이터의 **정정/복원**인지는 이 API만으로 확정하지 않습니다. 따라서 향후 lifecycle 모델은 irreversible terminal event가 아니라 reopening-aware episode 또는 multi-state 모델을 우선 고려합니다.
+
+기계 판독 결과는 `provenance/reverse_transition_findings.json`에 있습니다. 원문 `MNG_NO`, 상호, 주소, 좌표, 폐업일자 값은 저장소에 커밋하지 않습니다.

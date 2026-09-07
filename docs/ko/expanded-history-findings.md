@@ -29,9 +29,9 @@
 | `3830000` | 휴게음식점 | `03→01` | 값 → 빈값 |
 | `4530000` | 일반음식점 | `03→01` | 값 → 빈값 |
 
-두 사례 모두 permit date, 사업장명, 주소, 좌표는 두 시점 사이에 변경되지 않았습니다. 따라서 현재 증거만으로는 **재개업**인지 **행정정정**인지 구분할 수 없습니다.
+후속 3일 probe에서 두 사례 모두 실제로 `폐업(03) → 영업/정상(01)` 전환이 재현됐고, 폐업일자는 값에서 빈값으로 바뀌었습니다. permit date, 사업장명, 주소, 좌표는 그대로였습니다. 따라서 source-level 역전은 확인됐지만 **재개업**인지 **행정정정**인지는 여전히 구분하지 않습니다.
 
-이 결과 때문에 `03`을 영구적인 terminal closure로 간주하는 survival rule은 아직 동결하지 않습니다.
+이 결과로 `03`을 영구적인 terminal closure로 간주하는 survival rule은 **채택하지 않습니다**.
 
 ## 상태 vocabulary drift
 
@@ -50,12 +50,12 @@
 
 ```text
 MNG_NO continuity: CONSISTENT_ACROSS_SAMPLE
-lifecycle: REVERSIBLE_OR_CORRECTION_SIGNAL_PRESENT
-terminal closure semantics: NOT FROZEN
+lifecycle: SOURCE_STATE_REVERSAL_CONFIRMED
+terminal closure irreversibility: REJECTED
 source PK: NOT DECLARED
 establishment identity: NOT DECLARED
 ```
 
-다음 gate는 두 `03→01` 사례 주변의 추가 시점을 좁게 조회해 reopening과 correction을 구분하는 것입니다. 전국 daily-history 크롤링은 필요하지 않습니다.
+다음 gate는 reversible 상태를 표현할 수 있는 분석 grain을 동결하고, 상태코드 `05`와 identity-attribute 동시변경 사례를 추가 검토하는 것입니다. 전국 daily-history 크롤링은 필요하지 않습니다.
 
 기계 판독 결과는 `provenance/expanded_history_audit.json`에 있습니다. 원문 `MNG_NO`, 사업장명, 주소, 좌표 값은 public provenance에 포함하지 않습니다.

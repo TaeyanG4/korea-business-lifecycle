@@ -108,15 +108,16 @@
   "lifecycle_claim": {
     "terminal_closure_declared_irreversible": false,
     "reopening_or_correction_signal_present": true,
-    "interpretation": "The two 03->01 transitions with closure value->blank and unchanged permit/name/address/coordinates require reopening-versus-correction review before a terminal-event survival model is frozen."
+    "follow_up_confirmed_source_state_reversal": true,
+    "interpretation": "A three-date follow-up confirmed both 03->01 transitions as source-level 폐업->영업/정상 reversals with closure value->blank and unchanged permit/name/address/coordinates. Reopening versus administrative correction remains unresolved, but irreversible terminal-closure semantics are rejected."
   },
   "next_gate": {
     "required": true,
     "items": [
-      "review the two 03->01 cases using additional bounded dates around the observed transition window without publishing row values",
       "review selected name+address+coordinate simultaneous-change cases for relocation, correction, entity replacement or identifier reuse",
       "resolve status code 05 semantics from the official status-code reference before canonical state mapping",
-      "do not freeze a survival event definition until reversible/correction semantics are resolved"
+      "freeze an analysis grain that can represent reversible status episodes",
+      "do not create irreversible terminal survival labels from status code 03 alone"
     ]
   }
 }

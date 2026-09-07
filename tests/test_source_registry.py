@@ -4,6 +4,7 @@ from korea_business_lifecycle.provenance import (
     load_history_review,
     load_history_sample_plan,
     load_reverse_transition_probe_plan,
+    load_reverse_transition_findings,
     load_license_review,
     load_observed_snapshot_summary,
     load_privacy_review,
@@ -11,6 +12,7 @@ from korea_business_lifecycle.provenance import (
     validate_history_review,
     validate_history_sample_plan,
     validate_reverse_transition_probe_plan,
+    validate_reverse_transition_findings,
     validate_bounded_history_audit,
     validate_expanded_history_audit,
     validate_license_review,
@@ -90,6 +92,15 @@ def test_reverse_transition_probe_plan_is_tightly_bounded() -> None:
     assert validate_reverse_transition_probe_plan(plan) == []
     assert plan["planned_tasks"] == 6
     assert plan["max_network_requests"] == 411
+
+
+def test_reverse_transition_findings_reject_irreversible_terminal_closure() -> None:
+    findings = load_reverse_transition_findings()
+    assert validate_reverse_transition_findings(findings) == []
+    assert findings["decision"] == "SOURCE_STATE_REVERSALS_CONFIRMED_TERMINAL_IRREVERSIBILITY_REJECTED"
+    assert findings["lifecycle_conclusion"]["code_03_can_be_assumed_irreversible_terminal"] is False
+    assert findings["lifecycle_conclusion"]["reopening_vs_correction_resolved"] is False
+    assert all(item["status_transition"] == "03->01" for item in findings["cases"])
 
 
 def test_observed_snapshot_summary_matches_empirical_v1_scale() -> None:

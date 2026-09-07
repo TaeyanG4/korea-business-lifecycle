@@ -33,6 +33,10 @@ def load_reverse_transition_probe_plan() -> dict[str, Any]:
     return load_json("provenance/reverse_transition_probe_plan.json")
 
 
+def load_reverse_transition_findings() -> dict[str, Any]:
+    return load_json("provenance/reverse_transition_findings.json")
+
+
 def load_observed_snapshot_summary() -> dict[str, Any]:
     return load_json("provenance/observed_snapshot_summary.json")
 
@@ -164,6 +168,54 @@ def validate_reverse_transition_probe_plan(plan: dict[str, Any]) -> list[str]:
         "coordinates_committed",
     )):
         errors.append("reverse-transition probe privacy flags must remain false")
+    return errors
+
+
+def validate_reverse_transition_findings(findings: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if findings.get("decision") != "SOURCE_STATE_REVERSALS_CONFIRMED_TERMINAL_IRREVERSIBILITY_REJECTED":
+        errors.append("reverse-transition finding decision changed")
+    cases = findings.get("cases", [])
+    if len(cases) != 2:
+        errors.append("reverse-transition findings must contain exactly two cases")
+    expected = {
+        ("rest_cafes", "3830000", "20260831", "20260901"),
+        ("general_restaurants", "4530000", "20260316", "20260317"),
+    }
+    observed = {
+        (
+            str(item.get("source_key")),
+            str(item.get("authority_code")),
+            str(item.get("last_observed_closed_date")),
+            str(item.get("first_observed_active_date")),
+        )
+        for item in cases
+    }
+    if observed != expected:
+        errors.append("reverse-transition boundaries changed")
+    for item in cases:
+        if item.get("status_transition") != "03->01":
+            errors.append(f"{item.get('source_key')}: reverse status transition changed")
+        if item.get("closure_transition") != "value->blank":
+            errors.append(f"{item.get('source_key')}: closure reversal pattern changed")
+        for key in ("permit_date_stable", "business_name_stable", "address_stable", "coordinates_stable"):
+            if item.get(key) is not True:
+                errors.append(f"{item.get('source_key')}: identity stability observation changed for {key}")
+    conclusion = findings.get("lifecycle_conclusion", {})
+    if conclusion.get("code_03_can_be_assumed_irreversible_terminal") is not False:
+        errors.append("code 03 must not be treated as irreversible terminal")
+    if conclusion.get("closure_date_can_be_assumed_permanent_terminal_event") is not False:
+        errors.append("closure date must not be treated as permanent terminal event")
+    if conclusion.get("reopening_vs_correction_resolved") is not False:
+        errors.append("reopening-versus-correction semantics must remain unresolved")
+    identity = findings.get("identity_conclusion", {})
+    if identity.get("mng_no_primary_key_declared") is not False:
+        errors.append("reverse-transition findings must not declare MNG_NO as primary key")
+    if identity.get("establishment_identity_declared") is not False:
+        errors.append("reverse-transition findings must not declare establishment identity")
+    evidence = findings.get("evidence", {})
+    if len(evidence.get("probe_manifest_sha256", [])) != 6:
+        errors.append("reverse-transition findings must retain six probe manifest hashes")
     return errors
 
 
