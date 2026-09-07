@@ -1,6 +1,6 @@
 # Bounded Source Profiling
 
-The first Phase 2 implementation does not download source data. It reproducibly inspects an **already approved CSV artifact stored outside Git**.
+Phase 2 separates current-snapshot acquisition from profiling. `acquire_snapshot.py` fetches only the three v1 official `file.localdata.go.kr` bulk URLs with finite retries/timeouts and never calls a history endpoint. The profiler reproducibly inspects an **already external CSV artifact stored outside Git**.
 
 ## Safety rules
 
@@ -17,6 +17,9 @@ The first Phase 2 implementation does not download source data. It reproducibly 
 ## Example
 
 ```bash
+python scripts/acquire_snapshot.py general_restaurants \
+  --data-root "$KBL_DATA_ROOT"
+
 python scripts/profile_artifact.py general_restaurants \
   "$KBL_DATA_ROOT/raw/general_restaurants/source.csv"
 ```

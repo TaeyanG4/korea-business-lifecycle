@@ -1,6 +1,6 @@
 # Bounded Source Profiling
 
-Phase 2의 첫 구현은 네트워크 다운로드가 아니라 **이미 승인되어 외부 저장소에 존재하는 CSV artifact**를 재현 가능하게 검사합니다.
+Phase 2는 current snapshot 취득과 profiling을 분리합니다. `acquire_snapshot.py`는 v1 세 소스의 공식 `file.localdata.go.kr` bulk URL만 유한 재시도/timeout으로 취득하며 history endpoint는 호출하지 않습니다. profiler는 **이미 외부 저장소에 존재하는 CSV artifact**를 재현 가능하게 검사합니다.
 
 ## 안전 규칙
 
@@ -17,6 +17,9 @@ Phase 2의 첫 구현은 네트워크 다운로드가 아니라 **이미 승인�
 ## 실행 예시
 
 ```bash
+python scripts/acquire_snapshot.py general_restaurants \
+  --data-root "$KBL_DATA_ROOT"
+
 python scripts/profile_artifact.py general_restaurants \
   "$KBL_DATA_ROOT/raw/general_restaurants/source.csv"
 ```
