@@ -1,6 +1,7 @@
 from korea_business_lifecycle.provenance import (
     load_bounded_history_audit,
     load_expanded_history_audit,
+    load_grain_decision,
     load_history_review,
     load_history_sample_plan,
     load_reverse_transition_probe_plan,
@@ -15,6 +16,7 @@ from korea_business_lifecycle.provenance import (
     validate_reverse_transition_findings,
     validate_bounded_history_audit,
     validate_expanded_history_audit,
+    validate_grain_decision,
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_privacy_review,
@@ -129,3 +131,13 @@ def test_expanded_history_audit_records_reversibility_without_pk_claim() -> None
     assert audit["assessment_counts"]["mng_no_continuity"] == {"STRONG": 15}
     assert audit["identity_claim"]["source_primary_key_declared"] is False
     assert audit["lifecycle_claim"]["terminal_closure_declared_irreversible"] is False
+
+
+def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
+    decision = load_grain_decision()
+    assert validate_grain_decision(decision) == []
+    assert decision["selected_grains"]["canonical_parent_grain"]["name"] == "PERMIT"
+    assert decision["selected_grains"]["lifecycle_analysis_grain"]["name"] == "PERMIT_STATUS_EPISODE"
+    assert decision["identity_policy"]["mng_no_primary_key_declared"] is False
+    assert decision["episode_semantics"]["active_end_observations"] == "right-censored"
+    assert decision["episode_semantics"]["closure_code_03_irreversible"] is False

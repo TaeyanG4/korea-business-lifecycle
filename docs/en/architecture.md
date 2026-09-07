@@ -9,13 +9,15 @@ official source evidence
   → ignored local raw storage (`data/local/`)
   → staging/profile
   → grain/identity/lifecycle audit
-  → canonical schema
+  → canonical PERMIT parent
+  → derived PERMIT_STATUS_EPISODE
+  → canonical schema freeze
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → separate publication review
 ```
 
-The repository currently implements only the first bounded execution milestone. Full-history ingestion, lifecycle reconstruction, and Kaggle publication are not implemented yet.
+The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`. Full-history ingestion, production episode reconstruction, and Kaggle publication are not implemented yet.
 
 ## Data storage rule
 

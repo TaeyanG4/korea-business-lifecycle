@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "V1_GRAIN_FROZEN_PERMIT_PARENT_WITH_REVERSIBLE_STATUS_EPISODES",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "applies_to": "food-service v1 only",
+    "nationwide_establishment_identity_claim": false
+  },
+  "selected_grains": {
+    "ingestion_observation_grain": {
+      "name": "PERMIT_AS_OF_SNAPSHOT",
+      "row_meaning": "one source permit record observed in one dated snapshot",
+      "role": "raw/staging observation grain"
+    },
+    "canonical_parent_grain": {
+      "name": "PERMIT",
+      "row_meaning": "one source permit record represented as a canonical parent without merging establishments by name, address or coordinates",
+      "role": "v1 canonical parent grain",
+      "status": "SELECTED"
+    },
+    "lifecycle_analysis_grain": {
+      "name": "PERMIT_STATUS_EPISODE",
+      "row_meaning": "one maximal observed interval for a permit during which the source status state is unchanged",
+      "role": "derived lifecycle analysis grain",
+      "status": "SELECTED",
+      "production_reconstruction_enabled": false,
+      "reason_reconstruction_deferred": "nationwide daily history is not acquired and status code 05 semantics remain unresolved"
+    }
+  },
+  "rejected_grains": [
+    {
+      "name": "ESTABLISHMENT_CATEGORY_EPISODE",
+      "status": "REJECTED_FOR_V1",
+      "reason": "establishment identity across permits, relocations or replacements is not proven; MNG_NO is not declared to be an establishment identifier"
+    },
+    {
+      "name": "SINGLE_TERMINAL_SURVIVAL_ROW",
+      "status": "REJECTED",
+      "reason": "two confirmed source-level 03->01 reversals show that code 03 and closure-date presence cannot be assumed to be irreversible terminal events"
+    }
+  ],
+  "identity_policy": {
+    "source_primary_key_declared": false,
+    "mng_no_primary_key_declared": false,
+    "establishment_identity_declared": false,
+    "mng_no_role": "bounded continuity/linkage candidate only; every build must fail closed if the expected uniqueness invariant is violated",
+    "cross_permit_entity_resolution_allowed": false
+  },
+  "episode_semantics": {
+    "episode_partition_basis": "observed source status state, not business-name/address similarity",
+    "exact_transition_time_claimed_from_sparse_snapshots": false,
+    "sparse_transition_boundaries": "interval-censored between the last observation of the previous state and the first observation of the next state",
+    "active_end_observations": "right-censored",
+    "closure_code_03_irreversible": false,
+    "closure_date_permanent_terminal_event": false,
+    "reopening_vs_correction_resolved": false,
+    "status_code_05_semantics_resolved": false
+  },
+  "evidence": {
+    "current_snapshot_rows": 3010802,
+    "current_snapshot_duplicate_mng_no_rows": 0,
+    "bounded_history_source_authority_pairs": 15,
+    "bounded_history_pairs_with_strong_mng_no_continuity": 15,
+    "bounded_history_disappeared_start_ids": 0,
+    "bounded_history_permit_date_changes": 0,
+    "confirmed_03_to_01_reversals": 2,
+    "reverse_transition_findings": "provenance/reverse_transition_findings.json",
+    "expanded_history_audit": "provenance/expanded_history_audit.json"
+  },
+  "hard_rules_for_next_phase": [
+    "canonical schema must keep permit identity separate from establishment identity",
+    "no row may be merged across permits solely from business name, address or coordinates",
+    "status 03 must not create an irreversible terminal survival label",
+    "episode boundaries must preserve interval censoring unless directly bracketed by dated observations",
+    "active observations must remain right-censored",
+    "status code 05 must remain unmapped until its semantics are verified",
+    "production episode reconstruction remains disabled until an explicit bounded history-observation strategy is approved"
+  ],
+  "next_gate": {
+    "phase": "Phase 4 Canonical Schema Freeze",
+    "goal": "define permit-parent columns and lifecycle-episode columns without resolving establishment identity or inventing terminal closure semantics"
+  }
+}

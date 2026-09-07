@@ -49,6 +49,10 @@ def load_expanded_history_audit() -> dict[str, Any]:
     return load_json("provenance/expanded_history_audit.json")
 
 
+def load_grain_decision() -> dict[str, Any]:
+    return load_json("provenance/grain_decision.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -299,4 +303,58 @@ def validate_expanded_history_audit(audit: dict[str, Any]) -> list[str]:
         errors.append("expanded-history audit must not declare establishment identity")
     if audit.get("lifecycle_claim", {}).get("terminal_closure_declared_irreversible") is not False:
         errors.append("expanded-history audit must not freeze irreversible closure semantics")
+    return errors
+
+
+def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if decision.get("decision") != "V1_GRAIN_FROZEN_PERMIT_PARENT_WITH_REVERSIBLE_STATUS_EPISODES":
+        errors.append("v1 grain decision changed")
+    if set(decision.get("scope", {}).get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("grain-decision scope must exactly match the three v1 sources")
+
+    selected = decision.get("selected_grains", {})
+    if selected.get("canonical_parent_grain", {}).get("name") != "PERMIT":
+        errors.append("canonical parent grain must remain PERMIT")
+    lifecycle = selected.get("lifecycle_analysis_grain", {})
+    if lifecycle.get("name") != "PERMIT_STATUS_EPISODE":
+        errors.append("lifecycle analysis grain must remain PERMIT_STATUS_EPISODE")
+    if lifecycle.get("production_reconstruction_enabled") is not False:
+        errors.append("production episode reconstruction must remain disabled at this gate")
+
+    rejected = {item.get("name"): item.get("status") for item in decision.get("rejected_grains", [])}
+    if rejected.get("ESTABLISHMENT_CATEGORY_EPISODE") != "REJECTED_FOR_V1":
+        errors.append("establishment-category episode grain must remain rejected for v1")
+    if rejected.get("SINGLE_TERMINAL_SURVIVAL_ROW") != "REJECTED":
+        errors.append("single terminal survival row must remain rejected")
+
+    identity = decision.get("identity_policy", {})
+    for key in (
+        "source_primary_key_declared",
+        "mng_no_primary_key_declared",
+        "establishment_identity_declared",
+        "cross_permit_entity_resolution_allowed",
+    ):
+        if identity.get(key) is not False:
+            errors.append(f"grain decision must keep {key}=false")
+
+    semantics = decision.get("episode_semantics", {})
+    if semantics.get("exact_transition_time_claimed_from_sparse_snapshots") is not False:
+        errors.append("sparse episode transitions must remain interval-censored")
+    if semantics.get("active_end_observations") != "right-censored":
+        errors.append("active episode endpoints must remain right-censored")
+    if semantics.get("closure_code_03_irreversible") is not False:
+        errors.append("status code 03 must remain reversible in the grain decision")
+    if semantics.get("closure_date_permanent_terminal_event") is not False:
+        errors.append("closure date must not be promoted to a permanent terminal event")
+    if semantics.get("status_code_05_semantics_resolved") is not False:
+        errors.append("status code 05 must remain unresolved at this gate")
+
+    evidence = decision.get("evidence", {})
+    if evidence.get("current_snapshot_rows") != 3_010_802:
+        errors.append("grain decision current-snapshot evidence changed")
+    if evidence.get("bounded_history_pairs_with_strong_mng_no_continuity") != 15:
+        errors.append("grain decision continuity evidence changed")
+    if evidence.get("confirmed_03_to_01_reversals") != 2:
+        errors.append("grain decision reversal evidence changed")
     return errors
