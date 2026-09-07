@@ -6,7 +6,7 @@ Keep source evidence separate from semantic interpretation and allow only eviden
 
 ```text
 official source evidence
-  → external raw storage
+  → ignored local raw storage (`data/local/`)
   → staging/profile
   → grain/identity/lifecycle audit
   → canonical schema
@@ -19,4 +19,4 @@ The repository currently implements only the first bounded execution milestone. 
 
 ## Data storage rule
 
-`data/raw`, `data/staging`, `data/processed`, and `data/logs` are structural placeholders. Real files must live outside Git under `KBL_DATA_ROOT`.
+Runtime data lives under the Git-ignored `data/local/` tree by default. `KBL_DATA_ROOT` may override this location, but any repository-local override must remain under `data/local/`.

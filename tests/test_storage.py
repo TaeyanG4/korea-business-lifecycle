@@ -11,17 +11,18 @@ from korea_business_lifecycle.storage import (
 )
 
 
-def test_data_root_must_be_outside_repository() -> None:
-    with pytest.raises(DataRootError, match="outside"):
-        resolve_data_root(project_root() / "data")
+def test_repository_local_data_root_must_be_under_data_local() -> None:
+    with pytest.raises(DataRootError, match="data/local"):
+        resolve_data_root(project_root() / "tmp-data")
 
 
-def test_default_data_root_is_project_scoped_sibling(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_default_data_root_is_project_local_ignored_directory(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.delenv("KBL_DATA_ROOT", raising=False)
     resolved = resolve_data_root()
     assert resolved == default_data_root().resolve()
-    assert resolved.name == "korea-business-lifecycle-data"
-    assert resolved.parent == project_root().parent.resolve()
+    assert resolved == (project_root() / "data" / "local").resolve()
 
 
 def test_external_artifact_must_be_under_data_root(external_tmp_path: Path) -> None:
@@ -39,3 +40,15 @@ def test_external_artifact_accepts_file_under_root(external_tmp_path: Path) -> N
     artifact.parent.mkdir(parents=True)
     artifact.write_text("a\n1\n", encoding="utf-8")
     assert require_external_artifact(artifact, root) == artifact.resolve()
+
+
+def test_repository_local_artifact_accepts_file_under_default_root() -> None:
+    root = default_data_root()
+    artifact = root / "test-storage" / "synthetic.csv"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("a\n1\n", encoding="utf-8")
+    try:
+        assert require_external_artifact(artifact, root) == artifact.resolve()
+    finally:
+        artifact.unlink(missing_ok=True)
+        artifact.parent.rmdir()

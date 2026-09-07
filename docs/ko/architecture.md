@@ -6,7 +6,7 @@
 
 ```text
 공식 소스 증거
-  → 외부 raw 저장소
+  → Git-ignored 로컬 raw 저장소 (`data/local/`)
   → staging/profile
   → grain/identity/lifecycle audit
   → canonical schema
@@ -19,4 +19,4 @@
 
 ## 데이터 저장 원칙
 
-`data/raw`, `data/staging`, `data/processed`, `data/logs`는 구조 표시용입니다. 실제 파일은 Git 바깥 `KBL_DATA_ROOT`에 저장해야 합니다.
+실행용 데이터는 기본적으로 Git에서 제외되는 `data/local/` 아래에 저장합니다. `KBL_DATA_ROOT`로 위치를 바꿀 수 있지만, 저장소 내부 경로를 쓸 경우 반드시 `data/local/` 하위여야 합니다.

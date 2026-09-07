@@ -35,15 +35,8 @@ secrets*
 **/credentials/**
 **/secrets/**
 
-# Real or derived data: only placeholders are tracked.
-data/raw/**
-!data/raw/.gitkeep
-data/staging/**
-!data/staging/.gitkeep
-data/processed/**
-!data/processed/.gitkeep
-data/logs/**
-!data/logs/.gitkeep
+# Project-local real/derived runtime data. Nothing below this directory is tracked.
+data/local/
 
 # Common bulk-data artifacts anywhere in the repository
 *.parquet

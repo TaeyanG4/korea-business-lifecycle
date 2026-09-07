@@ -1,6 +1,6 @@
 # v1 Current Snapshot 관찰 결과
 
-2026-09-07에 세 전국 current snapshot을 Git 외부에 취득하고 SHA-256으로 고정한 뒤 전체 파일을 프로파일링/감사했습니다.
+2026-09-07에 세 전국 current snapshot을 취득하고 SHA-256으로 고정한 뒤 전체 파일을 프로파일링/감사했습니다. 로컬 사본은 저장소 내부의 Git-ignored `data/local/` runtime tree에 보관합니다.
 
 - 일반음식점: 2,295,369행 / 696,584,488 bytes
 - 휴게음식점: 645,952행 / 207,347,981 bytes
@@ -12,4 +12,4 @@
 - 일반음식점에는 비어있지 않지만 파싱되지 않는 인허가일자 4건과 retrieval date 이후 폐업일자 3건이 있습니다.
 - 전화번호·사업장명·정확 주소·홈페이지·정밀 좌표가 실제 스키마에 존재하므로 public row-level allowlist는 승인하지 않았습니다.
 
-이 결과는 current snapshot에 한정됩니다. authenticated history probe는 구현되어 있으나, 2026-09-07 실제 제과점 `/info`와 `/history` 호출에서 현재 로컬 키가 `SERVICE_KEY_IS_NOT_REGISTERED_ERROR`로 거부되었습니다. 따라서 relocation, reopening, category transition, history ordering, longitudinal identifier stability는 유효한 data.go.kr 서비스키/활용권한이 확인될 때까지 판단하지 않습니다.
+이 결과 자체는 current snapshot에 한정됩니다. 이후 authenticated history 접근이 활성화되어 5개 자치단체 bounded audit까지 수행했으며, `MNG_NO` continuity는 표본 전반에서 강했지만 `03→01` 역전 2건이 확인되어 reopening/행정정정 의미는 계속 후속 감사 중입니다.

@@ -1,6 +1,6 @@
 # v1 Current Snapshot Findings
 
-On 2026-09-07 the three nationwide current snapshots were acquired outside Git, fixed by SHA-256, then fully profiled and audited.
+On 2026-09-07 the three nationwide current snapshots were acquired, fixed by SHA-256, then fully profiled and audited. The local copies are stored under the repository-local Git-ignored `data/local/` runtime tree.
 
 - General restaurants: 2,295,369 rows / 696,584,488 bytes
 - Rest cafes: 645,952 rows / 207,347,981 bytes

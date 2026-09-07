@@ -1,12 +1,12 @@
 # Bounded Source Profiling
 
-Phase 2 separates current-snapshot acquisition from profiling. `acquire_snapshot.py` fetches only the three v1 official `file.localdata.go.kr` bulk URLs with finite retries/timeouts and never calls a history endpoint. The profiler reproducibly inspects an **already external CSV artifact stored outside Git**.
+Phase 2 separates current-snapshot acquisition from profiling. `acquire_snapshot.py` fetches only the three v1 official `file.localdata.go.kr` bulk URLs with finite retries/timeouts and never calls a history endpoint. The profiler reproducibly inspects an already downloaded CSV artifact under the Git-ignored runtime data root.
 
 ## Safety rules
 
-- The default real-data location is the project-scoped sibling directory `../korea-business-lifecycle-data`.
+- The default real-data location is the repository-local, Git-ignored directory `data/local/`.
 - `KBL_DATA_ROOT` may explicitly override that default.
-- The resolved real-data root must always remain outside the Git repository.
+- A repository-local override must stay under `data/local/`.
 - The input artifact must live under `KBL_DATA_ROOT`.
 - Raw bytes are never modified.
 - SHA-256 is recorded.
@@ -27,10 +27,9 @@ python scripts/profile_artifact.py general_restaurants \
   "$KBL_DATA_ROOT/raw/general_restaurants/source.csv"
 ```
 
-If neither `KBL_DATA_ROOT` nor `--data-root` is supplied, the sibling directory
-`../korea-business-lifecycle-data` is used.
+If neither `KBL_DATA_ROOT` nor `--data-root` is supplied, `data/local/` is used.
 
-Outputs are written outside Git:
+Outputs are written under the ignored runtime tree:
 
 ```text
 $KBL_DATA_ROOT/staging/profiles/<source_key>/<sha256>/

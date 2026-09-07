@@ -14,7 +14,7 @@ pytest -v
 python scripts/repo_check.py
 ```
 
-`pytest` 실행 중 네트워크 socket은 차단됩니다. 향후 실데이터 integration test는 Git 외부의 승인된 artifact를 명시적으로 지정하는 opt-in 테스트로만 추가합니다.
+`pytest` 실행 중 네트워크 socket은 차단됩니다. 향후 실데이터 integration test는 Git에서 제외된 runtime data root의 승인된 artifact를 명시적으로 지정하는 opt-in 테스트로만 추가합니다.
 
 ## Git 마일스톤
 

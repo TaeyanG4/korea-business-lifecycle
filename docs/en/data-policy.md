@@ -10,7 +10,7 @@
 - local AI/agent instructions; or
 - unreviewed personal/contact fields.
 
-Real data must live under an external `KBL_DATA_ROOT`.
+Real data lives under the Git-ignored `data/local/` runtime tree by default. `KBL_DATA_ROOT` may override it, but any repository-local override must stay under `data/local/`.
 
 ## Public access vs redistribution
 

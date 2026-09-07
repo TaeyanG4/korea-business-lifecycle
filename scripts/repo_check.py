@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN_BASENAMES = {"AGENTS.md", "SKILL.md", "CLAUDE.md"}
-DATA_DIRS = ["raw", "staging", "processed", "logs"]
+FORBIDDEN_TRACKED_PREFIXES = ("data/local/",)
 
 
 def tracked_files() -> list[str]:
@@ -27,9 +27,8 @@ def violations(paths: list[str]) -> list[str]:
         name = Path(path).name
         if name in FORBIDDEN_BASENAMES:
             found.append(path)
-        for data_dir in DATA_DIRS:
-            prefix = f"data/{data_dir}/"
-            if path.startswith(prefix) and path != f"{prefix}.gitkeep":
+        for prefix in FORBIDDEN_TRACKED_PREFIXES:
+            if path.startswith(prefix):
                 found.append(path)
     return sorted(set(found))
 

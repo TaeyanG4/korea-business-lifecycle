@@ -7,7 +7,7 @@ from .config import project_root
 
 
 class DataRootError(ValueError):
-    """Raised when a real-data path violates the external-storage policy."""
+    """Raised when a real-data path violates the local-storage policy."""
 
 
 def is_within(path: Path, parent: Path) -> bool:
@@ -21,8 +21,8 @@ def is_within(path: Path, parent: Path) -> bool:
 
 
 def default_data_root() -> Path:
-    """Return the project-scoped sibling directory used for real data by default."""
-    return project_root().parent / "korea-business-lifecycle-data"
+    """Return the ignored project-local directory used for real data by default."""
+    return project_root() / "data" / "local"
 
 
 def resolve_data_root(value: str | os.PathLike[str] | None = None) -> Path:
@@ -30,8 +30,12 @@ def resolve_data_root(value: str | os.PathLike[str] | None = None) -> Path:
     if not raw:
         raw = str(default_data_root())
     root = Path(raw).expanduser().resolve()
-    if is_within(root, project_root()) or root == project_root().resolve():
-        raise DataRootError("KBL_DATA_ROOT must resolve outside the Git repository")
+    repo = project_root().resolve()
+    allowed_local = default_data_root().resolve()
+    if is_within(root, repo) and not is_within(root, allowed_local):
+        raise DataRootError(
+            "repository-local KBL_DATA_ROOT must resolve under data/local, which is Git-ignored"
+        )
     return root
 
 
@@ -41,6 +45,8 @@ def require_external_artifact(path: str | os.PathLike[str], data_root: Path) -> 
         raise DataRootError(f"artifact does not exist: {artifact}")
     if not is_within(artifact, data_root):
         raise DataRootError("artifact must be stored under KBL_DATA_ROOT")
-    if is_within(artifact, project_root()):
-        raise DataRootError("real artifacts must not be stored inside the Git repository")
+    if is_within(artifact, project_root()) and not is_within(
+        artifact, default_data_root()
+    ):
+        raise DataRootError("repository-local artifacts must stay under ignored data/local")
     return artifact

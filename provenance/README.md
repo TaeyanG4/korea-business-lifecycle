@@ -9,4 +9,4 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `history_review.json`: official authenticated history-query contract and remaining execution/completeness blockers.
 - `feasibility.json`: current project gate state.
 
-Evidence was rechecked on 2026-09-07 against official `data.go.kr` and Ministry of the Interior and Safety pages. Current v1 snapshots were acquired into external storage and their hashes plus aggregate audit results are recorded here; the source files themselves remain outside Git.
+Evidence was rechecked on 2026-09-07 against official `data.go.kr` and Ministry of the Interior and Safety pages. Current v1 snapshots are stored under the repository-local Git-ignored runtime tree; only hashes and aggregate audit results are tracked here, never the source rows themselves.

@@ -1,5 +1,7 @@
 # Data directories
 
-These directories are placeholders only. Real/raw/staging/processed data and logs are excluded from Git.
+All runtime source data and derived local artifacts live under `data/local/`.
+That entire directory is excluded from Git.
 
-Production work must use an external data root such as `KBL_DATA_ROOT` that resolves outside this repository.
+The default `KBL_DATA_ROOT` is `data/local/`. An explicit override is still supported,
+but any repository-local override must remain under `data/local/`.

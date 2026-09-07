@@ -14,7 +14,7 @@ pytest -v
 python scripts/repo_check.py
 ```
 
-Network sockets are disabled during pytest. Future real-data integration tests will be opt-in and will reference approved artifacts stored outside Git.
+Network sockets are disabled during pytest. Future real-data integration tests will be opt-in and will reference approved artifacts under the Git-ignored runtime data root.
 
 ## Git milestone gate
 
