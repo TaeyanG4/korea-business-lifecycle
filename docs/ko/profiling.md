@@ -4,7 +4,9 @@ Phase 2는 current snapshot 취득과 profiling을 분리합니다. `acquire_sna
 
 ## 안전 규칙
 
-- `KBL_DATA_ROOT`는 Git 저장소 바깥이어야 합니다.
+- 실데이터 기본 저장 위치는 Git 저장소와 나란한 `../korea-business-lifecycle-data`입니다.
+- `KBL_DATA_ROOT`를 설정하면 이 기본 위치를 명시적으로 재정의할 수 있습니다.
+- 어떤 경우에도 실데이터 루트는 Git 저장소 바깥이어야 합니다.
 - 입력 artifact는 반드시 `KBL_DATA_ROOT` 아래에 있어야 합니다.
 - 원본 파일을 수정하지 않습니다.
 - SHA-256을 계산합니다.
@@ -24,6 +26,9 @@ python scripts/acquire_snapshot.py general_restaurants \
 python scripts/profile_artifact.py general_restaurants \
   "$KBL_DATA_ROOT/raw/general_restaurants/source.csv"
 ```
+
+`KBL_DATA_ROOT`나 `--data-root`를 지정하지 않으면 프로젝트 sibling인
+`../korea-business-lifecycle-data`를 사용합니다.
 
 출력은 다음과 같이 외부 저장소에 생성됩니다.
 

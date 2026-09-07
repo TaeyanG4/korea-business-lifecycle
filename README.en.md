@@ -22,7 +22,7 @@ No nationwide raw data, full-history harvesting, lifecycle reconstruction, or Ka
 - Closure dates and status values are not converted into closure labels before semantic verification.
 - EPSG:5174 is documented for the three v1 sources, but source X/Y meanings and axis order remain to be verified.
 - Public accessibility and permission to redistribute on Kaggle are separate gates.
-- Real source data must live outside Git.
+- Real source data must live outside Git. The default project-scoped location is the sibling directory `../korea-business-lifecycle-data`.
 
 ## Development
 

@@ -20,10 +20,15 @@ def is_within(path: Path, parent: Path) -> bool:
     return True
 
 
+def default_data_root() -> Path:
+    """Return the project-scoped sibling directory used for real data by default."""
+    return project_root().parent / "korea-business-lifecycle-data"
+
+
 def resolve_data_root(value: str | os.PathLike[str] | None = None) -> Path:
     raw = str(value) if value is not None else os.environ.get("KBL_DATA_ROOT")
     if not raw:
-        raise DataRootError("KBL_DATA_ROOT is required for real-data work")
+        raw = str(default_data_root())
     root = Path(raw).expanduser().resolve()
     if is_within(root, project_root()) or root == project_root().resolve():
         raise DataRootError("KBL_DATA_ROOT must resolve outside the Git repository")

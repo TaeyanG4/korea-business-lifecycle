@@ -20,6 +20,21 @@ from korea_business_lifecycle.history_probe import (
 )
 
 
+def test_service_key_can_be_loaded_from_gitignored_dotenv(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import korea_business_lifecycle.history_probe as history_probe
+
+    monkeypatch.delenv(history_probe.SERVICE_KEY_ENV, raising=False)
+    (tmp_path / ".env").write_text(
+        f"{history_probe.SERVICE_KEY_ENV}=synthetic-decoding-key\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(history_probe, "project_root", lambda: tmp_path)
+    assert history_probe.require_service_key() == "synthetic-decoding-key"
+
+
 class FakeResponse:
     def __init__(self, payload: dict, *, url: str) -> None:
         self._stream = io.BytesIO(json.dumps(payload).encode("utf-8"))
@@ -56,8 +71,14 @@ def success_payload(total_count: int = 12) -> dict:
     }
 
 
-def test_service_key_is_required_from_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_service_key_is_required_when_env_and_dotenv_are_missing(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import korea_business_lifecycle.history_probe as history_probe
+
     monkeypatch.delenv(SERVICE_KEY_ENV, raising=False)
+    monkeypatch.setattr(history_probe, "project_root", lambda: tmp_path)
     with pytest.raises(HistoryProbeError, match=SERVICE_KEY_ENV):
         require_service_key()
 

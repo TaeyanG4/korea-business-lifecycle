@@ -65,8 +65,8 @@ def test_validate_final_url_rejects_official_error_page() -> None:
         validate_final_url("https://file.localdata.go.kr/error.html")
 
 
-def test_acquisition_writes_immutable_artifact_and_manifest(tmp_path: Path) -> None:
-    data_root = tmp_path / "external-data"
+def test_acquisition_writes_immutable_artifact_and_manifest(external_tmp_path: Path) -> None:
+    data_root = external_tmp_path / "external-data"
     data_root.mkdir()
     body = "관리번호,인허가일자\nA1,20200102\n".encode("utf-8")
     calls: list[tuple[str, int]] = []
@@ -93,8 +93,8 @@ def test_acquisition_writes_immutable_artifact_and_manifest(tmp_path: Path) -> N
     assert calls == [("https://file.localdata.go.kr/file/download/general_restaurants/info", 7)]
 
 
-def test_acquisition_retries_are_bounded(tmp_path: Path) -> None:
-    data_root = tmp_path / "external-data"
+def test_acquisition_retries_are_bounded(external_tmp_path: Path) -> None:
+    data_root = external_tmp_path / "external-data"
     data_root.mkdir()
     calls = 0
     sleeps: list[float] = []
@@ -117,8 +117,8 @@ def test_acquisition_retries_are_bounded(tmp_path: Path) -> None:
     assert sleeps == [1, 2]
 
 
-def test_acquisition_rejects_truncated_response(tmp_path: Path) -> None:
-    data_root = tmp_path / "external-data"
+def test_acquisition_rejects_truncated_response(external_tmp_path: Path) -> None:
+    data_root = external_tmp_path / "external-data"
     data_root.mkdir()
     body = b"short"
 
@@ -135,8 +135,8 @@ def test_acquisition_rejects_truncated_response(tmp_path: Path) -> None:
         )
 
 
-def test_acquisition_rejects_html_error_response(tmp_path: Path) -> None:
-    data_root = tmp_path / "external-data"
+def test_acquisition_rejects_html_error_response(external_tmp_path: Path) -> None:
+    data_root = external_tmp_path / "external-data"
     data_root.mkdir()
 
     def opener(_request: Request, _timeout: int) -> FakeResponse:
@@ -157,8 +157,8 @@ def test_acquisition_rejects_html_error_response(tmp_path: Path) -> None:
         )
 
 
-def test_acquisition_enforces_independent_byte_cap(tmp_path: Path) -> None:
-    data_root = tmp_path / "external-data"
+def test_acquisition_enforces_independent_byte_cap(external_tmp_path: Path) -> None:
+    data_root = external_tmp_path / "external-data"
     data_root.mkdir()
 
     def opener(_request: Request, _timeout: int) -> FakeResponse:

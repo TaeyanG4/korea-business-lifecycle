@@ -4,7 +4,9 @@ Phase 2 separates current-snapshot acquisition from profiling. `acquire_snapshot
 
 ## Safety rules
 
-- `KBL_DATA_ROOT` must resolve outside the Git repository.
+- The default real-data location is the project-scoped sibling directory `../korea-business-lifecycle-data`.
+- `KBL_DATA_ROOT` may explicitly override that default.
+- The resolved real-data root must always remain outside the Git repository.
 - The input artifact must live under `KBL_DATA_ROOT`.
 - Raw bytes are never modified.
 - SHA-256 is recorded.
@@ -24,6 +26,9 @@ python scripts/acquire_snapshot.py general_restaurants \
 python scripts/profile_artifact.py general_restaurants \
   "$KBL_DATA_ROOT/raw/general_restaurants/source.csv"
 ```
+
+If neither `KBL_DATA_ROOT` nor `--data-root` is supplied, the sibling directory
+`../korea-business-lifecycle-data` is used.
 
 Outputs are written outside Git:
 

@@ -5,7 +5,12 @@ __pycache__/
 build/
 dist/
 .pytest_cache/
+.pytest-kbl/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
 .coverage
+.coverage.*
 htmlcov/
 
 # Virtual environments
@@ -49,6 +54,7 @@ data/logs/**
 *.db
 
 # Local/private work material
+.local/
 .private/
 private/
 local/
@@ -57,6 +63,11 @@ tasks/private/
 *.private.*
 *.prompt.local.*
 *.task.local.*
+
+# Local runtime logs and scratch output
+*.log
+*.tmp
+*.temp
 
 # Local AI / agent instructions
 **/AGENTS.md

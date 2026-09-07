@@ -10,6 +10,7 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Any, Callable
 from urllib.parse import urlencode, urlsplit
 
+from .config import project_root
 from .provenance import V1_SOURCE_KEYS, load_history_review
 
 
@@ -99,8 +100,28 @@ def history_endpoint(source_key: str) -> str:
 def require_service_key(value: str | None = None) -> str:
     key = value if value is not None else os.environ.get(SERVICE_KEY_ENV)
     if not key:
+        dotenv_path = project_root() / ".env"
+        if dotenv_path.is_file():
+            try:
+                lines = dotenv_path.read_text(encoding="utf-8-sig").splitlines()
+            except UnicodeDecodeError as exc:
+                raise HistoryProbeError("local .env must be UTF-8 text") from exc
+            for line in lines:
+                stripped = line.strip()
+                if not stripped or stripped.startswith("#") or "=" not in stripped:
+                    continue
+                name, raw_value = stripped.split("=", 1)
+                if name.strip() != SERVICE_KEY_ENV:
+                    continue
+                candidate = raw_value.strip()
+                if len(candidate) >= 2 and candidate[0] == candidate[-1] and candidate[0] in {"'", '"'}:
+                    candidate = candidate[1:-1]
+                key = candidate
+                break
+    if not key:
         raise HistoryProbeError(
-            f"{SERVICE_KEY_ENV} is required; use the data.go.kr Decoding service key and keep it out of Git/logs"
+            f"{SERVICE_KEY_ENV} is required in the environment or local .env; "
+            "use the data.go.kr Decoding service key and keep it out of Git/logs"
         )
     if any(char.isspace() for char in key):
         raise HistoryProbeError("service key must not contain whitespace")

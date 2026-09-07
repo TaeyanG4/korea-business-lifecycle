@@ -39,6 +39,11 @@ def test_sensitive_and_bulk_patterns_are_ignored() -> None:
         "nested/SKILL.md",
         "nested/CLAUDE.md",
         ".claude/settings.json",
+        ".pytest-kbl/example.tmp",
+        ".ruff_cache/cache.db",
+        ".mypy_cache/state.json",
+        "notebooks/.ipynb_checkpoints/example.ipynb",
+        "local-run.log",
     ):
         assert _is_ignored(path), path
 

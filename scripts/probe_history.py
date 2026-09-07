@@ -12,7 +12,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Run one authenticated v1 history page-1 probe. The data.go.kr service key "
-            "is read only from KBL_DATA_GO_KR_SERVICE_KEY and is never printed."
+            "is read from KBL_DATA_GO_KR_SERVICE_KEY or local .env and is never printed."
         )
     )
     parser.add_argument("source_key", choices=sorted(V1_SOURCE_KEYS))
