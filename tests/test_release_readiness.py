@@ -34,8 +34,10 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["geospatial_derivation"]["transformed_coordinates"] == 2_811_767
     assert readiness["tracks"]["geospatial_derivation"]["missing_source_coordinates"] == 199_035
     assert readiness["tracks"]["geospatial_derivation"]["output_bytes"] == 50_805_782
+    assert readiness["tracks"]["core_v1"]["status"] == "COMPLETE"
+    assert readiness["tracks"]["core_v1"]["nationwide_history_required"] is False
     assert readiness["tracks"]["public_kaggle"]["privacy_minimized_aggregate_candidate"] == (
-        "COMPLETED_VERIFIED_NOT_PUBLICATION_APPROVED"
+        "COMPLETED_VERIFIED_RELEASE_APPROVED"
     )
     assert readiness["tracks"]["public_kaggle"]["aggregate_candidate_build_id"] == (
         "permit-public-agg-v1-bedd874de6619bee"
@@ -48,45 +50,39 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["aggregate_output_bytes"] == 108_019
     assert readiness["tracks"]["public_kaggle"]["aggregate_independent_verifier"] == "PASS"
     assert readiness["tracks"]["public_kaggle"]["aggregate_technical_minimization_verified"] is True
-    assert readiness["tracks"]["public_kaggle"]["aggregate_publication_approved"] is False
+    assert readiness["tracks"]["public_kaggle"]["aggregate_build_time_publication_flag"] is False
+    assert readiness["tracks"]["public_kaggle"]["aggregate_publication_approved"] is True
     assert readiness["tracks"]["public_kaggle"]["source_use_license"] == "PASS_METADATA_CONFIRMED"
     assert readiness["tracks"]["public_kaggle"]["raw_external_mirror_gate"] == (
         "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION"
     )
-    assert readiness["tracks"]["public_kaggle"]["aggregate_redistribution_gate"] == "UNRESOLVED"
+    assert readiness["tracks"]["public_kaggle"]["aggregate_redistribution_gate"] == (
+        "PERMITTED_FOR_VERIFIED_AGGREGATE"
+    )
     assert readiness["tracks"]["public_kaggle"]["redistribution_clarification_plan"] == (
-        "PREPARED_WRITTEN_RESPONSE_PENDING"
+        "OPTIONAL_ADDITIONAL_CONFIRMATION"
     )
     assert readiness["tracks"]["public_kaggle"]["redistribution_prepared_inquiry_status"] == "READY_NOT_SENT"
     assert readiness["tracks"]["public_kaggle"]["redistribution_prepared_inquiry_source_count"] == 3
     assert readiness["tracks"]["public_kaggle"]["redistribution_clarification_outreach_performed"] is False
     assert readiness["tracks"]["public_kaggle"]["redistribution_written_response_received"] is False
-    assert readiness["next_long_local_actions"] == [
-        {
-            "name": "nationwide_monthly_history_acquisition",
-            "command": "py -3.12 scripts/acquire_nationwide_history.py --execute --max-network-requests 400000 --request-delay-seconds 0.2",
-            "planned_snapshot_tasks": 7_320,
-            "maximum_network_requests": 400_000,
-            "default_mode_without_execute": "DRY_RUN",
-            "resumable": True,
-        }
-    ]
+    assert readiness["next_long_local_actions"] == []
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor"] == (
         "IMPLEMENTED_SYNTHETIC_VALIDATED"
     )
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_max_observations"] == 100_000
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_in_memory_only"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_observation_strategy"] == (
-        "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING"
+        "OPTIONAL_MONTHLY_REFERENCE_CADENCE_AVAILABLE"
     )
-    assert readiness["tracks"]["lifecycle_episode"]["status"] == "READY_FOR_APPROVED_HISTORY_ACQUISITION"
+    assert readiness["tracks"]["lifecycle_episode"]["status"] == "OPTIONAL_ADVANCED_WORKFLOW_READY"
     assert readiness["tracks"]["lifecycle_episode"]["history_selected_cadence"] == "MONTHLY_ANCHOR_PLUS_END"
     assert readiness["tracks"]["lifecycle_episode"]["history_selected_observation_dates"] == 10
     assert readiness["tracks"]["lifecycle_episode"]["history_selected_maximum_gap_days"] == 31
     assert readiness["tracks"]["lifecycle_episode"]["history_nationwide_snapshot_tasks_planned"] == 7_320
     assert readiness["tracks"]["lifecycle_episode"]["history_acquisition_hard_network_request_cap_per_run"] == 400_000
-    assert readiness["tracks"]["lifecycle_episode"]["history_nationwide_acquisition_status"] == "APPROVED_NOT_EXECUTED"
-    assert readiness["tracks"]["lifecycle_episode"]["history_episode_materialization_status"] == "PREPARED_WAITING_FOR_COMPLETE_HISTORY"
+    assert readiness["tracks"]["lifecycle_episode"]["history_nationwide_acquisition_status"] == "OPTIONAL_NOT_REQUIRED_FOR_V1"
+    assert readiness["tracks"]["lifecycle_episode"]["history_episode_materialization_status"] == "OPTIONAL_REQUIRES_COMPLETE_HISTORY"
     assert readiness["tracks"]["lifecycle_episode"]["history_authenticated_execution_available"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_bounded_deleted_partition_post_reform_freeze_confirmed"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_bounded_current_partition_post_reform_evolution_confirmed"] is True
@@ -125,5 +121,5 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_lower_bound"] == 301_258
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_upper_bound"] == 308_380
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
-    assert readiness["tracks"]["public_kaggle"]["status"] == "BLOCKED"
+    assert readiness["tracks"]["public_kaggle"]["status"] == "READY_AGGREGATE_ONLY"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False

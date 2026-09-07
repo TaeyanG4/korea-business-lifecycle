@@ -64,5 +64,8 @@
     "history_rows_under_git_ignored_data_root": true,
     "row_level_values_emitted_by_runner_summary": false,
     "service_key_written_to_manifest": false
-  }
+  },
+  "product_role": "OPTIONAL_ADVANCED_WORKFLOW",
+  "required_for_core_v1": false,
+  "required_for_kaggle_aggregate_release": false
 }

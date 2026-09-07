@@ -1,7 +1,14 @@
-License status: pending.
+Source-data notice
 
-No license grant for source data is made by this repository. The project code
-license and any dataset redistribution license will be selected only after the
-Phase 1 source/license review is complete. Public accessibility of upstream
-government data must not be interpreted as permission to republish it on
-Kaggle or elsewhere.
+The repository does not relicense upstream Korean government source records.
+The three v1 Public Data Portal API pages were rechecked on 2026-09-08 and each
+displayed `이용허락범위 제한 없음` (no restriction on the permitted-use scope).
+
+The public v1 dataset release is limited to the independently verified,
+privacy-minimized aggregate identified in `provenance/v1_release_scope.json`.
+Kaggle metadata uses the `other` license category and the dataset description
+points back to the official source pages and their displayed terms. Row-level
+PERMIT records and precise coordinates are not released by this project.
+
+The software/code license is not granted by this notice and remains a separate
+repository-maintainer decision.

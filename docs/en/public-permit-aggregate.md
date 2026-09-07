@@ -1,8 +1,8 @@
-# Privacy-Minimized Public Permit Aggregate Candidate
+# Privacy-Minimized Public Permit Aggregate
 
-Checked: **2026-09-07**
+Checked: **2026-09-08**
 
-The project does not publish row-level `PERMIT` or WGS84 artifacts. This contract defines a separate local **privacy-minimized aggregate candidate**. It is a technical minimization step only and does not grant permission for Kaggle/public redistribution.
+The project does not publish row-level `PERMIT` or WGS84 artifacts. It publishes only the separate **privacy-minimized aggregate**. That artifact has passed technical minimization verification, and `provenance/v1_release_scope.json` separately approves it for Kaggle/public distribution.
 
 ## Input
 
@@ -41,7 +41,7 @@ The aggregate output excludes row-level fields including:
 
 The grouping key is `source + authority + source status codes + permit year + closure year`. A cell with **fewer than 10 rows is suppressed entirely** from the candidate output.
 
-`k=10` is only a technical suppression threshold for this project. It is **not claimed as a legal or statistical guarantee of privacy**. Redistribution/license review and final release policy remain separate required gates.
+`k=10` is only a technical suppression threshold for this project. It is **not claimed as a legal or statistical guarantee of privacy**. Technical verification and the final release-scope decision are recorded separately.
 
 ## Local build
 
@@ -69,7 +69,7 @@ python scripts/verify_public_permit_aggregate.py
 
 The verifier re-verifies the parent build and checks the aggregate manifest/hash/schema/ZSTD, `cell_count >= 10`, and released/suppressed row accounting.
 
-## Current gate
+## Current release state
 
 - implementation + synthetic suppression/tamper tests: PASS
 - real parent plan-only validation: PASS
@@ -82,7 +82,9 @@ The verifier re-verifies the parent build and checks the aggregate manifest/hash
 - output: 108,019 bytes, independent verifier PASS
 - technical minimization: VERIFIED
 - row-level public release: BLOCKED
-- aggregate publication: BLOCKED
-- Kaggle redistribution: UNRESOLVED
+- aggregate publication: **APPROVED**
+- Kaggle redistribution: **APPROVED FOR THIS VERIFIED AGGREGATE**
+- row-level/precise-coordinate publication: BLOCKED
+- release decision: `provenance/v1_release_scope.json`
 
-`Released candidate` does not mean approved for publication. It only means an aggregate cell passed the local suppression rule and is present in the local candidate artifact.
+The candidate-time publication flag embedded in the immutable build records the gate at build time. The 2026-09-08 release decision separately approves publication of this **same verified hash** and does not approve row-level release.

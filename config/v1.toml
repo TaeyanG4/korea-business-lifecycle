@@ -7,4 +7,6 @@ python_max_exclusive = "3.13"
 categories = ["general_restaurants", "rest_cafes", "bakeries"]
 allow_network_in_tests = false
 allow_real_data_in_git = false
-allow_kaggle_publication = false
+allow_kaggle_aggregate_publication = true
+allow_kaggle_row_level_publication = false
+require_nationwide_history_for_core_v1 = false

@@ -9,7 +9,7 @@ Food-Service v1은 하나의 grain으로 모든 데이터를 표현하지 않고
 1. **Canonical parent grain: `PERMIT`**
    - 한 행은 하나의 source permit record를 의미합니다.
    - 사업장명·주소·좌표가 비슷하다는 이유만으로 서로 다른 permit을 하나의 사업체로 합치지 않습니다.
-2. **Lifecycle analysis grain: `PERMIT_STATUS_EPISODE`**
+2. **Optional lifecycle analysis grain: `PERMIT_STATUS_EPISODE`**
    - 한 행은 같은 permit 안에서 source status state가 연속해서 유지되는 하나의 관찰 구간을 의미합니다.
    - `03→01` 역전이 실제로 확인됐으므로 폐업 상태를 영구 terminal state로 가정하지 않습니다.
 
@@ -50,15 +50,12 @@ v1에서는 채택하지 않습니다. 서로 다른 permit을 동일 사업체�
 - sparse snapshot 사이의 상태 변화 시점은 정확한 날짜라고 주장하지 않고 **interval-censored**로 보존합니다.
 - active 상태로 관찰이 끝난 episode는 **right-censored**입니다.
 - 상태코드 `05`는 의미가 확인될 때까지 canonical state로 매핑하지 않습니다.
-- 전국 daily history를 확보하지 않은 현재는 production episode reconstruction을 활성화하지 않습니다.
+- production episode reconstruction은 core v1의 필수 산출물이 아닙니다. 분석가가 optional history workflow를 선택한 경우에만 승인된 snapshot completeness/censoring 규칙을 적용해 생성합니다.
 
-## 다음 단계
+## v1 제품 범위
 
-Phase 4에서는 이 grain 결정을 바탕으로 다음 두 스키마의 컬럼을 정의합니다.
+2026-09-08 최종 scope에서 `PERMIT` current snapshot은 core v1이고, `PERMIT_STATUS_EPISODE`는 frozen reference schema와 재구성 도구를 제공하는 optional advanced workflow입니다. 따라서 nationwide history 7,320-task 수집은 core v1 완료나 Kaggle aggregate 공개를 막지 않습니다.
 
-- permit parent schema
-- permit status episode schema
-
-사업체 단위 entity resolution이나 terminal survival label 생성은 Phase 4 범위에 포함하지 않습니다.
+사업체 단위 entity resolution이나 terminal survival label 생성은 계속 v1 범위에 포함하지 않습니다.
 
 기계 판독 결정은 `provenance/grain_decision.json`에 있습니다.

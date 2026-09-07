@@ -34,12 +34,12 @@ official source evidence
       ↳ production scan: completed (3,010,802 rows)
       ↳ independent verifier: passed
       ↳ candidate cells: 67,267 released / 229,928 suppressed
-      ↳ publication/redistribution: still blocked
+      ↳ Kaggle aggregate publication: approved by final v1 release scope
   → bounded PERMIT_STATUS_EPISODE tooling
       ↳ sparse explicit observations only
       ↳ max 100,000 observations/call, in memory
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
-      ↳ nationwide production reconstruction: disabled until acquisition completes
+      ↳ nationwide production reconstruction: optional advanced workflow
   → nationwide history observation cost gate
       ↳ exact-244 pre-reform current-scale planning: 30,109..30,838 requests/as-of date
       ↳ post-reform current-244-only planning: 30,151..30,838 requests/as-of date
@@ -54,15 +54,16 @@ official source evidence
       ↳ pre-reform policy: current 244 - new 32 + deleted 32 = exact 244
       ↳ no same-date old/new union
       ↳ approved cadence: MONTHLY_ANCHOR_PLUS_END, 10 dates, maximum gap 31 days
-      ↳ acquisition: 7,320 snapshot tasks, resumable, 400,000 requests/run hard cap, not executed
-      ↳ episode materializer/verifier: prepared; blocked until all 7,320 snapshots are complete/unique
-  → redistribution clarification gate
-      ↳ source-use metadata: PASS
-      ↳ written source-specific questions/contact routes: prepared
-      ↳ raw/aggregate external redistribution: unresolved
+      ↳ optional acquisition reference: 7,320 snapshot tasks, resumable, 400,000 requests/run hard cap
+      ↳ episode materializer/verifier: optional; still requires all 7,320 snapshots complete/unique if executed
+  → v1 release scope
+      ↳ core v1: current PERMIT + local WGS84 sidecar, COMPLETE
+      ↳ Kaggle/public: verified privacy-minimized aggregate only
+      ↳ row-level PERMIT / precise coordinates: private
+      ↳ written source-specific clarification: optional additional assurance
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The authority code set is approved from the official change reference as pre-reform `current-new+deleted` 244 and post-reform current 244. This current-state membership policy is deliberately separate from which codes the API will answer for a historical `BASE_DATE`. A 10-date monthly cadence and a fail-closed 400,000-request budget are approved, but nationwide acquisition itself has not yet been executed. The runner reuses complete snapshots and the production episode materializer remains blocked until all 7,320 tasks are complete and unique. Source-use metadata is PASS, while external redistribution remains blocked until source-specific written clarification is archived.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. The 10-date/7,320-task monthly plan and episode completeness gate apply only when an analyst chooses that workflow. Kaggle publication is limited to the already verified k=10 privacy-minimized aggregate; row-level and precise-coordinate artifacts remain private. `provenance/v1_release_scope.json` is the current scope authority.
 
 ## Data storage rule
 

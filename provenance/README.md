@@ -3,7 +3,7 @@
 This directory stores small, reviewable evidence metadata only. It must not contain nationwide source files or unreviewed personal/contact data.
 
 - `source_registry.json`: current authoritative source identifiers and explicitly unresolved claims.
-- `license_review.json`: official no-restriction source-use labels revalidated for all three v1 APIs, with external raw/aggregate redistribution still unresolved pending source-specific third-party-rights clarification.
+- `license_review.json`: preserved 2026-09-07 conservative review of the official no-restriction source-use labels; its aggregate-publication caution is superseded only by the later `v1_release_scope.json` decision.
 - `privacy_review.json`: observed v1 field inventory plus the still-blocked public allowlist decision.
 - `observed_snapshot_summary.json`: privacy-safe aggregate findings from the three acquired current snapshots; no row-level source values.
 - `history_review.json`: official history-query contract, preserved historical 403 evidence, later authenticated success, and remaining authority-partition semantic blockers.
@@ -22,17 +22,18 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `permit_geospatial_materialization_plan.json`: local-only, separately versioned WGS84 enrichment writer/verifier contract, now marked completed-pass-verified.
 - `permit_geospatial_materialization.json`: aggregate-only evidence for the verified 3,010,802-row WGS84 sidecar build; no row-level coordinates or identifiers are tracked here.
 - `public_permit_aggregate_plan.json`: local-only privacy-minimized aggregate candidate contract with k=10 cell suppression, now marked completed-pass-verified.
-- `public_permit_aggregate.json`: aggregate-only evidence for the verified local candidate: 3,010,802 source rows scanned, 67,267 released candidate cells, 229,928 suppressed cells, no row-level values tracked; publication remains unapproved and redistribution unresolved.
+- `public_permit_aggregate.json`: immutable build-time evidence for the verified aggregate: 3,010,802 source rows scanned, 67,267 released cells, 229,928 suppressed cells, no row-level values tracked. Its build-time publication flag remains preserved; later release approval is in `v1_release_scope.json`.
 - `bounded_episode_reconstruction.json`: deterministic bounded sparse-observation episode-reconstruction contract; synthetic validation is complete while nationwide production reconstruction remains disabled.
 - `history_observation_strategy.json`: network-free reform-aware request planning using exact 244-code date-effective domains; `MONTHLY_ANCHOR_PLUS_END` is approved for 10 dates with maximum 31-day gap, current-scale planning 301,258–308,380 requests, and a 400,000-request hard cap per run.
 - `history_authority_partition_findings.json`: aggregate-only bounded evidence that sampled deleted partitions evolve before the reform and freeze afterward while a sampled current partition continues evolving; raw identifiers/rows are not tracked.
 - `history_authority_partition_probe_plan.json`: exact 384-request DRY_RUN-by-default plan for count-only probing of all 32 deleted codes across three sources and four dates, now marked completed.
 - `history_authority_partition_full_probe.json`: aggregate-only verified result of the completed 384-request run; all 96 source/authority pairs show post-reform count freeze, while row-content freeze is not generalized beyond the bounded full-row sample.
 - `history_authority_policy.json`: approved date-effective current-state authority policy: before 2026-07-01 use current minus new plus deleted = 244; on/after the reform use current 244 only. API queryability is explicitly not treated as membership.
-- `history_nationwide_acquisition_plan.json`: DRY_RUN-by-default resumable production acquisition contract for 10 dates × three sources × 244 authorities = 7,320 snapshot tasks, with a 400,000-request hard cap and minimum 0.2-second request delay; execution is not yet performed.
-- `history_episode_materialization_plan.json`: local-only production episode writer/verifier contract, blocked until all 7,320 history tasks are complete and unique; raw history page hashes are checked before bucketed episode reconstruction.
-- `redistribution_clarification_plan.json`: source-specific written questions and official contact-route evidence required before any raw or aggregate external redistribution gate can change.
-- `release_readiness.json`: current product-track gate summary derived from the evidence above; local PERMIT/WGS84 are verified, monthly history acquisition is approved but unexecuted, production episodes wait on complete history, and publication remains separately blocked.
+- `history_nationwide_acquisition_plan.json`: DRY_RUN-by-default resumable optional acquisition contract for 10 dates × three sources × 244 authorities = 7,320 snapshot tasks, with a 400,000-request hard cap and minimum 0.2-second request delay.
+- `history_episode_materialization_plan.json`: optional local episode writer/verifier contract; if used, all 7,320 history tasks must still be complete and unique and raw-page hashes are checked before reconstruction.
+- `redistribution_clarification_plan.json`: preserved conservative source-specific inquiry plan. Written confirmation is now optional additional assurance for the aggregate-only v1 release.
+- `v1_release_scope.json`: **current product-scope authority**: local current-snapshot core complete, history/episodes optional, verified aggregate approved for Kaggle, row-level and precise coordinates private.
+- `release_readiness.json`: current product-track summary derived from the evidence above; core v1 is complete and the verified aggregate is Kaggle-ready while history remains optional.
 - `feasibility.json`: current project gate state.
 
-Evidence was rechecked on 2026-09-07 against official `data.go.kr` and Ministry of the Interior and Safety pages. Current v1 snapshots are stored under the repository-local Git-ignored runtime tree; only hashes and aggregate audit results are tracked here, never the source rows themselves.
+Release evidence was rechecked on 2026-09-08 against official `data.go.kr` pages. Current v1 snapshots are stored under the repository-local Git-ignored runtime tree; only hashes and aggregate audit results are tracked here, never the source rows themselves.

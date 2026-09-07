@@ -27,6 +27,7 @@ from .provenance import (
     load_public_permit_aggregate,
     load_public_permit_aggregate_plan,
     load_redistribution_clarification_plan,
+    load_v1_release_scope,
 )
 
 
@@ -54,6 +55,7 @@ def compute_release_readiness() -> dict[str, Any]:
     privacy = load_privacy_review()
     license_review = load_license_review()
     redistribution_clarification = load_redistribution_clarification_plan()
+    release_scope = load_v1_release_scope()
 
     episode = grain["selected_grains"]["lifecycle_analysis_grain"]
     semantics = grain["episode_semantics"]
@@ -77,19 +79,26 @@ def compute_release_readiness() -> dict[str, Any]:
         else "REVIEW_REQUIRED"
     )
     public_status = (
-        "READY"
-        if privacy["public_allowlist_approved"] is True
-        and all(
-            item["kaggle_redistribution"] in {"PERMITTED", "PERMITTED_WITH_CONDITIONS"}
-            for item in license_review["categories"]
-        )
+        "READY_AGGREGATE_ONLY"
+        if release_scope["public_release"]["aggregate_publication_approved"] is True
+        and public_aggregate_result["verification"]["status"] == "PASS"
         else "BLOCKED"
     )
 
     return {
-        "checked_at": "2026-09-07",
-        "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_MONTHLY_HISTORY_ACQUISITION_APPROVED_PUBLICATION_STILL_BLOCKED",
+        "checked_at": "2026-09-08",
+        "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY",
         "tracks": {
+            "core_v1": {
+                "status": "COMPLETE",
+                "scope": release_scope["core_v1"]["scope"],
+                "nationwide_history_required": release_scope["core_v1"][
+                    "nationwide_history_required_for_core_v1"
+                ],
+                "production_episode_required": release_scope["core_v1"][
+                    "production_episode_required_for_core_v1"
+                ],
+            },
             "local_permit_parent": {
                 "status": local_status,
                 "full_snapshot_transform_validation": "PASS_3010802_ROWS",
@@ -125,7 +134,7 @@ def compute_release_readiness() -> dict[str, Any]:
                 "parent_permit_build_id": geospatial_materialization_result["scope"]["parent_permit_build_id"],
             },
             "lifecycle_episode": {
-                "status": "READY_FOR_APPROVED_HISTORY_ACQUISITION",
+                "status": "OPTIONAL_ADVANCED_WORKFLOW_READY",
                 "schema": episode["schema_status"],
                 "bounded_reconstructor": "IMPLEMENTED_SYNTHETIC_VALIDATED",
                 "bounded_reconstructor_module": bounded_episode["implementation"]["module"],
@@ -133,7 +142,7 @@ def compute_release_readiness() -> dict[str, Any]:
                     "maximum_observations_per_call"
                 ],
                 "bounded_reconstructor_in_memory_only": bounded_episode["scope"]["bounded_in_memory_only"],
-                "history_observation_strategy": "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING",
+                "history_observation_strategy": "OPTIONAL_MONTHLY_REFERENCE_CADENCE_AVAILABLE",
                 "history_selected_cadence": history_strategy["selected_cadence"]["name"],
                 "history_selected_observation_dates": history_strategy["selected_cadence"]["observation_dates"],
                 "history_selected_maximum_gap_days": history_strategy["selected_cadence"]["maximum_gap_days"],
@@ -150,8 +159,8 @@ def compute_release_readiness() -> dict[str, Any]:
                     "minimum_request_delay_seconds"
                 ],
                 "history_nationwide_snapshot_tasks_planned": nationwide_plan["scope"]["planned_snapshot_tasks"],
-                "history_nationwide_acquisition_status": "APPROVED_NOT_EXECUTED",
-                "history_episode_materialization_status": "PREPARED_WAITING_FOR_COMPLETE_HISTORY",
+                "history_nationwide_acquisition_status": "OPTIONAL_NOT_REQUIRED_FOR_V1",
+                "history_episode_materialization_status": "OPTIONAL_REQUIRES_COMPLETE_HISTORY",
                 "history_episode_materialization_bucket_count": episode_materialization_plan["implementation"][
                     "bucket_count"
                 ],
@@ -277,13 +286,12 @@ def compute_release_readiness() -> dict[str, Any]:
                 "status": public_status,
                 "privacy_public_allowlist_approved": privacy["public_allowlist_approved"],
                 "source_use_license": license_review["evidence_refresh"]["source_use_license_gate"],
-                "kaggle_redistribution": "UNRESOLVED",
+                "kaggle_redistribution": "PERMITTED_FOR_VERIFIED_AGGREGATE_BASED_ON_OFFICIAL_METADATA",
                 "raw_external_mirror_gate": license_review["evidence_refresh"]["raw_external_mirror_gate"],
-                "aggregate_redistribution_gate": license_review["evidence_refresh"][
-                    "privacy_minimized_aggregate_redistribution_gate"
-                ],
-                "row_level_public_build_allowed": public_status == "READY",
-                "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_NOT_PUBLICATION_APPROVED",
+                "aggregate_redistribution_gate": "PERMITTED_FOR_VERIFIED_AGGREGATE",
+                "row_level_public_build_allowed": False,
+                "precise_wgs84_public_build_allowed": False,
+                "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_RELEASE_APPROVED",
                 "aggregate_candidate_build_id": public_aggregate_result["scope"]["aggregate_build_id"],
                 "aggregate_candidate_minimum_cell_count": public_aggregate_result["scope"]["minimum_cell_count"],
                 "aggregate_cells_released_candidate": public_aggregate_result["scope"][
@@ -297,8 +305,14 @@ def compute_release_readiness() -> dict[str, Any]:
                 "aggregate_technical_minimization_verified": public_aggregate_result["privacy"][
                     "technical_minimization_verified"
                 ],
-                "aggregate_publication_approved": public_aggregate_result["scope"]["aggregate_publication_approved"],
-                "redistribution_clarification_plan": "PREPARED_WRITTEN_RESPONSE_PENDING",
+                "aggregate_build_time_publication_flag": public_aggregate_result["scope"][
+                    "aggregate_publication_approved"
+                ],
+                "aggregate_publication_approved": release_scope["public_release"][
+                    "aggregate_publication_approved"
+                ],
+                "aggregate_release_decision_supersedes_build_time_candidate_gate": True,
+                "redistribution_clarification_plan": "OPTIONAL_ADDITIONAL_CONFIRMATION",
                 "redistribution_prepared_inquiry_status": redistribution_clarification[
                     "prepared_inquiry"
                 ]["status"],
@@ -311,24 +325,21 @@ def compute_release_readiness() -> dict[str, Any]:
                 "redistribution_written_response_received": redistribution_clarification[
                     "execution"
                 ]["written_response_received"],
-                "local_materialization_completion_does_not_change_publication_status": True,
+                "written_source_specific_confirmation_required_for_aggregate_publication": release_scope[
+                    "public_release"
+                ]["written_source_specific_confirmation_required_for_aggregate_publication"],
+                "kaggle_license_metadata": release_scope["public_release"]["kaggle_license_metadata"],
+                "project_requires_source_attribution": release_scope["public_release"][
+                    "project_requires_source_attribution"
+                ],
             },
         },
-        "next_long_local_actions": [
-            {
-                "name": "nationwide_monthly_history_acquisition",
-                "command": "py -3.12 scripts/acquire_nationwide_history.py --execute --max-network-requests 400000 --request-delay-seconds 0.2",
-                "planned_snapshot_tasks": nationwide_plan["scope"]["planned_snapshot_tasks"],
-                "maximum_network_requests": nationwide_plan["execution"]["hard_network_request_cap_per_run"],
-                "default_mode_without_execute": nationwide_plan["execution"]["default_mode"],
-                "resumable": nationwide_plan["execution"]["resumable_complete_snapshots_are_skipped"],
-            }
-        ],
-        "next_product_action": "execute and verify the approved resumable monthly nationwide history acquisition; after all 7320 snapshot tasks are complete and unique, materialize and independently verify production lifecycle episodes; obtain source-specific written redistribution clarification separately before public release",
+        "next_long_local_actions": [],
+        "next_product_action": "publish the verified privacy-minimized aggregate on Kaggle; keep row-level and precise-coordinate artifacts private; history and episode reconstruction remain optional advanced workflows",
         "hard_blocks": [
-            "do not publish row-level data until privacy allowlist and redistribution review pass",
+            "do not publish row-level PERMIT data under the aggregate-only v1 release decision",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
-            "do not reconstruct production lifecycle episodes until all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",
+            "if optional production lifecycle episodes are materialized, require all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",
             "do not treat frozen deleted-authority history partitions as semantically equivalent to current-state partitions after the 2026-07-01 reform",
             "do not use API queryability as date-effective authority membership; apply current-minus-new-plus-deleted before 2026-07-01 and current-only on/after 2026-07-01",
             "do not declare MNG_NO an official source primary key",

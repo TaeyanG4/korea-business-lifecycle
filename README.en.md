@@ -1,77 +1,83 @@
-# Korea Business Lifecycle
+# Korea Local Food-Service Permit Data
 
 [한국어](README.md)
 
-An open project for reproducible research on the lifecycle of Korean businesses or permit units using local-government licensing data.
+A reproducible public-data project built from Korean Ministry of the Interior and Safety local-government permit data. The repository keeps the name `korea-business-lifecycle`, but the **core v1 data product is a nationwide current permit snapshot**. Nationwide history acquisition and `PERMIT_STATUS_EPISODE` reconstruction are retained as an **optional advanced workflow** for analysts who need longitudinal inference.
 
-## Current execution scope
+## v1 status
 
-The first execution milestone is intentionally bounded to:
+**LOCAL V1 CORE: COMPLETE**
 
-1. bootstrap a public GitHub repository and Python 3.11/3.12 project;
-2. archive reproducible provenance for the current licensing-data sources; and
-3. assess technical, legal, privacy, and history feasibility for **general restaurants, rest cafes, and bakeries** only.
+- Scope: general restaurants, rest cafes, and bakeries
+- Canonical `PERMIT`: **3,010,802 rows**, production materialized and independently verified
+- WGS84 sidecar: **3,010,802 rows**, 2,811,767 coordinates transformed and independently verified
+- Public aggregate: **67,267 cells**, k=10 suppression, independently verified
+- Nationwide history/episodes: **not required for v1 completion**; runner, schema, and verifier remain available as optional tooling
 
-No nationwide raw data, full-history harvesting, lifecycle reconstruction, or Kaggle publication is performed in this milestone.
+All real and derived runtime data stays under Git-ignored `data/local/`.
 
-## Important constraints
+## Public release scope
 
-- The current official candidate inventory is recorded as **195 permit datasets**, not 196.
-- No source primary key is assumed.
-- Permit date is not automatically treated as physical opening date.
-- Closure dates and status values are not converted into closure labels before semantic verification.
-- EPSG:5174 is documented for the three v1 sources, and full current-v1 QA supports `좌표정보(X)=easting` and `좌표정보(Y)=northing`. This interpretation is scoped to the currently approved artifacts and future snapshots require revalidation.
-- Public accessibility and permission to redistribute on Kaggle are separate gates.
-- Real source data lives in the repository-local but Git-ignored `data/local/` runtime directory. Raw/history/staging/processed/log artifacts under it are never tracked.
+The Kaggle/public v1 release contains **only the privacy-minimized aggregate**.
 
-## Development
+The following remain private:
+
+- row-level `PERMIT`
+- business names, exact addresses, management numbers, phone numbers, and other direct/linkable fields
+- precise source coordinates and WGS84 coordinates
+- partial history snapshots
+
+The aggregate groups by source, authority code, raw status/detail-status code, permit year, and closure year, and suppresses cells below 10. **k=10 is a technical minimization threshold, not a legal privacy guarantee.**
+
+## Sources and permitted-use metadata
+
+As rechecked on 2026-09-08, all three official Public Data Portal API pages display `이용허락범위 제한 없음` (no restriction on the permitted-use scope). v1 uses that official metadata as the release basis and publishes only the attributed privacy-minimized aggregate. Separate written clarification remains optional additional assurance rather than a release prerequisite.
+
+- 15154916 — MOIS food/general restaurants API
+- 15154921 — MOIS food/rest cafes API
+- 15155252 — MOIS food/bakeries API
+
+The machine-readable final release decision is `provenance/v1_release_scope.json`.
+
+## Lifecycle caveats
+
+The current snapshot is not promoted into invented lifecycle events.
+
+- `MNG_NO` is not declared an official primary key or establishment identity.
+- Permit date is not treated as the physical opening date.
+- Closure date is not assumed to be a permanent terminal event.
+- Two observed `03→01` reversals prove that `03` is not irreversible terminal closure.
+- Status code `05` remains unresolved.
+- History is an as-of snapshot service, not a lossless event log.
+- Optional sparse episodes preserve interval censoring and right censoring.
+
+## Optional history workflow
+
+Analysts who require longitudinal reconstruction can use the prepared monthly reference cadence and acquisition tooling. The reference plan is 10 dates × 3 sources × 244 date-effective authority codes = 7,320 snapshot tasks. This acquisition is **not required for core v1 or the Kaggle aggregate release**.
+
+Key docs:
+
+- [v1 Grain Decision](docs/en/grain-decision.md)
+- [History Observation Strategy](docs/en/history-observation-strategy.md)
+- [Authority Domain Reference](docs/en/authority-domain-reference.md)
+- [Architecture](docs/en/architecture.md)
+- [Public Aggregate](docs/en/public-permit-aggregate.md)
+- [Redistribution Clarification](docs/en/redistribution-clarification.md)
+
+## Development and verification
 
 ```bash
 python -m pip install -e ".[test]"
 python -m compileall src scripts tests
 pytest -v
-```
-
-Tests are offline and use synthetic fixtures only.
-
-## Current history status
-
-Current-snapshot acquisition/profiling and bounded history audits are complete. Production `PERMIT` build `permit-v1-9908225df465e2ff` and separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` are both materialized and independently verified across all **3,010,802 rows**. Lifecycle semantic hard rules remain unchanged: `03` is not irreversible terminal closure and `05` remains unmapped. The full **384-request** count-only probe across 32 deleted codes, three sources, and four dates is complete. Using the official 2026-07-01 change reference, the date-effective current-state authority domain is now fixed to **pre-reform 244 = current 244 - new 32 + deleted 32**, and **post-reform current 244 only**. API queryability itself does not define that membership. The production history cadence is approved as **MONTHLY_ANCHOR_PLUS_END** over 10 dates, maximum gap 31 days, current-scale planning **301,258–308,380 requests**, with a 400,000-request hard cap per run. Nationwide acquisition has not yet been executed; a resumable runner, complete-7,320-snapshot gate, bucketed episode materializer, and independent verifier are prepared. Written redistribution questions/contact routes are also prepared, but external publication remains unapproved.
-
-## Documentation
-
-- [Architecture](docs/en/architecture.md)
-- [v1 data sources](docs/en/data-sources.md)
-- [Data/privacy policy](docs/en/data-policy.md)
-- [Reproducibility](docs/en/reproducibility.md)
-- [Bounded source profiling](docs/en/profiling.md)
-- [Bounded history audit findings](docs/en/bounded-history-findings.md)
-- [03→01 reverse-transition follow-up probe](docs/en/reverse-transition-probe.md)
-- [v1 grain decision](docs/en/grain-decision.md)
-- [Canonical PERMIT parent schema](docs/en/canonical-permit-schema.md)
-- [Canonical PERMIT_STATUS_EPISODE schema](docs/en/canonical-episode-schema.md)
-- [Bounded PERMIT_STATUS_EPISODE reconstruction](docs/en/bounded-episode-reconstruction.md)
-- [Nationwide history observation strategy cost gate](docs/en/history-observation-strategy.md)
-- [History authority partition semantics](docs/en/history-authority-partition-semantics.md)
-- [Official authority-domain reference gate](docs/en/authority-domain-reference.md)
-- [Redistribution written-clarification gate](docs/en/redistribution-clarification.md)
-- [Canonical PERMIT transformer](docs/en/canonical-permit-transformer.md)
-- [Canonical PERMIT bounded real-data compatibility](docs/en/canonical-permit-compatibility.md)
-- [Canonical PERMIT full-snapshot dry run](docs/en/canonical-permit-full-dry-run.md)
-- [Canonical PERMIT production materialization](docs/en/canonical-permit-materialization.md)
-- [Geospatial source X/Y axis QA](docs/en/geospatial-axis-qa.md)
-- [Canonical PERMIT WGS84 enrichment](docs/en/canonical-permit-geospatial.md)
-- [Privacy-minimized public aggregate candidate](docs/en/public-permit-aggregate.md)
-- [History sample expansion plan](docs/en/history-sample-expansion.md)
-- [Five-authority history sample findings](docs/en/expanded-history-findings.md)
-- [First-milestone feasibility](docs/en/first-milestone.md)
-
-Current product-track gates are available as aggregate-only JSON:
-
-```bash
 python scripts/release_readiness.py
 ```
 
-## License
+Tests block network access by default and use synthetic fixtures only. The roughly 4 KB under `tests/fixtures/` is minimal test data required to reproducibly validate transformers and verifiers; it is not source data for publication.
 
-The project code license and dataset redistribution policy are not yet finalized. The 2026-09-07 refresh reconfirmed `no restriction on the permitted-use scope` on all three official MOIS v1 APIs, so the source-use metadata gate is recorded as PASS. Source-specific third-party-rights clarification is still outstanding under the portal policy, so raw mirroring and external/Kaggle redistribution of the privacy-minimized aggregate remain `UNRESOLVED`.
+## Repository data policy
+
+- Real source rows, credentials, runtime logs, partial history, canonical Parquet, and Kaggle staging stay under `data/local/`.
+- `.env` and Kaggle/API credentials are never tracked.
+- Schemas and aggregate-only provenance are tracked.
+- Older conservative gates/probes remain for audit history; `v1_release_scope.json` is the current product-scope authority.

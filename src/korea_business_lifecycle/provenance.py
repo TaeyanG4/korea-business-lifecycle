@@ -142,6 +142,78 @@ def load_redistribution_clarification_plan() -> dict[str, Any]:
     return load_json("provenance/redistribution_clarification_plan.json")
 
 
+def load_v1_release_scope() -> dict[str, Any]:
+    return load_json("provenance/v1_release_scope.json")
+
+
+def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if scope.get("decision") != (
+        "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLICATION_APPROVED"
+    ):
+        errors.append("v1 release-scope decision changed")
+
+    core = scope.get("core_v1", {})
+    if set(core.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("v1 release scope must exactly match the three v1 sources")
+    if core.get("permit_parent_build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("v1 release scope permit parent build changed")
+    if core.get("permit_parent_rows") != 3_010_802:
+        errors.append("v1 release scope permit parent row count changed")
+    if core.get("wgs84_sidecar_build_id") != "permit-geo-v1-c4af8799de0283bb":
+        errors.append("v1 release scope geospatial build changed")
+    if core.get("wgs84_sidecar_rows") != 3_010_802:
+        errors.append("v1 release scope geospatial row count changed")
+    for key in ("local_core_complete",):
+        if core.get(key) is not True:
+            errors.append(f"v1 release scope must keep {key}=true")
+    for key in ("nationwide_history_required_for_core_v1", "production_episode_required_for_core_v1"):
+        if core.get(key) is not False:
+            errors.append(f"v1 release scope must keep {key}=false")
+
+    lifecycle = scope.get("lifecycle_optional", {})
+    if lifecycle.get("status") != "OPTIONAL_ADVANCED_WORKFLOW":
+        errors.append("lifecycle workflow must remain optional for core v1")
+    if lifecycle.get("episode_schema") != "schemas/permit_status_episode.v1.json":
+        errors.append("optional episode schema reference changed")
+    if lifecycle.get("approved_reference_snapshot_tasks") != 7_320:
+        errors.append("optional monthly reference task count changed")
+    if lifecycle.get("partial_history_is_production_episode_input") is not False:
+        errors.append("partial history must not become production episode input")
+    if lifecycle.get("history_is_lossless_event_log") is not False:
+        errors.append("optional history must not be promoted to an event log")
+
+    public = scope.get("public_release", {})
+    if public.get("kaggle_target") != "PRIVACY_MINIMIZED_AGGREGATE_ONLY":
+        errors.append("Kaggle release target changed")
+    if public.get("aggregate_build_id") != "permit-public-agg-v1-bedd874de6619bee":
+        errors.append("Kaggle aggregate build changed")
+    if public.get("aggregate_sha256") != (
+        "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb"
+    ):
+        errors.append("Kaggle aggregate hash changed")
+    if public.get("aggregate_rows") != 67_267:
+        errors.append("Kaggle aggregate row count changed")
+    if public.get("aggregate_publication_approved") is not True:
+        errors.append("verified aggregate publication must remain approved")
+    for key in ("row_level_permit_publication_approved", "precise_wgs84_publication_approved"):
+        if public.get(key) is not False:
+            errors.append(f"v1 release scope must keep {key}=false")
+    if public.get("all_three_source_pages_display_no_restriction") is not True:
+        errors.append("official no-restriction metadata evidence changed")
+    if public.get("written_source_specific_confirmation_required_for_aggregate_publication") is not False:
+        errors.append("written clarification must remain optional for the approved aggregate release")
+    if public.get("minimum_cell_count") != 10:
+        errors.append("aggregate suppression threshold changed")
+    if public.get("minimum_cell_count_is_legal_privacy_guarantee") is not False:
+        errors.append("k=10 must not be promoted to a legal privacy guarantee")
+    if public.get("kaggle_license_metadata") != "other":
+        errors.append("Kaggle license metadata must remain 'other' unless source terms are remapped explicitly")
+    if public.get("project_requires_source_attribution") is not True:
+        errors.append("Kaggle release must retain source attribution")
+    return errors
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -1382,8 +1454,8 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit status episode schema gate reference changed")
     if next_gate.get("permit_status_episode_schema_status") != "FROZEN":
         errors.append("permit status episode schema gate must remain frozen")
-    if next_gate.get("phase") != "Phase 7 Publication Safety Review":
-        errors.append("next gate must be Phase 7 publication safety review")
+    if next_gate.get("phase") != "Phase 7 Aggregate Publication Release":
+        errors.append("next gate must be Phase 7 aggregate publication release")
     if next_gate.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
         errors.append("permit parent transformer reference changed")
     if next_gate.get("permit_parent_transformer_status") != "FULL_SNAPSHOT_VALIDATED":
@@ -1442,9 +1514,7 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("bounded episode reconstruction status changed")
     if next_gate.get("history_observation_strategy") != "provenance/history_observation_strategy.json":
         errors.append("history observation strategy evidence reference changed")
-    if next_gate.get("history_observation_strategy_status") != (
-        "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING"
-    ):
+    if next_gate.get("history_observation_strategy_status") != "OPTIONAL_MONTHLY_CADENCE_AVAILABLE":
         errors.append("history observation strategy status changed")
     if next_gate.get("authority_domain_reference") != "provenance/authority_domain_reference.json":
         errors.append("authority-domain reference evidence changed")
@@ -1484,20 +1554,22 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         "provenance/history_nationwide_acquisition_plan.json"
     ):
         errors.append("history nationwide acquisition plan reference changed")
-    if next_gate.get("history_nationwide_acquisition_status") != "MONTHLY_APPROVED_NOT_EXECUTED":
+    if next_gate.get("history_nationwide_acquisition_status") != "OPTIONAL_NOT_REQUIRED_FOR_V1":
         errors.append("history nationwide acquisition status changed")
     if next_gate.get("history_episode_materialization_plan") != (
         "provenance/history_episode_materialization_plan.json"
     ):
         errors.append("history episode materialization plan reference changed")
-    if next_gate.get("history_episode_materialization_status") != (
-        "PREPARED_WAITING_FOR_COMPLETE_HISTORY"
-    ):
+    if next_gate.get("history_episode_materialization_status") != "OPTIONAL_REQUIRES_COMPLETE_HISTORY":
         errors.append("history episode materialization status changed")
     if next_gate.get("redistribution_clarification_plan") != "provenance/redistribution_clarification_plan.json":
         errors.append("redistribution clarification plan reference changed")
-    if next_gate.get("redistribution_clarification_status") != "PREPARED_WRITTEN_RESPONSE_PENDING":
+    if next_gate.get("redistribution_clarification_status") != "OPTIONAL_ADDITIONAL_CONFIRMATION":
         errors.append("redistribution clarification status changed")
+    if next_gate.get("v1_release_scope") != "provenance/v1_release_scope.json":
+        errors.append("v1 release scope reference changed")
+    if next_gate.get("v1_release_scope_status") != "LOCAL_V1_CORE_COMPLETE_AGGREGATE_KAGGLE_APPROVED":
+        errors.append("v1 release scope status changed")
     return errors
 
 

@@ -1,0 +1,62 @@
+{
+  "checked_at": "2026-09-08",
+  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLICATION_APPROVED",
+  "core_v1": {
+    "scope": "nationwide current permit snapshot for three food-service categories",
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "permit_parent_build_id": "permit-v1-9908225df465e2ff",
+    "permit_parent_rows": 3010802,
+    "wgs84_sidecar_build_id": "permit-geo-v1-c4af8799de0283bb",
+    "wgs84_sidecar_rows": 3010802,
+    "local_core_complete": true,
+    "nationwide_history_required_for_core_v1": false,
+    "production_episode_required_for_core_v1": false
+  },
+  "lifecycle_optional": {
+    "status": "OPTIONAL_ADVANCED_WORKFLOW",
+    "episode_schema": "schemas/permit_status_episode.v1.json",
+    "episode_schema_status": "FROZEN_REFERENCE_CONTRACT",
+    "bounded_reconstructor_available": true,
+    "approved_reference_cadence": "MONTHLY_ANCHOR_PLUS_END",
+    "approved_reference_snapshot_tasks": 7320,
+    "partial_local_history_may_be_reused": true,
+    "partial_history_is_production_episode_input": false,
+    "history_is_lossless_event_log": false
+  },
+  "public_release": {
+    "kaggle_target": "PRIVACY_MINIMIZED_AGGREGATE_ONLY",
+    "aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+    "aggregate_sha256": "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb",
+    "aggregate_rows": 67267,
+    "aggregate_publication_approved": true,
+    "row_level_permit_publication_approved": false,
+    "precise_wgs84_publication_approved": false,
+    "source_use_basis": "OFFICIAL_DATA_GO_KR_NO_RESTRICTION_METADATA",
+    "official_source_pages": [
+      "https://www.data.go.kr/data/15154916/openapi.do",
+      "https://www.data.go.kr/data/15154921/openapi.do",
+      "https://www.data.go.kr/data/15155252/openapi.do"
+    ],
+    "portal_policy": "https://www.data.go.kr/ugs/selectPortalPolicyView.do",
+    "all_three_source_pages_display_no_restriction": true,
+    "written_source_specific_confirmation_required_for_aggregate_publication": false,
+    "written_confirmation_remains_optional_additional_assurance": true,
+    "absence_of_third_party_rights_is_claimed_as_legal_fact": false,
+    "minimum_cell_count": 10,
+    "minimum_cell_count_is_legal_privacy_guarantee": false,
+    "kaggle_license_metadata": "other",
+    "project_requires_source_attribution": true
+  },
+  "supersedes_for_core_v1_and_aggregate_publication_only": [
+    "the prior requirement that nationwide history acquisition complete before v1 product completion",
+    "the prior project-level requirement for written source-specific clarification before publishing the verified aggregate"
+  ],
+  "does_not_supersede": [
+    "row-level privacy restrictions",
+    "precise-coordinate publication restrictions",
+    "MNG_NO identity limitations",
+    "status 03 reversibility evidence",
+    "status 05 unresolved semantics",
+    "interval/right censoring requirements for any optional episode reconstruction"
+  ]
+}

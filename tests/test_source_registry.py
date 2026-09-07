@@ -30,6 +30,7 @@ from korea_business_lifecycle.provenance import (
     load_public_permit_aggregate,
     load_public_permit_aggregate_plan,
     load_redistribution_clarification_plan,
+    load_v1_release_scope,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -63,6 +64,7 @@ from korea_business_lifecycle.provenance import (
     validate_public_permit_aggregate,
     validate_public_permit_aggregate_plan,
     validate_redistribution_clarification_plan,
+    validate_v1_release_scope,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -311,7 +313,7 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_parent_schema_status"] == "FROZEN"
     assert decision["next_gate"]["permit_status_episode_schema"] == "schemas/permit_status_episode.v1.json"
     assert decision["next_gate"]["permit_status_episode_schema_status"] == "FROZEN"
-    assert decision["next_gate"]["phase"] == "Phase 7 Publication Safety Review"
+    assert decision["next_gate"]["phase"] == "Phase 7 Aggregate Publication Release"
     assert decision["next_gate"]["permit_parent_transformer"] == "src/korea_business_lifecycle/canonical_permit.py"
     assert decision["next_gate"]["permit_parent_transformer_status"] == "FULL_SNAPSHOT_VALIDATED"
     assert decision["next_gate"]["permit_parent_compatibility"] == "provenance/permit_parent_compatibility.json"
@@ -344,6 +346,21 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["public_permit_aggregate_status"] == (
         "COMPLETED_PASS_VERIFIED_NOT_PUBLICATION_APPROVED"
     )
+    assert decision["next_gate"]["history_nationwide_acquisition_status"] == "OPTIONAL_NOT_REQUIRED_FOR_V1"
+    assert decision["next_gate"]["history_episode_materialization_status"] == "OPTIONAL_REQUIRES_COMPLETE_HISTORY"
+    assert decision["next_gate"]["v1_release_scope"] == "provenance/v1_release_scope.json"
+
+
+def test_v1_release_scope_closes_core_and_approves_aggregate_only() -> None:
+    scope = load_v1_release_scope()
+    assert validate_v1_release_scope(scope) == []
+    assert scope["core_v1"]["local_core_complete"] is True
+    assert scope["core_v1"]["nationwide_history_required_for_core_v1"] is False
+    assert scope["lifecycle_optional"]["status"] == "OPTIONAL_ADVANCED_WORKFLOW"
+    assert scope["public_release"]["aggregate_publication_approved"] is True
+    assert scope["public_release"]["row_level_permit_publication_approved"] is False
+    assert scope["public_release"]["precise_wgs84_publication_approved"] is False
+    assert scope["public_release"]["written_source_specific_confirmation_required_for_aggregate_publication"] is False
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:

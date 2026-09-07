@@ -1,26 +1,23 @@
 {
-  "checked_at": "2026-09-07",
-  "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_MONTHLY_HISTORY_ACQUISITION_APPROVED_PUBLICATION_STILL_BLOCKED",
+  "checked_at": "2026-09-08",
+  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY",
   "hard_blocks": [
-    "do not publish row-level data until privacy allowlist and redistribution review pass",
+    "do not publish row-level PERMIT data under the aggregate-only v1 release decision",
     "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
-    "do not reconstruct production lifecycle episodes until all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",
+    "if optional production lifecycle episodes are materialized, require all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",
     "do not treat frozen deleted-authority history partitions as semantically equivalent to current-state partitions after the 2026-07-01 reform",
     "do not use API queryability as date-effective authority membership; apply current-minus-new-plus-deleted before 2026-07-01 and current-only on/after 2026-07-01",
     "do not declare MNG_NO an official source primary key"
   ],
-  "next_long_local_actions": [
-    {
-      "command": "py -3.12 scripts/acquire_nationwide_history.py --execute --max-network-requests 400000 --request-delay-seconds 0.2",
-      "default_mode_without_execute": "DRY_RUN",
-      "maximum_network_requests": 400000,
-      "name": "nationwide_monthly_history_acquisition",
-      "planned_snapshot_tasks": 7320,
-      "resumable": true
-    }
-  ],
-  "next_product_action": "execute and verify the approved resumable monthly nationwide history acquisition; after all 7320 snapshot tasks are complete and unique, materialize and independently verify production lifecycle episodes; obtain source-specific written redistribution clarification separately before public release",
+  "next_long_local_actions": [],
+  "next_product_action": "publish the verified privacy-minimized aggregate on Kaggle; keep row-level and precise-coordinate artifacts private; history and episode reconstruction remain optional advanced workflows",
   "tracks": {
+    "core_v1": {
+      "nationwide_history_required": false,
+      "production_episode_required": false,
+      "scope": "nationwide current permit snapshot for three food-service categories",
+      "status": "COMPLETE"
+    },
     "geospatial_derivation": {
       "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
       "build_id": "permit-geo-v1-c4af8799de0283bb",
@@ -62,7 +59,7 @@
       "history_date_effective_authority_filter_semantics_verified": false,
       "history_deleted_source_authority_pairs_post_reform_count_frozen": 96,
       "history_episode_materialization_bucket_count": 256,
-      "history_episode_materialization_status": "PREPARED_WAITING_FOR_COMPLETE_HISTORY",
+      "history_episode_materialization_status": "OPTIONAL_REQUIRES_COMPLETE_HISTORY",
       "history_exact_current_official_numeric_codes_ingested": true,
       "history_exact_deleted_numeric_codes_ingested": true,
       "history_exact_new_numeric_codes_ingested": true,
@@ -71,9 +68,9 @@
       "history_full_deleted_authority_count_probe_status": "COMPLETED_VERIFIED",
       "history_future_authority_reference_refresh_required": true,
       "history_manual_reference_authority_count": 245,
-      "history_nationwide_acquisition_status": "APPROVED_NOT_EXECUTED",
+      "history_nationwide_acquisition_status": "OPTIONAL_NOT_REQUIRED_FOR_V1",
       "history_nationwide_snapshot_tasks_planned": 7320,
-      "history_observation_strategy": "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING",
+      "history_observation_strategy": "OPTIONAL_MONTHLY_REFERENCE_CADENCE_AVAILABLE",
       "history_observed_current_authority_count": 230,
       "history_official_deleted_numeric_authority_count": 32,
       "history_post_reform_current_state_enumeration_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
@@ -99,7 +96,7 @@
       "production_reconstruction_enabled": false,
       "reopening_vs_correction_resolved": false,
       "schema": "FROZEN",
-      "status": "READY_FOR_APPROVED_HISTORY_ACQUISITION",
+      "status": "OPTIONAL_ADVANCED_WORKFLOW_READY",
       "status_code_05_semantics_resolved": false
     },
     "local_permit_parent": {
@@ -113,30 +110,35 @@
       "status": "COMPLETED_VERIFIED"
     },
     "public_kaggle": {
+      "aggregate_build_time_publication_flag": false,
       "aggregate_candidate_build_id": "permit-public-agg-v1-bedd874de6619bee",
       "aggregate_candidate_minimum_cell_count": 10,
       "aggregate_cells_released_candidate": 67267,
       "aggregate_cells_suppressed": 229928,
       "aggregate_independent_verifier": "PASS",
       "aggregate_output_bytes": 108019,
-      "aggregate_publication_approved": false,
-      "aggregate_redistribution_gate": "UNRESOLVED",
+      "aggregate_publication_approved": true,
+      "aggregate_redistribution_gate": "PERMITTED_FOR_VERIFIED_AGGREGATE",
+      "aggregate_release_decision_supersedes_build_time_candidate_gate": true,
       "aggregate_released_source_rows": 2383689,
       "aggregate_suppressed_source_rows": 627113,
       "aggregate_technical_minimization_verified": true,
-      "kaggle_redistribution": "UNRESOLVED",
-      "local_materialization_completion_does_not_change_publication_status": true,
-      "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_NOT_PUBLICATION_APPROVED",
+      "kaggle_license_metadata": "other",
+      "kaggle_redistribution": "PERMITTED_FOR_VERIFIED_AGGREGATE_BASED_ON_OFFICIAL_METADATA",
+      "precise_wgs84_public_build_allowed": false,
+      "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_RELEASE_APPROVED",
       "privacy_public_allowlist_approved": false,
+      "project_requires_source_attribution": true,
       "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
       "redistribution_clarification_outreach_performed": false,
-      "redistribution_clarification_plan": "PREPARED_WRITTEN_RESPONSE_PENDING",
+      "redistribution_clarification_plan": "OPTIONAL_ADDITIONAL_CONFIRMATION",
       "redistribution_prepared_inquiry_source_count": 3,
       "redistribution_prepared_inquiry_status": "READY_NOT_SENT",
       "redistribution_written_response_received": false,
       "row_level_public_build_allowed": false,
       "source_use_license": "PASS_METADATA_CONFIRMED",
-      "status": "BLOCKED"
+      "status": "READY_AGGREGATE_ONLY",
+      "written_source_specific_confirmation_required_for_aggregate_publication": false
     }
   }
 }

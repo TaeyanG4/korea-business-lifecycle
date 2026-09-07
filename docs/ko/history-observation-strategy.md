@@ -2,7 +2,7 @@
 
 확인일: **2026-09-07**
 
-production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 위한 authority enumeration과 observation cadence를 확정했습니다. 이 문서는 승인된 **MONTHLY_ANCHOR_PLUS_END** cadence와 그 비용/불완전성 한계를 기록합니다.
+Optional `PERMIT_STATUS_EPISODE` 분석을 전국 범위로 확장할 때 사용할 authority enumeration과 observation cadence를 확정했습니다. 이 문서는 reference **MONTHLY_ANCHOR_PLUS_END** cadence와 그 비용/불완전성 한계를 기록합니다. **2026-09-08부터 이 workflow는 core v1 완료나 Kaggle aggregate 공개의 prerequisite가 아닙니다.**
 
 ## 계산 근거
 
@@ -61,9 +61,9 @@ daily cadence는 interval-censoring width를 줄일 뿐 event-log semantics를 �
 
 ## 현재 결정
 
-`MONTHLY_HISTORY_OBSERVATION_CADENCE_APPROVED_ACQUISITION_NOT_YET_EXECUTED`
+`OPTIONAL_MONTHLY_REFERENCE_CADENCE_AVAILABLE`
 
-production reconstruction 전에는 다음 실행 gate가 남습니다.
+분석가가 optional production reconstruction을 선택한 경우에만 다음 gate를 적용합니다.
 
 1. 10개 observation date × 3 source × 244 authority = **7,320 snapshot task**의 resumable nationwide acquisition 실행
 2. 실행당 actual network attempt **400,000 hard cap**, 최소 request delay 0.2초 유지
@@ -80,7 +80,7 @@ bounded 실행 결과는 [History Authority Partition Semantics](history-authori
 python scripts/history_observation_strategy.py
 ```
 
-실제 전국 수집은 장시간 실행이므로 자동 시작하지 않으며 `scripts/acquire_nationwide_history.py`는 기본 DRY_RUN입니다.
+실제 전국 수집은 장시간 실행이므로 optional이며 자동 시작하지 않습니다. `scripts/acquire_nationwide_history.py`는 기본 DRY_RUN입니다.
 
 ```bash
 # network-free plan/current local completion state

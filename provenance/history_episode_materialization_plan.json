@@ -35,5 +35,8 @@
     "schema_columns": 23,
     "window_end": "2026-09-06",
     "window_start": "2026-01-01"
-  }
+  },
+  "product_role": "OPTIONAL_ADVANCED_WORKFLOW",
+  "required_for_core_v1": false,
+  "required_for_kaggle_aggregate_release": false
 }

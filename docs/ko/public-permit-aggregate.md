@@ -1,8 +1,8 @@
-# Privacy-Minimized Public Permit Aggregate Candidate
+# Privacy-Minimized Public Permit Aggregate
 
-확인일: **2026-09-07**
+확인일: **2026-09-08**
 
-row-level `PERMIT`/WGS84 산출물은 공개하지 않고, 개인정보·연결 가능성을 줄인 **aggregate 공개 후보**만 별도 local artifact로 만들기 위한 계약입니다. 이 단계는 기술적 privacy-minimization일 뿐이며 Kaggle/public redistribution 허가를 의미하지 않습니다.
+row-level `PERMIT`/WGS84 산출물은 공개하지 않고, 개인정보·연결 가능성을 줄인 **aggregate만 공개**합니다. 이 artifact는 기술적 privacy-minimization 검증을 완료했고, `provenance/v1_release_scope.json`의 별도 release decision에서 Kaggle/public 배포가 승인되었습니다.
 
 ## 입력
 
@@ -41,7 +41,7 @@ row-level `PERMIT`/WGS84 산출물은 공개하지 않고, 개인정보·연결 
 
 grouping key는 `source + authority + source status codes + permit year + closure year`입니다. 같은 key의 `cell_count`가 **10 미만이면 해당 셀 전체를 output에서 제외**합니다.
 
-`k=10`은 이 프로젝트의 기술적 suppression threshold일 뿐이며 **법적·통계적 개인정보 안전을 보장한다고 주장하지 않습니다**. 공개 전에는 redistribution/license와 최종 release policy가 별도로 통과해야 합니다.
+`k=10`은 이 프로젝트의 기술적 suppression threshold일 뿐이며 **법적·통계적 개인정보 안전을 보장한다고 주장하지 않습니다**. 기술 검증과 최종 release-scope 승인은 서로 별도로 기록합니다.
 
 ## Local build
 
@@ -69,7 +69,7 @@ python scripts/verify_public_permit_aggregate.py
 
 verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/ZSTD, `cell_count >= 10`, released/suppressed row accounting을 확인합니다.
 
-## 현재 gate
+## 현재 release 상태
 
 - implementation + synthetic suppression/tamper tests: PASS
 - real parent plan-only validation: PASS
@@ -82,7 +82,9 @@ verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/Z
 - output: 108,019 bytes, independent verifier PASS
 - technical minimization: VERIFIED
 - row-level public release: BLOCKED
-- aggregate publication: BLOCKED
-- Kaggle redistribution: UNRESOLVED
+- aggregate publication: **APPROVED**
+- Kaggle redistribution: **APPROVED FOR THIS VERIFIED AGGREGATE**
+- row-level/precise-coordinate publication: BLOCKED
+- release decision: `provenance/v1_release_scope.json`
 
-`released candidate`는 공개 승인 의미가 아닙니다. 이 용어는 suppression rule을 통과해 local candidate 파일에 포함된 aggregate cell만 뜻합니다.
+기존 build manifest/schema 안의 candidate-time publication flag는 immutable build 당시의 gate를 기록합니다. 2026-09-08 최종 release decision이 이 **동일 hash의 검증된 aggregate artifact** 공개를 별도로 승인하며, row-level 공개 승인을 의미하지 않습니다.

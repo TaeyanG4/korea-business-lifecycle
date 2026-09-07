@@ -2,7 +2,7 @@
 
 Checked: **2026-09-07**
 
-The authority-enumeration semantics and production observation cadence are now settled for nationwide `PERMIT_STATUS_EPISODE` input. This document records the approved **MONTHLY_ANCHOR_PLUS_END** cadence and its cost/completeness limits.
+The authority-enumeration semantics and observation cadence are settled for analysts who choose nationwide `PERMIT_STATUS_EPISODE` reconstruction. This document records the reference **MONTHLY_ANCHOR_PLUS_END** cadence and its cost/completeness limits. **As of 2026-09-08 this workflow is not a prerequisite for core v1 completion or the Kaggle aggregate release.**
 
 ## Cost basis
 
@@ -61,9 +61,9 @@ Daily cadence narrows interval-censoring width; it does not create event-log sem
 
 ## Current decision
 
-`MONTHLY_HISTORY_OBSERVATION_CADENCE_APPROVED_ACQUISITION_NOT_YET_EXECUTED`
+`OPTIONAL_MONTHLY_REFERENCE_CADENCE_AVAILABLE`
 
-Before production reconstruction, these execution gates remain:
+Only if an analyst elects optional production reconstruction do these execution gates apply:
 
 1. execute the resumable **7,320 snapshot tasks** covering 10 dates × three sources × 244 authorities;
 2. retain the **400,000 actual network-attempt hard cap** per run and minimum 0.2-second request delay;
@@ -80,7 +80,7 @@ The cost model is reproducible without network access:
 python scripts/history_observation_strategy.py
 ```
 
-The nationwide acquisition is intentionally not auto-started; `scripts/acquire_nationwide_history.py` remains DRY_RUN by default.
+The nationwide acquisition is optional and intentionally not auto-started; `scripts/acquire_nationwide_history.py` remains DRY_RUN by default.
 
 ```bash
 # network-free plan/current local completion state

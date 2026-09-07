@@ -62,4 +62,4 @@ Those values are not historical row-count bounds. Deleted codes can be non-empty
 
 ## Next gate
 
-The authority code-set gate is passed. The next action is the approved resumable nationwide acquisition under the monthly cadence and 400,000-request hard cap.
+The authority code-set gate is passed and remains the rule for the optional history workflow. Nationwide acquisition is no longer a core-v1 completion gate or a prerequisite for publishing the Kaggle aggregate.

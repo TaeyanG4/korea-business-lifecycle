@@ -1,12 +1,12 @@
-# Redistribution Written-Clarification Gate
+# Optional Redistribution Written Clarification
 
-확인일: **2026-09-07**
+확인일: **2026-09-08**
 
 세 v1 행정안전부 OpenAPI 상세 페이지 모두 `이용허락범위 제한 없음`을 표시하므로 source-use metadata gate는 `PASS_METADATA_CONFIRMED`입니다. 그러나 공공데이터포털 정책은 공공데이터에 제3자 권리가 포함된 경우 권리자의 정당한 이용허락이 필요하다고 명시합니다.
 
-현재 상세 페이지에서는 이 세 source에 제3자 권리가 **없다**고 명시적으로 확정하는 문구를 확인하지 못했습니다. 따라서 공개 접근 가능성과 외부 mirror 허가는 계속 분리합니다.
+현재 상세 페이지에서는 이 세 source에 제3자 권리가 **없다**고 별도로 선언한 문구를 확인하지 못했습니다. 이 부재 자체를 제3자 권리 부재의 법적 증명으로 사용하지는 않습니다. 다만 세 source의 공식 표시가 모두 `이용허락범위 제한 없음`인 점을 최종 v1 release decision의 운영 근거로 삼아 **검증된 privacy-minimized aggregate 공개는 승인**했습니다. Row-level mirror는 계속 별도 검토 대상으로 남깁니다.
 
-## 서면으로 확인할 질문
+## 선택적으로 서면 확인할 질문
 
 1. 세 API의 `이용허락범위 제한 없음`이 Kaggle 같은 제3자 플랫폼에 row-level source record를 재배포/mirror하는 것까지 허용하는가?
 2. 이 세 데이터셋에 공공데이터포털 정책상 별도 허락이 필요한 제3자 권리가 포함되어 있는가?
@@ -21,7 +21,7 @@
 - 제공기관: 행정안전부
 - 관리부서: 지역디지털협력과
 
-자동으로 메일이나 문의를 전송하지 않습니다. 회신을 받으면 source-specific written evidence로 보관하고 그때 redistribution gate를 다시 판정합니다.
+자동으로 메일이나 문의를 전송하지 않습니다. 회신을 받으면 source-specific written evidence로 보관해 향후 row-level 또는 더 넓은 공개범위를 재검토할 수 있습니다. **현재 aggregate Kaggle 공개에는 회신이 필수가 아닙니다.**
 
 ## 준비된 문의안
 
@@ -39,8 +39,10 @@
 
 - source-use metadata: PASS
 - raw external mirror: `UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION`
-- privacy-minimized aggregate redistribution: `UNRESOLVED`
+- privacy-minimized aggregate redistribution: `APPROVED_BY_V1_RELEASE_SCOPE`
 - row-level public release: BLOCKED
-- aggregate publication: BLOCKED
+- aggregate publication: APPROVED
 - outreach performed: false
 - written response received: false
+
+최신 기계 판독 결정은 `provenance/v1_release_scope.json`이며, 기존 `provenance/redistribution_clarification_plan.json`은 당시의 보수적 문의 계획을 감사 추적용으로 보존합니다.

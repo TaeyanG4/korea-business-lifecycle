@@ -238,6 +238,9 @@ def history_observation_strategy_plan(
 
     return {
         "checked_at": "2026-09-07",
+        "product_role": "OPTIONAL_ADVANCED_WORKFLOW",
+        "required_for_core_v1": False,
+        "required_for_kaggle_aggregate_release": False,
         "scope": {
             "sources": [str(item["source_key"]) for item in summary["categories"]],
             "window_start": start.isoformat(),

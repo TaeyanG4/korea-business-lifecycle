@@ -62,4 +62,4 @@ production 비용 계획은 276 union이 아니라 date-effective **244-code dom
 
 ## 다음 gate
 
-authority code-set gate는 통과했습니다. 다음 단계는 승인된 monthly cadence와 400,000-request hard cap 아래에서 resumable nationwide acquisition을 실행하는 것입니다.
+authority code-set gate는 통과했습니다. 이 규칙은 optional history workflow를 실행할 때 그대로 사용합니다. Nationwide acquisition은 더 이상 core v1 완료조건이나 Kaggle aggregate 공개조건이 아닙니다.

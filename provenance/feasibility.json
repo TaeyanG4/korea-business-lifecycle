@@ -1,37 +1,38 @@
 {
-  "checked_at": "2026-09-07",
+  "checked_at": "2026-09-08",
   "scope": ["general_restaurants", "rest_cafes", "bakeries"],
-  "decision": "CURRENT_SNAPSHOTS_PROFILED_HISTORY_AUTH_REQUIRED",
+  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY",
   "planning": {
-    "catalog_snapshot_rows": 2751529,
-    "snapshot_rows_planning_range": [2700000, 2900000],
     "observed_snapshot_rows": 3010802,
     "observed_snapshot_bytes": 926587446,
-    "snapshot_working_storage_gb": [5, 10],
-    "three_snapshot_experiment_storage_gb": [10, 20],
-    "historical_work_initial_free_space_gb": 50,
-    "note": "Current three-category size is now directly observed. Historical row scale remains unknown because authenticated history execution has not started."
+    "canonical_permit_build_id": "permit-v1-9908225df465e2ff",
+    "wgs84_sidecar_build_id": "permit-geo-v1-c4af8799de0283bb",
+    "public_aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+    "public_aggregate_cells": 67267,
+    "history_role": "OPTIONAL_ADVANCED_WORKFLOW",
+    "history_reference_snapshot_tasks": 7320,
+    "note": "Core v1 is the verified nationwide current snapshot. Nationwide history is optional and is not a prerequisite for the aggregate Kaggle release."
   },
   "gates": {
     "authoritative_v1_sources": "PASS",
     "current_snapshot_access": "PASS",
     "current_snapshot_profile": "PASS",
     "historical_finiteness": "CONDITIONAL_PASS_PER_DATE_AND_AUTHORITY_CODE",
-    "history_service_key": "BLOCKED_USER_CREDENTIAL_REQUIRED",
-    "history_authority_code_domain": "BLOCKED_UNVERIFIED",
+    "history_service_key": "PASS_AUTHENTICATED_EXECUTION_AVAILABLE",
+    "history_authority_code_domain": "PASS_DATE_EFFECTIVE_PRE244_POST244",
     "history_event_log_completeness": "NOT_SUPPORTED_BY_DOCUMENTED_SEMANTICS",
-    "kaggle_redistribution": "BLOCKED_UNRESOLVED",
-    "privacy_publication": "BLOCKED_REVIEW",
-    "identity_semantics": "CURRENT_SNAPSHOT_UNIQUE_LONGITUDINAL_UNVERIFIED",
-    "lifecycle_semantics": "CLOSURE_DATE_ONLY_FALSIFIED_HISTORY_REQUIRED",
+    "kaggle_redistribution": "PASS_AGGREGATE_ONLY",
+    "privacy_publication": "PASS_AGGREGATE_ONLY_ROW_LEVEL_BLOCKED",
+    "identity_semantics": "MNG_NO_LINKAGE_CANDIDATE_NOT_PRIMARY_KEY",
+    "lifecycle_semantics": "REVERSIBLE_STATUS_EVIDENCE_EPISODES_OPTIONAL",
     "documented_v1_crs": "PASS",
-    "coordinate_field_meanings": "SOURCE_X_Y_FIELDS_OBSERVED_TRANSFORM_NOT_VALIDATED"
+    "coordinate_field_meanings": "PASS_CURRENT_V1_X_EASTING_Y_NORTHING_PRECISE_COORDINATES_PRIVATE"
   },
   "hard_stop_rules": {
-    "history": "If full history has no deterministic finite stopping rule, redesign to bounded history or snapshots; never implement an unbounded crawler.",
-    "redistribution": "If redistribution is prohibited, do not publish raw Kaggle data; redesign to code/provenance/fetch-from-source or separately approved aggregates.",
-    "identity": "If longitudinal identity is not defensible, redesign to permit/facility/episode or snapshot grain.",
-    "lifecycle": "If terminal states or event timing are not defensible, do not create survival labels; use status-only, interval-censored, or snapshot analyses.",
-    "crs": "If coordinate fields or CRS cannot be authoritatively tied together, do not transform or publish longitude/latitude."
+    "history": "If optional nationwide history is collected, keep the finite date-effective authority plan and never implement an unbounded crawler.",
+    "redistribution": "The v1 Kaggle release is aggregate-only; do not upload row-level PERMIT or precise-coordinate artifacts.",
+    "identity": "Do not promote MNG_NO to an official primary key or establishment identity.",
+    "lifecycle": "Do not create irreversible terminal survival labels from status 03 or closure date; optional sparse episodes must preserve censoring.",
+    "crs": "The X=easting/Y=northing interpretation is approved only for the exact current-v1 artifacts and must be revalidated for future snapshots."
   }
 }

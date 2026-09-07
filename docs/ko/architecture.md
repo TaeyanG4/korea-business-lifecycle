@@ -34,12 +34,12 @@
       ↳ production scan: completed (3,010,802 rows)
       ↳ independent verifier: passed
       ↳ candidate cells: 67,267 released / 229,928 suppressed
-      ↳ publication/redistribution: still blocked
+      ↳ Kaggle aggregate publication: approved by final v1 release scope
   → bounded PERMIT_STATUS_EPISODE tooling
       ↳ sparse explicit observations only
       ↳ max 100,000 observations/call, in-memory
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
-      ↳ production nationwide reconstruction: acquisition 완료 전 disabled
+      ↳ production nationwide reconstruction: optional advanced workflow
   → nationwide history observation cost gate
       ↳ pre-reform exact-244 current-scale planning: 30,109..30,838 requests/as-of date
       ↳ post-reform current-244-only planning: 30,151..30,838 requests/as-of date
@@ -54,15 +54,16 @@
       ↳ pre-reform policy: current 244 - new 32 + deleted 32 = exact 244
       ↳ same-date old/new union: 사용하지 않음
       ↳ approved cadence: MONTHLY_ANCHOR_PLUS_END, 10 dates, max gap 31 days
-      ↳ acquisition: 7,320 snapshot tasks, resumable, hard cap 400,000 requests/run, not executed
-      ↳ episode materializer/verifier: prepared; all 7,320 snapshots complete/unique 전까지 blocked
-  → redistribution clarification gate
-      ↳ source-use metadata: PASS
-      ↳ written source-specific questions/contact routes: prepared
-      ↳ raw/aggregate external redistribution: unresolved
+      ↳ optional acquisition reference: 7,320 snapshot tasks, resumable, hard cap 400,000 requests/run
+      ↳ episode materializer/verifier: optional; 실행 시 all 7,320 snapshots complete/unique gate 유지
+  → v1 release scope
+      ↳ core v1: current PERMIT + local WGS84 sidecar, COMPLETE
+      ↳ Kaggle/public: verified privacy-minimized aggregate only
+      ↳ row-level PERMIT / precise coordinates: private
+      ↳ written source-specific clarification: optional additional assurance
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. authority code-set은 공식 변경표를 기준으로 개편 전 `current-new+deleted` 244, 개편 후 current 244로 승인했습니다. 이는 API가 어느 code에 과거 `BASE_DATE` 응답을 반환하는지와 분리된 current-state membership 정책입니다. monthly 10-date cadence와 400,000-request fail-closed budget도 승인했지만 전국 acquisition 자체는 아직 실행하지 않았습니다. 수집 runner는 기존 complete snapshot을 재사용하며, 7,320 task가 모두 complete/unique일 때만 production episode materializer가 열립니다. redistribution은 source-use metadata PASS와 별개로 source-specific 서면 확인 전까지 외부 공개를 계속 차단합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. **2026-09-08부터 core v1은 이 current snapshot 제품으로 완료**하며, nationwide history/episode는 optional advanced workflow로 둡니다. 월별 10-date/7,320-task 계획과 episode gate는 longitudinal 분석을 선택한 경우에만 적용합니다. Kaggle에는 row-level이나 정밀좌표를 공개하지 않고, 이미 검증된 k=10 privacy-minimized aggregate만 공개합니다. 최종 범위는 `provenance/v1_release_scope.json`이 규정합니다.
 
 ## 데이터 저장 원칙
 

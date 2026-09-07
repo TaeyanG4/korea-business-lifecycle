@@ -36,6 +36,7 @@ secrets*
 **/secrets/**
 
 # Project-local real/derived runtime data. Nothing below this directory is tracked.
+# This includes partial/optional history, logs, canonical builds, and Kaggle upload staging.
 data/local/
 
 # Common bulk-data artifacts anywhere in the repository

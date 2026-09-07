@@ -2,9 +2,16 @@
   "checked_at": "2026-09-07",
   "decision": "V1_GRAIN_FROZEN_PERMIT_PARENT_WITH_REVERSIBLE_STATUS_EPISODES",
   "scope": {
-    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "sources": [
+      "general_restaurants",
+      "rest_cafes",
+      "bakeries"
+    ],
     "applies_to": "food-service v1 only",
-    "nationwide_establishment_identity_claim": false
+    "nationwide_establishment_identity_claim": false,
+    "core_v1_status": "COMPLETE",
+    "nationwide_history_required_for_core_v1": false,
+    "production_episode_required_for_core_v1": false
   },
   "selected_grains": {
     "ingestion_observation_grain": {
@@ -21,12 +28,12 @@
     "lifecycle_analysis_grain": {
       "name": "PERMIT_STATUS_EPISODE",
       "row_meaning": "one maximal observed interval for a permit during which the source status state is unchanged",
-      "role": "derived lifecycle analysis grain",
-      "status": "SELECTED",
+      "role": "optional derived lifecycle analysis grain",
+      "status": "OPTIONAL_FOR_CORE_V1",
       "schema": "schemas/permit_status_episode.v1.json",
       "schema_status": "FROZEN",
       "production_reconstruction_enabled": false,
-      "reason_reconstruction_deferred": "approved monthly nationwide history acquisition has not completed; status code 05 semantics also remain unresolved"
+      "reason_reconstruction_deferred": "nationwide history acquisition is optional for core v1; status code 05 semantics remain unresolved"
     }
   },
   "rejected_grains": [
@@ -87,10 +94,10 @@
     "episode boundaries must preserve interval censoring unless directly bracketed by dated observations",
     "active observations must remain right-censored",
     "status code 05 must remain unmapped until its semantics are verified",
-    "production episode reconstruction remains disabled until all 7320 approved monthly history snapshot tasks complete uniquely and pass preflight"
+    "if an analyst elects production nationwide episode reconstruction, require all 7320 approved monthly history snapshot tasks complete uniquely and pass preflight"
   ],
   "next_gate": {
-    "phase": "Phase 7 Publication Safety Review",
+    "phase": "Phase 7 Aggregate Publication Release",
     "permit_parent_schema": "schemas/permit_parent.v1.json",
     "permit_parent_schema_status": "FROZEN",
     "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
@@ -120,7 +127,7 @@
     "bounded_episode_reconstruction": "provenance/bounded_episode_reconstruction.json",
     "bounded_episode_reconstruction_status": "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED",
     "history_observation_strategy": "provenance/history_observation_strategy.json",
-    "history_observation_strategy_status": "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING",
+    "history_observation_strategy_status": "OPTIONAL_MONTHLY_CADENCE_AVAILABLE",
     "authority_domain_reference": "provenance/authority_domain_reference.json",
     "authority_domain_reference_status": "DATE_EFFECTIVE_PRE_244_POST_244_APPROVED",
     "history_authority_partition_findings": "provenance/history_authority_partition_findings.json",
@@ -132,11 +139,13 @@
     "history_authority_policy": "provenance/history_authority_policy.json",
     "history_authority_policy_status": "DATE_EFFECTIVE_CURRENT_STATE_AUTHORITY_POLICY_APPROVED",
     "history_nationwide_acquisition_plan": "provenance/history_nationwide_acquisition_plan.json",
-    "history_nationwide_acquisition_status": "MONTHLY_APPROVED_NOT_EXECUTED",
+    "history_nationwide_acquisition_status": "OPTIONAL_NOT_REQUIRED_FOR_V1",
     "history_episode_materialization_plan": "provenance/history_episode_materialization_plan.json",
-    "history_episode_materialization_status": "PREPARED_WAITING_FOR_COMPLETE_HISTORY",
+    "history_episode_materialization_status": "OPTIONAL_REQUIRES_COMPLETE_HISTORY",
     "redistribution_clarification_plan": "provenance/redistribution_clarification_plan.json",
-    "redistribution_clarification_status": "PREPARED_WRITTEN_RESPONSE_PENDING",
-    "goal": "keep verified local artifacts private; execute and verify the approved monthly nationwide history acquisition, then materialize and verify production status episodes; obtain written source-specific redistribution clarification separately before public release"
+    "redistribution_clarification_status": "OPTIONAL_ADDITIONAL_CONFIRMATION",
+    "goal": "publish the verified privacy-minimized aggregate on Kaggle while keeping row-level and precise-coordinate artifacts private; retain history/episode reconstruction as an optional advanced workflow",
+    "v1_release_scope": "provenance/v1_release_scope.json",
+    "v1_release_scope_status": "LOCAL_V1_CORE_COMPLETE_AGGREGATE_KAGGLE_APPROVED"
   }
 }

@@ -165,5 +165,8 @@
     "exact_transition_timestamp_claimed": false,
     "reopening_vs_correction_resolved": false,
     "status_code_05_semantics_resolved": false
-  }
+  },
+  "product_role": "OPTIONAL_ADVANCED_WORKFLOW",
+  "required_for_core_v1": false,
+  "required_for_kaggle_aggregate_release": false
 }
