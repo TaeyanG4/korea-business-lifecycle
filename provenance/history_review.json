@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_EXECUTION_BLOCKED_BY_SERVICE_KEY",
+  "common_contract": {
+    "lower_base_date": "2026-01-01",
+    "upper_base_date_rule": "query date minus one day",
+    "semantics": "as-of-date state query",
+    "event_log_claim": false,
+    "required_parameters": [
+      "serviceKey",
+      "pageNo",
+      "numOfRows",
+      "cond[BASE_DATE::EQ]",
+      "cond[OPN_ATMY_GRP_CD::EQ]"
+    ],
+    "max_num_of_rows": 100,
+    "response_total_count": true,
+    "authentication": "data.go.kr serviceKey required",
+    "unauthenticated_probe": "HTTP 401",
+    "nationwide_completeness_blocker": "complete authoritative OPN_ATMY_GRP_CD domain must be verified before nationwide enumeration"
+  },
+  "categories": [
+    {
+      "source_key": "general_restaurants",
+      "official_page": "https://www.data.go.kr/data/15154916/openapi.do",
+      "history_url": "https://apis.data.go.kr/1741000/general_restaurants/history"
+    },
+    {
+      "source_key": "rest_cafes",
+      "official_page": "https://www.data.go.kr/data/15154921/openapi.do",
+      "history_url": "https://apis.data.go.kr/1741000/rest_cafes/history"
+    },
+    {
+      "source_key": "bakeries",
+      "official_page": "https://www.data.go.kr/data/15155252/openapi.do",
+      "history_url": "https://apis.data.go.kr/1741000/bakeries/history"
+    }
+  ],
+  "hard_limit": "This evidence supports finite historical state snapshots only. It does not prove a lossless event/change log or complete recovery of intermediate lifecycle transitions."
+}

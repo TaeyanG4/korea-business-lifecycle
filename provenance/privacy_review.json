@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "PUBLIC_FIELD_ALLOWLIST_BLOCKED_PENDING_SCHEMA_PROFILE",
+  "decision": "FIELD_INVENTORY_COMPLETE_PUBLIC_ALLOWLIST_BLOCKED",
   "scope": ["general_restaurants", "rest_cafes", "bakeries"],
   "known_from_official_descriptions": [
     {
@@ -26,7 +26,18 @@
     "free_text",
     "permit_holder_identifier"
   ],
-  "field_inventory_complete": false,
+  "observed_sensitive_or_linkable_fields": [
+    "관리번호",
+    "사업장명",
+    "전화번호",
+    "도로명주소",
+    "지번주소",
+    "홈페이지",
+    "좌표정보(X)",
+    "좌표정보(Y)"
+  ],
+  "observed_common_schema_columns": 39,
+  "field_inventory_complete": true,
   "public_allowlist_approved": false,
-  "rule": "No row-level public build may be generated until an observed national schema is profiled and every intended public field is explicitly allowlisted."
+  "rule": "The v1 current schema is now inventoried, but no row-level public build may be generated until every intended public field is explicitly allowlisted and redistribution is cleared."
 }

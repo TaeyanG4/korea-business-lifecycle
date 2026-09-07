@@ -1,8 +1,12 @@
 from korea_business_lifecycle.provenance import (
+    load_history_review,
     load_license_review,
+    load_observed_snapshot_summary,
     load_privacy_review,
     load_source_registry,
+    validate_history_review,
     validate_license_review,
+    validate_observed_snapshot_summary,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -50,3 +54,20 @@ def test_privacy_review_keeps_public_allowlist_blocked() -> None:
     review = load_privacy_review()
     assert validate_privacy_review(review) == []
     assert review["public_allowlist_approved"] is False
+    assert review["field_inventory_complete"] is True
+
+
+def test_history_review_is_finite_but_not_an_event_log() -> None:
+    review = load_history_review()
+    assert validate_history_review(review) == []
+    assert review["common_contract"]["lower_base_date"] == "2026-01-01"
+    assert review["common_contract"]["max_num_of_rows"] == 100
+    assert review["common_contract"]["event_log_claim"] is False
+
+
+def test_observed_snapshot_summary_matches_empirical_v1_scale() -> None:
+    summary = load_observed_snapshot_summary()
+    assert validate_observed_snapshot_summary(summary) == []
+    assert summary["totals"]["rows"] == 3_010_802
+    assert summary["totals"]["bytes"] == 926_587_446
+    assert summary["totals"]["cross_category_management_number_overlap"] == 0

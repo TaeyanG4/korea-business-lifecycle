@@ -1,27 +1,31 @@
 {
   "checked_at": "2026-09-07",
   "scope": ["general_restaurants", "rest_cafes", "bakeries"],
-  "decision": "FEASIBLE_FOR_BOUNDED_PROFILING_ONLY",
+  "decision": "CURRENT_SNAPSHOTS_PROFILED_HISTORY_AUTH_REQUIRED",
   "planning": {
     "catalog_snapshot_rows": 2751529,
     "snapshot_rows_planning_range": [2700000, 2900000],
-    "estimated_uncompressed_snapshot_gb": [0.83, 2.48],
-    "estimate_assumption_bytes_per_row": [300, 900],
+    "observed_snapshot_rows": 3010802,
+    "observed_snapshot_bytes": 926587446,
     "snapshot_working_storage_gb": [5, 10],
     "three_snapshot_experiment_storage_gb": [10, 20],
     "historical_work_initial_free_space_gb": 50,
-    "note": "Byte/storage figures are engineering assumptions until an approved retrieval measures actual bytes. Historical row scale is unknown."
+    "note": "Current three-category size is now directly observed. Historical row scale remains unknown because authenticated history execution has not started."
   },
   "gates": {
     "authoritative_v1_sources": "PASS",
     "current_snapshot_access": "PASS",
-    "historical_finiteness": "BLOCKED_UNVERIFIED",
+    "current_snapshot_profile": "PASS",
+    "historical_finiteness": "CONDITIONAL_PASS_PER_DATE_AND_AUTHORITY_CODE",
+    "history_service_key": "BLOCKED_USER_CREDENTIAL_REQUIRED",
+    "history_authority_code_domain": "BLOCKED_UNVERIFIED",
+    "history_event_log_completeness": "NOT_SUPPORTED_BY_DOCUMENTED_SEMANTICS",
     "kaggle_redistribution": "BLOCKED_UNRESOLVED",
     "privacy_publication": "BLOCKED_REVIEW",
-    "identity_semantics": "NOT_STARTED",
-    "lifecycle_semantics": "NOT_STARTED",
+    "identity_semantics": "CURRENT_SNAPSHOT_UNIQUE_LONGITUDINAL_UNVERIFIED",
+    "lifecycle_semantics": "CLOSURE_DATE_ONLY_FALSIFIED_HISTORY_REQUIRED",
     "documented_v1_crs": "PASS",
-    "coordinate_field_meanings": "BLOCKED_UNVERIFIED"
+    "coordinate_field_meanings": "SOURCE_X_Y_FIELDS_OBSERVED_TRANSFORM_NOT_VALIDATED"
   },
   "hard_stop_rules": {
     "history": "If full history has no deterministic finite stopping rule, redesign to bounded history or snapshots; never implement an unbounded crawler.",

@@ -21,6 +21,14 @@ def load_privacy_review() -> dict[str, Any]:
     return load_json("provenance/privacy_review.json")
 
 
+def load_history_review() -> dict[str, Any]:
+    return load_json("provenance/history_review.json")
+
+
+def load_observed_snapshot_summary() -> dict[str, Any]:
+    return load_json("provenance/observed_snapshot_summary.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -65,8 +73,34 @@ def validate_privacy_review(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if set(review.get("scope", [])) != V1_SOURCE_KEYS:
         errors.append("privacy-review scope must exactly match the three v1 sources")
-    if review.get("field_inventory_complete") is not False:
-        errors.append("field inventory cannot be complete before real schema profiling")
+    if review.get("field_inventory_complete") is not True:
+        errors.append("field inventory must reflect completed current snapshot profiling")
     if review.get("public_allowlist_approved") is not False:
         errors.append("public allowlist cannot be approved before privacy profiling")
+    return errors
+
+
+def validate_history_review(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("common_contract", {}).get("event_log_claim") is not False:
+        errors.append("history must not be represented as a lossless event log")
+    if review.get("common_contract", {}).get("authentication") != "data.go.kr serviceKey required":
+        errors.append("history authentication requirement must remain explicit")
+    if {item.get("source_key") for item in review.get("categories", [])} != V1_SOURCE_KEYS:
+        errors.append("history-review scope must exactly match v1 sources")
+    return errors
+
+
+def validate_observed_snapshot_summary(summary: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    totals = summary.get("totals", {})
+    categories = summary.get("categories", [])
+    if {item.get("source_key") for item in categories} != V1_SOURCE_KEYS:
+        errors.append("observed snapshot summary must exactly match v1 sources")
+    if totals.get("rows") != sum(item.get("rows", 0) for item in categories):
+        errors.append("observed total rows must equal category row totals")
+    if any(item.get("management_number_distinct") != item.get("rows") for item in categories):
+        errors.append("current-snapshot management-number uniqueness observation changed")
+    if "not declared" not in summary.get("interpretation", {}).get("identity", ""):
+        errors.append("observed uniqueness must not be upgraded to a declared primary key")
     return errors
