@@ -10,3 +10,5 @@
 - X/Y는 결측쌍·부분결측·숫자 parse 실패·0/음수만 검사하고 CRS transform은 수행하지 않습니다.
 
 이 audit만으로 relocation, category change, reopening, history ordering, longitudinal identifier stability를 판단하지 않습니다. 해당 항목은 history API가 필요합니다.
+
+`audit_cross_category.py`는 현재 snapshot들 사이에서 `관리번호`와 `(개방자치단체코드, 관리번호)`가 여러 카테고리에 동시에 등장하는지만 집계합니다. 겹치는 복합키에 대해 상호+주소가 동일한지 내부 해시로만 비교하며 값이나 해시는 출력하지 않습니다. 이는 category transition의 증거가 아니라 current-record overlap 진단입니다.

@@ -10,3 +10,5 @@
 - It checks X/Y pair completeness, numeric parse failures, zeros, and negative values without performing a CRS transform.
 
 This audit cannot establish relocation, category changes, reopening, history ordering, or longitudinal identifier stability. Those require history access.
+
+`audit_cross_category.py` measures whether `관리번호` or `(개방자치단체코드, 관리번호)` appear simultaneously in multiple current category snapshots. For overlapping composite keys it compares business-name/address context only through an internal temporary hash and emits neither values nor hashes. This is a current-record overlap diagnostic, not evidence of a category transition.
