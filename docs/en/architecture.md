@@ -40,9 +40,14 @@ official source evidence
       ↳ max 100,000 observations/call, in memory
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
       ↳ nationwide production reconstruction: disabled
+  → nationwide history observation cost gate
+      ↳ current-scale requests/as-of date: 30,109..30,796
+      ↳ daily 249-date scenario: 7,497,141..7,668,204 requests
+      ↳ authoritative authority domain: unresolved
+      ↳ approved cadence: none
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified across 3,010,802 rows. It excludes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10. A bounded sparse-observation episode reconstructor is also implemented, but it is local tooling capped at 100,000 observations per call. Without a nationwide history-observation strategy, production reconstruction and public release remain blocked.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified. A bounded sparse-observation episode reconstructor and a network-free nationwide history cost model are implemented as well. Current scale alone implies more than 30,000 requests per as-of date and roughly 7.50–7.67 million requests for the 249-date daily scenario. Because the authoritative authority domain and cadence are not approved, production reconstruction and public release remain blocked.
 
 ## Data storage rule
 

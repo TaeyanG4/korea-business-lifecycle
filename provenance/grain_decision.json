@@ -119,6 +119,8 @@
     "public_permit_aggregate_status": "COMPLETED_PASS_VERIFIED_NOT_PUBLICATION_APPROVED",
     "bounded_episode_reconstruction": "provenance/bounded_episode_reconstruction.json",
     "bounded_episode_reconstruction_status": "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED",
-    "goal": "keep the verified aggregate candidate local while resolving redistribution; bounded episode tooling is available for reviewed windows but nationwide production reconstruction remains disabled"
+    "history_observation_strategy": "provenance/history_observation_strategy.json",
+    "history_observation_strategy_status": "COST_BOUNDED_NO_CADENCE_APPROVED",
+    "goal": "keep the verified aggregate candidate local while resolving redistribution; bounded episode tooling is available, but authoritative authority-domain verification and an explicit observation-cadence decision are required before nationwide production reconstruction"
   }
 }

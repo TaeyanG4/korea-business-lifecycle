@@ -105,6 +105,10 @@ def load_bounded_episode_reconstruction() -> dict[str, Any]:
     return load_json("provenance/bounded_episode_reconstruction.json")
 
 
+def load_history_observation_strategy() -> dict[str, Any]:
+    return load_json("provenance/history_observation_strategy.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -544,6 +548,10 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED"
     ):
         errors.append("bounded episode reconstruction status changed")
+    if next_gate.get("history_observation_strategy") != "provenance/history_observation_strategy.json":
+        errors.append("history observation strategy evidence reference changed")
+    if next_gate.get("history_observation_strategy_status") != "COST_BOUNDED_NO_CADENCE_APPROVED":
+        errors.append("history observation strategy status changed")
     return errors
 
 
@@ -625,6 +633,97 @@ def validate_bounded_episode_reconstruction(review: dict[str, Any]) -> list[str]
         errors.append("bounded episode reconstruction function reference changed")
     if implementation.get("default_max_bounded_observations") != 100_000:
         errors.append("bounded episode reconstruction default cap changed")
+    return errors
+
+
+def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != (
+        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_COST_AND_COMPLETENESS_REVIEW_REQUIRED"
+    ):
+        errors.append("history observation strategy decision changed")
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("history observation strategy scope must exactly match v1 sources")
+    if scope.get("window_start") != "2026-01-01" or scope.get("window_end") != "2026-09-06":
+        errors.append("history observation strategy window changed")
+    if scope.get("calendar_days_inclusive") != 249:
+        errors.append("history observation strategy calendar length changed")
+    for key in ("network_access_performed", "production_episode_reconstruction_enabled"):
+        if scope.get(key) is not False:
+            errors.append(f"history observation strategy must keep {key}=false")
+
+    paging = review.get("paging_basis", {})
+    expected_paging = {
+        "current_rows_total": 3_010_802,
+        "observed_authority_count": 230,
+        "authority_domain_authoritatively_complete": False,
+        "page_size": 100,
+        "request_lower_bound_per_asof_date": 30_109,
+        "request_upper_bound_per_asof_date": 30_796,
+        "cost_basis": "CURRENT_ROW_SCALE_MATHEMATICAL_PAGE_BOUNDS_NOT_HISTORICAL_ROW_COUNT_FORECAST",
+    }
+    for key, expected in expected_paging.items():
+        if paging.get(key) != expected:
+            errors.append(f"history observation paging basis {key} changed")
+    per_source = paging.get("per_source", [])
+    expected_sources = {
+        "general_restaurants": (2_295_369, 22_954, 23_183),
+        "rest_cafes": (645_952, 6_460, 6_689),
+        "bakeries": (69_481, 695, 924),
+    }
+    if {item.get("source_key") for item in per_source} != V1_SOURCE_KEYS or len(per_source) != 3:
+        errors.append("history observation per-source paging scope changed")
+    for item in per_source:
+        source_key = item.get("source_key")
+        expected = expected_sources.get(source_key)
+        observed = (
+            item.get("current_rows"),
+            item.get("request_lower_bound_per_asof_date"),
+            item.get("request_upper_bound_per_asof_date"),
+        )
+        if expected is not None and observed != expected:
+            errors.append(f"{source_key}: history observation request bounds changed")
+
+    scenarios = {item.get("name"): item for item in review.get("scenarios", [])}
+    expected_scenarios = {
+        "ENDPOINTS_ONLY": (2, 248, 60_218, 61_592),
+        "MONTHLY_ANCHOR_PLUS_END": (10, 31, 301_090, 307_960),
+        "WEEKLY_7D_PLUS_END": (37, 7, 1_114_033, 1_139_452),
+        "DAILY": (249, 1, 7_497_141, 7_668_204),
+    }
+    if set(scenarios) != set(expected_scenarios):
+        errors.append("history observation scenario set changed")
+    for name, expected in expected_scenarios.items():
+        item = scenarios.get(name, {})
+        observed = (
+            item.get("observation_dates"),
+            item.get("maximum_gap_days"),
+            item.get("request_lower_bound"),
+            item.get("request_upper_bound"),
+        )
+        if observed != expected:
+            errors.append(f"{name}: history observation scenario changed")
+        if item.get("approved_for_production") is not False:
+            errors.append(f"{name}: history observation scenario must remain unapproved")
+
+    limits = review.get("semantic_limits", {})
+    for key in (
+        "as_of_snapshots_are_lossless_event_log",
+        "daily_sampling_proves_no_multiple_intraday_transitions",
+        "exact_transition_timestamp_claimed",
+        "status_code_05_semantics_resolved",
+        "reopening_vs_correction_resolved",
+    ):
+        if limits.get(key) is not False:
+            errors.append(f"history observation semantic limit must keep {key}=false")
+    implementation = review.get("implementation", {})
+    if implementation.get("module") != "src/korea_business_lifecycle/history_observation_strategy.py":
+        errors.append("history observation strategy module reference changed")
+    if implementation.get("script") != "scripts/history_observation_strategy.py":
+        errors.append("history observation strategy script reference changed")
+    if implementation.get("network_required") is not False:
+        errors.append("history observation strategy must remain network-free")
     return errors
 
 

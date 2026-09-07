@@ -51,6 +51,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Canonical PERMIT parent schema](docs/en/canonical-permit-schema.md)
 - [Canonical PERMIT_STATUS_EPISODE schema](docs/en/canonical-episode-schema.md)
 - [Bounded PERMIT_STATUS_EPISODE reconstruction](docs/en/bounded-episode-reconstruction.md)
+- [Nationwide history observation strategy cost gate](docs/en/history-observation-strategy.md)
 - [Canonical PERMIT transformer](docs/en/canonical-permit-transformer.md)
 - [Canonical PERMIT bounded real-data compatibility](docs/en/canonical-permit-compatibility.md)
 - [Canonical PERMIT full-snapshot dry run](docs/en/canonical-permit-full-dry-run.md)

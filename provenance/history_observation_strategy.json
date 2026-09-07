@@ -1,0 +1,89 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_COST_AND_COMPLETENESS_REVIEW_REQUIRED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "window_start": "2026-01-01",
+    "window_end": "2026-09-06",
+    "calendar_days_inclusive": 249,
+    "network_access_performed": false,
+    "production_episode_reconstruction_enabled": false
+  },
+  "paging_basis": {
+    "current_rows_total": 3010802,
+    "observed_authority_count": 230,
+    "authority_domain_authoritatively_complete": false,
+    "page_size": 100,
+    "request_lower_bound_per_asof_date": 30109,
+    "request_upper_bound_per_asof_date": 30796,
+    "cost_basis": "CURRENT_ROW_SCALE_MATHEMATICAL_PAGE_BOUNDS_NOT_HISTORICAL_ROW_COUNT_FORECAST",
+    "per_source": [
+      {
+        "source_key": "general_restaurants",
+        "current_rows": 2295369,
+        "request_lower_bound_per_asof_date": 22954,
+        "request_upper_bound_per_asof_date": 23183
+      },
+      {
+        "source_key": "rest_cafes",
+        "current_rows": 645952,
+        "request_lower_bound_per_asof_date": 6460,
+        "request_upper_bound_per_asof_date": 6689
+      },
+      {
+        "source_key": "bakeries",
+        "current_rows": 69481,
+        "request_lower_bound_per_asof_date": 695,
+        "request_upper_bound_per_asof_date": 924
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "name": "ENDPOINTS_ONLY",
+      "observation_dates": 2,
+      "maximum_gap_days": 248,
+      "request_lower_bound": 60218,
+      "request_upper_bound": 61592,
+      "approved_for_production": false
+    },
+    {
+      "name": "MONTHLY_ANCHOR_PLUS_END",
+      "observation_dates": 10,
+      "maximum_gap_days": 31,
+      "request_lower_bound": 301090,
+      "request_upper_bound": 307960,
+      "approved_for_production": false
+    },
+    {
+      "name": "WEEKLY_7D_PLUS_END",
+      "observation_dates": 37,
+      "maximum_gap_days": 7,
+      "request_lower_bound": 1114033,
+      "request_upper_bound": 1139452,
+      "approved_for_production": false
+    },
+    {
+      "name": "DAILY",
+      "observation_dates": 249,
+      "maximum_gap_days": 1,
+      "request_lower_bound": 7497141,
+      "request_upper_bound": 7668204,
+      "approved_for_production": false
+    }
+  ],
+  "semantic_limits": {
+    "as_of_snapshots_are_lossless_event_log": false,
+    "daily_sampling_proves_no_multiple_intraday_transitions": false,
+    "exact_transition_timestamp_claimed": false,
+    "status_code_05_semantics_resolved": false,
+    "reopening_vs_correction_resolved": false
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/history_observation_strategy.py",
+    "script": "scripts/history_observation_strategy.py",
+    "test_module": "tests/test_history_observation_strategy.py",
+    "network_required": false
+  },
+  "next_gate": "verify an authoritative nationwide authority-code domain and make an explicit cadence/cost decision before any nationwide acquisition or production episode reconstruction"
+}

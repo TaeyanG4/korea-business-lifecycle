@@ -9,6 +9,7 @@ from .provenance import (
     load_geospatial_full_axis,
     load_geospatial_full_axis_plan,
     load_grain_decision,
+    load_history_observation_strategy,
     load_license_review,
     load_permit_parent_full_dry_run,
     load_permit_parent_materialization,
@@ -33,6 +34,7 @@ def compute_release_readiness() -> dict[str, Any]:
     public_aggregate = load_public_permit_aggregate_plan()
     public_aggregate_result = load_public_permit_aggregate()
     bounded_episode = load_bounded_episode_reconstruction()
+    history_strategy = load_history_observation_strategy()
     grain = load_grain_decision()
     privacy = load_privacy_review()
     license_review = load_license_review()
@@ -115,6 +117,26 @@ def compute_release_readiness() -> dict[str, Any]:
                     "maximum_observations_per_call"
                 ],
                 "bounded_reconstructor_in_memory_only": bounded_episode["scope"]["bounded_in_memory_only"],
+                "history_observation_strategy": "COST_BOUNDED_NO_CADENCE_APPROVED",
+                "history_authority_domain_authoritatively_complete": history_strategy["paging_basis"][
+                    "authority_domain_authoritatively_complete"
+                ],
+                "history_requests_per_asof_date_lower_bound": history_strategy["paging_basis"][
+                    "request_lower_bound_per_asof_date"
+                ],
+                "history_requests_per_asof_date_upper_bound": history_strategy["paging_basis"][
+                    "request_upper_bound_per_asof_date"
+                ],
+                "daily_window_request_lower_bound": next(
+                    item["request_lower_bound"]
+                    for item in history_strategy["scenarios"]
+                    if item["name"] == "DAILY"
+                ),
+                "daily_window_request_upper_bound": next(
+                    item["request_upper_bound"]
+                    for item in history_strategy["scenarios"]
+                    if item["name"] == "DAILY"
+                ),
                 "production_reconstruction_enabled": episode["production_reconstruction_enabled"],
                 "status_code_05_semantics_resolved": semantics["status_code_05_semantics_resolved"],
                 "reopening_vs_correction_resolved": semantics["reopening_vs_correction_resolved"],

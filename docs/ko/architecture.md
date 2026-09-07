@@ -40,9 +40,14 @@
       ↳ max 100,000 observations/call, in-memory
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
       ↳ production nationwide reconstruction: disabled
+  → nationwide history observation cost gate
+      ↳ current-scale requests/as-of date: 30,109..30,796
+      ↳ daily 249-date scenario: 7,497,141..7,668,204 requests
+      ↳ authoritative authority domain: unresolved
+      ↳ approved cadence: none
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. business/address/identifier/precise-coordinate는 제외하고 exact date는 연도로만 축약했으며 k=10 미만 셀은 suppress했습니다. 추가로 bounded sparse-observation episode reconstructor를 구현했지만 이는 100,000-observation cap의 local tooling일 뿐입니다. 전국 history observation 전략이 없으므로 production reconstruction과 public release는 계속 차단합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. 추가로 bounded sparse-observation episode reconstructor와 network-free nationwide history cost model을 구현했습니다. current scale만으로도 as-of 한 날짜에 30천 건 이상, 249일 daily scenario에는 약 750만~767만 requests가 필요합니다. authoritative authority domain과 cadence가 승인되지 않았으므로 production reconstruction과 public release는 계속 차단합니다.
 
 ## 데이터 저장 원칙
 

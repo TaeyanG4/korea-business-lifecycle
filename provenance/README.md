@@ -23,6 +23,7 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `public_permit_aggregate_plan.json`: local-only privacy-minimized aggregate candidate contract with k=10 cell suppression, now marked completed-pass-verified.
 - `public_permit_aggregate.json`: aggregate-only evidence for the verified local candidate: 3,010,802 source rows scanned, 67,267 released candidate cells, 229,928 suppressed cells, no row-level values tracked; publication remains unapproved and redistribution unresolved.
 - `bounded_episode_reconstruction.json`: deterministic bounded sparse-observation episode-reconstruction contract; synthetic validation is complete while nationwide production reconstruction remains disabled.
+- `history_observation_strategy.json`: network-free current-scale request bounds for endpoints/monthly/weekly/daily nationwide as-of scenarios; no cadence is approved and authority-domain completeness remains unresolved.
 - `release_readiness.json`: current product-track gate summary derived from the evidence above; local PERMIT, WGS84, and the privacy-minimized aggregate candidate are completed/verified, while lifecycle/publication gates remain separately blocked.
 - `feasibility.json`: current project gate state.
 

@@ -6,6 +6,7 @@ from korea_business_lifecycle.provenance import (
     load_geospatial_axis_probe,
     load_geospatial_full_axis,
     load_geospatial_full_axis_plan,
+    load_history_observation_strategy,
     load_history_review,
     load_history_sample_plan,
     load_reverse_transition_probe_plan,
@@ -34,6 +35,7 @@ from korea_business_lifecycle.provenance import (
     validate_geospatial_axis_probe,
     validate_geospatial_full_axis,
     validate_geospatial_full_axis_plan,
+    validate_history_observation_strategy,
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_permit_parent_compatibility,
@@ -371,3 +373,16 @@ def test_bounded_episode_reconstructor_is_validated_but_production_remains_disab
     assert review["episode_contract"]["last_episode_end_censoring"] == "RIGHT_CENSORED"
     assert review["semantic_safety"]["status_code_03_irreversible"] is False
     assert review["semantic_safety"]["status_code_05_semantics_resolved"] is False
+
+
+def test_history_observation_strategy_quantifies_cost_without_approving_nationwide_cadence() -> None:
+    review = load_history_observation_strategy()
+    assert validate_history_observation_strategy(review) == []
+    assert review["paging_basis"]["request_lower_bound_per_asof_date"] == 30_109
+    assert review["paging_basis"]["request_upper_bound_per_asof_date"] == 30_796
+    assert review["paging_basis"]["authority_domain_authoritatively_complete"] is False
+    daily = next(item for item in review["scenarios"] if item["name"] == "DAILY")
+    assert daily["request_lower_bound"] == 7_497_141
+    assert daily["request_upper_bound"] == 7_668_204
+    assert daily["approved_for_production"] is False
+    assert review["scope"]["production_episode_reconstruction_enabled"] is False

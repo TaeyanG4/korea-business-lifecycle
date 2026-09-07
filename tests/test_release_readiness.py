@@ -60,6 +60,14 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     )
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_max_observations"] == 100_000
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_in_memory_only"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_observation_strategy"] == (
+        "COST_BOUNDED_NO_CADENCE_APPROVED"
+    )
+    assert readiness["tracks"]["lifecycle_episode"]["history_authority_domain_authoritatively_complete"] is False
+    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_lower_bound"] == 30_109
+    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_upper_bound"] == 30_796
+    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_lower_bound"] == 7_497_141
+    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_upper_bound"] == 7_668_204
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
     assert readiness["tracks"]["public_kaggle"]["status"] == "BLOCKED"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False
