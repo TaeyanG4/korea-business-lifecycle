@@ -17,6 +17,12 @@
     "response_total_count": true,
     "authentication": "data.go.kr serviceKey required",
     "unauthenticated_probe": "HTTP 401",
+    "observed_current_authority_code_domain": {
+      "distinct_count": 230,
+      "format": "7-digit numeric strings",
+      "identical_across_three_current_snapshots": true,
+      "authoritative_completeness": false
+    },
     "nationwide_completeness_blocker": "complete authoritative OPN_ATMY_GRP_CD domain must be verified before nationwide enumeration"
   },
   "categories": [
