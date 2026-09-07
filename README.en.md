@@ -34,6 +34,10 @@ pytest -v
 
 Tests are offline and use synthetic fixtures only.
 
+## Current external authorization required
+
+Current-snapshot acquisition and profiling are complete. The next history verification step requires a **data.go.kr Decoding serviceKey** authorized for the v1 APIs. Never commit the real key or place it in a tracked `.env`; supply it only through the local `KBL_DATA_GO_KR_SERVICE_KEY` environment variable. `.env.example` contains the variable name only.
+
 ## Documentation
 
 - [Architecture](docs/en/architecture.md)

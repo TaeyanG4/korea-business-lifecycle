@@ -34,6 +34,10 @@ pytest -v
 
 테스트는 네트워크 접근을 차단하며 합성 fixture만 사용합니다.
 
+## 현재 필요한 외부 권한
+
+current snapshot 취득/프로파일링은 완료되었습니다. 다음 history 검증에는 공공데이터포털에서 발급된 **Decoding serviceKey**가 필요합니다. 실제 키는 Git이나 `.env` 파일에 커밋하지 말고 로컬 환경변수 `KBL_DATA_GO_KR_SERVICE_KEY`로만 전달합니다. `.env.example`에는 변수명만 있습니다.
+
 ## 문서
 
 - [아키텍처](docs/ko/architecture.md)

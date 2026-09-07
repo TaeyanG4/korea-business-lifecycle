@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 
-from korea_business_lifecycle.history_probe import probe_history
+from korea_business_lifecycle.history_probe import HistoryProbeError, probe_history
 from korea_business_lifecycle.provenance import V1_SOURCE_KEYS
 
 
@@ -24,13 +25,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    result = probe_history(
-        args.source_key,
-        base_date=args.base_date,
-        authority_code=args.authority_code,
-        num_rows=args.num_rows,
-        timeout_seconds=args.timeout_seconds,
-    )
+    try:
+        result = probe_history(
+            args.source_key,
+            base_date=args.base_date,
+            authority_code=args.authority_code,
+            num_rows=args.num_rows,
+            timeout_seconds=args.timeout_seconds,
+        )
+    except HistoryProbeError as exc:
+        print(f"history probe blocked: {exc}", file=sys.stderr)
+        return 2
     print(json.dumps(result.as_dict(), ensure_ascii=False, indent=2))
     return 0
 
