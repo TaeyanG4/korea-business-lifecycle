@@ -59,6 +59,12 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [5개 자치단체 History 표본 확장 결과](docs/ko/expanded-history-findings.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)
 
+현재 제품별 gate 상태는 다음 aggregate-only 명령으로 확인할 수 있습니다.
+
+```bash
+python scripts/release_readiness.py
+```
+
 ## 라이선스
 
 프로젝트 코드 및 데이터 재배포 라이선스는 아직 확정하지 않았습니다. upstream 페이지의 `이용허락범위 제한 없음` 표시는 중요한 증거이지만, 제3자 권리 및 Kaggle 원자료 재배포 가능성 검토가 끝나기 전에는 재배포 허가로 간주하지 않습니다.

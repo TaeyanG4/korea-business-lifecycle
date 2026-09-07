@@ -59,6 +59,12 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)
 
+Current product-track gates are available as aggregate-only JSON:
+
+```bash
+python scripts/release_readiness.py
+```
+
 ## License
 
 The project code license and any dataset redistribution license are not yet finalized. The upstream `no restriction on permitted use` label is evidence to review, not an automatic grant to mirror source records on Kaggle.

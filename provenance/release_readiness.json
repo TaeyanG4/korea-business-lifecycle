@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "LOCAL_PERMIT_BUILD_READY_PUBLICATION_AND_DERIVED_PRODUCTS_BLOCKED",
+  "tracks": {
+    "local_permit_parent": {
+      "status": "READY_FOR_USER_EXECUTION",
+      "full_snapshot_transform_validation": "PASS_3010802_ROWS",
+      "materializer": "IMPLEMENTED_TESTED_NOT_EXECUTED",
+      "independent_build_verifier": "IMPLEMENTED_TESTED",
+      "expected_build_id": "permit-v1-9908225df465e2ff",
+      "public_release_implied": false
+    },
+    "geospatial_derivation": {
+      "status": "READY_FOR_FULL_AXIS_QA_USER_EXECUTION",
+      "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "full_axis_validator": "IMPLEMENTED_NOT_EXECUTED",
+      "coordinate_axis_order_verified_nationwide": false,
+      "wgs84_generation_approved": false
+    },
+    "lifecycle_episode": {
+      "status": "BLOCKED_PRODUCTION_RECONSTRUCTION",
+      "schema": "FROZEN",
+      "production_reconstruction_enabled": false,
+      "status_code_05_semantics_resolved": false,
+      "reopening_vs_correction_resolved": false,
+      "nationwide_lossless_event_history_available": false
+    },
+    "public_kaggle": {
+      "status": "BLOCKED",
+      "privacy_public_allowlist_approved": false,
+      "kaggle_redistribution": "UNRESOLVED",
+      "row_level_public_build_allowed": false,
+      "local_materialization_completion_does_not_change_publication_status": true
+    }
+  },
+  "next_long_local_actions": [
+    {
+      "priority": 1,
+      "name": "materialize_permit_parent",
+      "command": "python scripts/materialize_permit_parent.py --execute",
+      "follow_up": "python scripts/verify_permit_parent_build.py"
+    },
+    {
+      "priority": 2,
+      "name": "validate_full_coordinate_axis",
+      "command": "python scripts/validate_full_coordinate_axis.py --execute",
+      "follow_up": "review aggregate result before changing schema axis metadata or enabling WGS84"
+    }
+  ],
+  "hard_blocks": [
+    "do not publish row-level data until privacy allowlist and redistribution review pass",
+    "do not generate WGS84 columns until full coordinate-axis QA result is reviewed and transformation QA is approved",
+    "do not reconstruct production lifecycle episodes until the explicit history-observation strategy is approved; status 05 remains unmapped",
+    "do not declare MNG_NO an official source primary key"
+  ]
+}
