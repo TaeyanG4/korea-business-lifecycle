@@ -69,4 +69,4 @@ python scripts/release_readiness.py
 
 ## License
 
-The project code license and any dataset redistribution license are not yet finalized. The upstream `no restriction on permitted use` label is evidence to review, not an automatic grant to mirror source records on Kaggle.
+The project code license and dataset redistribution policy are not yet finalized. The 2026-09-07 refresh reconfirmed `no restriction on the permitted-use scope` on all three official MOIS v1 APIs, so the source-use metadata gate is recorded as PASS. Source-specific third-party-rights clarification is still outstanding under the portal policy, so raw mirroring and external/Kaggle redistribution of the privacy-minimized aggregate remain `UNRESOLVED`.

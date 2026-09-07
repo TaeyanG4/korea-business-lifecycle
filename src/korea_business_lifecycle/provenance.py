@@ -125,13 +125,34 @@ def validate_source_registry(registry: dict[str, Any]) -> list[str]:
 
 def validate_license_review(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+    if review.get("decision") != "SOURCE_USE_LICENSE_LABELS_CONFIRMED_KAGGLE_REDISTRIBUTION_UNRESOLVED":
+        errors.append("license-review decision changed")
+    refresh = review.get("evidence_refresh", {})
+    if refresh.get("official_detail_pages_reviewed") != 3:
+        errors.append("license review must record all three official detail pages")
+    if refresh.get("all_three_show_no_restriction_label") is not True:
+        errors.append("license review must retain the observed no-restriction labels")
+    if refresh.get("source_use_license_gate") != "PASS_METADATA_CONFIRMED":
+        errors.append("source-use license metadata gate changed")
+    if refresh.get("raw_external_mirror_gate") != "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION":
+        errors.append("raw external mirror gate must remain unresolved")
+    if refresh.get("privacy_minimized_aggregate_redistribution_gate") != "UNRESOLVED":
+        errors.append("aggregate redistribution gate must remain unresolved")
+    if refresh.get("absence_of_source_specific_third_party_statement_is_proof_of_no_third_party_rights") is not False:
+        errors.append("absence of a third-party statement must not be promoted to proof")
     categories = review.get("categories", [])
     keys = {item.get("source_key") for item in categories}
     if keys != V1_SOURCE_KEYS:
         errors.append(f"license-review source keys mismatch: {sorted(keys)}")
     for item in categories:
+        if item.get("official_license_label") != "이용허락범위 제한 없음":
+            errors.append(f"{item.get('source_key')}: official no-restriction label changed")
+        if item.get("source_use_license") != "PASS_METADATA_CONFIRMED":
+            errors.append(f"{item.get('source_key')}: source-use metadata gate changed")
         if item.get("kaggle_redistribution") != "UNRESOLVED":
             errors.append(f"{item.get('source_key')}: redistribution must remain unresolved")
+        if item.get("third_party_rights") != "NO_SOURCE_SPECIFIC_STATEMENT_IDENTIFIED_REVIEW_REQUIRED":
+            errors.append(f"{item.get('source_key')}: third-party-rights review state changed")
         if item.get("privacy_review") != "REVIEW_REQUIRED":
             errors.append(f"{item.get('source_key')}: privacy review must remain required")
     return errors

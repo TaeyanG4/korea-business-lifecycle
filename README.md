@@ -69,4 +69,4 @@ python scripts/release_readiness.py
 
 ## 라이선스
 
-프로젝트 코드 및 데이터 재배포 라이선스는 아직 확정하지 않았습니다. upstream 페이지의 `이용허락범위 제한 없음` 표시는 중요한 증거이지만, 제3자 권리 및 Kaggle 원자료 재배포 가능성 검토가 끝나기 전에는 재배포 허가로 간주하지 않습니다.
+프로젝트 코드 및 데이터 재배포 라이선스는 아직 확정하지 않았습니다. 2026-09-07 재검수에서 세 v1 행정안전부 OpenAPI 모두 `이용허락범위 제한 없음`을 확인해 source-use metadata gate는 PASS로 기록했습니다. 다만 공공데이터포털의 제3자 권리 정책에 대한 source-specific 확인이 남아 있으므로 raw mirror와 privacy-minimized aggregate의 외부/Kaggle 재배포는 계속 `UNRESOLVED`입니다.

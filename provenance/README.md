@@ -3,7 +3,7 @@
 This directory stores small, reviewable evidence metadata only. It must not contain nationwide source files or unreviewed personal/contact data.
 
 - `source_registry.json`: current authoritative source identifiers and explicitly unresolved claims.
-- `license_review.json`: separate public-access and Kaggle-redistribution decision state.
+- `license_review.json`: official no-restriction source-use labels revalidated for all three v1 APIs, with external raw/aggregate redistribution still unresolved pending source-specific third-party-rights clarification.
 - `privacy_review.json`: observed v1 field inventory plus the still-blocked public allowlist decision.
 - `observed_snapshot_summary.json`: privacy-safe aggregate findings from the three acquired current snapshots; no row-level source values.
 - `history_review.json`: official authenticated history-query contract and remaining execution/completeness blockers.

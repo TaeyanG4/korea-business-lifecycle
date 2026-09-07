@@ -42,6 +42,11 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     )
     assert readiness["tracks"]["public_kaggle"]["aggregate_candidate_minimum_cell_count"] == 10
     assert readiness["tracks"]["public_kaggle"]["aggregate_publication_approved"] is False
+    assert readiness["tracks"]["public_kaggle"]["source_use_license"] == "PASS_METADATA_CONFIRMED"
+    assert readiness["tracks"]["public_kaggle"]["raw_external_mirror_gate"] == (
+        "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION"
+    )
+    assert readiness["tracks"]["public_kaggle"]["aggregate_redistribution_gate"] == "UNRESOLVED"
     assert readiness["next_long_local_actions"][0]["command"] == (
         "python scripts/materialize_public_permit_aggregate.py --execute"
     )

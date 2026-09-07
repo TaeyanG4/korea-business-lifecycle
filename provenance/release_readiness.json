@@ -43,7 +43,10 @@
     "public_kaggle": {
       "status": "BLOCKED",
       "privacy_public_allowlist_approved": false,
+      "source_use_license": "PASS_METADATA_CONFIRMED",
       "kaggle_redistribution": "UNRESOLVED",
+      "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
+      "aggregate_redistribution_gate": "UNRESOLVED",
       "row_level_public_build_allowed": false,
       "privacy_minimized_aggregate_candidate": "IMPLEMENTED_NOT_EXECUTED",
       "aggregate_candidate_build_id": "permit-public-agg-v1-bedd874de6619bee",

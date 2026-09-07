@@ -113,7 +113,12 @@ def compute_release_readiness() -> dict[str, Any]:
             "public_kaggle": {
                 "status": public_status,
                 "privacy_public_allowlist_approved": privacy["public_allowlist_approved"],
+                "source_use_license": license_review["evidence_refresh"]["source_use_license_gate"],
                 "kaggle_redistribution": "UNRESOLVED",
+                "raw_external_mirror_gate": license_review["evidence_refresh"]["raw_external_mirror_gate"],
+                "aggregate_redistribution_gate": license_review["evidence_refresh"][
+                    "privacy_minimized_aggregate_redistribution_gate"
+                ],
                 "row_level_public_build_allowed": public_status == "READY",
                 "privacy_minimized_aggregate_candidate": "IMPLEMENTED_NOT_EXECUTED",
                 "aggregate_candidate_build_id": public_aggregate["scope"]["aggregate_build_id"],

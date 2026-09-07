@@ -82,6 +82,12 @@ def test_direct_bulk_download_urls_are_recorded() -> None:
 def test_license_review_keeps_kaggle_blocked() -> None:
     review = load_license_review()
     assert validate_license_review(review) == []
+    assert review["evidence_refresh"]["source_use_license_gate"] == "PASS_METADATA_CONFIRMED"
+    assert review["evidence_refresh"]["raw_external_mirror_gate"] == (
+        "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION"
+    )
+    assert all(item["official_license_label"] == "이용허락범위 제한 없음" for item in review["categories"])
+    assert all(item["kaggle_redistribution"] == "UNRESOLVED" for item in review["categories"])
 
 
 def test_privacy_review_keeps_public_allowlist_blocked() -> None:

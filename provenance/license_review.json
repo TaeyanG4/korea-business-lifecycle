@@ -1,42 +1,60 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "KAGGLE_REDISTRIBUTION_UNRESOLVED",
+  "decision": "SOURCE_USE_LICENSE_LABELS_CONFIRMED_KAGGLE_REDISTRIBUTION_UNRESOLVED",
   "portal_policy": {
     "url": "https://www.data.go.kr/ugs/selectPortalPolicyView.do",
+    "reviewed_section": "공공데이터 이용허락범위",
     "evidence": [
+      "Each reviewed v1 OpenAPI detail page links its '이용허락범위 제한 없음' label to the portal public-data policy.",
       "The portal states that public data containing third-party rights requires legitimate permission from the rights holder.",
       "The portal states that public data containing copyrighted works should display the applicable KOGL type."
     ],
-    "interpretation": "Public download/API accessibility is not by itself a Kaggle raw-redistribution grant."
+    "source_use_interpretation": "The official metadata explicitly reports no restriction on the permitted-use scope for all three v1 APIs.",
+    "redistribution_interpretation": "The metadata label is strong source-use evidence, but the reviewed source pages do not separately state whether third-party rights exist; external raw mirroring therefore remains unresolved rather than being inferred from public accessibility alone."
+  },
+  "evidence_refresh": {
+    "reviewed_at": "2026-09-07",
+    "official_detail_pages_reviewed": 3,
+    "all_three_show_no_restriction_label": true,
+    "source_use_license_gate": "PASS_METADATA_CONFIRMED",
+    "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
+    "privacy_minimized_aggregate_redistribution_gate": "UNRESOLVED",
+    "absence_of_source_specific_third_party_statement_is_proof_of_no_third_party_rights": false
   },
   "categories": [
     {
       "source_key": "general_restaurants",
       "official_license_label": "이용허락범위 제한 없음",
       "official_license_url": "https://www.data.go.kr/data/15154916/openapi.do",
+      "official_page_modified_date": "2026-04-16",
       "public_accessibility": "CONFIRMED",
+      "source_use_license": "PASS_METADATA_CONFIRMED",
       "kaggle_redistribution": "UNRESOLVED",
-      "third_party_rights": "REVIEW_REQUIRED",
+      "third_party_rights": "NO_SOURCE_SPECIFIC_STATEMENT_IDENTIFIED_REVIEW_REQUIRED",
       "privacy_review": "REVIEW_REQUIRED"
     },
     {
       "source_key": "rest_cafes",
       "official_license_label": "이용허락범위 제한 없음",
       "official_license_url": "https://www.data.go.kr/data/15154921/openapi.do",
+      "official_page_modified_date": "2026-04-16",
       "public_accessibility": "CONFIRMED",
+      "source_use_license": "PASS_METADATA_CONFIRMED",
       "kaggle_redistribution": "UNRESOLVED",
-      "third_party_rights": "REVIEW_REQUIRED",
+      "third_party_rights": "NO_SOURCE_SPECIFIC_STATEMENT_IDENTIFIED_REVIEW_REQUIRED",
       "privacy_review": "REVIEW_REQUIRED"
     },
     {
       "source_key": "bakeries",
       "official_license_label": "이용허락범위 제한 없음",
       "official_license_url": "https://www.data.go.kr/data/15155252/openapi.do",
+      "official_page_modified_date": "2026-04-15",
       "public_accessibility": "CONFIRMED",
+      "source_use_license": "PASS_METADATA_CONFIRMED",
       "kaggle_redistribution": "UNRESOLVED",
-      "third_party_rights": "REVIEW_REQUIRED",
+      "third_party_rights": "NO_SOURCE_SPECIFIC_STATEMENT_IDENTIFIED_REVIEW_REQUIRED",
       "privacy_review": "REVIEW_REQUIRED"
     }
   ],
-  "publication_rule": "No raw or row-level Kaggle publication until every included source is PERMITTED or PERMITTED_WITH_CONDITIONS and the public field allowlist passes privacy review."
+  "publication_rule": "Source-use labels are confirmed, but do not publish raw/row-level or aggregate artifacts externally until the applicable redistribution gate and privacy/release policy are explicitly cleared."
 }
