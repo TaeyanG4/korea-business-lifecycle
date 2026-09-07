@@ -21,7 +21,7 @@ class FakeResponse:
         self,
         body: bytes,
         *,
-        url: str = "https://file.localdata.go.kr/file/general_restaurants/info",
+        url: str = "https://file.localdata.go.kr/file/download/general_restaurants/info",
         status: int = 200,
         content_length: int | None = None,
     ) -> None:
@@ -90,7 +90,7 @@ def test_acquisition_writes_immutable_artifact_and_manifest(tmp_path: Path) -> N
     assert len(result.manifest["artifact"]["sha256"]) == 64
     assert result.manifest["response"]["etag"] == '"synthetic-etag"'
     assert result.manifest["request"]["attempt"] == 1
-    assert calls == [("https://file.localdata.go.kr/file/general_restaurants/info", 7)]
+    assert calls == [("https://file.localdata.go.kr/file/download/general_restaurants/info", 7)]
 
 
 def test_acquisition_retries_are_bounded(tmp_path: Path) -> None:

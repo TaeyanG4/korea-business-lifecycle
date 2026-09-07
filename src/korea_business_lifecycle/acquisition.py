@@ -223,7 +223,9 @@ def acquire_current_snapshot(
     ensure_disk_capacity(root, min_free_bytes=min_free_bytes)
 
     source = source_entry(source_key)
-    url = source["bulk_url"]
+    landing_url = source["bulk_url"]
+    url = source["bulk_download_url"]
+    validate_bulk_url(landing_url)
     validate_bulk_url(url)
     safe_request_url = sanitize_url(url)
 
@@ -244,6 +246,7 @@ def acquire_current_snapshot(
             headers={
                 "User-Agent": "korea-business-lifecycle/0.0.0 (+https://github.com/TaeyanG4/korea-business-lifecycle)",
                 "Accept": "text/csv,application/octet-stream,*/*;q=0.1",
+                "Referer": landing_url,
             },
         )
         try:
@@ -297,6 +300,7 @@ def acquire_current_snapshot(
                     "api_dataset_id": source.get("api_dataset_id"),
                     "file_dataset_id": source.get("file_dataset_id"),
                     "standard_dataset_id": source.get("standard_dataset_id"),
+                    "landing_url": sanitize_url(landing_url),
                     "request_url": safe_request_url,
                     "final_url": final_url,
                 },

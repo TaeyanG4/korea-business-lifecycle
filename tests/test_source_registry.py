@@ -31,6 +31,16 @@ def test_bakery_file_dataset_id_is_currently_verified() -> None:
     assert bakery["file_dataset_id"] == "15006688"
 
 
+def test_direct_bulk_download_urls_are_recorded() -> None:
+    registry = load_source_registry()
+    for item in registry["categories"]:
+        assert item["bulk_url"].startswith("https://file.localdata.go.kr/file/")
+        assert item["bulk_download_url"].startswith(
+            "https://file.localdata.go.kr/file/download/"
+        )
+        assert item["observed_download_bytes_2026_09_07"] > 0
+
+
 def test_license_review_keeps_kaggle_blocked() -> None:
     review = load_license_review()
     assert validate_license_review(review) == []

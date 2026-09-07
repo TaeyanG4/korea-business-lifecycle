@@ -22,6 +22,8 @@
 
 상세한 기계 판독 레지스트리는 `provenance/source_registry.json`을 참조합니다.
 
+2026-09-07 직접 probe 결과, 공공데이터포털에 기재된 `/file/<category>/info` URL은 다운로드 UI이며 실제 전국 CSV 액션은 `/file/download/<category>/info`입니다. Range probe로 관찰한 현재 파일 크기는 일반음식점 696,584,488 bytes, 휴게음식점 207,347,981 bytes, 제과점영업 22,654,977 bytes입니다. 이 값은 해당 시점의 관찰치이며 고정 규격이 아닙니다.
+
 ## 라이선스 판정 상태
 
 세 API 페이지는 `이용허락범위 제한 없음`을 표시합니다. 그러나 공공데이터포털 정책은 제3자 권리가 포함된 공공데이터의 경우 권리자의 정당한 이용허락 확보가 필요하다고 명시합니다. 따라서 이 프로젝트는 공개 접근과 Kaggle 원자료 재배포를 분리하며, `provenance/license_review.json`에서 재배포 상태를 계속 `UNRESOLVED`로 유지합니다.

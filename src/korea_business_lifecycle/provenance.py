@@ -34,6 +34,8 @@ def validate_source_registry(registry: dict[str, Any]) -> list[str]:
         errors.append(f"v1 source keys mismatch: {sorted(keys)}")
 
     for item in categories:
+        if not item.get("bulk_download_url"):
+            errors.append(f"{item.get('source_key')}: direct bulk download URL missing")
         if item.get("documented_primary_key") is not None:
             errors.append(f"{item.get('source_key')}: source PK must remain unresolved")
         if item.get("closure_semantics") not in {"UNRESOLVED", "VERIFIED"}:

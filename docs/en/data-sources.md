@@ -22,6 +22,8 @@ The official descriptions identify permit date, operating status, business name,
 
 See `provenance/source_registry.json` for the machine-readable registry.
 
+Direct probes on 2026-09-07 established that the catalog `/file/<category>/info` URL is a download UI and the actual nationwide CSV action is `/file/download/<category>/info`. Current byte sizes observed through a Range probe were 696,584,488 bytes for general restaurants, 207,347,981 for rest cafes, and 22,654,977 for bakeries. These are point-in-time observations, not fixed source specifications.
+
 ## License-decision state
 
 All three API pages display `이용허락범위 제한 없음` (no restriction on the displayed permitted-use scope). The Public Data Portal policy separately states that legitimate permission is required when third-party rights are included. The project therefore keeps public accessibility and Kaggle raw redistribution as separate gates; `provenance/license_review.json` remains `UNRESOLVED` for Kaggle redistribution.
