@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -39,3 +40,40 @@ def test_sample_runner_refuses_request_cap_below_plan(external_tmp_path: Path) -
     root.mkdir()
     with pytest.raises(HistorySampleRunnerError, match="exceeding cap"):
         run_history_sample(data_root=root, max_requests=2191)
+
+
+def test_sample_runner_emits_progress_events(external_tmp_path: Path) -> None:
+    root = external_tmp_path / "data"
+    root.mkdir()
+    events: list[dict] = []
+
+    def fake_acquire(source_key: str, **kwargs):
+        callback = kwargs["progress_callback"]
+        callback(
+            {
+                "event": "page_complete",
+                "source_key": source_key,
+                "authority_code": kwargs["authority_code"],
+                "base_date": kwargs["base_date"],
+                "page_no": 1,
+                "total_pages": 1,
+                "page_rows": 1,
+                "stored_rows": 1,
+                "total_count": 1,
+            }
+        )
+        return SimpleNamespace(
+            snapshot_dir=root / "synthetic",
+            manifest={"observed": {"total_count": 1, "total_pages": 1}},
+        )
+
+    result = run_history_sample(
+        data_root=root,
+        execute=True,
+        acquire=fake_acquire,
+        progress_callback=events.append,
+    )
+    assert result["acquired_tasks"] == 24
+    assert sum(1 for event in events if event["event"] == "task_start") == 24
+    assert sum(1 for event in events if event["event"] == "page_complete") == 24
+    assert sum(1 for event in events if event["event"] == "task_complete") == 24

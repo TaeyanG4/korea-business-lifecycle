@@ -2,11 +2,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 
+from korea_business_lifecycle.history_progress import format_history_progress
 from korea_business_lifecycle.history_transition_runner import (
     HistoryTransitionRunnerError,
     run_transition_probe_batch,
 )
+
+
+def _print_progress(event: dict) -> None:
+    print(format_history_progress(event), file=sys.stderr, flush=True)
 
 
 def main() -> int:
@@ -27,6 +33,7 @@ def main() -> int:
             execute=args.execute,
             max_requests=args.max_requests,
             request_delay_seconds=args.request_delay_seconds,
+            progress_callback=_print_progress if args.execute else None,
         )
     except HistoryTransitionRunnerError as exc:
         raise SystemExit(f"reverse-transition probe blocked: {exc}") from exc
@@ -36,4 +43,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

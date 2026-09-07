@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 
 from korea_business_lifecycle.history_acquisition import (
     DEFAULT_MAX_ATTEMPTS,
@@ -10,6 +11,7 @@ from korea_business_lifecycle.history_acquisition import (
     HistoryAcquisitionError,
     acquire_history_snapshot,
 )
+from korea_business_lifecycle.history_progress import format_history_progress
 from korea_business_lifecycle.provenance import V1_SOURCE_KEYS
 
 
@@ -32,6 +34,23 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+
+    def progress(event: dict) -> None:
+        print(
+            format_history_progress({**event, "task_index": 1, "task_total": 1}),
+            file=sys.stderr,
+            flush=True,
+        )
+
+    progress(
+        {
+            "event": "task_start",
+            "source_key": args.source_key,
+            "authority_code": args.authority_code,
+            "base_date": args.base_date,
+            "max_pages": args.max_pages,
+        }
+    )
     try:
         result = acquire_history_snapshot(
             args.source_key,
@@ -41,9 +60,21 @@ def main() -> int:
             max_pages=args.max_pages,
             max_attempts=args.max_attempts,
             timeout_seconds=args.timeout_seconds,
+            progress_callback=progress,
         )
     except HistoryAcquisitionError as exc:
         raise SystemExit(f"history acquisition blocked: {exc}") from exc
+    progress(
+        {
+            "event": "task_complete",
+            "source_key": args.source_key,
+            "authority_code": args.authority_code,
+            "base_date": args.base_date,
+            "finished_tasks": 1,
+            "observed_rows": result.manifest["observed"]["total_count"],
+            "observed_pages": result.manifest["observed"]["total_pages"],
+        }
+    )
     print(
         json.dumps(
             {

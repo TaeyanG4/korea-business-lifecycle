@@ -192,6 +192,7 @@ def acquire_history_snapshot(
     service_key: str | None = None,
     opener: Callable[[urllib.request.Request, int], Any] = _open_url,
     sleep: Callable[[float], None] = time.sleep,
+    progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> HistorySnapshotResult:
     """Acquire one explicitly bounded `(source, date, authority)` history snapshot."""
     parsed_date = parse_base_date(base_date).strftime("%Y%m%d")
@@ -259,6 +260,20 @@ def acquire_history_snapshot(
                     "filename": page_path.name,
                 }
             )
+            if progress_callback is not None:
+                progress_callback(
+                    {
+                        "event": "page_complete",
+                        "source_key": source_key,
+                        "authority_code": authority_code,
+                        "base_date": parsed_date,
+                        "page_no": page_no,
+                        "total_pages": total_pages,
+                        "page_rows": len(items),
+                        "stored_rows": sum(item["rows"] for item in page_records),
+                        "total_count": total_count,
+                    }
+                )
             if total_pages == 0 or page_no >= total_pages:
                 break
             if request_delay_seconds:

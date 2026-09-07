@@ -124,3 +124,29 @@ def test_history_snapshot_can_pace_requests(external_tmp_path: Path) -> None:
         sleep=sleeps.append,
     )
     assert sleeps == [0.25]
+
+
+def test_history_snapshot_reports_page_progress(external_tmp_path: Path) -> None:
+    root = external_tmp_path / "data"
+    root.mkdir()
+    events: list[dict] = []
+
+    def opener(request: Request, _timeout: int) -> FakeResponse:
+        page_no = 1 if "pageNo=1" in request.full_url else 2
+        body = payload(page_no, 101, ["A"] * 100 if page_no == 1 else ["B"])
+        return FakeResponse(body, request.full_url)
+
+    acquire_history_snapshot(
+        "bakeries",
+        base_date="20260101",
+        authority_code="3000000",
+        data_root=root,
+        max_pages=2,
+        max_attempts=1,
+        service_key="synthetic-secret",
+        opener=opener,
+        progress_callback=events.append,
+    )
+    assert [(event["page_no"], event["total_pages"]) for event in events] == [(1, 2), (2, 2)]
+    assert events[-1]["stored_rows"] == 101
+    assert events[-1]["total_count"] == 101

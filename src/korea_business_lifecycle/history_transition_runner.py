@@ -61,6 +61,7 @@ def run_transition_probe_batch(
     max_requests: int = 450,
     request_delay_seconds: float = 0.2,
     acquire: Callable[..., HistorySnapshotResult] = acquire_history_snapshot,
+    progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Plan or execute only the tracked six-snapshot reverse-transition follow-up."""
     if max_requests < 1:
@@ -85,11 +86,13 @@ def run_transition_probe_batch(
     root.mkdir(parents=True, exist_ok=True)
     completed: list[dict[str, Any]] = []
     pending: list[TransitionProbeTask] = []
+    existing_by_task: dict[TransitionProbeTask, Path] = {}
     for task in tasks:
         existing = _existing_snapshot_dir(root, task)
         if existing is None:
             pending.append(task)
         else:
+            existing_by_task[task] = existing
             completed.append(
                 {
                     "source_key": task.source_key,
@@ -113,7 +116,52 @@ def run_transition_probe_batch(
         }
 
     acquired: list[dict[str, Any]] = []
-    for task in pending:
+    finished_tasks = 0
+    pending_set = set(pending)
+    for task_index, task in enumerate(tasks, start=1):
+        if task not in pending_set:
+            finished_tasks += 1
+            if progress_callback is not None:
+                progress_callback(
+                    {
+                        "event": "task_skipped",
+                        "task_index": task_index,
+                        "task_total": len(tasks),
+                        "finished_tasks": finished_tasks,
+                        "source_key": task.source_key,
+                        "authority_code": task.authority_code,
+                        "base_date": task.base_date,
+                        "snapshot_dir": str(existing_by_task[task]),
+                    }
+                )
+            continue
+
+        if progress_callback is not None:
+            progress_callback(
+                {
+                    "event": "task_start",
+                    "task_index": task_index,
+                    "task_total": len(tasks),
+                    "finished_tasks": finished_tasks,
+                    "source_key": task.source_key,
+                    "authority_code": task.authority_code,
+                    "base_date": task.base_date,
+                    "max_pages": task.max_pages,
+                }
+            )
+
+        def page_progress(event: dict[str, Any]) -> None:
+            if progress_callback is None:
+                return
+            progress_callback(
+                {
+                    **event,
+                    "task_index": task_index,
+                    "task_total": len(tasks),
+                    "finished_tasks": finished_tasks,
+                }
+            )
+
         result = acquire(
             task.source_key,
             base_date=task.base_date,
@@ -121,6 +169,7 @@ def run_transition_probe_batch(
             data_root=root,
             max_pages=task.max_pages,
             request_delay_seconds=request_delay_seconds,
+            progress_callback=page_progress,
         )
         acquired.append(
             {
@@ -133,6 +182,21 @@ def run_transition_probe_batch(
                 "snapshot_dir": str(result.snapshot_dir),
             }
         )
+        finished_tasks += 1
+        if progress_callback is not None:
+            progress_callback(
+                {
+                    "event": "task_complete",
+                    "task_index": task_index,
+                    "task_total": len(tasks),
+                    "finished_tasks": finished_tasks,
+                    "source_key": task.source_key,
+                    "authority_code": task.authority_code,
+                    "base_date": task.base_date,
+                    "observed_rows": int(result.manifest["observed"]["total_count"]),
+                    "observed_pages": int(result.manifest["observed"]["total_pages"]),
+                }
+            )
     return {
         "mode": "EXECUTED",
         "planned_tasks": len(tasks),
@@ -143,4 +207,3 @@ def run_transition_probe_batch(
         "completed": completed,
         "acquired": acquired,
     }
-
