@@ -48,6 +48,49 @@ def test_compare_history_snapshots_is_aggregate_only(tmp_path: Path) -> None:
     assert result["disappeared_mng_no"] == 1
     assert result["changed_common_rows"]["status"] == 1
     assert result["changed_common_rows"]["business_name"] == 1
+    assert result["changed_common_rows"]["permit_date"] == 0
+    assert result["status_closure_alignment"]["status_changed_without_closure_change"] == 1
+    assert result["assessment"]["mng_no_continuity"] == "MIXED"
+    assert result["assessment"]["lifecycle_signal"] == "AMBIGUOUS"
+    assert result["status_code_counts_start"] == {"1": 2}
+    assert result["status_code_counts_end"] == {"1": 1, "3": 1}
+    assert result["status_codes_added"] == ["3"]
     rendered = json.dumps(result)
     assert "secret-A" not in rendered
     assert "Private Name" not in rendered
+
+
+def test_compare_history_snapshots_can_mark_strong_bounded_continuity(tmp_path: Path) -> None:
+    start = _write_snapshot(
+        tmp_path,
+        "20260101",
+        [
+            {
+                "MNG_NO": "secret-A",
+                "SALS_STTS_CD": "01",
+                "SALS_STTS_NM": "active",
+                "CLSBIZ_YMD": "",
+                "LCPMT_YMD": "20200101",
+            }
+        ],
+    )
+    end = _write_snapshot(
+        tmp_path,
+        "20260906",
+        [
+            {
+                "MNG_NO": "secret-A",
+                "SALS_STTS_CD": "03",
+                "SALS_STTS_NM": "closed",
+                "CLSBIZ_YMD": "20260401",
+                "LCPMT_YMD": "20200101",
+            },
+            {"MNG_NO": "secret-B", "SALS_STTS_CD": "01", "LCPMT_YMD": "20260801"},
+        ],
+    )
+    result = compare_history_snapshots(start, end)
+    assert result["assessment"]["mng_no_continuity"] == "STRONG"
+    assert result["assessment"]["lifecycle_signal"] == "USABLE_FOR_FURTHER_AUDIT"
+    assert result["status_closure_alignment"]["status_and_closure_changed"] == 1
+    assert result["assessment"]["reopening_like_03_to_01"] == 0
+    assert result["assessment"]["status_vocabulary_changed"] is True

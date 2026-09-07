@@ -1,10 +1,12 @@
 from korea_business_lifecycle.provenance import (
+    load_bounded_history_audit,
     load_history_review,
     load_license_review,
     load_observed_snapshot_summary,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
+    validate_bounded_history_audit,
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_privacy_review,
@@ -71,3 +73,13 @@ def test_observed_snapshot_summary_matches_empirical_v1_scale() -> None:
     assert summary["totals"]["rows"] == 3_010_802
     assert summary["totals"]["bytes"] == 926_587_446
     assert summary["totals"]["cross_category_management_number_overlap"] == 0
+
+
+def test_bounded_history_audit_keeps_identity_claim_scoped() -> None:
+    audit = load_bounded_history_audit()
+    assert validate_bounded_history_audit(audit) == []
+    assert audit["decision"] == "BOUNDED_CONTINUITY_SUPPORTED_FURTHER_AUDIT_REQUIRED"
+    rest = next(item for item in audit["categories"] if item["source_key"] == "rest_cafes")
+    assert rest["status_codes_added"] == ["05"]
+    assert audit["identity_claim"]["source_primary_key_declared"] is False
+    assert audit["identity_claim"]["establishment_identity_declared"] is False

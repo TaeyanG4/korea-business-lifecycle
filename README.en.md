@@ -34,9 +34,9 @@ pytest -v
 
 Tests are offline and use synthetic fixtures only.
 
-## Current external authorization required
+## Current history status
 
-Current-snapshot acquisition and profiling are complete. The next history verification step requires a **data.go.kr Decoding serviceKey** authorized for the v1 APIs. Never commit the real key or place it in a tracked `.env`; supply it only through the local `KBL_DATA_GO_KR_SERVICE_KEY` environment variable. `.env.example` contains the variable name only.
+Current-snapshot acquisition/profiling and the first bounded history audit are complete. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
 
 ## Documentation
 
@@ -45,6 +45,7 @@ Current-snapshot acquisition and profiling are complete. The next history verifi
 - [Data/privacy policy](docs/en/data-policy.md)
 - [Reproducibility](docs/en/reproducibility.md)
 - [Bounded source profiling](docs/en/profiling.md)
+- [Bounded history audit findings](docs/en/bounded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)
 
 ## License

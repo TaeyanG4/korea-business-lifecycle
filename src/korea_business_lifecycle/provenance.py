@@ -29,6 +29,10 @@ def load_observed_snapshot_summary() -> dict[str, Any]:
     return load_json("provenance/observed_snapshot_summary.json")
 
 
+def load_bounded_history_audit() -> dict[str, Any]:
+    return load_json("provenance/bounded_history_audit.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -103,4 +107,34 @@ def validate_observed_snapshot_summary(summary: dict[str, Any]) -> list[str]:
         errors.append("current-snapshot management-number uniqueness observation changed")
     if "not declared" not in summary.get("interpretation", {}).get("identity", ""):
         errors.append("observed uniqueness must not be upgraded to a declared primary key")
+    return errors
+
+
+def validate_bounded_history_audit(audit: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    categories = audit.get("categories", [])
+    if {item.get("source_key") for item in categories} != V1_SOURCE_KEYS:
+        errors.append("bounded-history audit must exactly match v1 sources")
+    if audit.get("scope", {}).get("authority_code") != "3000000":
+        errors.append("bounded-history audit must remain scoped to authority 3000000")
+    if audit.get("scope", {}).get("start_date") != "20260101":
+        errors.append("bounded-history audit start date changed")
+    if audit.get("scope", {}).get("end_date") != "20260906":
+        errors.append("bounded-history audit end date changed")
+    for item in categories:
+        if item.get("assessment", {}).get("mng_no_continuity") != "STRONG":
+            errors.append(f"{item.get('source_key')}: bounded MNG_NO continuity is not STRONG")
+        if item.get("assessment", {}).get("lifecycle_signal") != "USABLE_FOR_FURTHER_AUDIT":
+            errors.append(f"{item.get('source_key')}: lifecycle signal changed")
+        if item.get("start_duplicate_mng_no_rows") != 0 or item.get("end_duplicate_mng_no_rows") != 0:
+            errors.append(f"{item.get('source_key')}: duplicate MNG_NO observed")
+        if item.get("disappeared_mng_no") != 0:
+            errors.append(f"{item.get('source_key')}: starting MNG_NO disappeared")
+        if item.get("changed_common_rows", {}).get("permit_date") != 0:
+            errors.append(f"{item.get('source_key')}: permit date changed")
+        alignment = item.get("status_closure_alignment", {})
+        if alignment.get("status_changed_without_closure_change") != 0:
+            errors.append(f"{item.get('source_key')}: status changed without closure-date change")
+        if alignment.get("closure_changed_without_status_change") != 0:
+            errors.append(f"{item.get('source_key')}: closure date changed without status change")
     return errors

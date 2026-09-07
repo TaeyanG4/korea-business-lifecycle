@@ -1,0 +1,182 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "BOUNDED_CONTINUITY_SUPPORTED_FURTHER_AUDIT_REQUIRED",
+  "scope": {
+    "authority_code": "3000000",
+    "start_date": "20260101",
+    "end_date": "20260906",
+    "source_count": 3,
+    "scope_note": "This is a two-date, single-authority audit. It is not a nationwide longitudinal proof."
+  },
+  "assessment_rules": {
+    "mng_no_continuity_strong": "zero duplicate MNG_NO in both snapshots, zero starting IDs disappeared, and zero permit-date changes among common IDs",
+    "lifecycle_signal_usable": "at least one status change, every observed status change is row-aligned with a closure-date change, no closure-only changes, and no 03->01 reverse transition in the bounded pair",
+    "threshold_policy": "No percentage threshold is used in this milestone; only exact contradiction/invariant checks are applied."
+  },
+  "identity_claim": {
+    "source_primary_key_declared": false,
+    "establishment_identity_declared": false,
+    "interpretation": "MNG_NO is an empirically strong bounded continuity candidate only for this authority/date pair."
+  },
+  "categories": [
+    {
+      "source_key": "bakeries",
+      "start_snapshot": {
+        "retrieval_id": "20260907T030950Z",
+        "manifest_sha256": "2d15bb6fea1a624db5ae1821e2075e3b27911157f272cf93d9d3ade06c1cabf3",
+        "rows": 377,
+        "pages": 4
+      },
+      "end_snapshot": {
+        "retrieval_id": "20260907T030937Z",
+        "manifest_sha256": "350c5d8fbb1b1c3116abfc419ec4896d42cb17d4962a620ca9d357f8e4096628",
+        "rows": 391,
+        "pages": 4
+      },
+      "start_duplicate_mng_no_rows": 0,
+      "end_duplicate_mng_no_rows": 0,
+      "common_mng_no": 377,
+      "added_mng_no": 14,
+      "disappeared_mng_no": 0,
+      "changed_common_rows": {
+        "status": 6,
+        "detail_status": 6,
+        "closure_date": 6,
+        "permit_date": 0,
+        "business_name": 1,
+        "address": 0,
+        "coordinates": 5
+      },
+      "status_closure_alignment": {
+        "status_and_closure_changed": 6,
+        "status_changed_without_closure_change": 0,
+        "closure_changed_without_status_change": 0
+      },
+      "simultaneous_name_address_coordinate_changes": 0,
+      "status_code_transitions": {
+        "01->01": 137,
+        "01->03": 6,
+        "03->03": 234
+      },
+      "status_code_counts_start": {"01": 143, "03": 234},
+      "status_code_counts_end": {"01": 151, "03": 240},
+      "status_codes_added": [],
+      "status_codes_removed": [],
+      "assessment": {
+        "mng_no_continuity": "STRONG",
+        "lifecycle_signal": "USABLE_FOR_FURTHER_AUDIT",
+        "reopening_like_03_to_01": 0,
+        "status_vocabulary_changed": false
+      }
+    },
+    {
+      "source_key": "rest_cafes",
+      "start_snapshot": {
+        "retrieval_id": "20260907T030951Z",
+        "manifest_sha256": "c5548047efbd6b6d92543e559ec8cb7ce7acd49a15c7a4e8c085c1417622cba9",
+        "rows": 5428,
+        "pages": 55
+      },
+      "end_snapshot": {
+        "retrieval_id": "20260907T031039Z",
+        "manifest_sha256": "b7b0e9535f63558b65f8a870b8c592dab06814b7223fdfdde8bea80c40887ade",
+        "rows": 5542,
+        "pages": 56
+      },
+      "start_duplicate_mng_no_rows": 0,
+      "end_duplicate_mng_no_rows": 0,
+      "common_mng_no": 5428,
+      "added_mng_no": 114,
+      "disappeared_mng_no": 0,
+      "changed_common_rows": {
+        "status": 94,
+        "detail_status": 94,
+        "closure_date": 94,
+        "permit_date": 0,
+        "business_name": 51,
+        "address": 10,
+        "coordinates": 36
+      },
+      "status_closure_alignment": {
+        "status_and_closure_changed": 94,
+        "status_changed_without_closure_change": 0,
+        "closure_changed_without_status_change": 0
+      },
+      "simultaneous_name_address_coordinate_changes": 2,
+      "status_code_transitions": {
+        "01->01": 1653,
+        "01->03": 94,
+        "03->03": 3681
+      },
+      "status_code_counts_start": {"01": 1747, "03": 3681},
+      "status_code_counts_end": {"01": 1759, "03": 3782, "05": 1},
+      "status_codes_added": ["05"],
+      "status_codes_removed": [],
+      "assessment": {
+        "mng_no_continuity": "STRONG",
+        "lifecycle_signal": "USABLE_FOR_FURTHER_AUDIT",
+        "reopening_like_03_to_01": 0,
+        "status_vocabulary_changed": true
+      }
+    },
+    {
+      "source_key": "general_restaurants",
+      "start_snapshot": {
+        "retrieval_id": "20260907T031142Z",
+        "manifest_sha256": "7b950402d71d2957b3cb7c41f8fad4f432a8f9164330bd69fb6903df76475e69",
+        "rows": 20314,
+        "pages": 204
+      },
+      "end_snapshot": {
+        "retrieval_id": "20260907T032045Z",
+        "manifest_sha256": "8d041dbc37886ecfed8d8719907b0c9b4a130851ebb47d59ea0ae6a7ce0729bd",
+        "rows": 20571,
+        "pages": 206
+      },
+      "start_duplicate_mng_no_rows": 0,
+      "end_duplicate_mng_no_rows": 0,
+      "common_mng_no": 20314,
+      "added_mng_no": 257,
+      "disappeared_mng_no": 0,
+      "changed_common_rows": {
+        "status": 199,
+        "detail_status": 199,
+        "closure_date": 199,
+        "permit_date": 0,
+        "business_name": 342,
+        "address": 43,
+        "coordinates": 134
+      },
+      "status_closure_alignment": {
+        "status_and_closure_changed": 199,
+        "status_changed_without_closure_change": 0,
+        "closure_changed_without_status_change": 0
+      },
+      "simultaneous_name_address_coordinate_changes": 7,
+      "status_code_transitions": {
+        "01->01": 6426,
+        "01->03": 199,
+        "03->03": 13689
+      },
+      "status_code_counts_start": {"01": 6625, "03": 13689},
+      "status_code_counts_end": {"01": 6644, "03": 13927},
+      "status_codes_added": [],
+      "status_codes_removed": [],
+      "assessment": {
+        "mng_no_continuity": "STRONG",
+        "lifecycle_signal": "USABLE_FOR_FURTHER_AUDIT",
+        "reopening_like_03_to_01": 0,
+        "status_vocabulary_changed": false
+      }
+    }
+  ],
+  "follow_up": {
+    "required": true,
+    "items": [
+      "audit a small number of additional authorities before choosing project-wide identity grain",
+      "review 2 rest-cafe and 7 general-restaurant rows where business name, address and coordinates all changed, without publishing raw values",
+      "resolve the semantic meaning of rest-cafe status code 05 before any canonical lifecycle mapping",
+      "do not interpret absence of 03->01 in this two-date pair as proof that reopening never occurs"
+    ]
+  }
+}
