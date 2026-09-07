@@ -107,6 +107,10 @@
     "permit_parent_materialization_status": "COMPLETED_PASS_VERIFIED",
     "geospatial_full_axis": "provenance/geospatial_full_axis.json",
     "geospatial_full_axis_status": "PASSED_REVIEWED_CURRENT_V1",
-    "goal": "implement separately versioned local WGS84 enrichment from the verified immutable PERMIT build; keep the frozen parent unchanged, public release blocked, and episode reconstruction disabled"
+    "permit_geospatial_schema": "schemas/permit_geospatial.v1.json",
+    "permit_geospatial_schema_status": "FROZEN",
+    "permit_geospatial_materialization_plan": "provenance/permit_geospatial_materialization_plan.json",
+    "permit_geospatial_materialization_status": "IMPLEMENTED_NOT_EXECUTED",
+    "goal": "execute and independently verify the separately versioned local WGS84 enrichment; keep the frozen parent unchanged, public release blocked, and episode reconstruction disabled"
   }
 }

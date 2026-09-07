@@ -87,6 +87,18 @@ FORBIDDEN_CANONICAL_COLUMNS = {
     "wgs84_longitude",
 }
 
+REQUIRED_GEOSPATIAL_COLUMNS = {
+    "source_key",
+    "source_row_number",
+    "management_number",
+    "parent_permit_build_id",
+    "wgs84_longitude",
+    "wgs84_latitude",
+    "coordinate_quality",
+}
+
+GEOSPATIAL_QUALITY_VALUES = ["TRANSFORMED", "MISSING_SOURCE_COORDINATES"]
+
 REQUIRED_EPISODE_COLUMNS = {
     "source_key",
     "management_number",
@@ -151,6 +163,10 @@ def load_permit_parent_schema() -> dict[str, Any]:
 
 def load_permit_status_episode_schema() -> dict[str, Any]:
     return load_json("schemas/permit_status_episode.v1.json")
+
+
+def load_permit_geospatial_schema() -> dict[str, Any]:
+    return load_json("schemas/permit_geospatial.v1.json")
 
 
 def validate_permit_parent_schema(schema: dict[str, Any]) -> list[str]:
@@ -243,6 +259,71 @@ def validate_permit_parent_schema(schema: dict[str, Any]) -> list[str]:
     if explicit_absent != FORBIDDEN_CANONICAL_COLUMNS:
         errors.append("explicitly absent semantic/geospatial fields changed")
 
+    return errors
+
+
+def validate_permit_geospatial_schema(schema: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if schema.get("schema_name") != "permit_geospatial" or schema.get("schema_version") != 1:
+        errors.append("permit geospatial schema identity/version changed")
+    if schema.get("grain") != "PERMIT_GEOSPATIAL_ENRICHMENT":
+        errors.append("permit geospatial grain changed")
+
+    scope = schema.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("permit geospatial scope must exactly match v1 sources")
+    if scope.get("parent_schema") != "schemas/permit_parent.v1.json":
+        errors.append("permit geospatial parent schema reference changed")
+    if scope.get("parent_build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("permit geospatial parent build id changed")
+    if scope.get("parent_rows") != 3_010_802:
+        errors.append("permit geospatial parent row count changed")
+    for key in ("parent_mutated", "establishment_identity_claim", "source_primary_key_claim", "public_row_level_release_approved"):
+        if scope.get(key) is not False:
+            errors.append(f"permit geospatial scope must keep {key}=false")
+
+    policy = schema.get("derivation_policy", {})
+    if policy.get("axis_evidence") != "provenance/geospatial_full_axis.json":
+        errors.append("permit geospatial axis evidence reference changed")
+    if policy.get("source_crs") != "EPSG:5174" or policy.get("target_crs") != "EPSG:4326":
+        errors.append("permit geospatial CRS contract changed")
+    if policy.get("source_x_interpretation") != "EASTING":
+        errors.append("permit geospatial source X interpretation changed")
+    if policy.get("source_y_interpretation") != "NORTHING":
+        errors.append("permit geospatial source Y interpretation changed")
+    for key in ("exact_parent_build_required", "future_snapshot_revalidation_required"):
+        if policy.get(key) is not True:
+            errors.append(f"permit geospatial policy must keep {key}=true")
+    if policy.get("partial_coordinate_policy") != "FAIL_CLOSED":
+        errors.append("permit geospatial partial-coordinate policy changed")
+    if policy.get("nonfinite_transform_policy") != "FAIL_CLOSED":
+        errors.append("permit geospatial nonfinite-transform policy changed")
+    if policy.get("publication_policy") != "LOCAL_PRIVATE_ONLY_PUBLICATION_REVIEW_REQUIRED":
+        errors.append("permit geospatial publication policy changed")
+
+    linkage = schema.get("parent_linkage", {})
+    if linkage.get("columns") != ["source_key", "source_row_number", "management_number"]:
+        errors.append("permit geospatial parent linkage changed")
+    if linkage.get("official_primary_key_claim") is not False:
+        errors.append("permit geospatial linkage must not claim an official primary key")
+
+    columns = schema.get("columns", [])
+    names = [item.get("name") for item in columns]
+    if len(columns) != 7 or len(set(names)) != 7 or set(names) != REQUIRED_GEOSPATIAL_COLUMNS:
+        errors.append("permit geospatial schema must contain exactly the frozen seven columns")
+    by_name = {item.get("name"): item for item in columns}
+    for name in ("source_key", "management_number", "parent_permit_build_id", "coordinate_quality"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "string" or item.get("nullable") is not False:
+            errors.append(f"{name} geospatial contract changed")
+    if by_name.get("source_row_number", {}).get("logical_type") != "int64" or by_name.get("source_row_number", {}).get("nullable") is not False:
+        errors.append("source_row_number geospatial contract changed")
+    for name in ("wgs84_longitude", "wgs84_latitude"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "float64" or item.get("nullable") is not True:
+            errors.append(f"{name} must remain nullable float64")
+    if by_name.get("coordinate_quality", {}).get("allowed_values") != GEOSPATIAL_QUALITY_VALUES:
+        errors.append("permit geospatial quality enum changed")
     return errors
 
 

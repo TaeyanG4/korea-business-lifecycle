@@ -1,0 +1,68 @@
+{
+  "schema_name": "permit_geospatial",
+  "schema_version": 1,
+  "checked_at": "2026-09-07",
+  "grain": "PERMIT_GEOSPATIAL_ENRICHMENT",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "parent_schema": "schemas/permit_parent.v1.json",
+    "parent_build_id": "permit-v1-9908225df465e2ff",
+    "parent_rows": 3010802,
+    "parent_mutated": false,
+    "establishment_identity_claim": false,
+    "source_primary_key_claim": false,
+    "public_row_level_release_approved": false
+  },
+  "derivation_policy": {
+    "axis_evidence": "provenance/geospatial_full_axis.json",
+    "source_crs": "EPSG:5174",
+    "target_crs": "EPSG:4326",
+    "source_x_interpretation": "EASTING",
+    "source_y_interpretation": "NORTHING",
+    "transformer_policy": "pyproj Transformer.from_crs(EPSG:5174, EPSG:4326, always_xy=true)",
+    "exact_parent_build_required": true,
+    "future_snapshot_revalidation_required": true,
+    "missing_coordinate_policy": "EMIT_NULL_WGS84_WITH_MISSING_SOURCE_COORDINATES",
+    "partial_coordinate_policy": "FAIL_CLOSED",
+    "nonfinite_transform_policy": "FAIL_CLOSED",
+    "broad_korea_envelope_policy": "FAIL_CLOSED_OUTSIDE_LON_124_132_LAT_32_40",
+    "publication_policy": "LOCAL_PRIVATE_ONLY_PUBLICATION_REVIEW_REQUIRED"
+  },
+  "parent_linkage": {
+    "columns": ["source_key", "source_row_number", "management_number"],
+    "official_primary_key_claim": false,
+    "management_number_role": "expected uniqueness/continuity candidate only"
+  },
+  "columns": [
+    {"name": "source_key", "logical_type": "string", "nullable": false, "role": "parent_lineage"},
+    {"name": "source_row_number", "logical_type": "int64", "nullable": false, "role": "parent_lineage"},
+    {"name": "management_number", "logical_type": "string", "nullable": false, "role": "parent_linkage_candidate"},
+    {"name": "parent_permit_build_id", "logical_type": "string", "nullable": false, "role": "parent_build_lineage"},
+    {"name": "wgs84_longitude", "logical_type": "float64", "nullable": true, "role": "derived_coordinate"},
+    {"name": "wgs84_latitude", "logical_type": "float64", "nullable": true, "role": "derived_coordinate"},
+    {
+      "name": "coordinate_quality",
+      "logical_type": "string",
+      "nullable": false,
+      "role": "quality",
+      "allowed_values": ["TRANSFORMED", "MISSING_SOURCE_COORDINATES"]
+    }
+  ],
+  "row_invariants": [
+    "source_row_number remains the exact 1-based row lineage from the parent build",
+    "TRANSFORMED implies finite non-null longitude/latitude inside broad lon 124..132 and lat 32..40",
+    "MISSING_SOURCE_COORDINATES implies both longitude and latitude are null",
+    "partial source X/Y pairs fail closed rather than emitting a row",
+    "the enrichment contains exactly one row per parent PERMIT row"
+  ],
+  "explicitly_absent_fields": [
+    "business_name",
+    "road_address",
+    "lot_address",
+    "telephone_number",
+    "canonical_active_flag",
+    "canonical_closed_flag",
+    "terminal_event_flag"
+  ],
+  "next_gate": "implement and verify the local immutable WGS84 enrichment build; do not publish row-level output"
+}

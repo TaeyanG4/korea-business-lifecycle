@@ -16,6 +16,7 @@ from korea_business_lifecycle.provenance import (
     load_permit_parent_full_dry_run_plan,
     load_permit_parent_materialization_plan,
     load_permit_parent_materialization,
+    load_permit_geospatial_materialization_plan,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -35,6 +36,7 @@ from korea_business_lifecycle.provenance import (
     validate_permit_parent_full_dry_run_plan,
     validate_permit_parent_materialization_plan,
     validate_permit_parent_materialization,
+    validate_permit_geospatial_materialization_plan,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -174,6 +176,12 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_parent_materialization_status"] == "COMPLETED_PASS_VERIFIED"
     assert decision["next_gate"]["geospatial_full_axis"] == "provenance/geospatial_full_axis.json"
     assert decision["next_gate"]["geospatial_full_axis_status"] == "PASSED_REVIEWED_CURRENT_V1"
+    assert decision["next_gate"]["permit_geospatial_schema"] == "schemas/permit_geospatial.v1.json"
+    assert decision["next_gate"]["permit_geospatial_schema_status"] == "FROZEN"
+    assert decision["next_gate"]["permit_geospatial_materialization_plan"] == (
+        "provenance/permit_geospatial_materialization_plan.json"
+    )
+    assert decision["next_gate"]["permit_geospatial_materialization_status"] == "IMPLEMENTED_NOT_EXECUTED"
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -263,3 +271,16 @@ def test_full_geospatial_axis_result_approves_local_derivation_only() -> None:
     assert review["review"]["coordinate_axis_order_verified_nationwide"] is True
     assert review["review"]["local_wgs84_derivation_approved"] is True
     assert review["review"]["public_wgs84_release_approved"] is False
+
+
+def test_permit_geospatial_materialization_plan_is_ready_and_private() -> None:
+    plan = load_permit_geospatial_materialization_plan()
+    assert validate_permit_geospatial_materialization_plan(plan) == []
+    assert plan["scope"]["parent_permit_build_id"] == "permit-v1-9908225df465e2ff"
+    assert plan["scope"]["geospatial_build_id"] == "permit-geo-v1-c4af8799de0283bb"
+    assert plan["scope"]["expected_rows_total"] == 3_010_802
+    assert plan["scope"]["expected_transformed_total"] == 2_811_767
+    assert plan["scope"]["expected_missing_total"] == 199_035
+    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["parent_mutated"] is False
+    assert plan["scope"]["public_row_level_release_approved"] is False

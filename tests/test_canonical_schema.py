@@ -4,10 +4,13 @@ from korea_business_lifecycle.canonical_schema import (
     EPISODE_STATE_PARTITION_FIELDS,
     FROZEN_V1_SOURCE_COLUMNS,
     FORBIDDEN_EPISODE_COLUMNS,
+    REQUIRED_GEOSPATIAL_COLUMNS,
     REQUIRED_EPISODE_COLUMNS,
+    load_permit_geospatial_schema,
     load_permit_parent_schema,
     load_permit_status_episode_schema,
     validate_permit_parent_schema,
+    validate_permit_geospatial_schema,
     validate_permit_status_episode_schema,
 )
 
@@ -50,6 +53,35 @@ def test_permit_parent_keeps_coordinates_untransformed() -> None:
     assert schema["metadata"]["coordinate_axis_order_validated"] is False
     assert "wgs84_latitude" in schema["explicitly_absent_fields"]
     assert "wgs84_longitude" in schema["explicitly_absent_fields"]
+
+
+def test_permit_geospatial_schema_is_separate_frozen_sidecar() -> None:
+    schema = load_permit_geospatial_schema()
+    assert validate_permit_geospatial_schema(schema) == []
+    assert schema["grain"] == "PERMIT_GEOSPATIAL_ENRICHMENT"
+    assert len(schema["columns"]) == 7
+    assert {item["name"] for item in schema["columns"]} == REQUIRED_GEOSPATIAL_COLUMNS
+    assert schema["scope"]["parent_schema"] == "schemas/permit_parent.v1.json"
+    assert schema["scope"]["parent_mutated"] is False
+    assert schema["scope"]["public_row_level_release_approved"] is False
+    assert schema["parent_linkage"]["official_primary_key_claim"] is False
+    assert schema["derivation_policy"]["source_x_interpretation"] == "EASTING"
+    assert schema["derivation_policy"]["source_y_interpretation"] == "NORTHING"
+
+
+def test_permit_geospatial_schema_rejects_parent_mutation_or_pk_semantic_drift() -> None:
+    schema = load_permit_geospatial_schema()
+    mutated = deepcopy(schema)
+    mutated["scope"]["parent_mutated"] = True
+    assert validate_permit_geospatial_schema(mutated)
+
+    mutated = deepcopy(schema)
+    mutated["parent_linkage"]["official_primary_key_claim"] = True
+    assert validate_permit_geospatial_schema(mutated)
+
+    mutated = deepcopy(schema)
+    mutated["derivation_policy"]["source_x_interpretation"] = "NORTHING"
+    assert validate_permit_geospatial_schema(mutated)
 
 
 def test_permit_status_episode_schema_is_frozen_and_valid() -> None:

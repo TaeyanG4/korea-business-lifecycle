@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and two `03→01` source-state reversals are confirmed, so code `03` is not treated as irreversible terminal closure. The v1 `PERMIT` and `PERMIT_STATUS_EPISODE` schemas remain frozen. The current-snapshot → `PERMIT` transformer passed the complete **3,010,802-row full dry run** with zero duplicate linkage candidates. Local production build `permit-v1-9908225df465e2ff` was then materialized as Parquet/ZSTD for all 3,010,802 rows, and an independent verifier rechecked hashes, schemas, ZSTD compression, and quality aggregates. Full geospatial QA inspected all 2,811,767 coordinate pairs; among 2,631,605 pairs eligible for coarse address-region comparison, `X=easting/Y=northing` matched 99.958% and there were zero candidate-B-only matches. Local WGS84 derivation is therefore approved for exactly these current-v1 artifacts, but it will be implemented as a separate enrichment rather than changing the frozen 26-column parent. Public row-level release and episode reconstruction remain blocked.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and two `03→01` source-state reversals are confirmed, so code `03` is not treated as irreversible terminal closure. The current-snapshot → `PERMIT` transformer and local Parquet/ZSTD production build `permit-v1-9908225df465e2ff` are complete and independently verified across all **3,010,802 rows**. Full geospatial QA inspected all 2,811,767 coordinate pairs and adopted `X=easting/Y=northing` for the approved current artifacts. A separate seven-column `PERMIT_GEOSPATIAL_ENRICHMENT` schema and deterministic WGS84 builder/verifier are now implemented and tested without changing the frozen 26-column parent. Planned build `permit-geo-v1-c4af8799de0283bb` contains 3,010,802 rows: 2,811,767 transformed coordinates and 199,035 null-preserved rows with missing source coordinates. The long WGS84 materialization awaits user execution. Public row-level release and episode reconstruction remain blocked.
 
 ## Documentation
 
@@ -55,6 +55,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Canonical PERMIT full-snapshot dry run](docs/en/canonical-permit-full-dry-run.md)
 - [Canonical PERMIT production materialization](docs/en/canonical-permit-materialization.md)
 - [Geospatial source X/Y axis QA](docs/en/geospatial-axis-qa.md)
+- [Canonical PERMIT WGS84 enrichment](docs/en/canonical-permit-geospatial.md)
 - [History sample expansion plan](docs/en/history-sample-expansion.md)
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)

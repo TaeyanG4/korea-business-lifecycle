@@ -24,10 +24,14 @@
       ↳ full-snapshot aggregate validator: passed/reviewed (2,811,767 coordinate pairs)
       ↳ local WGS84 derivation: approved for exact current-v1 artifacts
       ↳ frozen PERMIT parent mutation: prohibited; use separate enrichment
+  → PERMIT_GEOSPATIAL_ENRICHMENT
+      ↳ 7-column schema: frozen
+      ↳ builder + independent verifier: implemented/tested
+      ↳ production execution: pending user run
   → 별도 공개 검토
 ```
 
-v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer와 production Parquet/ZSTD build가 모두 3,010,802행 기준으로 완료·검증됐습니다. full geospatial QA도 2,811,767 coordinate pair 전체를 검사해 source X=easting/Y=northing 해석을 현재 승인된 v1 artifact 범위에서 채택했습니다. 기존 frozen `PERMIT` schema hash와 parent build는 변경하지 않고 WGS84는 별도 versioned enrichment로만 추가합니다. public release, episode reconstruction, Kaggle publication은 계속 차단 상태입니다.
+v1 parent/lifecycle 계약은 동결됐고, current snapshot → `PERMIT` transformer와 production Parquet/ZSTD build가 모두 3,010,802행 기준으로 완료·검증됐습니다. full geospatial QA도 2,811,767 coordinate pair 전체를 검사해 source X=easting/Y=northing 해석을 현재 승인된 v1 artifact 범위에서 채택했습니다. 기존 frozen `PERMIT` schema hash와 parent build는 변경하지 않고, 별도 7컬럼 `PERMIT_GEOSPATIAL_ENRICHMENT` schema와 deterministic builder/verifier를 구현했습니다. production WGS84 sidecar 실행만 사용자 장시간 작업으로 남아 있으며 public release, episode reconstruction, Kaggle publication은 계속 차단 상태입니다.
 
 ## 데이터 저장 원칙
 

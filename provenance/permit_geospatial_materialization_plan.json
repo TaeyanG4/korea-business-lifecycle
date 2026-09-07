@@ -1,0 +1,70 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "LOCAL_WGS84_PERMIT_ENRICHMENT_IMPLEMENTED_USER_EXECUTION_REQUIRED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+    "geospatial_build_id": "permit-geo-v1-c4af8799de0283bb",
+    "expected_rows_total": 3010802,
+    "expected_transformed_total": 2811767,
+    "expected_missing_total": 199035,
+    "output_root": "data/local/canonical/permit_geospatial/v1/permit-geo-v1-c4af8799de0283bb",
+    "execution_status": "NOT_EXECUTED",
+    "parent_mutated": false,
+    "public_row_level_release_approved": false,
+    "network_access_required": false
+  },
+  "contracts": {
+    "schema": "schemas/permit_geospatial.v1.json",
+    "schema_sha256": "585a2b7c04559b947f1d35a51f332b18488e9f263ce450464cf575251c9cb762",
+    "axis_evidence": "provenance/geospatial_full_axis.json",
+    "source_crs": "EPSG:5174",
+    "target_crs": "EPSG:4326",
+    "source_x_interpretation": "EASTING",
+    "source_y_interpretation": "NORTHING",
+    "parent_linkage": ["source_key", "source_row_number", "management_number"],
+    "official_primary_key_claim": false
+  },
+  "writer_contract": {
+    "pyarrow_version": "21.0.0",
+    "pyproj_version": "3.7.2",
+    "proj_version": "9.5.1",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000
+  },
+  "safety": {
+    "independently_verify_parent_before_write": true,
+    "require_reviewed_axis_evidence": true,
+    "partial_coordinate_pair_fails_closed": true,
+    "nonfinite_transform_fails_closed": true,
+    "outside_broad_korea_envelope_fails_closed": true,
+    "missing_source_coordinates_emit_null_wgs84": true,
+    "write_to_unique_staging_directory_first": true,
+    "remove_staging_directory_on_handled_failure": true,
+    "fail_if_final_build_directory_exists": true,
+    "future_snapshot_revalidation_required": true,
+    "frozen_parent_schema_mutated": false,
+    "public_release_approved": false
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/geospatial_enrichment.py",
+    "script": "scripts/materialize_permit_geospatial.py",
+    "verification_module": "src/korea_business_lifecycle/geospatial_enrichment_verify.py",
+    "verification_script": "scripts/verify_permit_geospatial_build.py",
+    "default_mode": "PLAN_ONLY",
+    "execute_flag": "--execute"
+  },
+  "execution": {
+    "plan_command": "python scripts/materialize_permit_geospatial.py",
+    "execute_command": "python scripts/materialize_permit_geospatial.py --execute",
+    "verify_command": "python scripts/verify_permit_geospatial_build.py",
+    "progress_stream": "stderr",
+    "final_aggregate_json_stream": "stdout"
+  },
+  "next_gate": "user executes the local WGS84 enrichment and independent verifier; keep row-level publication and lifecycle episode reconstruction blocked"
+}

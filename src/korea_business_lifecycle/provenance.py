@@ -85,6 +85,10 @@ def load_geospatial_full_axis() -> dict[str, Any]:
     return load_json("provenance/geospatial_full_axis.json")
 
 
+def load_permit_geospatial_materialization_plan() -> dict[str, Any]:
+    return load_json("provenance/permit_geospatial_materialization_plan.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -453,6 +457,16 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("geospatial full-axis result reference changed")
     if next_gate.get("geospatial_full_axis_status") != "PASSED_REVIEWED_CURRENT_V1":
         errors.append("geospatial full-axis status changed")
+    if next_gate.get("permit_geospatial_schema") != "schemas/permit_geospatial.v1.json":
+        errors.append("permit geospatial schema gate reference changed")
+    if next_gate.get("permit_geospatial_schema_status") != "FROZEN":
+        errors.append("permit geospatial schema must remain frozen")
+    if next_gate.get("permit_geospatial_materialization_plan") != (
+        "provenance/permit_geospatial_materialization_plan.json"
+    ):
+        errors.append("permit geospatial materialization plan reference changed")
+    if next_gate.get("permit_geospatial_materialization_status") != "IMPLEMENTED_NOT_EXECUTED":
+        errors.append("permit geospatial materialization status changed")
     return errors
 
 
@@ -1013,4 +1027,107 @@ def validate_geospatial_full_axis(review: dict[str, Any]) -> list[str]:
         errors.append("reviewed full geospatial result must keep public WGS84 release blocked")
     if reviewed.get("frozen_permit_parent_schema_mutated") is not False:
         errors.append("geospatial review must not mutate the frozen PERMIT parent schema")
+    return errors
+
+
+def validate_permit_geospatial_materialization_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "LOCAL_WGS84_PERMIT_ENRICHMENT_IMPLEMENTED_USER_EXECUTION_REQUIRED":
+        errors.append("permit geospatial materialization plan decision changed")
+
+    scope = plan.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("permit geospatial materialization scope must exactly match v1 sources")
+    if scope.get("parent_permit_build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("permit geospatial parent build id changed")
+    if scope.get("geospatial_build_id") != "permit-geo-v1-c4af8799de0283bb":
+        errors.append("permit geospatial deterministic build id changed")
+    if scope.get("expected_rows_total") != 3_010_802:
+        errors.append("permit geospatial expected row total changed")
+    if scope.get("expected_transformed_total") != 2_811_767:
+        errors.append("permit geospatial expected transformed total changed")
+    if scope.get("expected_missing_total") != 199_035:
+        errors.append("permit geospatial expected missing total changed")
+    if scope.get("execution_status") != "NOT_EXECUTED":
+        errors.append("permit geospatial tracked plan must remain not executed until user run")
+    for key in ("parent_mutated", "public_row_level_release_approved", "network_access_required"):
+        if scope.get(key) is not False:
+            errors.append(f"permit geospatial plan must keep {key}=false")
+
+    contracts = plan.get("contracts", {})
+    if contracts.get("schema") != "schemas/permit_geospatial.v1.json":
+        errors.append("permit geospatial schema reference changed")
+    if contracts.get("schema_sha256") != "585a2b7c04559b947f1d35a51f332b18488e9f263ce450464cf575251c9cb762":
+        errors.append("permit geospatial schema SHA-256 changed")
+    if contracts.get("axis_evidence") != "provenance/geospatial_full_axis.json":
+        errors.append("permit geospatial axis evidence reference changed")
+    if contracts.get("source_crs") != "EPSG:5174" or contracts.get("target_crs") != "EPSG:4326":
+        errors.append("permit geospatial CRS contract changed")
+    if contracts.get("source_x_interpretation") != "EASTING":
+        errors.append("permit geospatial source X interpretation changed")
+    if contracts.get("source_y_interpretation") != "NORTHING":
+        errors.append("permit geospatial source Y interpretation changed")
+    if contracts.get("parent_linkage") != ["source_key", "source_row_number", "management_number"]:
+        errors.append("permit geospatial parent linkage changed")
+    if contracts.get("official_primary_key_claim") is not False:
+        errors.append("permit geospatial linkage must not claim an official primary key")
+
+    writer = plan.get("writer_contract", {})
+    expected_writer = {
+        "pyarrow_version": "21.0.0",
+        "pyproj_version": "3.7.2",
+        "proj_version": "9.5.1",
+        "format": "PARQUET",
+        "parquet_version": "2.6",
+        "compression": "ZSTD",
+        "compression_level": 9,
+        "data_page_version": "2.0",
+        "rows_per_batch": 50_000,
+        "rows_per_row_group": 50_000,
+    }
+    if writer != expected_writer:
+        errors.append("permit geospatial writer contract changed")
+
+    safety = plan.get("safety", {})
+    for key in (
+        "independently_verify_parent_before_write",
+        "require_reviewed_axis_evidence",
+        "partial_coordinate_pair_fails_closed",
+        "nonfinite_transform_fails_closed",
+        "outside_broad_korea_envelope_fails_closed",
+        "missing_source_coordinates_emit_null_wgs84",
+        "write_to_unique_staging_directory_first",
+        "remove_staging_directory_on_handled_failure",
+        "fail_if_final_build_directory_exists",
+        "future_snapshot_revalidation_required",
+    ):
+        if safety.get(key) is not True:
+            errors.append(f"permit geospatial safety control {key} must remain enabled")
+    for key in ("frozen_parent_schema_mutated", "public_release_approved"):
+        if safety.get(key) is not False:
+            errors.append(f"permit geospatial safety control {key} must remain false")
+
+    implementation = plan.get("implementation", {})
+    if implementation.get("module") != "src/korea_business_lifecycle/geospatial_enrichment.py":
+        errors.append("permit geospatial implementation module changed")
+    if implementation.get("script") != "scripts/materialize_permit_geospatial.py":
+        errors.append("permit geospatial materialization script changed")
+    if implementation.get("verification_module") != (
+        "src/korea_business_lifecycle/geospatial_enrichment_verify.py"
+    ):
+        errors.append("permit geospatial verification module changed")
+    if implementation.get("verification_script") != "scripts/verify_permit_geospatial_build.py":
+        errors.append("permit geospatial verification script changed")
+    if implementation.get("default_mode") != "PLAN_ONLY" or implementation.get("execute_flag") != "--execute":
+        errors.append("permit geospatial execution safety defaults changed")
+
+    execution = plan.get("execution", {})
+    if execution.get("execute_command") != "python scripts/materialize_permit_geospatial.py --execute":
+        errors.append("permit geospatial execute command changed")
+    if execution.get("verify_command") != "python scripts/verify_permit_geospatial_build.py":
+        errors.append("permit geospatial verify command changed")
+    if execution.get("progress_stream") != "stderr":
+        errors.append("permit geospatial progress stream changed")
+    if execution.get("final_aggregate_json_stream") != "stdout":
+        errors.append("permit geospatial final JSON stream changed")
     return errors

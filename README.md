@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 두 `03→01` source-state reversal이 확인되어 `03`을 irreversible terminal closure로 사용하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 두 schema를 동결했습니다. current snapshot → `PERMIT` transformer는 **전체 3,010,802행 full dry run**을 통과했고 linkage candidate 중복은 0건입니다. local-only Parquet/ZSTD production build `permit-v1-9908225df465e2ff`도 3,010,802행으로 생성됐으며 독립 verifier가 hash/schema/ZSTD/quality aggregate를 모두 재검증했습니다. geospatial full QA는 2,811,767 coordinate pair 전체를 검사했고, 주소 거시권역 평가 가능 2,631,605건에서 `X=easting/Y=northing`이 99.958% 일치하며 반대 해석만 단독으로 맞는 사례는 0건이었습니다. 따라서 정확히 이 current-v1 artifact 집합에 대해서는 local WGS84 derivation을 승인하되 frozen 26컬럼 parent는 변경하지 않고 별도 enrichment로 구현합니다. public row-level release와 episode reconstruction은 계속 차단합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 두 `03→01` source-state reversal이 확인되어 `03`을 irreversible terminal closure로 사용하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했습니다. current snapshot → `PERMIT` transformer와 local Parquet/ZSTD production build `permit-v1-9908225df465e2ff`는 **전체 3,010,802행** 기준으로 완료·독립 검증됐습니다. geospatial full QA는 2,811,767 coordinate pair 전체를 검사해 현재 승인 artifact에 대해 `X=easting/Y=northing`을 채택했습니다. frozen 26컬럼 parent는 그대로 유지하면서 별도 7컬럼 `PERMIT_GEOSPATIAL_ENRICHMENT` schema와 deterministic WGS84 builder/verifier를 구현·테스트했습니다. 예정 build `permit-geo-v1-c4af8799de0283bb`는 3,010,802행 중 2,811,767건을 변환하고 199,035건은 source 좌표 누락으로 null 보존합니다. 실제 장시간 WGS84 materialization은 사용자 실행 대기 상태이며 public row-level release와 episode reconstruction은 계속 차단합니다.
 
 ## 문서
 
@@ -55,6 +55,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [Canonical PERMIT full-snapshot dry run](docs/ko/canonical-permit-full-dry-run.md)
 - [Canonical PERMIT production materialization](docs/ko/canonical-permit-materialization.md)
 - [Geospatial source X/Y axis QA](docs/ko/geospatial-axis-qa.md)
+- [Canonical PERMIT WGS84 enrichment](docs/ko/canonical-permit-geospatial.md)
 - [History 표본 확장 계획](docs/ko/history-sample-expansion.md)
 - [5개 자치단체 History 표본 확장 결과](docs/ko/expanded-history-findings.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)
