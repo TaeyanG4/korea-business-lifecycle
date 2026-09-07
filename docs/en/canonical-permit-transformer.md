@@ -46,4 +46,4 @@ The current functions are for synthetic/bounded in-memory validation and are not
 
 ## Next gate
 
-Bounded compatibility has now passed on 256 real current-snapshot rows per source. The next single step is a progress-reporting **full-snapshot streaming dry-run validator**. The potentially long full scan will be run by the user, and that gate will still write no production canonical dataset.
+Bounded compatibility and the complete 3,010,802-row full-snapshot dry run have now passed. The current next gate is local-only production Parquet/ZSTD materialization for the identical approved input hashes.

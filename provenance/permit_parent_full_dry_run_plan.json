@@ -7,7 +7,7 @@
     "network_access_required": false,
     "production_materialization_performed": false,
     "row_level_values_recorded": false,
-    "execution_status": "NOT_EXECUTED"
+    "execution_status": "COMPLETED_PASS"
   },
   "implementation": {
     "module": "src/korea_business_lifecycle/canonical_full_dry_run.py",
@@ -52,5 +52,6 @@
     "coordinate_values_in_stdout_or_stderr": false,
     "canonical_rows_written": false
   },
-  "next_gate": "user executes the full dry run and returns the aggregate JSON; analyze any failures without exposing row-level source values"
+  "result_provenance": "provenance/permit_parent_full_dry_run.json",
+  "next_gate": "use the passed full-snapshot evidence to gate local-only production PERMIT materialization for the identical immutable source artifacts"
 }

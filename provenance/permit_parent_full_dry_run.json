@@ -1,0 +1,102 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "FULL_CURRENT_SNAPSHOT_DRY_RUN_PASSED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "expected_rows_total": 3010802,
+    "rows_examined_total": 3010802,
+    "rows_transformed_total": 3010802,
+    "full_snapshot_scan_performed": true,
+    "production_materialization_performed": false,
+    "row_level_values_recorded": false
+  },
+  "contracts": {
+    "permit_parent_schema": "schemas/permit_parent.v1.json",
+    "permit_parent_transformer": "src/korea_business_lifecycle/canonical_permit.py",
+    "full_dry_run_validator": "src/korea_business_lifecycle/canonical_full_dry_run.py",
+    "uniqueness_backend": "EPHEMERAL_SQLITE_EXACT_TEXT_PRIMARY_KEY"
+  },
+  "results": [
+    {
+      "source_key": "general_restaurants",
+      "retrieval_id": "20260907T022234Z-0cfae3c716d5",
+      "artifact_sha256": "0cfae3c716d5bc61b63832308897d15ca1d7f25f3547bc7b146f933bff2d6fd8",
+      "artifact_bytes": 696584488,
+      "expected_rows": 2295369,
+      "rows_examined": 2295369,
+      "rows_transformed": 2295369,
+      "encoding": "cp949",
+      "source_column_count": 39,
+      "output_column_count": 26,
+      "permit_date_quality": {"INVALID": 4, "VALID": 2295365},
+      "closure_date_quality": {"MISSING": 676350, "VALID": 1619019},
+      "null_source_coordinate_x": 160923,
+      "null_source_coordinate_y": 160923,
+      "duplicate_linkage_candidates": 0,
+      "temporary_uniqueness_index_removed": true,
+      "status": "PASS"
+    },
+    {
+      "source_key": "rest_cafes",
+      "retrieval_id": "20260907T021951Z-64b884979e15",
+      "artifact_sha256": "64b884979e1533d0672ed11060b9c0438c5124e0f8b66d804bd1bae54afa3082",
+      "artifact_bytes": 207347981,
+      "expected_rows": 645952,
+      "rows_examined": 645952,
+      "rows_transformed": 645952,
+      "encoding": "cp949",
+      "source_column_count": 39,
+      "output_column_count": 26,
+      "permit_date_quality": {"VALID": 645952},
+      "closure_date_quality": {"MISSING": 198753, "VALID": 447199},
+      "null_source_coordinate_x": 34150,
+      "null_source_coordinate_y": 34150,
+      "duplicate_linkage_candidates": 0,
+      "temporary_uniqueness_index_removed": true,
+      "status": "PASS"
+    },
+    {
+      "source_key": "bakeries",
+      "retrieval_id": "20260907T021916Z-32e93fdc827b",
+      "artifact_sha256": "32e93fdc827bf8bb8066acbeaecc02e458d2b920957407dd00651c87243879c3",
+      "artifact_bytes": 22654977,
+      "expected_rows": 69481,
+      "rows_examined": 69481,
+      "rows_transformed": 69481,
+      "encoding": "cp949",
+      "source_column_count": 39,
+      "output_column_count": 26,
+      "permit_date_quality": {"VALID": 69481},
+      "closure_date_quality": {"MISSING": 20015, "VALID": 49466},
+      "null_source_coordinate_x": 3962,
+      "null_source_coordinate_y": 3962,
+      "duplicate_linkage_candidates": 0,
+      "temporary_uniqueness_index_removed": true,
+      "status": "PASS"
+    }
+  ],
+  "aggregate": {
+    "rows_examined": 3010802,
+    "rows_transformed": 3010802,
+    "permit_date_quality": {"INVALID": 4, "VALID": 3010798},
+    "closure_date_quality": {"MISSING": 895118, "VALID": 2115684},
+    "null_source_coordinate_x": 199035,
+    "null_source_coordinate_y": 199035,
+    "duplicate_linkage_candidates": 0,
+    "all_sources_passed": true,
+    "all_temporary_uniqueness_indexes_removed": true
+  },
+  "privacy": {
+    "management_numbers_recorded": false,
+    "business_names_recorded": false,
+    "addresses_recorded": false,
+    "telephone_numbers_recorded": false,
+    "coordinate_values_recorded": false
+  },
+  "interpretation": {
+    "invalid_permit_dates": "the four INVALID permit dates are the same aggregate anomaly count already observed in full-snapshot profiling; they remain null plus INVALID quality rather than failing transformation",
+    "identity": "zero duplicate linkage candidates is an exact full-snapshot validation for these immutable artifacts, not a declaration that MNG_NO is an official source primary key",
+    "publication": "the full dry run approves local canonical materialization design only; public row-level publication remains blocked"
+  },
+  "next_gate": "implement and validate a local-only production PERMIT Parquet/ZSTD materializer pinned to these exact full-dry-run-approved input artifacts"
+}

@@ -8,13 +8,13 @@
 ## Local verification
 
 ```bash
-python -m pip install -e ".[test]"
+python -m pip install -e ".[test,build]"
 python -m compileall src scripts tests
 pytest -v
 python scripts/repo_check.py
 ```
 
-Network sockets are disabled during pytest. Future real-data integration tests will be opt-in and will reference approved artifacts under the Git-ignored runtime data root.
+Network sockets are disabled during pytest. The `build` extra pins `pyarrow==21.0.0` for reproducible Parquet writer behavior. Real-data artifacts remain only under the Git-ignored runtime data root.
 
 ## Git milestone gate
 

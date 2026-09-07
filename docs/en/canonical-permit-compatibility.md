@@ -44,4 +44,4 @@ Management numbers, business names, addresses, telephone numbers, and coordinate
 
 ## Next gate
 
-The **full-snapshot streaming dry-run validator is now implemented**. The next gate is for the user to execute the roughly 3.01-million-row scan and return the aggregate result. Progress is emitted live on stderr and no canonical output file is written. See `canonical-permit-full-dry-run.md` for the execution contract.
+The full-snapshot streaming dry run has also completed with all 3,010,802 rows passing. The next gate is the local-only Parquet/ZSTD production build described in `canonical-permit-materialization.md`.

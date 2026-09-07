@@ -15,13 +15,15 @@ official source evidence
   → deterministic PERMIT parent transformation
       ↳ synthetic 39-column fixture: validated
       ↳ bounded real-snapshot compatibility: passed (256 rows/source)
-      ↳ full-snapshot streaming dry run: implemented / user execution pending
-  → geospatial normalization
-  → deterministic Parquet/ZSTD build
+      ↳ full-snapshot streaming dry run: passed (3,010,802 rows)
+  → local PERMIT Parquet/ZSTD materialization
+      ↳ builder: implemented/tested
+      ↳ production execution: pending user run
+  → separate geospatial QA / derived normalization
   → separate publication review
 ```
 
-The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer has passed both synthetic validation and bounded real compatibility on 256 rows per source. A progress-reporting full-snapshot dry-run validator is now implemented; the long local execution is pending user execution. Production canonical materialization, full-history ingestion, episode reconstruction, and Kaggle publication are not implemented yet.
+The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer has passed synthetic validation, bounded real compatibility on 256 rows per source, and the complete 3,010,802-row full dry run. A local-only production Parquet/ZSTD builder restricted to the exact approved input SHA-256 values is also implemented and tested. The long production materialization remains pending user execution; public row-level release, WGS84 generation, full-history ingestion, episode reconstruction, and Kaggle publication remain disabled.
 
 ## Data storage rule
 

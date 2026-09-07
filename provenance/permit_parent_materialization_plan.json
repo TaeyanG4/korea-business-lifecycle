@@ -1,0 +1,50 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "LOCAL_PRODUCTION_PERMIT_MATERIALIZER_IMPLEMENTATION_GATE",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "expected_rows_total": 3010802,
+    "input_evidence": "provenance/permit_parent_full_dry_run.json",
+    "output_root": "data/local/canonical/permit/v1/<build_id>",
+    "git_ignored": true,
+    "public_row_level_release_approved": false,
+    "execution_status": "NOT_EXECUTED"
+  },
+  "writer_contract": {
+    "library": "pyarrow",
+    "library_version": "21.0.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000,
+    "files": "one Parquet file per source plus one local build manifest"
+  },
+  "safety": {
+    "recompute_input_sha256_before_write": true,
+    "require_exact_full_dry_run_artifact_hashes": true,
+    "require_full_dry_run_duplicate_count_zero": true,
+    "reuse_uniqueness_proof_only_for_identical_sha256": true,
+    "fail_if_final_build_directory_exists": true,
+    "write_to_unique_staging_directory_first": true,
+    "remove_staging_directory_on_handled_failure": true,
+    "canonical_status_mapping_enabled": false,
+    "wgs84_generation_enabled": false,
+    "episode_reconstruction_enabled": false
+  },
+  "privacy": {
+    "output_is_local_private_runtime_data": true,
+    "row_level_stdout_or_stderr": false,
+    "tracked_row_level_artifact": false,
+    "publication_review_required_before_any_distribution": true
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/canonical_materialization.py",
+    "script": "scripts/materialize_permit_parent.py",
+    "default_mode": "PLAN_ONLY",
+    "execute_flag": "--execute"
+  },
+  "next_gate": "after implementation and bounded tests pass, user executes the long local production materialization and returns the local manifest summary for verification"
+}

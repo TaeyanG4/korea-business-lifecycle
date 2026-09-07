@@ -61,6 +61,14 @@ def load_permit_parent_full_dry_run_plan() -> dict[str, Any]:
     return load_json("provenance/permit_parent_full_dry_run_plan.json")
 
 
+def load_permit_parent_full_dry_run() -> dict[str, Any]:
+    return load_json("provenance/permit_parent_full_dry_run.json")
+
+
+def load_permit_parent_materialization_plan() -> dict[str, Any]:
+    return load_json("provenance/permit_parent_materialization_plan.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -383,8 +391,8 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("next gate must remain Phase 5 canonical parent transformation")
     if next_gate.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
         errors.append("permit parent transformer reference changed")
-    if next_gate.get("permit_parent_transformer_status") != "BOUNDED_REAL_VALIDATED":
-        errors.append("permit parent transformer must remain bounded-real validated at this gate")
+    if next_gate.get("permit_parent_transformer_status") != "FULL_SNAPSHOT_VALIDATED":
+        errors.append("permit parent transformer must remain full-snapshot validated at this gate")
     if next_gate.get("permit_parent_compatibility") != "provenance/permit_parent_compatibility.json":
         errors.append("permit parent compatibility provenance reference changed")
     if next_gate.get("permit_parent_compatibility_status") != "PASSED_256_ROWS_PER_SOURCE":
@@ -393,8 +401,14 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         "provenance/permit_parent_full_dry_run_plan.json"
     ):
         errors.append("permit parent full dry-run plan reference changed")
-    if next_gate.get("permit_parent_full_dry_run_status") != "READY_FOR_USER_EXECUTION":
-        errors.append("permit parent full dry-run must remain ready for user execution at this gate")
+    if next_gate.get("permit_parent_full_dry_run") != "provenance/permit_parent_full_dry_run.json":
+        errors.append("permit parent full dry-run provenance reference changed")
+    if next_gate.get("permit_parent_full_dry_run_status") != "PASSED_3010802_ROWS":
+        errors.append("permit parent full dry-run pass status changed")
+    if next_gate.get("permit_parent_materialization_plan") != "provenance/permit_parent_materialization_plan.json":
+        errors.append("permit parent materialization plan reference changed")
+    if next_gate.get("permit_parent_materialization_status") != "IMPLEMENTED_NOT_EXECUTED":
+        errors.append("permit parent materialization status changed")
     return errors
 
 
@@ -485,8 +499,8 @@ def validate_permit_parent_full_dry_run_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("full dry-run must not materialize production canonical output")
     if scope.get("row_level_values_recorded") is not False:
         errors.append("full dry-run plan must not record row-level values")
-    if scope.get("execution_status") != "NOT_EXECUTED":
-        errors.append("full dry-run provenance must remain not-executed until user returns results")
+    if scope.get("execution_status") != "COMPLETED_PASS":
+        errors.append("full dry-run plan must record the completed passing user execution")
 
     implementation = plan.get("implementation", {})
     if implementation.get("module") != "src/korea_business_lifecycle/canonical_full_dry_run.py":
@@ -519,6 +533,8 @@ def validate_permit_parent_full_dry_run_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("full dry-run progress must remain on stderr")
     if execution.get("final_aggregate_json_stream") != "stdout":
         errors.append("full dry-run final aggregate JSON must remain on stdout")
+    if plan.get("result_provenance") != "provenance/permit_parent_full_dry_run.json":
+        errors.append("full dry-run result provenance reference changed")
 
     privacy = plan.get("privacy", {})
     for key in (
@@ -531,4 +547,133 @@ def validate_permit_parent_full_dry_run_plan(plan: dict[str, Any]) -> list[str]:
     ):
         if privacy.get(key) is not False:
             errors.append(f"full dry-run privacy contract must keep {key}=false")
+    return errors
+
+
+def validate_permit_parent_full_dry_run(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != "FULL_CURRENT_SNAPSHOT_DRY_RUN_PASSED":
+        errors.append("full current-snapshot dry-run decision changed")
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("full dry-run scope must exactly match v1 sources")
+    if scope.get("expected_rows_total") != 3_010_802:
+        errors.append("full dry-run expected row total changed")
+    if scope.get("rows_examined_total") != 3_010_802 or scope.get("rows_transformed_total") != 3_010_802:
+        errors.append("full dry-run transformed row total changed")
+    if scope.get("full_snapshot_scan_performed") is not True:
+        errors.append("full dry-run must record completed full snapshot scan")
+    if scope.get("production_materialization_performed") is not False:
+        errors.append("full dry-run must not claim production materialization")
+    if scope.get("row_level_values_recorded") is not False:
+        errors.append("full dry-run provenance must remain aggregate-only")
+
+    results = review.get("results", [])
+    expected_rows = {
+        "general_restaurants": 2_295_369,
+        "rest_cafes": 645_952,
+        "bakeries": 69_481,
+    }
+    if {item.get("source_key") for item in results} != V1_SOURCE_KEYS or len(results) != 3:
+        errors.append("full dry-run must contain exactly three v1 source results")
+    for item in results:
+        source_key = item.get("source_key")
+        expected = expected_rows.get(source_key)
+        if item.get("status") != "PASS":
+            errors.append(f"{source_key}: full dry-run did not pass")
+        if expected is None or item.get("rows_examined") != expected or item.get("rows_transformed") != expected:
+            errors.append(f"{source_key}: full dry-run row count changed")
+        if item.get("source_column_count") != 39 or item.get("output_column_count") != 26:
+            errors.append(f"{source_key}: full dry-run column contract changed")
+        if item.get("encoding") != "cp949":
+            errors.append(f"{source_key}: full dry-run encoding changed")
+        if item.get("duplicate_linkage_candidates") != 0:
+            errors.append(f"{source_key}: full dry-run uniqueness invariant failed")
+        if item.get("temporary_uniqueness_index_removed") is not True:
+            errors.append(f"{source_key}: full dry-run temporary uniqueness index was not removed")
+        if expected is not None and sum(item.get("permit_date_quality", {}).values()) != expected:
+            errors.append(f"{source_key}: permit-date quality counts do not sum to full source rows")
+        if expected is not None and sum(item.get("closure_date_quality", {}).values()) != expected:
+            errors.append(f"{source_key}: closure-date quality counts do not sum to full source rows")
+
+    aggregate = review.get("aggregate", {})
+    if aggregate.get("rows_examined") != 3_010_802 or aggregate.get("rows_transformed") != 3_010_802:
+        errors.append("full dry-run aggregate row total changed")
+    if aggregate.get("permit_date_quality") != {"INVALID": 4, "VALID": 3_010_798}:
+        errors.append("full dry-run permit-date quality aggregate changed")
+    if aggregate.get("closure_date_quality") != {"MISSING": 895_118, "VALID": 2_115_684}:
+        errors.append("full dry-run closure-date quality aggregate changed")
+    if aggregate.get("duplicate_linkage_candidates") != 0:
+        errors.append("full dry-run aggregate uniqueness result changed")
+    if aggregate.get("all_sources_passed") is not True:
+        errors.append("full dry-run aggregate pass flag changed")
+    if aggregate.get("all_temporary_uniqueness_indexes_removed") is not True:
+        errors.append("full dry-run temporary-state cleanup flag changed")
+
+    privacy = review.get("privacy", {})
+    for key in (
+        "management_numbers_recorded",
+        "business_names_recorded",
+        "addresses_recorded",
+        "telephone_numbers_recorded",
+        "coordinate_values_recorded",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"full dry-run provenance must keep {key}=false")
+    return errors
+
+
+def validate_permit_parent_materialization_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "LOCAL_PRODUCTION_PERMIT_MATERIALIZER_IMPLEMENTATION_GATE":
+        errors.append("permit parent materialization plan decision changed")
+    scope = plan.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("materialization plan scope must exactly match v1 sources")
+    if scope.get("expected_rows_total") != 3_010_802:
+        errors.append("materialization plan expected row total changed")
+    if scope.get("input_evidence") != "provenance/permit_parent_full_dry_run.json":
+        errors.append("materialization plan input evidence changed")
+    if scope.get("git_ignored") is not True:
+        errors.append("materialization output must remain Git-ignored")
+    if scope.get("public_row_level_release_approved") is not False:
+        errors.append("materialization plan must keep public row-level release blocked")
+    if scope.get("execution_status") != "NOT_EXECUTED":
+        errors.append("tracked materialization plan must remain not executed")
+
+    writer = plan.get("writer_contract", {})
+    expected_writer = {
+        "library": "pyarrow",
+        "library_version": "21.0.0",
+        "format": "PARQUET",
+        "parquet_version": "2.6",
+        "compression": "ZSTD",
+        "compression_level": 9,
+        "data_page_version": "2.0",
+        "rows_per_batch": 50_000,
+        "rows_per_row_group": 50_000,
+        "files": "one Parquet file per source plus one local build manifest",
+    }
+    if writer != expected_writer:
+        errors.append("materialization writer contract changed")
+
+    safety = plan.get("safety", {})
+    for key in (
+        "recompute_input_sha256_before_write",
+        "require_exact_full_dry_run_artifact_hashes",
+        "require_full_dry_run_duplicate_count_zero",
+        "reuse_uniqueness_proof_only_for_identical_sha256",
+        "fail_if_final_build_directory_exists",
+        "write_to_unique_staging_directory_first",
+        "remove_staging_directory_on_handled_failure",
+    ):
+        if safety.get(key) is not True:
+            errors.append(f"materialization safety control {key} must remain enabled")
+    for key in (
+        "canonical_status_mapping_enabled",
+        "wgs84_generation_enabled",
+        "episode_reconstruction_enabled",
+    ):
+        if safety.get(key) is not False:
+            errors.append(f"materialization safety control {key} must remain disabled")
     return errors

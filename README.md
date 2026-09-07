@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 후속 3일 probe에서 두 `03→01` 사례가 실제 `폐업→영업/정상` source-state reversal로 확인됐습니다. 따라서 `03`을 irreversible terminal closure로 사용하는 규칙은 채택하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고, `PERMIT` parent 26컬럼 schema와 `PERMIT_STATUS_EPISODE` 23컬럼 schema를 모두 동결했습니다. current snapshot → `PERMIT` deterministic transformer는 synthetic fixture와 source별 256행 실제 bounded compatibility를 통과했습니다. 전체 3,010,802행을 canonical output 없이 스트리밍 검증하는 full dry-run validator와 실시간 진행률도 구현했으며, 장시간 full scan 자체는 사용자 실행 대기 상태입니다. episode 경계는 left/interval/right censoring을 보존하며 exact transition time, canonical active/closed 상태, terminal event를 추론하지 않습니다. production canonical materialization과 episode reconstruction은 아직 활성화하지 않습니다. 인증키는 활성화됐으며 프로젝트는 Encoding/Decoding serviceKey를 모두 지원합니다. 실제 키는 Git에 커밋하지 않고 로컬 `.env` 또는 `KBL_DATA_GO_KR_SERVICE_KEY` 환경변수로만 전달합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 후속 3일 probe에서 두 `03→01` 사례가 실제 `폐업→영업/정상` source-state reversal로 확인됐습니다. 따라서 `03`을 irreversible terminal closure로 사용하는 규칙은 채택하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고, `PERMIT` parent 26컬럼 schema와 `PERMIT_STATUS_EPISODE` 23컬럼 schema를 모두 동결했습니다. current snapshot → `PERMIT` deterministic transformer는 synthetic fixture, source별 256행 실제 bounded compatibility, 그리고 **전체 3,010,802행 full-snapshot dry run**을 모두 통과했습니다. full scan에서 linkage candidate 중복은 0건이었고 permit-date `INVALID` 4건은 기존 profiling anomaly와 일치해 null + quality flag로 보존됩니다. 이어서 동일 hash의 승인된 source만 입력으로 받는 local-only Parquet/ZSTD production materializer도 구현·테스트했으며 실제 장시간 production build만 사용자 실행 대기 상태입니다. episode 경계는 left/interval/right censoring을 보존하며 exact transition time, canonical active/closed 상태, terminal event를 추론하지 않습니다. public row-level release, WGS84 생성, episode reconstruction은 아직 활성화하지 않습니다. 인증키는 활성화됐으며 실제 키는 Git에 커밋하지 않고 로컬 `.env` 또는 `KBL_DATA_GO_KR_SERVICE_KEY` 환경변수로만 전달합니다.
 
 ## 문서
 
@@ -53,6 +53,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [Canonical PERMIT transformer](docs/ko/canonical-permit-transformer.md)
 - [Canonical PERMIT bounded real-data compatibility](docs/ko/canonical-permit-compatibility.md)
 - [Canonical PERMIT full-snapshot dry run](docs/ko/canonical-permit-full-dry-run.md)
+- [Canonical PERMIT production materialization](docs/ko/canonical-permit-materialization.md)
 - [History 표본 확장 계획](docs/ko/history-sample-expansion.md)
 - [5개 자치단체 History 표본 확장 결과](docs/ko/expanded-history-findings.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)

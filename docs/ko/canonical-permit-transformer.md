@@ -46,4 +46,4 @@ lineage context는 다음 세 값을 요구합니다.
 
 ## 다음 gate
 
-실제 current snapshot에서 source별 256행 bounded compatibility validation까지 통과했습니다. 다음 한 단계는 진행률이 보이는 **full-snapshot streaming dry-run validator**를 구현하는 것입니다. 장시간 전체 scan은 사용자가 직접 실행하며, 이 gate에서도 production canonical dataset을 쓰지 않습니다.
+source별 256행 bounded compatibility와 전체 3,010,802행 full-snapshot dry run까지 통과했습니다. 현재 다음 gate는 동일 hash input에 대한 local-only production Parquet/ZSTD materialization입니다.

@@ -2,7 +2,7 @@
 
 확인일: **2026-09-07**
 
-실제 current snapshot 전체를 frozen 26컬럼 `PERMIT` transformer에 **스트리밍으로 통과시키되 canonical row를 저장하지 않는** dry-run validator를 구현했습니다. 약 301만 행을 읽는 장시간 로컬 작업이므로 구현·테스트·plan 검증까지만 저장소에서 완료하고, 실제 실행은 사용자가 직접 수행합니다.
+실제 current snapshot 전체를 frozen 26컬럼 `PERMIT` transformer에 **스트리밍으로 통과시키되 canonical row를 저장하지 않는** dry-run validator를 구현했고, 사용자가 전체 3,010,802행 실행까지 완료했습니다.
 
 ## 실행 범위
 
@@ -62,6 +62,6 @@ python scripts/dry_run_full_current_snapshot.py --execute --source bakeries
 
 ## 현재 상태
 
-코드·synthetic tests·실제 artifact plan 검증은 완료됐습니다. 실제 3,010,802행 full scan은 아직 수행하지 않았습니다. `provenance/permit_parent_full_dry_run_plan.json`의 execution status도 `NOT_EXECUTED`로 유지합니다.
+전체 3,010,802행이 모두 `PASS`했습니다. `source_key + management_number` 중복은 0건이었고 임시 uniqueness index는 세 source 모두 정상 삭제됐습니다. permit-date quality는 `VALID` 3,010,798행 / `INVALID` 4행이며, 이 4건은 이전 full profiling에서 이미 관찰된 anomaly count와 일치합니다. closure-date quality는 `VALID` 2,115,684행 / `MISSING` 895,118행입니다.
 
-다음 gate는 사용자가 full dry run을 실행한 뒤 나온 aggregate JSON을 분석하고, 모든 source가 통과한 경우에만 production canonical materialization 설계를 진행하는 것입니다.
+aggregate-only 결과는 `provenance/permit_parent_full_dry_run.json`에 고정했습니다. 다음 gate는 동일 SHA-256 source에 대한 local-only production `PERMIT` Parquet/ZSTD materialization입니다.

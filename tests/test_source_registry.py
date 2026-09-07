@@ -9,7 +9,9 @@ from korea_business_lifecycle.provenance import (
     load_license_review,
     load_observed_snapshot_summary,
     load_permit_parent_compatibility,
+    load_permit_parent_full_dry_run,
     load_permit_parent_full_dry_run_plan,
+    load_permit_parent_materialization_plan,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -22,7 +24,9 @@ from korea_business_lifecycle.provenance import (
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_permit_parent_compatibility,
+    validate_permit_parent_full_dry_run,
     validate_permit_parent_full_dry_run_plan,
+    validate_permit_parent_materialization_plan,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -151,11 +155,14 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_status_episode_schema_status"] == "FROZEN"
     assert decision["next_gate"]["phase"] == "Phase 5 Canonical Parent Transformation"
     assert decision["next_gate"]["permit_parent_transformer"] == "src/korea_business_lifecycle/canonical_permit.py"
-    assert decision["next_gate"]["permit_parent_transformer_status"] == "BOUNDED_REAL_VALIDATED"
+    assert decision["next_gate"]["permit_parent_transformer_status"] == "FULL_SNAPSHOT_VALIDATED"
     assert decision["next_gate"]["permit_parent_compatibility"] == "provenance/permit_parent_compatibility.json"
     assert decision["next_gate"]["permit_parent_compatibility_status"] == "PASSED_256_ROWS_PER_SOURCE"
     assert decision["next_gate"]["permit_parent_full_dry_run_plan"] == "provenance/permit_parent_full_dry_run_plan.json"
-    assert decision["next_gate"]["permit_parent_full_dry_run_status"] == "READY_FOR_USER_EXECUTION"
+    assert decision["next_gate"]["permit_parent_full_dry_run"] == "provenance/permit_parent_full_dry_run.json"
+    assert decision["next_gate"]["permit_parent_full_dry_run_status"] == "PASSED_3010802_ROWS"
+    assert decision["next_gate"]["permit_parent_materialization_plan"] == "provenance/permit_parent_materialization_plan.json"
+    assert decision["next_gate"]["permit_parent_materialization_status"] == "IMPLEMENTED_NOT_EXECUTED"
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -169,11 +176,31 @@ def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
     assert all(value is False for value in review["privacy"].values())
 
 
-def test_permit_parent_full_dry_run_is_ready_but_not_executed() -> None:
+def test_permit_parent_full_dry_run_plan_records_completed_user_execution() -> None:
     plan = load_permit_parent_full_dry_run_plan()
     assert validate_permit_parent_full_dry_run_plan(plan) == []
     assert plan["scope"]["expected_rows_total"] == 3_010_802
-    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["execution_status"] == "COMPLETED_PASS"
     assert plan["execution"]["progress_stream"] == "stderr"
     assert plan["execution"]["final_aggregate_json_stream"] == "stdout"
     assert all(value is False for value in plan["privacy"].values())
+
+
+def test_permit_parent_full_dry_run_is_complete_and_aggregate_only() -> None:
+    review = load_permit_parent_full_dry_run()
+    assert validate_permit_parent_full_dry_run(review) == []
+    assert review["decision"] == "FULL_CURRENT_SNAPSHOT_DRY_RUN_PASSED"
+    assert review["aggregate"]["rows_examined"] == 3_010_802
+    assert review["aggregate"]["permit_date_quality"] == {"INVALID": 4, "VALID": 3_010_798}
+    assert review["aggregate"]["duplicate_linkage_candidates"] == 0
+    assert review["aggregate"]["all_temporary_uniqueness_indexes_removed"] is True
+    assert all(value is False for value in review["privacy"].values())
+
+
+def test_permit_parent_materialization_plan_is_local_private_and_not_executed() -> None:
+    plan = load_permit_parent_materialization_plan()
+    assert validate_permit_parent_materialization_plan(plan) == []
+    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["public_row_level_release_approved"] is False
+    assert plan["writer_contract"]["library_version"] == "21.0.0"
+    assert plan["writer_contract"]["compression"] == "ZSTD"

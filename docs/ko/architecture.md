@@ -15,13 +15,15 @@
   → deterministic PERMIT parent transformation
       ↳ synthetic 39-column fixture: validated
       ↳ bounded real-snapshot compatibility: passed (256 rows/source)
-      ↳ full-snapshot streaming dry run: implemented / user execution pending
-  → geospatial normalization
-  → deterministic Parquet/ZSTD build
+      ↳ full-snapshot streaming dry run: passed (3,010,802 rows)
+  → local PERMIT Parquet/ZSTD materialization
+      ↳ builder: implemented/tested
+      ↳ production execution: pending user run
+  → separate geospatial QA / derived normalization
   → 별도 공개 검토
 ```
 
-v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer는 synthetic 및 source별 256행 실제 bounded compatibility를 통과했습니다. 전체 current snapshot을 canonical output 없이 검사하는 progress-reporting full dry-run validator까지 구현됐으며 실제 장시간 실행은 사용자 실행 대기 상태입니다. production canonical materialization, full-history ingestion, episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
+v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer는 synthetic, source별 256행 bounded compatibility, 전체 3,010,802행 full dry run을 모두 통과했습니다. 동일 SHA-256 input에만 허용되는 local-only production Parquet/ZSTD builder도 구현·테스트했습니다. 실제 production materialization은 사용자 실행 대기 상태이며 public row-level release, WGS84 생성, full-history ingestion, episode reconstruction, Kaggle publication은 아직 활성화하지 않습니다.
 
 ## 데이터 저장 원칙
 

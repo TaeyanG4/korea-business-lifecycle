@@ -2,7 +2,7 @@
 
 Checked: **2026-09-07**
 
-A streaming dry-run validator is now implemented to pass every real current-snapshot row through the frozen 26-column `PERMIT` transformer **without writing canonical rows**. Because the local scan covers roughly 3.01 million rows, repository work stops after implementation, tests, and plan verification; the long local execution is handed to the user.
+A streaming dry-run validator passes every real current-snapshot row through the frozen 26-column `PERMIT` transformer **without writing canonical rows**, and the user has now completed the entire 3,010,802-row execution.
 
 ## Execution scope
 
@@ -62,6 +62,6 @@ python scripts/dry_run_full_current_snapshot.py --execute --source bakeries
 
 ## Current state
 
-Implementation, synthetic tests, and real-artifact plan verification are complete. The 3,010,802-row full scan has not yet been executed. `provenance/permit_parent_full_dry_run_plan.json` therefore keeps execution status `NOT_EXECUTED`.
+All 3,010,802 rows passed. There were zero duplicate `source_key + management_number` candidates, and the ephemeral uniqueness indexes were removed for all three sources. Permit-date quality is 3,010,798 `VALID` / 4 `INVALID`; those four rows match the anomaly count already observed during full profiling. Closure-date quality is 2,115,684 `VALID` / 895,118 `MISSING`.
 
-The next gate is to analyze the aggregate JSON returned by the user's full dry run. Production canonical materialization design should proceed only if all sources pass.
+The aggregate-only result is frozen in `provenance/permit_parent_full_dry_run.json`. The next gate is local-only production `PERMIT` Parquet/ZSTD materialization for the same SHA-256-approved source artifacts.

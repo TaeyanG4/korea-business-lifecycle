@@ -85,11 +85,14 @@
     "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
     "permit_status_episode_schema_status": "FROZEN",
     "permit_parent_transformer": "src/korea_business_lifecycle/canonical_permit.py",
-    "permit_parent_transformer_status": "BOUNDED_REAL_VALIDATED",
+    "permit_parent_transformer_status": "FULL_SNAPSHOT_VALIDATED",
     "permit_parent_compatibility": "provenance/permit_parent_compatibility.json",
     "permit_parent_compatibility_status": "PASSED_256_ROWS_PER_SOURCE",
     "permit_parent_full_dry_run_plan": "provenance/permit_parent_full_dry_run_plan.json",
-    "permit_parent_full_dry_run_status": "READY_FOR_USER_EXECUTION",
-    "goal": "user executes the progress-reporting full-snapshot dry run and returns aggregate results; do not write production canonical output and keep episode reconstruction disabled"
+    "permit_parent_full_dry_run": "provenance/permit_parent_full_dry_run.json",
+    "permit_parent_full_dry_run_status": "PASSED_3010802_ROWS",
+    "permit_parent_materialization_plan": "provenance/permit_parent_materialization_plan.json",
+    "permit_parent_materialization_status": "IMPLEMENTED_NOT_EXECUTED",
+    "goal": "execute the local-only production PERMIT Parquet/ZSTD materialization for the exact full-dry-run-approved snapshots; keep public release, WGS84 generation and episode reconstruction disabled"
   }
 }

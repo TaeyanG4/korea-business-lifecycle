@@ -44,4 +44,4 @@ synthetic fixture에서 검증한 `PERMIT` transformer를 Git-ignored `data/loca
 
 ## 다음 gate
 
-**full-snapshot streaming dry-run validator 구현은 완료됐습니다.** 다음 gate는 사용자가 약 301만 행 전체 scan을 직접 실행하고 aggregate 결과를 반환하는 것입니다. 진행률은 stderr에 실시간 표시되며 canonical output 파일은 쓰지 않습니다. 자세한 실행 계약은 `canonical-permit-full-dry-run.md`에 있습니다.
+full-snapshot streaming dry run도 전체 3,010,802행 `PASS`로 완료됐습니다. 다음 gate는 `canonical-permit-materialization.md`의 local-only Parquet/ZSTD production build입니다.
