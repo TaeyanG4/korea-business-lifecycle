@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and a three-date follow-up confirmed both `03→01` cases as source-level `closed→operating/normal` reversals. The project therefore rejects code `03` as an assumed irreversible terminal closure. The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`, and the 26-column `PERMIT` parent schema is now frozen. Production episode reconstruction remains disabled. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and a three-date follow-up confirmed both `03→01` cases as source-level `closed→operating/normal` reversals. The project therefore rejects code `03` as an assumed irreversible terminal closure. The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`; both the 26-column `PERMIT` parent schema and the 23-column `PERMIT_STATUS_EPISODE` schema are now frozen. Episode boundaries preserve left/interval/right censoring without inferring exact transition times, canonical active/closed states, or terminal events. Production episode reconstruction remains disabled. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
 
 ## Documentation
 
@@ -49,6 +49,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [03→01 reverse-transition follow-up probe](docs/en/reverse-transition-probe.md)
 - [v1 grain decision](docs/en/grain-decision.md)
 - [Canonical PERMIT parent schema](docs/en/canonical-permit-schema.md)
+- [Canonical PERMIT_STATUS_EPISODE schema](docs/en/canonical-episode-schema.md)
 - [History sample expansion plan](docs/en/history-sample-expansion.md)
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)

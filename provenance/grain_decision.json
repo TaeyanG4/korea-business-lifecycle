@@ -23,6 +23,8 @@
       "row_meaning": "one maximal observed interval for a permit during which the source status state is unchanged",
       "role": "derived lifecycle analysis grain",
       "status": "SELECTED",
+      "schema": "schemas/permit_status_episode.v1.json",
+      "schema_status": "FROZEN",
       "production_reconstruction_enabled": false,
       "reason_reconstruction_deferred": "nationwide daily history is not acquired and status code 05 semantics remain unresolved"
     }
@@ -80,6 +82,8 @@
     "phase": "Phase 4 Canonical Schema Freeze",
     "permit_parent_schema": "schemas/permit_parent.v1.json",
     "permit_parent_schema_status": "FROZEN",
-    "goal": "freeze PERMIT_STATUS_EPISODE columns next without resolving establishment identity or inventing terminal closure semantics"
+    "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
+    "permit_status_episode_schema_status": "FROZEN",
+    "goal": "implement deterministic current-snapshot to PERMIT parent transformation on synthetic fixtures first; keep production episode reconstruction disabled"
   }
 }

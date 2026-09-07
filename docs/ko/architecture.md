@@ -11,13 +11,14 @@
   → grain/identity/lifecycle audit
   → canonical schema freeze
       ↳ PERMIT parent: frozen
-      ↳ PERMIT_STATUS_EPISODE: next gate
+      ↳ PERMIT_STATUS_EPISODE: frozen
+  → deterministic PERMIT parent transformation
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → 별도 공개 검토
 ```
 
-v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 `PERMIT` parent schema까지 동결했습니다. episode schema, full-history ingestion, production episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
+v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 두 schema 계약을 모두 동결했습니다. 다음 구현 gate는 합성 fixture에서 current snapshot → `PERMIT` parent 변환을 결정론적으로 구현하는 것입니다. full-history ingestion, production episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
 
 ## 데이터 저장 원칙
 

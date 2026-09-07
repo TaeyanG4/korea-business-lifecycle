@@ -87,9 +87,70 @@ FORBIDDEN_CANONICAL_COLUMNS = {
     "wgs84_longitude",
 }
 
+REQUIRED_EPISODE_COLUMNS = {
+    "source_key",
+    "management_number",
+    "episode_number",
+    "observation_window_start_date",
+    "observation_window_end_date",
+    "first_observed_date",
+    "last_observed_date",
+    "observation_count",
+    "source_status_code",
+    "source_status_name",
+    "source_detail_status_code",
+    "source_detail_status_name",
+    "start_boundary_lower_date",
+    "start_boundary_upper_date",
+    "start_censoring",
+    "end_boundary_lower_date",
+    "end_boundary_upper_date",
+    "end_censoring",
+    "right_censored",
+    "source_closure_date_first_observed",
+    "source_closure_date_first_quality",
+    "source_closure_date_last_observed",
+    "source_closure_date_last_quality",
+}
+
+FORBIDDEN_EPISODE_COLUMNS = {
+    "establishment_id",
+    "episode_id",
+    "canonical_active_flag",
+    "canonical_closed_flag",
+    "terminal_event_flag",
+    "event_date",
+    "exact_open_date",
+    "exact_close_date",
+    "reopened_flag",
+    "duration_days",
+}
+
+EPISODE_STATE_PARTITION_FIELDS = [
+    "source_status_code",
+    "source_status_name",
+    "source_detail_status_code",
+    "source_detail_status_name",
+]
+
+EPISODE_ROW_INVARIANTS = {
+    "observation_window_start_date <= first_observed_date <= last_observed_date <= observation_window_end_date",
+    "start_boundary_upper_date == first_observed_date",
+    "end_boundary_lower_date == last_observed_date",
+    "LEFT_CENSORED implies start_boundary_lower_date is null",
+    "INTERVAL_CENSORED start implies start_boundary_lower_date < start_boundary_upper_date",
+    "RIGHT_CENSORED implies end_boundary_upper_date is null and right_censored is true",
+    "INTERVAL_CENSORED end implies end_boundary_upper_date is non-null, end_boundary_lower_date < end_boundary_upper_date, and right_censored is false",
+    "episode_number is unique only within source_key + management_number + observation window",
+}
+
 
 def load_permit_parent_schema() -> dict[str, Any]:
     return load_json("schemas/permit_parent.v1.json")
+
+
+def load_permit_status_episode_schema() -> dict[str, Any]:
+    return load_json("schemas/permit_status_episode.v1.json")
 
 
 def validate_permit_parent_schema(schema: dict[str, Any]) -> list[str]:
@@ -181,5 +242,154 @@ def validate_permit_parent_schema(schema: dict[str, Any]) -> list[str]:
     explicit_absent = set(schema.get("explicitly_absent_fields", []))
     if explicit_absent != FORBIDDEN_CANONICAL_COLUMNS:
         errors.append("explicitly absent semantic/geospatial fields changed")
+
+    return errors
+
+
+def validate_permit_status_episode_schema(schema: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+
+    if schema.get("schema_name") != "permit_status_episode" or schema.get("schema_version") != 1:
+        errors.append("permit status episode schema identity/version changed")
+    if schema.get("grain") != "PERMIT_STATUS_EPISODE":
+        errors.append("permit status episode grain must remain PERMIT_STATUS_EPISODE")
+
+    scope = schema.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("permit status episode source scope must exactly match v1")
+    if scope.get("parent_schema") != "schemas/permit_parent.v1.json":
+        errors.append("permit status episode parent schema reference changed")
+    if scope.get("production_reconstruction_enabled") is not False:
+        errors.append("production episode reconstruction must remain disabled")
+    if scope.get("establishment_identity_claim") is not False:
+        errors.append("permit status episode schema must not claim establishment identity")
+    if scope.get("terminal_event_claim") is not False:
+        errors.append("permit status episode schema must not claim a terminal event")
+
+    policy = schema.get("episode_policy", {})
+    if policy.get("parent_linkage") != ["source_key", "management_number"]:
+        errors.append("permit status episode parent linkage changed")
+    if policy.get("parent_linkage_is_primary_key_claim") is not False:
+        errors.append("permit status episode linkage must not become a primary-key claim")
+    if policy.get("state_partition_fields") != EPISODE_STATE_PARTITION_FIELDS:
+        errors.append("episode state partition must remain the source status four-tuple")
+    if policy.get("episode_number_persistent_identity") is not False:
+        errors.append("episode_number must remain window-local rather than persistent identity")
+    if policy.get("first_episode_start_censoring") != "LEFT_CENSORED":
+        errors.append("first episode start must remain left-censored")
+    if policy.get("between_episode_boundary_censoring") != "INTERVAL_CENSORED":
+        errors.append("between-episode transitions must remain interval-censored")
+    if policy.get("last_episode_end_censoring") != "RIGHT_CENSORED":
+        errors.append("last episode end must remain right-censored")
+    if policy.get("exact_transition_time_claimed") is not False:
+        errors.append("sparse observations must not claim an exact transition time")
+    if policy.get("canonical_status_mapping_enabled") is not False:
+        errors.append("canonical status mapping must remain disabled")
+    if policy.get("status_code_03_irreversible") is not False:
+        errors.append("status code 03 must not become an irreversible terminal state")
+    if policy.get("closure_date_permanent_terminal_event") is not False:
+        errors.append("closure date must not become a permanent terminal event")
+    if policy.get("status_code_05_semantics_resolved") is not False:
+        errors.append("status code 05 must remain semantically unresolved")
+    if policy.get("publication_policy") != "NOT_APPROVED_FOR_PUBLIC_ROW_LEVEL_BUILD":
+        errors.append("permit status episode publication must remain blocked")
+
+    columns = schema.get("columns", [])
+    names = [item.get("name") for item in columns]
+    name_set = set(names)
+    if len(columns) != 23 or len(name_set) != 23:
+        errors.append("permit status episode schema must contain 23 uniquely named columns")
+    if name_set != REQUIRED_EPISODE_COLUMNS:
+        missing = sorted(REQUIRED_EPISODE_COLUMNS - name_set)
+        extra = sorted(name_set - REQUIRED_EPISODE_COLUMNS)
+        errors.append(f"permit status episode columns changed; missing={missing}, extra={extra}")
+    if name_set & FORBIDDEN_EPISODE_COLUMNS:
+        errors.append("permit status episode schema contains a forbidden inferred semantic field")
+
+    by_name = {item.get("name"): item for item in columns}
+    for name in ("source_key", "management_number"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "string" or item.get("nullable") is not False:
+            errors.append(f"{name} episode linkage contract changed")
+
+    for name in (
+        "observation_window_start_date",
+        "observation_window_end_date",
+        "first_observed_date",
+        "last_observed_date",
+        "start_boundary_upper_date",
+        "end_boundary_lower_date",
+    ):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "date32" or item.get("nullable") is not False:
+            errors.append(f"{name} must remain a non-null date32")
+
+    for name in (
+        "start_boundary_lower_date",
+        "end_boundary_upper_date",
+        "source_closure_date_first_observed",
+        "source_closure_date_last_observed",
+    ):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "date32" or item.get("nullable") is not True:
+            errors.append(f"{name} must remain a nullable date32")
+
+    if by_name.get("episode_number", {}).get("constraints") != [">= 1"]:
+        errors.append("episode_number sequence constraint changed")
+    if by_name.get("observation_count", {}).get("constraints") != [">= 1"]:
+        errors.append("observation_count constraint changed")
+    for name in ("episode_number", "observation_count"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "int32" or item.get("nullable") is not False:
+            errors.append(f"{name} must remain a non-null int32")
+
+    for name in EPISODE_STATE_PARTITION_FIELDS:
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "string" or item.get("nullable") is not True:
+            errors.append(f"{name} must remain a nullable source-state string")
+
+    if by_name.get("start_censoring", {}).get("allowed_values") != [
+        "LEFT_CENSORED",
+        "INTERVAL_CENSORED",
+    ]:
+        errors.append("start_censoring enum changed")
+    if by_name.get("end_censoring", {}).get("allowed_values") != [
+        "INTERVAL_CENSORED",
+        "RIGHT_CENSORED",
+    ]:
+        errors.append("end_censoring enum changed")
+    for name in ("start_censoring", "end_censoring"):
+        item = by_name.get(name, {})
+        if item.get("logical_type") != "string" or item.get("nullable") is not False:
+            errors.append(f"{name} must remain a non-null string")
+
+    right_censored = by_name.get("right_censored", {})
+    if right_censored.get("logical_type") != "bool" or right_censored.get("nullable") is not False:
+        errors.append("right_censored must remain a non-null bool")
+    if right_censored.get("derivation") != "end_censoring == RIGHT_CENSORED":
+        errors.append("right_censored derivation changed")
+
+    expected_quality = ["VALID", "MISSING", "INVALID"]
+    for name in ("source_closure_date_first_quality", "source_closure_date_last_quality"):
+        item = by_name.get(name, {})
+        if (
+            item.get("logical_type") != "string"
+            or item.get("nullable") is not False
+            or item.get("allowed_values") != expected_quality
+        ):
+            errors.append(f"{name} quality contract changed")
+
+    row_invariants = schema.get("row_invariants", [])
+    if len(row_invariants) != len(EPISODE_ROW_INVARIANTS) or set(row_invariants) != EPISODE_ROW_INVARIANTS:
+        errors.append("permit status episode row invariants changed")
+
+    explicit_absent = set(schema.get("explicitly_absent_fields", []))
+    if explicit_absent != FORBIDDEN_EPISODE_COLUMNS:
+        errors.append("explicitly absent episode semantic fields changed")
+
+    if schema.get("next_gate") != (
+        "implement deterministic PERMIT parent transformation first; keep nationwide episode reconstruction disabled"
+    ):
+        errors.append("permit status episode next gate changed")
 
     return errors

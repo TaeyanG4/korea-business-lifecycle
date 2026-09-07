@@ -319,6 +319,10 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
     lifecycle = selected.get("lifecycle_analysis_grain", {})
     if lifecycle.get("name") != "PERMIT_STATUS_EPISODE":
         errors.append("lifecycle analysis grain must remain PERMIT_STATUS_EPISODE")
+    if lifecycle.get("schema") != "schemas/permit_status_episode.v1.json":
+        errors.append("lifecycle analysis schema reference changed")
+    if lifecycle.get("schema_status") != "FROZEN":
+        errors.append("permit status episode schema must remain frozen")
     if lifecycle.get("production_reconstruction_enabled") is not False:
         errors.append("production episode reconstruction must remain disabled at this gate")
 
@@ -357,4 +361,14 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("grain decision continuity evidence changed")
     if evidence.get("confirmed_03_to_01_reversals") != 2:
         errors.append("grain decision reversal evidence changed")
+
+    next_gate = decision.get("next_gate", {})
+    if next_gate.get("permit_parent_schema") != "schemas/permit_parent.v1.json":
+        errors.append("permit parent schema gate reference changed")
+    if next_gate.get("permit_parent_schema_status") != "FROZEN":
+        errors.append("permit parent schema must remain frozen")
+    if next_gate.get("permit_status_episode_schema") != "schemas/permit_status_episode.v1.json":
+        errors.append("permit status episode schema gate reference changed")
+    if next_gate.get("permit_status_episode_schema_status") != "FROZEN":
+        errors.append("permit status episode schema gate must remain frozen")
     return errors

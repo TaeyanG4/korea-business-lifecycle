@@ -1,0 +1,93 @@
+{
+  "schema_name": "permit_status_episode",
+  "schema_version": 1,
+  "checked_at": "2026-09-07",
+  "grain": "PERMIT_STATUS_EPISODE",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "parent_schema": "schemas/permit_parent.v1.json",
+    "production_reconstruction_enabled": false,
+    "establishment_identity_claim": false,
+    "terminal_event_claim": false
+  },
+  "episode_policy": {
+    "parent_linkage": ["source_key", "management_number"],
+    "parent_linkage_is_primary_key_claim": false,
+    "state_partition_fields": [
+      "source_status_code",
+      "source_status_name",
+      "source_detail_status_code",
+      "source_detail_status_name"
+    ],
+    "state_partition_semantics": "episodes split only when the source-preserving four-field status tuple changes; no active/closed/reopened semantic mapping is applied",
+    "episode_number_policy": "1-based order within one permit and one observation window; deterministic for that input window but not a persistent identity across wider future history windows",
+    "episode_number_persistent_identity": false,
+    "first_episode_start": "LEFT_CENSORED: true start is on or before first_observed_date and is not inferred from permit_date",
+    "first_episode_start_censoring": "LEFT_CENSORED",
+    "between_episode_boundary": "INTERVAL_CENSORED: transition is after the prior episode last_observed_date and on or before the next episode first_observed_date",
+    "between_episode_boundary_censoring": "INTERVAL_CENSORED",
+    "last_episode_end": "RIGHT_CENSORED: state is observed through last_observed_date with no terminal-event assertion after that date",
+    "last_episode_end_censoring": "RIGHT_CENSORED",
+    "exact_transition_time_claimed": false,
+    "canonical_status_mapping_enabled": false,
+    "status_code_03_irreversible": false,
+    "closure_date_policy": "closure date is retained only as first/last source observation context; it does not define the episode boundary and is not a permanent terminal event",
+    "closure_date_permanent_terminal_event": false,
+    "status_code_05_policy": "retain raw source value without canonical semantic mapping",
+    "status_code_05_semantics_resolved": false,
+    "publication_policy": "NOT_APPROVED_FOR_PUBLIC_ROW_LEVEL_BUILD"
+  },
+  "columns": [
+    {"name": "source_key", "logical_type": "string", "nullable": false, "role": "parent_linkage"},
+    {"name": "management_number", "logical_type": "string", "nullable": false, "role": "parent_linkage"},
+    {"name": "episode_number", "logical_type": "int32", "nullable": false, "role": "window_local_sequence", "constraints": [">= 1"]},
+
+    {"name": "observation_window_start_date", "logical_type": "date32", "nullable": false, "role": "observation_window"},
+    {"name": "observation_window_end_date", "logical_type": "date32", "nullable": false, "role": "observation_window"},
+    {"name": "first_observed_date", "logical_type": "date32", "nullable": false, "role": "episode_observation"},
+    {"name": "last_observed_date", "logical_type": "date32", "nullable": false, "role": "episode_observation"},
+    {"name": "observation_count", "logical_type": "int32", "nullable": false, "role": "episode_observation", "constraints": [">= 1"]},
+
+    {"name": "source_status_code", "logical_type": "string", "nullable": true, "role": "source_state"},
+    {"name": "source_status_name", "logical_type": "string", "nullable": true, "role": "source_state"},
+    {"name": "source_detail_status_code", "logical_type": "string", "nullable": true, "role": "source_state"},
+    {"name": "source_detail_status_name", "logical_type": "string", "nullable": true, "role": "source_state"},
+
+    {"name": "start_boundary_lower_date", "logical_type": "date32", "nullable": true, "role": "censoring_boundary", "meaning": "exclusive lower bound for a known between-episode transition; null for a left-censored first episode"},
+    {"name": "start_boundary_upper_date", "logical_type": "date32", "nullable": false, "role": "censoring_boundary", "meaning": "inclusive upper bound; equals first_observed_date"},
+    {"name": "start_censoring", "logical_type": "string", "nullable": false, "role": "censoring", "allowed_values": ["LEFT_CENSORED", "INTERVAL_CENSORED"]},
+
+    {"name": "end_boundary_lower_date", "logical_type": "date32", "nullable": false, "role": "censoring_boundary", "meaning": "exclusive transition lower bound for a following episode or right-censoring observation date; equals last_observed_date"},
+    {"name": "end_boundary_upper_date", "logical_type": "date32", "nullable": true, "role": "censoring_boundary", "meaning": "inclusive upper bound from the next episode first_observed_date; null for right-censored final episode"},
+    {"name": "end_censoring", "logical_type": "string", "nullable": false, "role": "censoring", "allowed_values": ["INTERVAL_CENSORED", "RIGHT_CENSORED"]},
+    {"name": "right_censored", "logical_type": "bool", "nullable": false, "role": "censoring", "derivation": "end_censoring == RIGHT_CENSORED"},
+
+    {"name": "source_closure_date_first_observed", "logical_type": "date32", "nullable": true, "role": "source_lifecycle_context"},
+    {"name": "source_closure_date_first_quality", "logical_type": "string", "nullable": false, "role": "quality", "allowed_values": ["VALID", "MISSING", "INVALID"]},
+    {"name": "source_closure_date_last_observed", "logical_type": "date32", "nullable": true, "role": "source_lifecycle_context"},
+    {"name": "source_closure_date_last_quality", "logical_type": "string", "nullable": false, "role": "quality", "allowed_values": ["VALID", "MISSING", "INVALID"]}
+  ],
+  "row_invariants": [
+    "observation_window_start_date <= first_observed_date <= last_observed_date <= observation_window_end_date",
+    "start_boundary_upper_date == first_observed_date",
+    "end_boundary_lower_date == last_observed_date",
+    "LEFT_CENSORED implies start_boundary_lower_date is null",
+    "INTERVAL_CENSORED start implies start_boundary_lower_date < start_boundary_upper_date",
+    "RIGHT_CENSORED implies end_boundary_upper_date is null and right_censored is true",
+    "INTERVAL_CENSORED end implies end_boundary_upper_date is non-null, end_boundary_lower_date < end_boundary_upper_date, and right_censored is false",
+    "episode_number is unique only within source_key + management_number + observation window"
+  ],
+  "explicitly_absent_fields": [
+    "establishment_id",
+    "episode_id",
+    "canonical_active_flag",
+    "canonical_closed_flag",
+    "terminal_event_flag",
+    "event_date",
+    "exact_open_date",
+    "exact_close_date",
+    "reopened_flag",
+    "duration_days"
+  ],
+  "next_gate": "implement deterministic PERMIT parent transformation first; keep nationwide episode reconstruction disabled"
+}
