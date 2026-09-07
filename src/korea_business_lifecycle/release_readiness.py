@@ -17,6 +17,7 @@ from .provenance import (
     load_history_episode_materialization_plan,
     load_history_nationwide_acquisition_plan,
     load_history_observation_strategy,
+    load_kaggle_release,
     load_license_review,
     load_permit_parent_full_dry_run,
     load_permit_parent_materialization,
@@ -56,6 +57,7 @@ def compute_release_readiness() -> dict[str, Any]:
     license_review = load_license_review()
     redistribution_clarification = load_redistribution_clarification_plan()
     release_scope = load_v1_release_scope()
+    kaggle_release = load_kaggle_release()
 
     episode = grain["selected_grains"]["lifecycle_analysis_grain"]
     semantics = grain["episode_semantics"]
@@ -79,15 +81,17 @@ def compute_release_readiness() -> dict[str, Any]:
         else "REVIEW_REQUIRED"
     )
     public_status = (
-        "READY_AGGREGATE_ONLY"
+        "PUBLISHED_AGGREGATE_ONLY"
         if release_scope["public_release"]["aggregate_publication_approved"] is True
         and public_aggregate_result["verification"]["status"] == "PASS"
+        and kaggle_release["dataset"]["status"] == "READY"
+        and kaggle_release["dataset"]["visibility"] == "PUBLIC"
         else "BLOCKED"
     )
 
     return {
         "checked_at": "2026-09-08",
-        "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY",
+        "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLISHED",
         "tracks": {
             "core_v1": {
                 "status": "COMPLETE",
@@ -332,10 +336,16 @@ def compute_release_readiness() -> dict[str, Any]:
                 "project_requires_source_attribution": release_scope["public_release"][
                     "project_requires_source_attribution"
                 ],
+                "dataset_id": kaggle_release["dataset"]["dataset_id"],
+                "dataset_url": kaggle_release["dataset"]["url"],
+                "dataset_visibility": kaggle_release["dataset"]["visibility"],
+                "dataset_status": kaggle_release["dataset"]["status"],
+                "published_parquet_bytes": kaggle_release["artifact"]["bytes"],
+                "published_parquet_sha256": kaggle_release["artifact"]["sha256"],
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "publish the verified privacy-minimized aggregate on Kaggle; keep row-level and precise-coordinate artifacts private; history and episode reconstruction remain optional advanced workflows",
+        "next_product_action": "maintain the published aggregate and provenance; keep row-level and precise-coordinate artifacts private; history and episode reconstruction remain optional advanced workflows",
         "hard_blocks": [
             "do not publish row-level PERMIT data under the aggregate-only v1 release decision",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

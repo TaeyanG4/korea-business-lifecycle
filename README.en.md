@@ -8,6 +8,8 @@ A reproducible public-data project built from Korean Ministry of the Interior an
 
 **LOCAL V1 CORE: COMPLETE**
 
+**Kaggle aggregate: PUBLISHED** — [Korea Food-Service Permit Aggregate](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate)
+
 - Scope: general restaurants, rest cafes, and bakeries
 - Canonical `PERMIT`: **3,010,802 rows**, production materialized and independently verified
 - WGS84 sidecar: **3,010,802 rows**, 2,811,767 coordinates transformed and independently verified
@@ -38,6 +40,7 @@ As rechecked on 2026-09-08, all three official Public Data Portal API pages disp
 - 15155252 — MOIS food/bakeries API
 
 The machine-readable final release decision is `provenance/v1_release_scope.json`.
+The verified Kaggle publication outcome is recorded in `provenance/kaggle_release.json`.
 
 ## Lifecycle caveats
 

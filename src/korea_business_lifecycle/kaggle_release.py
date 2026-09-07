@@ -56,13 +56,13 @@ def _metadata(owner: str) -> dict[str, Any]:
             "and other row-level/linkable fields. Permit year is not claimed to be physical "
             "opening year; closure year is not claimed to be an irreversible terminal event. "
             "Status 03 is not treated as irreversible and status 05 remains unresolved. The "
-            "official source pages display 이용허락범위 제한 없음. License metadata is therefore "
+            "official source pages display no restriction on the permitted-use scope. License metadata is therefore "
             "recorded as Other and the official source pages/terms are the controlling source-use "
             "reference; this project does not relicense upstream source records."
         ),
         "id": dataset_id,
         "licenses": [{"name": "other"}],
-        "keywords": ["south-korea", "public-data", "business", "restaurants"],
+        "keywords": ["business", "restaurants"],
         "resources": [
             {
                 "path": PUBLIC_FILENAME,
@@ -134,7 +134,7 @@ This Kaggle release contains only a privacy-minimized aggregate derived from the
 
 - `permit_year` is not claimed to be a physical opening year.
 - `closure_year` is not claimed to be a permanent terminal event.
-- Status `03` is not treated as irreversible; two source-level `03→01` reversals were observed during project validation.
+- Status `03` is not treated as irreversible; two source-level `03->01` reversals were observed during project validation.
 - Status `05` remains unresolved.
 - `k=10` is a technical minimization threshold, not a legal privacy guarantee.
 - This release does not contain row-level permit data, business names, exact addresses, management numbers, phone numbers, or precise coordinates.
@@ -143,14 +143,14 @@ See `SOURCES.md` for official source pages and the repository for full reproduci
 """
     sources = """# Official sources and terms
 
-Provider: 행정안전부 (Ministry of the Interior and Safety), Republic of Korea.
+Provider: Ministry of the Interior and Safety (MOIS), Republic of Korea.
 
-- General restaurants — data.go.kr ID 15154916: https://www.data.go.kr/data/15154916/openapi.do
-- Rest cafes — data.go.kr ID 15154921: https://www.data.go.kr/data/15154921/openapi.do
-- Bakeries — data.go.kr ID 15155252: https://www.data.go.kr/data/15155252/openapi.do
+- General restaurants - data.go.kr ID 15154916: https://www.data.go.kr/data/15154916/openapi.do
+- Rest cafes - data.go.kr ID 15154921: https://www.data.go.kr/data/15154921/openapi.do
+- Bakeries - data.go.kr ID 15155252: https://www.data.go.kr/data/15155252/openapi.do
 - Public Data Portal policy: https://www.data.go.kr/ugs/selectPortalPolicyView.do
 
-The three official API detail pages were rechecked on 2026-09-08 and displayed `이용허락범위 제한 없음` (no restriction on the permitted-use scope). Kaggle metadata uses the `other` license category so this project does not invent or impose a different license on upstream government records. This public package contains only the independently verified privacy-minimized aggregate; row-level records and precise coordinates are not included.
+The three official API detail pages were rechecked on 2026-09-08 and displayed no restriction on the permitted-use scope. Kaggle metadata uses the `other` license category so this project does not invent or impose a different license on upstream government records. This public package contains only the independently verified privacy-minimized aggregate; row-level records and precise coordinates are not included.
 """
     (output / "README.md").write_text(readme, encoding="utf-8", newline="\n")
     (output / "SOURCES.md").write_text(sources, encoding="utf-8", newline="\n")
@@ -172,14 +172,14 @@ The three official API detail pages were rechecked on 2026-09-08 and displayed `
         normalized_owner = _validate_owner(owner)
         metadata = _metadata(normalized_owner)
         (output / "dataset-metadata.json").write_text(
-            json.dumps(metadata, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            json.dumps(metadata, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
             newline="\n",
         )
         manifest["dataset_id"] = metadata["id"]
 
     (output / "release-manifest.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        json.dumps(manifest, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
         newline="\n",
     )

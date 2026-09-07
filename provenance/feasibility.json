@@ -1,7 +1,7 @@
 {
   "checked_at": "2026-09-08",
   "scope": ["general_restaurants", "rest_cafes", "bakeries"],
-  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY",
+  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLISHED",
   "planning": {
     "observed_snapshot_rows": 3010802,
     "observed_snapshot_bytes": 926587446,

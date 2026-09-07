@@ -3,7 +3,7 @@ from korea_business_lifecycle.feasibility import kaggle_publication_ready, load_
 
 def test_v1_aggregate_is_kaggle_ready() -> None:
     feasibility = load_feasibility()
-    assert feasibility["decision"] == "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY"
+    assert feasibility["decision"] == "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLISHED"
     assert kaggle_publication_ready(feasibility) is True
 
 

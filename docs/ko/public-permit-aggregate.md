@@ -84,7 +84,9 @@ verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/Z
 - row-level public release: BLOCKED
 - aggregate publication: **APPROVED**
 - Kaggle redistribution: **APPROVED FOR THIS VERIFIED AGGREGATE**
+- Kaggle publication: **PUBLISHED / READY** — `taeyangg4/korea-food-service-permit-aggregate`
 - row-level/precise-coordinate publication: BLOCKED
 - release decision: `provenance/v1_release_scope.json`
+- publication result: `provenance/kaggle_release.json`
 
 기존 build manifest/schema 안의 candidate-time publication flag는 immutable build 당시의 gate를 기록합니다. 2026-09-08 최종 release decision이 이 **동일 hash의 검증된 aggregate artifact** 공개를 별도로 승인하며, row-level 공개 승인을 의미하지 않습니다.

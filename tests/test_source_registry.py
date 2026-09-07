@@ -8,6 +8,7 @@ from korea_business_lifecycle.provenance import (
     load_geospatial_full_axis,
     load_geospatial_full_axis_plan,
     load_history_observation_strategy,
+    load_kaggle_release,
     load_history_authority_partition_findings,
     load_history_authority_partition_full_probe,
     load_history_authority_partition_probe_plan,
@@ -46,6 +47,7 @@ from korea_business_lifecycle.provenance import (
     validate_geospatial_full_axis,
     validate_geospatial_full_axis_plan,
     validate_history_observation_strategy,
+    validate_kaggle_release,
     validate_history_authority_partition_findings,
     validate_history_authority_partition_full_probe,
     validate_history_authority_partition_probe_plan,
@@ -361,6 +363,17 @@ def test_v1_release_scope_closes_core_and_approves_aggregate_only() -> None:
     assert scope["public_release"]["row_level_permit_publication_approved"] is False
     assert scope["public_release"]["precise_wgs84_publication_approved"] is False
     assert scope["public_release"]["written_source_specific_confirmation_required_for_aggregate_publication"] is False
+
+
+def test_kaggle_aggregate_release_is_public_ready_and_private_by_design() -> None:
+    release = load_kaggle_release()
+    assert validate_kaggle_release(release) == []
+    assert release["dataset"]["dataset_id"] == "taeyangg4/korea-food-service-permit-aggregate"
+    assert release["dataset"]["visibility"] == "PUBLIC"
+    assert release["dataset"]["status"] == "READY"
+    assert release["artifact"]["bytes"] == 108_019
+    assert release["privacy"]["row_level_permit_published"] is False
+    assert release["privacy"]["precise_coordinates_published"] is False
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:

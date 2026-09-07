@@ -121,5 +121,11 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_lower_bound"] == 301_258
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_upper_bound"] == 308_380
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
-    assert readiness["tracks"]["public_kaggle"]["status"] == "READY_AGGREGATE_ONLY"
+    assert readiness["tracks"]["public_kaggle"]["status"] == "PUBLISHED_AGGREGATE_ONLY"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False
+    assert readiness["tracks"]["public_kaggle"]["dataset_id"] == (
+        "taeyangg4/korea-food-service-permit-aggregate"
+    )
+    assert readiness["tracks"]["public_kaggle"]["dataset_visibility"] == "PUBLIC"
+    assert readiness["tracks"]["public_kaggle"]["dataset_status"] == "READY"
+    assert readiness["tracks"]["public_kaggle"]["published_parquet_bytes"] == 108_019

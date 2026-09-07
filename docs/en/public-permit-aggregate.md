@@ -84,7 +84,9 @@ The verifier re-verifies the parent build and checks the aggregate manifest/hash
 - row-level public release: BLOCKED
 - aggregate publication: **APPROVED**
 - Kaggle redistribution: **APPROVED FOR THIS VERIFIED AGGREGATE**
+- Kaggle publication: **PUBLISHED / READY** — `taeyangg4/korea-food-service-permit-aggregate`
 - row-level/precise-coordinate publication: BLOCKED
 - release decision: `provenance/v1_release_scope.json`
+- publication result: `provenance/kaggle_release.json`
 
 The candidate-time publication flag embedded in the immutable build records the gate at build time. The 2026-09-08 release decision separately approves publication of this **same verified hash** and does not approve row-level release.

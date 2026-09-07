@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-08",
-  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_READY",
+  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLISHED",
   "hard_blocks": [
     "do not publish row-level PERMIT data under the aggregate-only v1 release decision",
     "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
@@ -10,7 +10,7 @@
     "do not declare MNG_NO an official source primary key"
   ],
   "next_long_local_actions": [],
-  "next_product_action": "publish the verified privacy-minimized aggregate on Kaggle; keep row-level and precise-coordinate artifacts private; history and episode reconstruction remain optional advanced workflows",
+  "next_product_action": "maintain the published aggregate and provenance; keep row-level and precise-coordinate artifacts private; history and episode reconstruction remain optional advanced workflows",
   "tracks": {
     "core_v1": {
       "nationwide_history_required": false,
@@ -123,12 +123,18 @@
       "aggregate_released_source_rows": 2383689,
       "aggregate_suppressed_source_rows": 627113,
       "aggregate_technical_minimization_verified": true,
+      "dataset_id": "taeyangg4/korea-food-service-permit-aggregate",
+      "dataset_status": "READY",
+      "dataset_url": "https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate",
+      "dataset_visibility": "PUBLIC",
       "kaggle_license_metadata": "other",
       "kaggle_redistribution": "PERMITTED_FOR_VERIFIED_AGGREGATE_BASED_ON_OFFICIAL_METADATA",
       "precise_wgs84_public_build_allowed": false,
       "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_RELEASE_APPROVED",
       "privacy_public_allowlist_approved": false,
       "project_requires_source_attribution": true,
+      "published_parquet_bytes": 108019,
+      "published_parquet_sha256": "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb",
       "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
       "redistribution_clarification_outreach_performed": false,
       "redistribution_clarification_plan": "OPTIONAL_ADDITIONAL_CONFIRMATION",
@@ -137,7 +143,7 @@
       "redistribution_written_response_received": false,
       "row_level_public_build_allowed": false,
       "source_use_license": "PASS_METADATA_CONFIRMED",
-      "status": "READY_AGGREGATE_ONLY",
+      "status": "PUBLISHED_AGGREGATE_ONLY",
       "written_source_specific_confirmation_required_for_aggregate_publication": false
     }
   }

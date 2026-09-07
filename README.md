@@ -8,6 +8,8 @@
 
 **LOCAL V1 CORE: COMPLETE**
 
+**Kaggle aggregate: PUBLISHED** — [Korea Food-Service Permit Aggregate](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate)
+
 - 대상: 일반음식점, 휴게음식점, 제과점영업
 - Canonical `PERMIT`: **3,010,802행**, production materialization 및 독립 검증 완료
 - WGS84 sidecar: **3,010,802행**, 2,811,767건 좌표 변환, 독립 검증 완료
@@ -38,6 +40,7 @@ Kaggle/public v1은 **privacy-minimized aggregate만** 공개 대상으로 합�
 - 15155252 — 행정안전부_식품_제과점영업 조회서비스
 
 최종 기계 판독 release 결정은 `provenance/v1_release_scope.json`에 있습니다.
+실제 Kaggle 공개 결과는 `provenance/kaggle_release.json`에 기록합니다.
 
 ## Lifecycle 사용 시 주의사항
 

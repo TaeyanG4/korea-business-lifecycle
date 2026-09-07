@@ -146,6 +146,61 @@ def load_v1_release_scope() -> dict[str, Any]:
     return load_json("provenance/v1_release_scope.json")
 
 
+def load_kaggle_release() -> dict[str, Any]:
+    return load_json("provenance/kaggle_release.json")
+
+
+def validate_kaggle_release(release: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if release.get("decision") != "KAGGLE_AGGREGATE_PUBLICATION_COMPLETED_VERIFIED":
+        errors.append("Kaggle release decision changed")
+    dataset = release.get("dataset", {})
+    if dataset.get("dataset_id") != "taeyangg4/korea-food-service-permit-aggregate":
+        errors.append("Kaggle dataset id changed")
+    if dataset.get("visibility") != "PUBLIC" or dataset.get("status") != "READY":
+        errors.append("Kaggle dataset must remain public and ready")
+    if dataset.get("license_metadata") != "other":
+        errors.append("Kaggle release license metadata changed")
+    artifact = release.get("artifact", {})
+    if artifact.get("build_id") != "permit-public-agg-v1-bedd874de6619bee":
+        errors.append("Kaggle aggregate build changed")
+    if artifact.get("bytes") != 108_019:
+        errors.append("Kaggle aggregate byte size changed")
+    if artifact.get("sha256") != (
+        "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb"
+    ):
+        errors.append("Kaggle aggregate hash changed")
+    if artifact.get("aggregate_cells") != 67_267 or artifact.get("minimum_cell_count") != 10:
+        errors.append("Kaggle aggregate cell contract changed")
+    privacy = release.get("privacy", {})
+    for key in (
+        "row_level_permit_published",
+        "precise_coordinates_published",
+        "business_names_published",
+        "exact_addresses_published",
+        "management_numbers_published",
+        "minimum_cell_count_is_legal_privacy_guarantee",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"Kaggle release must keep {key}=false")
+    auth = release.get("authentication", {})
+    if auth.get("method") != "KAGGLE_OAUTH":
+        errors.append("Kaggle release authentication method changed")
+    if auth.get("credential_value_recorded") is not False or auth.get("credential_committed_to_git") is not False:
+        errors.append("Kaggle credentials must never be recorded or committed")
+    verification = release.get("verification", {})
+    for key in (
+        "public_listing_found",
+        "published_parquet_byte_size_matches_verified_artifact",
+        "local_package_sha256_matches_verified_aggregate",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"Kaggle release verification must keep {key}=true")
+    if verification.get("kaggle_status_command") != "READY":
+        errors.append("Kaggle release status verification changed")
+    return errors
+
+
 def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if scope.get("decision") != (
