@@ -39,5 +39,18 @@
   "observed_common_schema_columns": 39,
   "field_inventory_complete": true,
   "public_allowlist_approved": false,
+  "aggregate_candidate_technical_assessment": {
+    "result_provenance": "provenance/public_permit_aggregate.json",
+    "status": "TECHNICAL_MINIMIZATION_VERIFIED_NOT_PUBLICATION_APPROVED",
+    "minimum_cell_count": 10,
+    "direct_or_linkable_row_fields_emitted": false,
+    "precise_coordinates_emitted": false,
+    "exact_addresses_emitted": false,
+    "business_names_emitted": false,
+    "management_numbers_emitted": false,
+    "suppression_invariants_verified": true,
+    "minimum_cell_count_is_legal_privacy_guarantee": false,
+    "aggregate_publication_approved": false
+  },
   "rule": "The v1 current schema is now inventoried, but no row-level public build may be generated until every intended public field is explicitly allowlisted and redistribution is cleared."
 }

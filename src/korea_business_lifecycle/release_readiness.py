@@ -15,6 +15,7 @@ from .provenance import (
     load_permit_geospatial_materialization_plan,
     load_permit_geospatial_materialization,
     load_privacy_review,
+    load_public_permit_aggregate,
     load_public_permit_aggregate_plan,
 )
 
@@ -29,6 +30,7 @@ def compute_release_readiness() -> dict[str, Any]:
     geospatial_materialization = load_permit_geospatial_materialization_plan()
     geospatial_materialization_result = load_permit_geospatial_materialization()
     public_aggregate = load_public_permit_aggregate_plan()
+    public_aggregate_result = load_public_permit_aggregate()
     grain = load_grain_decision()
     privacy = load_privacy_review()
     license_review = load_license_review()
@@ -120,24 +122,26 @@ def compute_release_readiness() -> dict[str, Any]:
                     "privacy_minimized_aggregate_redistribution_gate"
                 ],
                 "row_level_public_build_allowed": public_status == "READY",
-                "privacy_minimized_aggregate_candidate": "IMPLEMENTED_NOT_EXECUTED",
-                "aggregate_candidate_build_id": public_aggregate["scope"]["aggregate_build_id"],
-                "aggregate_candidate_minimum_cell_count": public_aggregate["contracts"][
-                    "minimum_cell_count"
+                "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_NOT_PUBLICATION_APPROVED",
+                "aggregate_candidate_build_id": public_aggregate_result["scope"]["aggregate_build_id"],
+                "aggregate_candidate_minimum_cell_count": public_aggregate_result["scope"]["minimum_cell_count"],
+                "aggregate_cells_released_candidate": public_aggregate_result["scope"][
+                    "aggregate_cells_released_candidate"
                 ],
-                "aggregate_publication_approved": public_aggregate["scope"]["aggregate_publication_approved"],
+                "aggregate_cells_suppressed": public_aggregate_result["scope"]["aggregate_cells_suppressed"],
+                "aggregate_released_source_rows": public_aggregate_result["scope"]["released_source_rows"],
+                "aggregate_suppressed_source_rows": public_aggregate_result["scope"]["suppressed_source_rows"],
+                "aggregate_output_bytes": public_aggregate_result["scope"]["output_bytes"],
+                "aggregate_independent_verifier": public_aggregate_result["verification"]["status"],
+                "aggregate_technical_minimization_verified": public_aggregate_result["privacy"][
+                    "technical_minimization_verified"
+                ],
+                "aggregate_publication_approved": public_aggregate_result["scope"]["aggregate_publication_approved"],
                 "local_materialization_completion_does_not_change_publication_status": True,
             },
         },
-        "next_long_local_actions": [
-            {
-                "priority": 1,
-                "name": "materialize_public_permit_aggregate",
-                "command": "python scripts/materialize_public_permit_aggregate.py --execute",
-                "follow_up": "python scripts/verify_public_permit_aggregate.py",
-            }
-        ],
-        "next_product_action": "execute and verify the local privacy-minimized aggregate candidate; publication still requires redistribution clearance",
+        "next_long_local_actions": [],
+        "next_product_action": "resolve redistribution clearance and advance bounded lifecycle-episode tooling without enabling nationwide production reconstruction",
         "hard_blocks": [
             "do not publish row-level data until privacy allowlist and redistribution review pass",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

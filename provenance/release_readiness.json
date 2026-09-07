@@ -1,73 +1,73 @@
 {
   "checked_at": "2026-09-07",
   "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_PUBLICATION_SAFETY_REVIEW_NEXT",
-  "tracks": {
-    "local_permit_parent": {
-      "status": "COMPLETED_VERIFIED",
-      "full_snapshot_transform_validation": "PASS_3010802_ROWS",
-      "materializer": "COMPLETED_PASS",
-      "independent_build_verifier": "PASS",
-      "build_id": "permit-v1-9908225df465e2ff",
-      "rows": 3010802,
-      "output_bytes": 165176236,
-      "public_release_implied": false
-    },
-    "geospatial_derivation": {
-      "status": "COMPLETED_VERIFIED",
-      "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
-      "full_axis_validator": "PASSED_REVIEWED_CURRENT_V1",
-      "coordinate_pairs_reviewed": 2811767,
-      "source_x_interpretation": "EASTING",
-      "source_y_interpretation": "NORTHING",
-      "coordinate_axis_order_verified_nationwide": true,
-      "local_wgs84_generation_approved": true,
-      "public_wgs84_release_approved": false,
-      "enrichment_schema": "FROZEN",
-      "enrichment_builder": "COMPLETED_PASS",
-      "independent_build_verifier": "PASS",
-      "build_id": "permit-geo-v1-c4af8799de0283bb",
-      "rows": 3010802,
-      "transformed_coordinates": 2811767,
-      "missing_source_coordinates": 199035,
-      "output_bytes": 50805782,
-      "parent_permit_build_id": "permit-v1-9908225df465e2ff"
-    },
-    "lifecycle_episode": {
-      "status": "BLOCKED_PRODUCTION_RECONSTRUCTION",
-      "schema": "FROZEN",
-      "production_reconstruction_enabled": false,
-      "status_code_05_semantics_resolved": false,
-      "reopening_vs_correction_resolved": false,
-      "nationwide_lossless_event_history_available": false
-    },
-    "public_kaggle": {
-      "status": "BLOCKED",
-      "privacy_public_allowlist_approved": false,
-      "source_use_license": "PASS_METADATA_CONFIRMED",
-      "kaggle_redistribution": "UNRESOLVED",
-      "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
-      "aggregate_redistribution_gate": "UNRESOLVED",
-      "row_level_public_build_allowed": false,
-      "privacy_minimized_aggregate_candidate": "IMPLEMENTED_NOT_EXECUTED",
-      "aggregate_candidate_build_id": "permit-public-agg-v1-bedd874de6619bee",
-      "aggregate_candidate_minimum_cell_count": 10,
-      "aggregate_publication_approved": false,
-      "local_materialization_completion_does_not_change_publication_status": true
-    }
-  },
-  "next_long_local_actions": [
-    {
-      "priority": 1,
-      "name": "materialize_public_permit_aggregate",
-      "command": "python scripts/materialize_public_permit_aggregate.py --execute",
-      "follow_up": "python scripts/verify_public_permit_aggregate.py"
-    }
-  ],
-  "next_product_action": "execute and verify the local privacy-minimized aggregate candidate; publication still requires redistribution clearance",
   "hard_blocks": [
     "do not publish row-level data until privacy allowlist and redistribution review pass",
     "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
     "do not reconstruct production lifecycle episodes until the explicit history-observation strategy is approved; status 05 remains unmapped",
     "do not declare MNG_NO an official source primary key"
-  ]
+  ],
+  "next_long_local_actions": [],
+  "next_product_action": "resolve redistribution clearance and advance bounded lifecycle-episode tooling without enabling nationwide production reconstruction",
+  "tracks": {
+    "geospatial_derivation": {
+      "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "build_id": "permit-geo-v1-c4af8799de0283bb",
+      "coordinate_axis_order_verified_nationwide": true,
+      "coordinate_pairs_reviewed": 2811767,
+      "enrichment_builder": "COMPLETED_PASS",
+      "enrichment_schema": "FROZEN",
+      "full_axis_validator": "PASSED_REVIEWED_CURRENT_V1",
+      "independent_build_verifier": "PASS",
+      "local_wgs84_generation_approved": true,
+      "missing_source_coordinates": 199035,
+      "output_bytes": 50805782,
+      "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+      "public_wgs84_release_approved": false,
+      "rows": 3010802,
+      "source_x_interpretation": "EASTING",
+      "source_y_interpretation": "NORTHING",
+      "status": "COMPLETED_VERIFIED",
+      "transformed_coordinates": 2811767
+    },
+    "lifecycle_episode": {
+      "nationwide_lossless_event_history_available": false,
+      "production_reconstruction_enabled": false,
+      "reopening_vs_correction_resolved": false,
+      "schema": "FROZEN",
+      "status": "BLOCKED_PRODUCTION_RECONSTRUCTION",
+      "status_code_05_semantics_resolved": false
+    },
+    "local_permit_parent": {
+      "build_id": "permit-v1-9908225df465e2ff",
+      "full_snapshot_transform_validation": "PASS_3010802_ROWS",
+      "independent_build_verifier": "PASS",
+      "materializer": "COMPLETED_PASS",
+      "output_bytes": 165176236,
+      "public_release_implied": false,
+      "rows": 3010802,
+      "status": "COMPLETED_VERIFIED"
+    },
+    "public_kaggle": {
+      "aggregate_candidate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+      "aggregate_candidate_minimum_cell_count": 10,
+      "aggregate_cells_released_candidate": 67267,
+      "aggregate_cells_suppressed": 229928,
+      "aggregate_independent_verifier": "PASS",
+      "aggregate_output_bytes": 108019,
+      "aggregate_publication_approved": false,
+      "aggregate_redistribution_gate": "UNRESOLVED",
+      "aggregate_released_source_rows": 2383689,
+      "aggregate_suppressed_source_rows": 627113,
+      "aggregate_technical_minimization_verified": true,
+      "kaggle_redistribution": "UNRESOLVED",
+      "local_materialization_completion_does_not_change_publication_status": true,
+      "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_NOT_PUBLICATION_APPROVED",
+      "privacy_public_allowlist_approved": false,
+      "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
+      "row_level_public_build_allowed": false,
+      "source_use_license": "PASS_METADATA_CONFIRMED",
+      "status": "BLOCKED"
+    }
+  }
 }

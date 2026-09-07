@@ -97,6 +97,10 @@ def load_public_permit_aggregate_plan() -> dict[str, Any]:
     return load_json("provenance/public_permit_aggregate_plan.json")
 
 
+def load_public_permit_aggregate() -> dict[str, Any]:
+    return load_json("provenance/public_permit_aggregate.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -166,6 +170,26 @@ def validate_privacy_review(review: dict[str, Any]) -> list[str]:
         errors.append("field inventory must reflect completed current snapshot profiling")
     if review.get("public_allowlist_approved") is not False:
         errors.append("public allowlist cannot be approved before privacy profiling")
+    aggregate = review.get("aggregate_candidate_technical_assessment", {})
+    if aggregate.get("result_provenance") != "provenance/public_permit_aggregate.json":
+        errors.append("privacy review aggregate result reference changed")
+    if aggregate.get("status") != "TECHNICAL_MINIMIZATION_VERIFIED_NOT_PUBLICATION_APPROVED":
+        errors.append("privacy review aggregate technical status changed")
+    if aggregate.get("minimum_cell_count") != 10:
+        errors.append("privacy review aggregate minimum cell count changed")
+    for key in (
+        "direct_or_linkable_row_fields_emitted",
+        "precise_coordinates_emitted",
+        "exact_addresses_emitted",
+        "business_names_emitted",
+        "management_numbers_emitted",
+        "minimum_cell_count_is_legal_privacy_guarantee",
+        "aggregate_publication_approved",
+    ):
+        if aggregate.get(key) is not False:
+            errors.append(f"privacy review aggregate assessment must keep {key}=false")
+    if aggregate.get("suppression_invariants_verified") is not True:
+        errors.append("privacy review aggregate suppression invariants must remain verified")
     return errors
 
 
@@ -506,7 +530,9 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("public permit aggregate schema status changed")
     if next_gate.get("public_permit_aggregate_plan") != "provenance/public_permit_aggregate_plan.json":
         errors.append("public permit aggregate plan reference changed")
-    if next_gate.get("public_permit_aggregate_status") != "IMPLEMENTED_NOT_EXECUTED":
+    if next_gate.get("public_permit_aggregate") != "provenance/public_permit_aggregate.json":
+        errors.append("public permit aggregate result reference changed")
+    if next_gate.get("public_permit_aggregate_status") != "COMPLETED_PASS_VERIFIED_NOT_PUBLICATION_APPROVED":
         errors.append("public permit aggregate status changed")
     return errors
 
@@ -1269,8 +1295,8 @@ def validate_public_permit_aggregate_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("public permit aggregate deterministic build id changed")
     if scope.get("expected_parent_rows") != 3_010_802:
         errors.append("public permit aggregate expected parent row count changed")
-    if scope.get("execution_status") != "NOT_EXECUTED":
-        errors.append("public permit aggregate plan must remain not executed until user run")
+    if scope.get("execution_status") != "COMPLETED_PASS_VERIFIED":
+        errors.append("public permit aggregate plan must record completed verified execution")
     for key in ("row_level_public_projection_approved", "aggregate_publication_approved", "network_access_required"):
         if scope.get(key) is not False:
             errors.append(f"public permit aggregate plan must keep {key}=false")
@@ -1367,4 +1393,85 @@ def validate_public_permit_aggregate_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("public permit aggregate progress stream changed")
     if execution.get("final_aggregate_json_stream") != "stdout":
         errors.append("public permit aggregate final JSON stream changed")
+    if plan.get("result_provenance") != "provenance/public_permit_aggregate.json":
+        errors.append("public permit aggregate result provenance reference changed")
+    return errors
+
+
+def validate_public_permit_aggregate(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != "LOCAL_PRIVACY_MINIMIZED_PERMIT_AGGREGATE_MATERIALIZED_AND_VERIFIED":
+        errors.append("public permit aggregate result decision changed")
+
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("public permit aggregate result scope must exactly match v1 sources")
+    expected_scalars = {
+        "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+        "aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+        "rows_scanned": 3_010_802,
+        "aggregate_cells_total_before_suppression": 297_195,
+        "aggregate_cells_released_candidate": 67_267,
+        "aggregate_cells_suppressed": 229_928,
+        "released_source_rows": 2_383_689,
+        "suppressed_source_rows": 627_113,
+        "output_bytes": 108_019,
+        "minimum_cell_count": 10,
+        "redistribution_status": "UNRESOLVED",
+    }
+    for key, expected in expected_scalars.items():
+        if scope.get(key) != expected:
+            errors.append(f"public permit aggregate result {key} changed")
+    for key in ("row_level_public_projection_approved", "aggregate_publication_approved"):
+        if scope.get(key) is not False:
+            errors.append(f"public permit aggregate result must keep {key}=false")
+    if scope.get("aggregate_cells_released_candidate", 0) + scope.get("aggregate_cells_suppressed", 0) != scope.get(
+        "aggregate_cells_total_before_suppression"
+    ):
+        errors.append("public permit aggregate cell accounting changed")
+    if scope.get("released_source_rows", 0) + scope.get("suppressed_source_rows", 0) != scope.get("rows_scanned"):
+        errors.append("public permit aggregate source-row accounting changed")
+
+    output = review.get("output", {})
+    if output.get("file") != "permit_aggregate.parquet":
+        errors.append("public permit aggregate output filename changed")
+    if output.get("sha256") != "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb":
+        errors.append("public permit aggregate output SHA-256 changed")
+    if output.get("parquet_row_groups") != 2:
+        errors.append("public permit aggregate row-group count changed")
+    if output.get("schema") != "schemas/public_permit_aggregate.v1.json":
+        errors.append("public permit aggregate result schema reference changed")
+    if output.get("schema_sha256") != "35b3145a3e6aace98881b9d0efb8c6298c740130f71f57b78f45aee74a480a45":
+        errors.append("public permit aggregate result schema SHA-256 changed")
+
+    verification = review.get("verification", {})
+    if verification.get("status") != "PASS":
+        errors.append("public permit aggregate independent verification did not pass")
+    for key in (
+        "parent_build_verified",
+        "manifest_verified",
+        "parquet_hash_verified",
+        "parquet_schema_verified",
+        "zstd_verified",
+        "suppression_invariants_verified",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"public permit aggregate verification must keep {key}=true")
+    if verification.get("row_level_values_returned") is not False:
+        errors.append("public permit aggregate verification must not return row-level values")
+
+    privacy = review.get("privacy", {})
+    for key in (
+        "direct_or_linkable_row_fields_emitted",
+        "precise_coordinates_emitted",
+        "exact_addresses_emitted",
+        "business_names_emitted",
+        "management_numbers_emitted",
+        "minimum_cell_count_is_legal_privacy_guarantee",
+        "publication_status_changed",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"public permit aggregate privacy evidence must keep {key}=false")
+    if privacy.get("technical_minimization_verified") is not True:
+        errors.append("public permit aggregate technical minimization must remain verified")
     return errors

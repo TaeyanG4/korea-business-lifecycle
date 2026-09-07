@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. `PERMIT` parent build `permit-v1-9908225df465e2ff`와 별도 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`는 모두 **3,010,802행** 기준 production materialization·독립 검증까지 완료했습니다. lifecycle semantic hard rules도 유지합니다: `03`은 irreversible terminal이 아니고 `05`는 unmapped입니다. publication-safety 단계에서는 row-level 공개를 계속 금지한 채 business/address/identifier/precise-coordinate를 제거하고 exact date를 연도로 축약하며 k=10 미만 셀을 suppress하는 local aggregate 후보를 구현·테스트했습니다. actual aggregate scan과 redistribution review는 아직 남아 있으며 episode reconstruction도 계속 차단합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. `PERMIT` parent build `permit-v1-9908225df465e2ff`와 별도 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`는 모두 **3,010,802행** 기준 production materialization·독립 검증까지 완료했습니다. lifecycle semantic hard rules도 유지합니다: `03`은 irreversible terminal이 아니고 `05`는 unmapped입니다. publication-safety의 local aggregate 후보도 3,010,802행 전수 스캔·독립 검증을 완료했고, 297,195개 셀 중 k=10 이상 67,267개만 candidate에 남겼습니다. 이는 기술적 최소화 검증일 뿐 public/Kaggle 배포 승인이 아니며 redistribution review와 episode reconstruction은 계속 차단합니다.
 
 ## 문서
 

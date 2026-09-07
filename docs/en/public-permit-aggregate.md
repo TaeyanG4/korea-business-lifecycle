@@ -73,7 +73,16 @@ The verifier re-verifies the parent build and checks the aggregate manifest/hash
 
 - implementation + synthetic suppression/tamper tests: PASS
 - real parent plan-only validation: PASS
-- production aggregate scan: awaits user execution
+- production aggregate scan: **PASS (3,010,802 rows)**
+- cells before suppression: 297,195
+- released candidate cells (`cell_count >= 10`): 67,267
+- suppressed cells: 229,928
+- source rows represented by released cells: 2,383,689
+- source rows represented by suppressed cells: 627,113
+- output: 108,019 bytes, independent verifier PASS
+- technical minimization: VERIFIED
 - row-level public release: BLOCKED
 - aggregate publication: BLOCKED
 - Kaggle redistribution: UNRESOLVED
+
+`Released candidate` does not mean approved for publication. It only means an aggregate cell passed the local suppression rule and is present in the local candidate artifact.

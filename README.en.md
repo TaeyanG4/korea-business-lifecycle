@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. Production `PERMIT` build `permit-v1-9908225df465e2ff` and separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` are both materialized and independently verified across all **3,010,802 rows**. Lifecycle semantic hard rules remain unchanged: `03` is not irreversible terminal closure and `05` remains unmapped. The publication-safety stage keeps row-level release blocked and introduces a local aggregate candidate that excludes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10. The aggregate builder/verifier are implemented and tested; the production scan and redistribution review remain outstanding, and episode reconstruction is still blocked.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. Production `PERMIT` build `permit-v1-9908225df465e2ff` and separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` are both materialized and independently verified across all **3,010,802 rows**. Lifecycle semantic hard rules remain unchanged: `03` is not irreversible terminal closure and `05` remains unmapped. The publication-safety local aggregate candidate is also fully scanned and independently verified across 3,010,802 rows; of 297,195 pre-suppression cells, only 67,267 cells with k>=10 remain in the candidate. This is technical minimization, not public/Kaggle publication approval. Redistribution review and episode reconstruction remain blocked.
 
 ## Documentation
 

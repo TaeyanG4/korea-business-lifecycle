@@ -18,6 +18,7 @@ from korea_business_lifecycle.provenance import (
     load_permit_parent_materialization,
     load_permit_geospatial_materialization_plan,
     load_permit_geospatial_materialization,
+    load_public_permit_aggregate,
     load_public_permit_aggregate_plan,
     load_privacy_review,
     load_source_registry,
@@ -40,6 +41,7 @@ from korea_business_lifecycle.provenance import (
     validate_permit_parent_materialization,
     validate_permit_geospatial_materialization_plan,
     validate_permit_geospatial_materialization,
+    validate_public_permit_aggregate,
     validate_public_permit_aggregate_plan,
     validate_privacy_review,
     validate_source_registry,
@@ -202,7 +204,10 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["public_permit_aggregate_plan"] == (
         "provenance/public_permit_aggregate_plan.json"
     )
-    assert decision["next_gate"]["public_permit_aggregate_status"] == "IMPLEMENTED_NOT_EXECUTED"
+    assert decision["next_gate"]["public_permit_aggregate"] == "provenance/public_permit_aggregate.json"
+    assert decision["next_gate"]["public_permit_aggregate_status"] == (
+        "COMPLETED_PASS_VERIFIED_NOT_PUBLICATION_APPROVED"
+    )
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -326,7 +331,7 @@ def test_public_permit_aggregate_plan_is_privacy_minimized_but_not_publishable()
     assert validate_public_permit_aggregate_plan(plan) == []
     assert plan["scope"]["aggregate_build_id"] == "permit-public-agg-v1-bedd874de6619bee"
     assert plan["scope"]["expected_parent_rows"] == 3_010_802
-    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["execution_status"] == "COMPLETED_PASS_VERIFIED"
     assert plan["contracts"]["minimum_cell_count"] == 10
     assert plan["contracts"]["minimum_cell_count_is_legal_privacy_guarantee"] is False
     assert plan["scope"]["row_level_public_projection_approved"] is False
@@ -334,3 +339,19 @@ def test_public_permit_aggregate_plan_is_privacy_minimized_but_not_publishable()
     assert plan["scope"]["redistribution_status"] == "UNRESOLVED"
     assert "management_number" in plan["excluded_row_level_fields"]
     assert "wgs84_longitude" in plan["excluded_row_level_fields"]
+    assert plan["result_provenance"] == "provenance/public_permit_aggregate.json"
+
+
+def test_public_permit_aggregate_result_is_verified_but_not_publication_approved() -> None:
+    review = load_public_permit_aggregate()
+    assert validate_public_permit_aggregate(review) == []
+    assert review["scope"]["rows_scanned"] == 3_010_802
+    assert review["scope"]["aggregate_cells_total_before_suppression"] == 297_195
+    assert review["scope"]["aggregate_cells_released_candidate"] == 67_267
+    assert review["scope"]["aggregate_cells_suppressed"] == 229_928
+    assert review["scope"]["released_source_rows"] == 2_383_689
+    assert review["scope"]["suppressed_source_rows"] == 627_113
+    assert review["scope"]["output_bytes"] == 108_019
+    assert review["verification"]["suppression_invariants_verified"] is True
+    assert review["privacy"]["technical_minimization_verified"] is True
+    assert review["scope"]["aggregate_publication_approved"] is False

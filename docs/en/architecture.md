@@ -31,12 +31,13 @@ official source evidence
       ↳ direct/linkable row-level fields: excluded
       ↳ exact dates: year-only derivation
       ↳ minimum cell count: 10; smaller cells suppressed
-      ↳ builder + independent verifier: implemented/tested
-      ↳ production execution: pending user run
+      ↳ production scan: completed (3,010,802 rows)
+      ↳ independent verifier: passed
+      ↳ candidate cells: 67,267 released / 229,928 suppressed
       ↳ publication/redistribution: still blocked
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The next publication-safety step does not expose row-level data: it removes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10 in a local aggregate candidate. Its builder/verifier are implemented and tested, but the production aggregate scan has not run yet. Redistribution/public release and episode reconstruction remain separately blocked.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified across 3,010,802 rows. It excludes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10. This technical-minimization PASS does not approve redistribution/public release, and episode reconstruction remains separately blocked.
 
 ## Data storage rule
 

@@ -7,7 +7,7 @@
     "aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
     "expected_parent_rows": 3010802,
     "output_root": "data/local/public_candidate/permit_aggregate/v1/permit-public-agg-v1-bedd874de6619bee",
-    "execution_status": "NOT_EXECUTED",
+    "execution_status": "COMPLETED_PASS_VERIFIED",
     "row_level_public_projection_approved": false,
     "aggregate_publication_approved": false,
     "redistribution_status": "UNRESOLVED",
@@ -78,5 +78,6 @@
     "progress_stream": "stderr",
     "final_aggregate_json_stream": "stdout"
   },
-  "next_gate": "user executes and verifies the local aggregate candidate; publication remains blocked until redistribution review and final release policy pass"
+  "result_provenance": "provenance/public_permit_aggregate.json",
+  "next_gate": "aggregate candidate is materialized and independently verified; publication remains blocked until redistribution review and final release policy pass"
 }

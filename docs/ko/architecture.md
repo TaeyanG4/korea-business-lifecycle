@@ -31,12 +31,13 @@
       ↳ direct/linkable row-level fields: excluded
       ↳ exact dates: year-only derivation
       ↳ minimum cell count: 10; smaller cells suppressed
-      ↳ builder + independent verifier: implemented/tested
-      ↳ production execution: pending user run
+      ↳ production scan: completed (3,010,802 rows)
+      ↳ independent verifier: passed
+      ↳ candidate cells: 67,267 released / 229,928 suppressed
       ↳ publication/redistribution: still blocked
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. 다음 publication-safety 단계는 row-level data를 공개하지 않고, business/address/identifier/precise-coordinate를 제거하며 exact date를 연도로만 축약하고 k=10 미만 셀을 suppress하는 local aggregate 후보입니다. 이 aggregate builder/verifier는 구현·테스트됐지만 production scan은 아직 미실행이며, 완료하더라도 redistribution과 public release는 별도 gate입니다. episode reconstruction도 계속 차단 상태입니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. business/address/identifier/precise-coordinate는 제외하고 exact date는 연도로만 축약했으며 k=10 미만 셀은 suppress했습니다. 이 기술적 최소화 PASS는 redistribution/public release 승인이 아니며 episode reconstruction도 계속 차단 상태입니다.
 
 ## 데이터 저장 원칙
 

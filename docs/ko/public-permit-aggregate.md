@@ -73,7 +73,16 @@ verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/Z
 
 - implementation + synthetic suppression/tamper tests: PASS
 - real parent plan-only validation: PASS
-- production aggregate scan: 사용자 실행 대기
+- production aggregate scan: **PASS (3,010,802 rows)**
+- cells before suppression: 297,195
+- released candidate cells (`cell_count >= 10`): 67,267
+- suppressed cells: 229,928
+- source rows represented by released cells: 2,383,689
+- source rows represented by suppressed cells: 627,113
+- output: 108,019 bytes, independent verifier PASS
+- technical minimization: VERIFIED
 - row-level public release: BLOCKED
 - aggregate publication: BLOCKED
 - Kaggle redistribution: UNRESOLVED
+
+`released candidate`는 공개 승인 의미가 아닙니다. 이 용어는 suppression rule을 통과해 local candidate 파일에 포함된 aggregate cell만 뜻합니다.
