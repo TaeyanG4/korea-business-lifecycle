@@ -10,4 +10,3 @@ def test_synthetic_fixture_is_small_and_explicitly_synthetic() -> None:
     assert 1 <= len(records) <= 10
     assert all(record["synthetic_id"].startswith("fixture-") for record in records)
     assert {record["category"] for record in records} <= {"일반음식점", "휴게음식점", "제과점영업"}
-

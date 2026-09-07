@@ -35,4 +35,3 @@ def validate_source_registry(registry: dict[str, Any]) -> list[str]:
                 f"{item.get('source_key')}: Kaggle redistribution cannot be pre-approved in bootstrap"
             )
     return errors
-

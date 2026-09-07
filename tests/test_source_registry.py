@@ -16,4 +16,3 @@ def test_v1_catalog_planning_scale() -> None:
 def test_no_category_claims_a_primary_key() -> None:
     registry = load_source_registry()
     assert all(item["documented_primary_key"] is None for item in registry["categories"])
-

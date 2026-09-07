@@ -19,4 +19,3 @@ Access through the Public Data Portal is not treated as equivalent to permission
 ## Privacy
 
 Business name and address are visible upstream concepts, but nationwide republication suitability requires a separate review. A future public build must be generated from an explicit allowlist.
-

@@ -21,4 +21,3 @@ For bakeries, standard page `15155672` currently exposes the bulk URL and file m
 The official descriptions identify permit date, operating status, business name, and address concepts. Primary key, closure semantics, history retention lower bound/completeness, and X/Y field meanings remain unresolved.
 
 See `provenance/source_registry.json` for the machine-readable registry.
-

@@ -45,4 +45,3 @@ Tests are offline and use synthetic fixtures only.
 ## License
 
 The project code license and any dataset redistribution license are not yet finalized. The upstream `no restriction on permitted use` label is evidence to review, not an automatic grant to mirror source records on Kaggle.
-

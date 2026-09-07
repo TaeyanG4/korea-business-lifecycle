@@ -20,4 +20,3 @@ The repository currently implements only the first bounded execution milestone. 
 ## Data storage rule
 
 `data/raw`, `data/staging`, `data/processed`, and `data/logs` are structural placeholders. Real files must live outside Git under `KBL_DATA_ROOT`.
-

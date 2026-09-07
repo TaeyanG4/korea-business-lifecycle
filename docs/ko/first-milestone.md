@@ -30,4 +30,3 @@
 6. 실제 좌표 X/Y 필드 의미 및 축 순서
 
 `provenance/feasibility.json`이 기계 판독 가능한 gate 원본입니다.
-

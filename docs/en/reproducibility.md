@@ -23,4 +23,3 @@ Every meaningful implementation milestone follows:
 `test → commit → push origin/main → verify matching remote SHA → verify Python 3.11/3.12 Actions green`
 
 Force push, including `--force-with-lease`, is prohibited.
-

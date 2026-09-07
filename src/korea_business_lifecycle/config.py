@@ -16,4 +16,3 @@ def load_json(relative_path: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise TypeError(f"Expected JSON object in {relative_path}")
     return value
-

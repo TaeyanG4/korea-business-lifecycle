@@ -45,4 +45,3 @@ def test_sensitive_and_bulk_patterns_are_ignored() -> None:
 
 def test_data_gitkeep_is_not_ignored() -> None:
     assert not _is_ignored("data/raw/.gitkeep")
-

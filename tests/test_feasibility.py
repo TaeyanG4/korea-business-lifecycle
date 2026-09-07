@@ -17,4 +17,3 @@ def test_all_five_stop_or_redesign_domains_are_explicit() -> None:
         "coordinate_field_meanings",
     ):
         assert gate in gates
-

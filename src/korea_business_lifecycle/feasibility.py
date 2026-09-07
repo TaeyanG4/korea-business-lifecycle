@@ -22,4 +22,3 @@ def load_feasibility() -> dict[str, Any]:
 def kaggle_publication_ready(feasibility: dict[str, Any]) -> bool:
     gates = feasibility.get("gates", {})
     return all(gates.get(name) == "PASS" for name in PUBLICATION_BLOCKING_GATES)
-

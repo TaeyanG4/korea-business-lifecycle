@@ -20,4 +20,3 @@
 ## 데이터 저장 원칙
 
 `data/raw`, `data/staging`, `data/processed`, `data/logs`는 구조 표시용입니다. 실제 파일은 Git 바깥 `KBL_DATA_ROOT`에 저장해야 합니다.
-

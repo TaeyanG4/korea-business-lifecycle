@@ -23,4 +23,3 @@ python scripts/repo_check.py
 `test → commit → push origin/main → remote SHA 일치 확인 → Python 3.11/3.12 Actions 성공 확인`
 
 force push, `--force-with-lease`를 포함한 강제 ref 업데이트는 사용하지 않습니다.
-

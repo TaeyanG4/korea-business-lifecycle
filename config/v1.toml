@@ -8,4 +8,3 @@ categories = ["general_restaurants", "rest_cafes", "bakeries"]
 allow_network_in_tests = false
 allow_real_data_in_git = false
 allow_kaggle_publication = false
-

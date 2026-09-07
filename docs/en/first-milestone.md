@@ -30,4 +30,3 @@ Not yet allowed:
 6. actual X/Y source-field meaning and axis order.
 
 `provenance/feasibility.json` is the machine-readable gate record.
-

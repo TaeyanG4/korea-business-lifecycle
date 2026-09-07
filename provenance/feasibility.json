@@ -31,4 +31,3 @@
     "crs": "If coordinate fields or CRS cannot be authoritatively tied together, do not transform or publish longitude/latitude."
   }
 }
-

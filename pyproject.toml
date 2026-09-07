@@ -25,4 +25,3 @@ addopts = "-ra --disable-socket"
 markers = [
   "real_data: opt-in tests requiring locally stored approved source artifacts",
 ]
-
