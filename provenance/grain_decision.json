@@ -117,6 +117,8 @@
     "public_permit_aggregate_plan": "provenance/public_permit_aggregate_plan.json",
     "public_permit_aggregate": "provenance/public_permit_aggregate.json",
     "public_permit_aggregate_status": "COMPLETED_PASS_VERIFIED_NOT_PUBLICATION_APPROVED",
-    "goal": "keep the verified aggregate candidate local while resolving redistribution and advancing bounded episode reconstruction without enabling nationwide production reconstruction"
+    "bounded_episode_reconstruction": "provenance/bounded_episode_reconstruction.json",
+    "bounded_episode_reconstruction_status": "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED",
+    "goal": "keep the verified aggregate candidate local while resolving redistribution; bounded episode tooling is available for reviewed windows but nationwide production reconstruction remains disabled"
   }
 }

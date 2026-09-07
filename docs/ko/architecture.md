@@ -35,9 +35,14 @@
       ↳ independent verifier: passed
       ↳ candidate cells: 67,267 released / 229,928 suppressed
       ↳ publication/redistribution: still blocked
+  → bounded PERMIT_STATUS_EPISODE tooling
+      ↳ sparse explicit observations only
+      ↳ max 100,000 observations/call, in-memory
+      ↳ LEFT / INTERVAL / RIGHT censoring preserved
+      ↳ production nationwide reconstruction: disabled
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. business/address/identifier/precise-coordinate는 제외하고 exact date는 연도로만 축약했으며 k=10 미만 셀은 suppress했습니다. 이 기술적 최소화 PASS는 redistribution/public release 승인이 아니며 episode reconstruction도 계속 차단 상태입니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. business/address/identifier/precise-coordinate는 제외하고 exact date는 연도로만 축약했으며 k=10 미만 셀은 suppress했습니다. 추가로 bounded sparse-observation episode reconstructor를 구현했지만 이는 100,000-observation cap의 local tooling일 뿐입니다. 전국 history observation 전략이 없으므로 production reconstruction과 public release는 계속 차단합니다.
 
 ## 데이터 저장 원칙
 

@@ -55,6 +55,11 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     )
     assert readiness["tracks"]["public_kaggle"]["aggregate_redistribution_gate"] == "UNRESOLVED"
     assert readiness["next_long_local_actions"] == []
+    assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor"] == (
+        "IMPLEMENTED_SYNTHETIC_VALIDATED"
+    )
+    assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_max_observations"] == 100_000
+    assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_in_memory_only"] is True
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
     assert readiness["tracks"]["public_kaggle"]["status"] == "BLOCKED"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False

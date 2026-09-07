@@ -4,6 +4,7 @@ from typing import Any
 
 from .canonical_materialization_verify import expected_permit_build_id
 from .provenance import (
+    load_bounded_episode_reconstruction,
     load_geospatial_axis_probe,
     load_geospatial_full_axis,
     load_geospatial_full_axis_plan,
@@ -31,6 +32,7 @@ def compute_release_readiness() -> dict[str, Any]:
     geospatial_materialization_result = load_permit_geospatial_materialization()
     public_aggregate = load_public_permit_aggregate_plan()
     public_aggregate_result = load_public_permit_aggregate()
+    bounded_episode = load_bounded_episode_reconstruction()
     grain = load_grain_decision()
     privacy = load_privacy_review()
     license_review = load_license_review()
@@ -107,6 +109,12 @@ def compute_release_readiness() -> dict[str, Any]:
             "lifecycle_episode": {
                 "status": "BLOCKED_PRODUCTION_RECONSTRUCTION",
                 "schema": episode["schema_status"],
+                "bounded_reconstructor": "IMPLEMENTED_SYNTHETIC_VALIDATED",
+                "bounded_reconstructor_module": bounded_episode["implementation"]["module"],
+                "bounded_reconstructor_max_observations": bounded_episode["scope"][
+                    "maximum_observations_per_call"
+                ],
+                "bounded_reconstructor_in_memory_only": bounded_episode["scope"]["bounded_in_memory_only"],
                 "production_reconstruction_enabled": episode["production_reconstruction_enabled"],
                 "status_code_05_semantics_resolved": semantics["status_code_05_semantics_resolved"],
                 "reopening_vs_correction_resolved": semantics["reopening_vs_correction_resolved"],
@@ -141,7 +149,7 @@ def compute_release_readiness() -> dict[str, Any]:
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "resolve redistribution clearance and advance bounded lifecycle-episode tooling without enabling nationwide production reconstruction",
+        "next_product_action": "resolve redistribution clearance and define the nationwide history-observation strategy required before production episode reconstruction can be considered",
         "hard_blocks": [
             "do not publish row-level data until privacy allowlist and redistribution review pass",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

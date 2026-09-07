@@ -1,0 +1,53 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "BOUNDED_EPISODE_RECONSTRUCTOR_IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "episode_schema": "schemas/permit_status_episode.v1.json",
+    "maximum_observations_per_call": 100000,
+    "bounded_in_memory_only": true,
+    "history_acquisition_performed": false,
+    "nationwide_production_reconstruction_enabled": false,
+    "public_row_level_release_approved": false
+  },
+  "input_contract": {
+    "grain": "one explicit as-of source-state observation for one source_key + management_number + observed_date",
+    "one_observation_per_permit_date_required": true,
+    "observations_outside_declared_window_fail_closed": true,
+    "duplicate_permit_date_observations_fail_closed": true,
+    "missing_history_is_interpolated": false,
+    "permit_date_used_as_episode_start": false,
+    "management_number_primary_key_claim": false
+  },
+  "episode_contract": {
+    "state_partition_fields": [
+      "source_status_code",
+      "source_status_name",
+      "source_detail_status_code",
+      "source_detail_status_name"
+    ],
+    "closure_date_partitions_episode": false,
+    "first_episode_start_censoring": "LEFT_CENSORED",
+    "between_episode_boundary_censoring": "INTERVAL_CENSORED",
+    "last_episode_end_censoring": "RIGHT_CENSORED",
+    "episode_number_persistent_identity": false,
+    "exact_transition_time_claimed": false
+  },
+  "semantic_safety": {
+    "canonical_status_mapping_enabled": false,
+    "status_code_03_irreversible": false,
+    "status_code_05_semantics_resolved": false,
+    "reopening_vs_correction_resolved": false,
+    "closure_date_permanent_terminal_event": false,
+    "terminal_event_claim": false
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/episode_reconstruction.py",
+    "function": "reconstruct_bounded_status_episodes",
+    "default_max_bounded_observations": 100000,
+    "test_module": "tests/test_episode_reconstruction.py",
+    "python_3_11_focused_tests": "11 PASS",
+    "python_3_12_focused_tests": "11 PASS"
+  },
+  "next_gate": "use only explicitly reviewed bounded history observations until a nationwide observation strategy is approved; production reconstruction remains disabled and status 05 remains unmapped"
+}

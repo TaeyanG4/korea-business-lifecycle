@@ -1,4 +1,5 @@
 from korea_business_lifecycle.provenance import (
+    load_bounded_episode_reconstruction,
     load_bounded_history_audit,
     load_expanded_history_audit,
     load_grain_decision,
@@ -27,6 +28,7 @@ from korea_business_lifecycle.provenance import (
     validate_reverse_transition_probe_plan,
     validate_reverse_transition_findings,
     validate_bounded_history_audit,
+    validate_bounded_episode_reconstruction,
     validate_expanded_history_audit,
     validate_grain_decision,
     validate_geospatial_axis_probe,
@@ -355,3 +357,17 @@ def test_public_permit_aggregate_result_is_verified_but_not_publication_approved
     assert review["verification"]["suppression_invariants_verified"] is True
     assert review["privacy"]["technical_minimization_verified"] is True
     assert review["scope"]["aggregate_publication_approved"] is False
+
+
+def test_bounded_episode_reconstructor_is_validated_but_production_remains_disabled() -> None:
+    review = load_bounded_episode_reconstruction()
+    assert validate_bounded_episode_reconstruction(review) == []
+    assert review["scope"]["maximum_observations_per_call"] == 100_000
+    assert review["scope"]["bounded_in_memory_only"] is True
+    assert review["scope"]["history_acquisition_performed"] is False
+    assert review["scope"]["nationwide_production_reconstruction_enabled"] is False
+    assert review["episode_contract"]["first_episode_start_censoring"] == "LEFT_CENSORED"
+    assert review["episode_contract"]["between_episode_boundary_censoring"] == "INTERVAL_CENSORED"
+    assert review["episode_contract"]["last_episode_end_censoring"] == "RIGHT_CENSORED"
+    assert review["semantic_safety"]["status_code_03_irreversible"] is False
+    assert review["semantic_safety"]["status_code_05_semantics_resolved"] is False

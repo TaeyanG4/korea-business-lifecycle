@@ -82,6 +82,8 @@ right_censored = true
 
 ## 다음 단계
 
-두 canonical schema 계약이 모두 동결됐습니다. 다음 구현 단계에서는 먼저 current snapshot → `PERMIT` parent의 deterministic transformer를 구현하는 것이 안전합니다. 전국 episode reconstruction은 계속 비활성화합니다.
+두 canonical schema 계약은 계속 동결 상태입니다. 이후 `PERMIT` parent production build까지 완료됐고, 명시적으로 제공된 sparse observation만 처리하는 bounded in-memory episode reconstructor도 구현·synthetic 검증했습니다. 그러나 전국 history observation 전략이 승인되지 않았으므로 production episode reconstruction은 계속 비활성화합니다.
+
+bounded 구현 계약은 [Bounded PERMIT_STATUS_EPISODE Reconstruction](bounded-episode-reconstruction.md)에 정리합니다.
 
 기계 판독 schema는 `schemas/permit_status_episode.v1.json`에 있습니다.

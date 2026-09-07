@@ -82,6 +82,8 @@ In particular, a `reopened_flag` is not created because a source-state reversal 
 
 ## Next step
 
-Both canonical schema contracts are now frozen. The next safe implementation step is a deterministic current-snapshot → `PERMIT` parent transformer. Nationwide episode reconstruction remains disabled.
+Both canonical schema contracts remain frozen. The production `PERMIT` parent is now complete, and a bounded in-memory episode reconstructor for explicitly supplied sparse observations has been implemented and synthetic-tested. Nationwide production episode reconstruction remains disabled because no nationwide history-observation strategy has been approved.
+
+The bounded implementation contract is documented in [Bounded PERMIT_STATUS_EPISODE Reconstruction](bounded-episode-reconstruction.md).
 
 The machine-readable contract is `schemas/permit_status_episode.v1.json`.

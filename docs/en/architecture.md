@@ -35,9 +35,14 @@ official source evidence
       ↳ independent verifier: passed
       ↳ candidate cells: 67,267 released / 229,928 suppressed
       ↳ publication/redistribution: still blocked
+  → bounded PERMIT_STATUS_EPISODE tooling
+      ↳ sparse explicit observations only
+      ↳ max 100,000 observations/call, in memory
+      ↳ LEFT / INTERVAL / RIGHT censoring preserved
+      ↳ nationwide production reconstruction: disabled
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified across 3,010,802 rows. It excludes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10. This technical-minimization PASS does not approve redistribution/public release, and episode reconstruction remains separately blocked.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified across 3,010,802 rows. It excludes business/address/identifier/precise-coordinate fields, coarsens exact dates to years, and suppresses cells below k=10. A bounded sparse-observation episode reconstructor is also implemented, but it is local tooling capped at 100,000 observations per call. Without a nationwide history-observation strategy, production reconstruction and public release remain blocked.
 
 ## Data storage rule
 

@@ -8,7 +8,7 @@
     "do not declare MNG_NO an official source primary key"
   ],
   "next_long_local_actions": [],
-  "next_product_action": "resolve redistribution clearance and advance bounded lifecycle-episode tooling without enabling nationwide production reconstruction",
+  "next_product_action": "resolve redistribution clearance and define the nationwide history-observation strategy required before production episode reconstruction can be considered",
   "tracks": {
     "geospatial_derivation": {
       "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
@@ -31,6 +31,10 @@
       "transformed_coordinates": 2811767
     },
     "lifecycle_episode": {
+      "bounded_reconstructor": "IMPLEMENTED_SYNTHETIC_VALIDATED",
+      "bounded_reconstructor_in_memory_only": true,
+      "bounded_reconstructor_max_observations": 100000,
+      "bounded_reconstructor_module": "src/korea_business_lifecycle/episode_reconstruction.py",
       "nationwide_lossless_event_history_available": false,
       "production_reconstruction_enabled": false,
       "reopening_vs_correction_resolved": false,

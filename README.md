@@ -50,6 +50,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [v1 Grain 결정](docs/ko/grain-decision.md)
 - [Canonical PERMIT parent schema](docs/ko/canonical-permit-schema.md)
 - [Canonical PERMIT_STATUS_EPISODE schema](docs/ko/canonical-episode-schema.md)
+- [Bounded PERMIT_STATUS_EPISODE reconstruction](docs/ko/bounded-episode-reconstruction.md)
 - [Canonical PERMIT transformer](docs/ko/canonical-permit-transformer.md)
 - [Canonical PERMIT bounded real-data compatibility](docs/ko/canonical-permit-compatibility.md)
 - [Canonical PERMIT full-snapshot dry run](docs/ko/canonical-permit-full-dry-run.md)

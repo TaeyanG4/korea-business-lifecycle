@@ -101,6 +101,10 @@ def load_public_permit_aggregate() -> dict[str, Any]:
     return load_json("provenance/public_permit_aggregate.json")
 
 
+def load_bounded_episode_reconstruction() -> dict[str, Any]:
+    return load_json("provenance/bounded_episode_reconstruction.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -534,6 +538,93 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("public permit aggregate result reference changed")
     if next_gate.get("public_permit_aggregate_status") != "COMPLETED_PASS_VERIFIED_NOT_PUBLICATION_APPROVED":
         errors.append("public permit aggregate status changed")
+    if next_gate.get("bounded_episode_reconstruction") != "provenance/bounded_episode_reconstruction.json":
+        errors.append("bounded episode reconstruction evidence reference changed")
+    if next_gate.get("bounded_episode_reconstruction_status") != (
+        "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED"
+    ):
+        errors.append("bounded episode reconstruction status changed")
+    return errors
+
+
+def validate_bounded_episode_reconstruction(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != (
+        "BOUNDED_EPISODE_RECONSTRUCTOR_IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED"
+    ):
+        errors.append("bounded episode reconstruction decision changed")
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("bounded episode reconstruction scope must exactly match v1 sources")
+    if scope.get("episode_schema") != "schemas/permit_status_episode.v1.json":
+        errors.append("bounded episode reconstruction schema reference changed")
+    if scope.get("maximum_observations_per_call") != 100_000:
+        errors.append("bounded episode reconstruction observation cap changed")
+    for key in ("bounded_in_memory_only",):
+        if scope.get(key) is not True:
+            errors.append(f"bounded episode reconstruction scope must keep {key}=true")
+    for key in (
+        "history_acquisition_performed",
+        "nationwide_production_reconstruction_enabled",
+        "public_row_level_release_approved",
+    ):
+        if scope.get(key) is not False:
+            errors.append(f"bounded episode reconstruction scope must keep {key}=false")
+
+    input_contract = review.get("input_contract", {})
+    for key in (
+        "one_observation_per_permit_date_required",
+        "observations_outside_declared_window_fail_closed",
+        "duplicate_permit_date_observations_fail_closed",
+    ):
+        if input_contract.get(key) is not True:
+            errors.append(f"bounded episode input contract must keep {key}=true")
+    for key in (
+        "missing_history_is_interpolated",
+        "permit_date_used_as_episode_start",
+        "management_number_primary_key_claim",
+    ):
+        if input_contract.get(key) is not False:
+            errors.append(f"bounded episode input contract must keep {key}=false")
+
+    episode = review.get("episode_contract", {})
+    expected_state = [
+        "source_status_code",
+        "source_status_name",
+        "source_detail_status_code",
+        "source_detail_status_name",
+    ]
+    if episode.get("state_partition_fields") != expected_state:
+        errors.append("bounded episode state partition fields changed")
+    if episode.get("first_episode_start_censoring") != "LEFT_CENSORED":
+        errors.append("bounded episode first-start censoring changed")
+    if episode.get("between_episode_boundary_censoring") != "INTERVAL_CENSORED":
+        errors.append("bounded episode transition censoring changed")
+    if episode.get("last_episode_end_censoring") != "RIGHT_CENSORED":
+        errors.append("bounded episode final-end censoring changed")
+    for key in ("closure_date_partitions_episode", "episode_number_persistent_identity", "exact_transition_time_claimed"):
+        if episode.get(key) is not False:
+            errors.append(f"bounded episode contract must keep {key}=false")
+
+    semantics = review.get("semantic_safety", {})
+    for key in (
+        "canonical_status_mapping_enabled",
+        "status_code_03_irreversible",
+        "status_code_05_semantics_resolved",
+        "reopening_vs_correction_resolved",
+        "closure_date_permanent_terminal_event",
+        "terminal_event_claim",
+    ):
+        if semantics.get(key) is not False:
+            errors.append(f"bounded episode semantic safety must keep {key}=false")
+
+    implementation = review.get("implementation", {})
+    if implementation.get("module") != "src/korea_business_lifecycle/episode_reconstruction.py":
+        errors.append("bounded episode reconstruction module reference changed")
+    if implementation.get("function") != "reconstruct_bounded_status_episodes":
+        errors.append("bounded episode reconstruction function reference changed")
+    if implementation.get("default_max_bounded_observations") != 100_000:
+        errors.append("bounded episode reconstruction default cap changed")
     return errors
 
 
