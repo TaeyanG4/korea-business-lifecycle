@@ -12,6 +12,7 @@ Phase 2는 current snapshot 취득과 profiling을 분리합니다. `acquire_sna
 - CSV 행의 필드 수가 헤더와 다르면 실패합니다.
 - cardinality 메모리는 컬럼당 상한을 둡니다. 상한을 넘으면 정확한 개수라고 주장하지 않고 lower bound로 기록합니다.
 - raw `top_values`는 상태(status) 계열 컬럼에만 기록하며 주소·상호·식별자 후보에는 기록하지 않습니다.
+- 날짜명/좌표명 컬럼은 날짜/숫자 parseability를 전수 검사합니다. 그 외 컬럼의 type parseability는 기본 10,000개 non-null 값까지만 bounded probe하며 exact 여부를 함께 기록합니다.
 - 컬럼명 기반 힌트는 의미 해석이 아니라 profiling 후보 표시일 뿐입니다.
 
 ## 실행 예시

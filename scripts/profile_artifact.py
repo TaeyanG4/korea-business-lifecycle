@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--data-root", default=None)
     parser.add_argument("--distinct-cap", type=int, default=10_000)
     parser.add_argument("--top-n", type=int, default=20)
+    parser.add_argument("--type-probe-cap", type=int, default=10_000)
     return parser.parse_args()
 
 
@@ -27,7 +28,12 @@ def main() -> int:
     args = parse_args()
     root = resolve_data_root(args.data_root)
     artifact = require_external_artifact(args.artifact, root)
-    profile = profile_csv(artifact, distinct_cap=args.distinct_cap, top_n=args.top_n)
+    profile = profile_csv(
+        artifact,
+        distinct_cap=args.distinct_cap,
+        top_n=args.top_n,
+        type_probe_cap=args.type_probe_cap,
+    )
     manifest = build_artifact_manifest(
         source_key=args.source_key,
         path=artifact,

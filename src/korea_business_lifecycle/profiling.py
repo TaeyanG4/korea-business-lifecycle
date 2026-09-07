@@ -12,6 +12,7 @@ from typing import Any, Iterable
 DATE_FORMATS = ("%Y%m%d", "%Y-%m-%d", "%Y/%m/%d")
 DEFAULT_DISTINCT_CAP = 10_000
 DEFAULT_TOP_N = 20
+DEFAULT_TYPE_PROBE_CAP = 10_000
 
 
 class ProfileError(ValueError):
@@ -23,6 +24,7 @@ class ColumnAccumulator:
     name: str
     distinct_cap: int
     top_n: int
+    type_probe_cap: int
     row_count: int = 0
     null_count: int = 0
     blank_count: int = 0
@@ -31,15 +33,21 @@ class ColumnAccumulator:
     min_length: int | None = None
     max_length: int | None = None
     numeric_parse_count: int = 0
+    numeric_parse_examined_count: int = 0
     numeric_min: float | None = None
     numeric_max: float | None = None
     date_parse_count: int = 0
+    date_parse_examined_count: int = 0
     date_formats: Counter[str] = field(default_factory=Counter)
     date_min: str | None = None
     date_max: str | None = None
     distinct_values: set[str] = field(default_factory=set)
     distinct_truncated: bool = False
     value_counts: Counter[str] = field(default_factory=Counter)
+    _hints: list[str] = field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        self._hints = column_name_hints(self.name)
 
     def add(self, raw: str | None) -> None:
         self.row_count += 1
@@ -67,31 +75,41 @@ class ColumnAccumulator:
         else:
             self.distinct_truncated = True
 
-        try:
-            number = float(stripped)
-        except ValueError:
-            pass
-        else:
-            if math.isfinite(number):
-                self.numeric_parse_count += 1
-                self.numeric_min = number if self.numeric_min is None else min(self.numeric_min, number)
-                self.numeric_max = number if self.numeric_max is None else max(self.numeric_max, number)
-
-        for fmt in DATE_FORMATS:
+        numeric_full_scan = "coordinate_like_name" in self._hints
+        if numeric_full_scan or self.numeric_parse_examined_count < self.type_probe_cap:
+            self.numeric_parse_examined_count += 1
             try:
-                parsed_date = datetime.strptime(stripped, fmt).date()
+                number = float(stripped)
             except ValueError:
-                continue
-            self.date_parse_count += 1
-            self.date_formats[fmt] += 1
-            iso_date = parsed_date.isoformat()
-            self.date_min = iso_date if self.date_min is None else min(self.date_min, iso_date)
-            self.date_max = iso_date if self.date_max is None else max(self.date_max, iso_date)
-            break
+                pass
+            else:
+                if math.isfinite(number):
+                    self.numeric_parse_count += 1
+                    self.numeric_min = (
+                        number if self.numeric_min is None else min(self.numeric_min, number)
+                    )
+                    self.numeric_max = (
+                        number if self.numeric_max is None else max(self.numeric_max, number)
+                    )
+
+        date_full_scan = "date_like_name" in self._hints
+        if date_full_scan or self.date_parse_examined_count < self.type_probe_cap:
+            self.date_parse_examined_count += 1
+            for fmt in DATE_FORMATS:
+                try:
+                    parsed_date = datetime.strptime(stripped, fmt).date()
+                except ValueError:
+                    continue
+                self.date_parse_count += 1
+                self.date_formats[fmt] += 1
+                iso_date = parsed_date.isoformat()
+                self.date_min = iso_date if self.date_min is None else min(self.date_min, iso_date)
+                self.date_max = iso_date if self.date_max is None else max(self.date_max, iso_date)
+                break
 
     def finish(self) -> dict[str, Any]:
         tracked_distinct = len(self.distinct_values)
-        hints = column_name_hints(self.name)
+        hints = self._hints
         expose_top_values = "status_like_name" in hints
         return {
             "name": self.name,
@@ -110,11 +128,17 @@ class ColumnAccumulator:
             "min_length": self.min_length,
             "max_length": self.max_length,
             "numeric_parse_count": self.numeric_parse_count,
-            "numeric_parse_pct": _pct(self.numeric_parse_count, self.non_null_count),
+            "numeric_parse_examined_count": self.numeric_parse_examined_count,
+            "numeric_parse_exact": self.numeric_parse_examined_count == self.non_null_count,
+            "numeric_parse_pct": _pct(
+                self.numeric_parse_count, self.numeric_parse_examined_count
+            ),
             "numeric_min": self.numeric_min,
             "numeric_max": self.numeric_max,
             "date_parse_count": self.date_parse_count,
-            "date_parse_pct": _pct(self.date_parse_count, self.non_null_count),
+            "date_parse_examined_count": self.date_parse_examined_count,
+            "date_parse_exact": self.date_parse_examined_count == self.non_null_count,
+            "date_parse_pct": _pct(self.date_parse_count, self.date_parse_examined_count),
             "observed_date_formats": dict(sorted(self.date_formats.items())),
             "date_min": self.date_min,
             "date_max": self.date_max,
@@ -188,12 +212,15 @@ def sniff_dialect(sample_text: str) -> dict[str, Any]:
             "escapechar": None,
             "detection": "header_fallback",
         }
+    # Source files are published as CSV. Python's Sniffer can incorrectly infer
+    # doublequote=False from an early sample and then split valid later rows.
+    # Detect only the delimiter; keep conventional CSV quoting deterministic.
     return {
         "delimiter": dialect.delimiter,
-        "quotechar": dialect.quotechar,
-        "doublequote": dialect.doublequote,
-        "escapechar": dialect.escapechar,
-        "detection": "sniffer",
+        "quotechar": '"',
+        "doublequote": True,
+        "escapechar": None,
+        "detection": "sniffer_delimiter_rfc4180_quotes",
     }
 
 
@@ -207,9 +234,12 @@ def profile_csv(
     *,
     distinct_cap: int = DEFAULT_DISTINCT_CAP,
     top_n: int = DEFAULT_TOP_N,
+    type_probe_cap: int = DEFAULT_TYPE_PROBE_CAP,
 ) -> dict[str, Any]:
     if distinct_cap < 1:
         raise ProfileError("distinct_cap must be positive")
+    if type_probe_cap < 1:
+        raise ProfileError("type_probe_cap must be positive")
     encoding_info = detect_encoding(path)
     encoding = encoding_info["selected"]
     sample = _sample_text(path, encoding)
@@ -240,7 +270,15 @@ def profile_csv(
             if header in seen:
                 duplicate_headers.append(header)
             seen.add(header)
-        accumulators = [ColumnAccumulator(h, distinct_cap=distinct_cap, top_n=top_n) for h in headers]
+        accumulators = [
+            ColumnAccumulator(
+                h,
+                distinct_cap=distinct_cap,
+                top_n=top_n,
+                type_probe_cap=type_probe_cap,
+            )
+            for h in headers
+        ]
 
         try:
             for row in reader:
@@ -275,6 +313,7 @@ def profile_csv(
         "limits": {
             "distinct_cap_per_column": distinct_cap,
             "top_values_per_column": top_n,
+            "type_probe_cap_per_non_date_non_coordinate_column": type_probe_cap,
         },
         "columns": columns,
     }

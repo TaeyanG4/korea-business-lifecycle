@@ -12,6 +12,7 @@ Phase 2 separates current-snapshot acquisition from profiling. `acquire_snapshot
 - CSV rows with a field count different from the header fail profiling.
 - Cardinality memory is capped per column. Once capped, the profiler reports a lower bound rather than pretending the count is exact.
 - Raw `top_values` are emitted only for status-like columns, not for address, business-name, or identifier-like fields.
+- Date-like and coordinate-like columns receive full date/numeric parseability checks. Other columns use a bounded default probe of 10,000 non-null values and explicitly record whether the result is exact.
 - Name-based column hints are profiling candidates, not semantic conclusions.
 
 ## Example

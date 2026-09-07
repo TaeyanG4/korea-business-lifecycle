@@ -57,6 +57,29 @@ def test_profile_csv_rejects_variable_field_count(tmp_path: Path) -> None:
         profile_csv(path)
 
 
+def test_profile_csv_uses_deterministic_standard_csv_quote_rules(tmp_path: Path) -> None:
+    path = tmp_path / "quoted.csv"
+    path.write_text(
+        '관리번호,사업장명\nA1,"합성 ""카페"""\nA2,일반명\n',
+        encoding="utf-8",
+    )
+    profile = profile_csv(path)
+    assert profile["rows"]["parsed_data_rows"] == 2
+    assert profile["header"]["column_count"] == 2
+    assert profile["dialect"]["doublequote"] is True
+
+
+def test_type_parsing_is_bounded_for_non_semantic_columns(tmp_path: Path) -> None:
+    path = tmp_path / "bounded.csv"
+    path.write_text("value\n1\n2\n3\n4\n", encoding="utf-8")
+    profile = profile_csv(path, type_probe_cap=2)
+    column = profile["columns"][0]
+    assert column["numeric_parse_examined_count"] == 2
+    assert column["numeric_parse_exact"] is False
+    assert column["date_parse_examined_count"] == 2
+    assert column["date_parse_exact"] is False
+
+
 def test_compare_column_sets_does_not_claim_semantic_equivalence(tmp_path: Path) -> None:
     first = tmp_path / "a.csv"
     second = tmp_path / "b.csv"
