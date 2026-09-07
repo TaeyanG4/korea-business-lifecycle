@@ -44,4 +44,4 @@ synthetic fixture에서 검증한 `PERMIT` transformer를 Git-ignored `data/loca
 
 ## 다음 gate
 
-다음 한 단계는 **full-snapshot streaming dry-run validator**를 구현하는 것입니다. 전국 current snapshot 약 3백만 행을 읽을 수 있으므로 진행률을 표시하고, 장시간 로컬 실행은 사용자에게 정확한 명령어를 제공해 직접 실행하도록 합니다. 이 단계에서도 canonical output 파일은 쓰지 않습니다.
+**full-snapshot streaming dry-run validator 구현은 완료됐습니다.** 다음 gate는 사용자가 약 301만 행 전체 scan을 직접 실행하고 aggregate 결과를 반환하는 것입니다. 진행률은 stderr에 실시간 표시되며 canonical output 파일은 쓰지 않습니다. 자세한 실행 계약은 `canonical-permit-full-dry-run.md`에 있습니다.

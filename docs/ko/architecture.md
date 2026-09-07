@@ -15,13 +15,13 @@
   → deterministic PERMIT parent transformation
       ↳ synthetic 39-column fixture: validated
       ↳ bounded real-snapshot compatibility: passed (256 rows/source)
-      ↳ full-snapshot streaming dry run: next gate
+      ↳ full-snapshot streaming dry run: implemented / user execution pending
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → 별도 공개 검토
 ```
 
-v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer는 synthetic 및 source별 256행 실제 bounded compatibility를 통과했습니다. 다음 gate는 진행률을 표시하는 full-snapshot streaming dry run입니다. production canonical materialization, full-history ingestion, episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
+v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer는 synthetic 및 source별 256행 실제 bounded compatibility를 통과했습니다. 전체 current snapshot을 canonical output 없이 검사하는 progress-reporting full dry-run validator까지 구현됐으며 실제 장시간 실행은 사용자 실행 대기 상태입니다. production canonical materialization, full-history ingestion, episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
 
 ## 데이터 저장 원칙
 

@@ -88,6 +88,8 @@
     "permit_parent_transformer_status": "BOUNDED_REAL_VALIDATED",
     "permit_parent_compatibility": "provenance/permit_parent_compatibility.json",
     "permit_parent_compatibility_status": "PASSED_256_ROWS_PER_SOURCE",
-    "goal": "implement a progress-reporting full-snapshot streaming dry-run validator for user execution; do not write production canonical output and keep episode reconstruction disabled"
+    "permit_parent_full_dry_run_plan": "provenance/permit_parent_full_dry_run_plan.json",
+    "permit_parent_full_dry_run_status": "READY_FOR_USER_EXECUTION",
+    "goal": "user executes the progress-reporting full-snapshot dry run and returns aggregate results; do not write production canonical output and keep episode reconstruction disabled"
   }
 }

@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and a three-date follow-up confirmed both `03→01` cases as source-level `closed→operating/normal` reversals. The project therefore rejects code `03` as an assumed irreversible terminal closure. The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`; both the 26-column `PERMIT` parent schema and the 23-column `PERMIT_STATUS_EPISODE` schema are frozen. The current-snapshot → `PERMIT` deterministic transformer has passed not only synthetic fixtures but also bounded compatibility on 256 real current-snapshot rows per source, 768 rows total. No row-level values or production canonical output were created. Episode boundaries preserve left/interval/right censoring without inferring exact transition times, canonical active/closed states, or terminal events. Production canonical materialization and episode reconstruction remain disabled. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and a three-date follow-up confirmed both `03→01` cases as source-level `closed→operating/normal` reversals. The project therefore rejects code `03` as an assumed irreversible terminal closure. The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`; both the 26-column `PERMIT` parent schema and the 23-column `PERMIT_STATUS_EPISODE` schema are frozen. The current-snapshot → `PERMIT` deterministic transformer has passed synthetic fixtures and bounded compatibility on 256 real rows per source. A progress-reporting full dry-run validator is now implemented to stream all 3,010,802 current rows without writing canonical output; the long full scan itself awaits user execution. Episode boundaries preserve left/interval/right censoring without inferring exact transition times, canonical active/closed states, or terminal events. Production canonical materialization and episode reconstruction remain disabled. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
 
 ## Documentation
 
@@ -52,6 +52,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Canonical PERMIT_STATUS_EPISODE schema](docs/en/canonical-episode-schema.md)
 - [Canonical PERMIT transformer](docs/en/canonical-permit-transformer.md)
 - [Canonical PERMIT bounded real-data compatibility](docs/en/canonical-permit-compatibility.md)
+- [Canonical PERMIT full-snapshot dry run](docs/en/canonical-permit-full-dry-run.md)
 - [History sample expansion plan](docs/en/history-sample-expansion.md)
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)

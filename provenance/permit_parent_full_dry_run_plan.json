@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "FULL_CURRENT_SNAPSHOT_DRY_RUN_IMPLEMENTED_USER_EXECUTION_REQUIRED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "expected_rows_total": 3010802,
+    "network_access_required": false,
+    "production_materialization_performed": false,
+    "row_level_values_recorded": false,
+    "execution_status": "NOT_EXECUTED"
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/canonical_full_dry_run.py",
+    "script": "scripts/dry_run_full_current_snapshot.py",
+    "default_progress_every_rows": 50000,
+    "uniqueness_backend": "EPHEMERAL_SQLITE_EXACT_TEXT_PRIMARY_KEY",
+    "temporary_state_root": "data/local/.tmp/canonical-full-dry-run",
+    "temporary_state_git_ignored": true,
+    "temporary_state_removed_on_normal_completion_or_handled_failure": true
+  },
+  "expected_artifacts": [
+    {
+      "source_key": "general_restaurants",
+      "artifact_sha256": "0cfae3c716d5bc61b63832308897d15ca1d7f25f3547bc7b146f933bff2d6fd8",
+      "artifact_bytes": 696584488,
+      "expected_rows": 2295369
+    },
+    {
+      "source_key": "rest_cafes",
+      "artifact_sha256": "64b884979e1533d0672ed11060b9c0438c5124e0f8b66d804bd1bae54afa3082",
+      "artifact_bytes": 207347981,
+      "expected_rows": 645952
+    },
+    {
+      "source_key": "bakeries",
+      "artifact_sha256": "32e93fdc827bf8bb8066acbeaecc02e458d2b920957407dd00651c87243879c3",
+      "artifact_bytes": 22654977,
+      "expected_rows": 69481
+    }
+  ],
+  "execution": {
+    "plan_command": "python scripts/dry_run_full_current_snapshot.py",
+    "execute_command": "python scripts/dry_run_full_current_snapshot.py --execute",
+    "progress_stream": "stderr",
+    "final_aggregate_json_stream": "stdout"
+  },
+  "privacy": {
+    "management_numbers_in_stdout_or_stderr": false,
+    "business_names_in_stdout_or_stderr": false,
+    "addresses_in_stdout_or_stderr": false,
+    "telephone_numbers_in_stdout_or_stderr": false,
+    "coordinate_values_in_stdout_or_stderr": false,
+    "canonical_rows_written": false
+  },
+  "next_gate": "user executes the full dry run and returns the aggregate JSON; analyze any failures without exposing row-level source values"
+}

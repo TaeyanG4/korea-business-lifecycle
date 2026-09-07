@@ -9,6 +9,7 @@ from korea_business_lifecycle.provenance import (
     load_license_review,
     load_observed_snapshot_summary,
     load_permit_parent_compatibility,
+    load_permit_parent_full_dry_run_plan,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -21,6 +22,7 @@ from korea_business_lifecycle.provenance import (
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_permit_parent_compatibility,
+    validate_permit_parent_full_dry_run_plan,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -152,6 +154,8 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_parent_transformer_status"] == "BOUNDED_REAL_VALIDATED"
     assert decision["next_gate"]["permit_parent_compatibility"] == "provenance/permit_parent_compatibility.json"
     assert decision["next_gate"]["permit_parent_compatibility_status"] == "PASSED_256_ROWS_PER_SOURCE"
+    assert decision["next_gate"]["permit_parent_full_dry_run_plan"] == "provenance/permit_parent_full_dry_run_plan.json"
+    assert decision["next_gate"]["permit_parent_full_dry_run_status"] == "READY_FOR_USER_EXECUTION"
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -163,3 +167,13 @@ def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
     assert review["scope"]["production_materialization_performed"] is False
     assert review["scope"]["full_snapshot_scan_performed"] is False
     assert all(value is False for value in review["privacy"].values())
+
+
+def test_permit_parent_full_dry_run_is_ready_but_not_executed() -> None:
+    plan = load_permit_parent_full_dry_run_plan()
+    assert validate_permit_parent_full_dry_run_plan(plan) == []
+    assert plan["scope"]["expected_rows_total"] == 3_010_802
+    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["execution"]["progress_stream"] == "stderr"
+    assert plan["execution"]["final_aggregate_json_stream"] == "stdout"
+    assert all(value is False for value in plan["privacy"].values())

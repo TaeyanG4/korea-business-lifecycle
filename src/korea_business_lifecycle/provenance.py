@@ -57,6 +57,10 @@ def load_permit_parent_compatibility() -> dict[str, Any]:
     return load_json("provenance/permit_parent_compatibility.json")
 
 
+def load_permit_parent_full_dry_run_plan() -> dict[str, Any]:
+    return load_json("provenance/permit_parent_full_dry_run_plan.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -385,6 +389,12 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit parent compatibility provenance reference changed")
     if next_gate.get("permit_parent_compatibility_status") != "PASSED_256_ROWS_PER_SOURCE":
         errors.append("permit parent compatibility gate status changed")
+    if next_gate.get("permit_parent_full_dry_run_plan") != (
+        "provenance/permit_parent_full_dry_run_plan.json"
+    ):
+        errors.append("permit parent full dry-run plan reference changed")
+    if next_gate.get("permit_parent_full_dry_run_status") != "READY_FOR_USER_EXECUTION":
+        errors.append("permit parent full dry-run must remain ready for user execution at this gate")
     return errors
 
 
@@ -456,4 +466,69 @@ def validate_permit_parent_compatibility(review: dict[str, Any]) -> list[str]:
     ):
         if privacy.get(key) is not False:
             errors.append(f"permit compatibility provenance must keep {key}=false")
+    return errors
+
+
+def validate_permit_parent_full_dry_run_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "FULL_CURRENT_SNAPSHOT_DRY_RUN_IMPLEMENTED_USER_EXECUTION_REQUIRED":
+        errors.append("full current-snapshot dry-run plan decision changed")
+
+    scope = plan.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("full dry-run plan must exactly cover v1 sources")
+    if scope.get("expected_rows_total") != 3_010_802:
+        errors.append("full dry-run expected row total changed")
+    if scope.get("network_access_required") is not False:
+        errors.append("full dry-run must remain local-only")
+    if scope.get("production_materialization_performed") is not False:
+        errors.append("full dry-run must not materialize production canonical output")
+    if scope.get("row_level_values_recorded") is not False:
+        errors.append("full dry-run plan must not record row-level values")
+    if scope.get("execution_status") != "NOT_EXECUTED":
+        errors.append("full dry-run provenance must remain not-executed until user returns results")
+
+    implementation = plan.get("implementation", {})
+    if implementation.get("module") != "src/korea_business_lifecycle/canonical_full_dry_run.py":
+        errors.append("full dry-run module reference changed")
+    if implementation.get("script") != "scripts/dry_run_full_current_snapshot.py":
+        errors.append("full dry-run script reference changed")
+    if implementation.get("default_progress_every_rows") != 50_000:
+        errors.append("full dry-run default progress interval changed")
+    if implementation.get("uniqueness_backend") != "EPHEMERAL_SQLITE_EXACT_TEXT_PRIMARY_KEY":
+        errors.append("full dry-run exact uniqueness backend changed")
+    if implementation.get("temporary_state_git_ignored") is not True:
+        errors.append("full dry-run temporary uniqueness state must remain Git-ignored")
+    if implementation.get("temporary_state_removed_on_normal_completion_or_handled_failure") is not True:
+        errors.append("full dry-run temporary uniqueness state cleanup contract changed")
+
+    artifacts = plan.get("expected_artifacts", [])
+    if {item.get("source_key") for item in artifacts} != V1_SOURCE_KEYS or len(artifacts) != 3:
+        errors.append("full dry-run expected artifacts must exactly cover three v1 sources")
+    if sum(int(item.get("expected_rows", 0)) for item in artifacts) != 3_010_802:
+        errors.append("full dry-run per-source row totals changed")
+    if sum(int(item.get("artifact_bytes", 0)) for item in artifacts) != 926_587_446:
+        errors.append("full dry-run expected artifact byte total changed")
+    if any(len(str(item.get("artifact_sha256", ""))) != 64 for item in artifacts):
+        errors.append("full dry-run expected artifact hashes are invalid")
+
+    execution = plan.get("execution", {})
+    if execution.get("execute_command") != "python scripts/dry_run_full_current_snapshot.py --execute":
+        errors.append("full dry-run execute command changed")
+    if execution.get("progress_stream") != "stderr":
+        errors.append("full dry-run progress must remain on stderr")
+    if execution.get("final_aggregate_json_stream") != "stdout":
+        errors.append("full dry-run final aggregate JSON must remain on stdout")
+
+    privacy = plan.get("privacy", {})
+    for key in (
+        "management_numbers_in_stdout_or_stderr",
+        "business_names_in_stdout_or_stderr",
+        "addresses_in_stdout_or_stderr",
+        "telephone_numbers_in_stdout_or_stderr",
+        "coordinate_values_in_stdout_or_stderr",
+        "canonical_rows_written",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"full dry-run privacy contract must keep {key}=false")
     return errors

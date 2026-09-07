@@ -44,4 +44,4 @@ Management numbers, business names, addresses, telephone numbers, and coordinate
 
 ## Next gate
 
-The next single step is to implement a **full-snapshot streaming dry-run validator**. Because it may scan roughly three million current rows, it must show progress and the potentially long local run will be handed to the user as an exact command. It will still write no canonical output file.
+The **full-snapshot streaming dry-run validator is now implemented**. The next gate is for the user to execute the roughly 3.01-million-row scan and return the aggregate result. Progress is emitted live on stderr and no canonical output file is written. See `canonical-permit-full-dry-run.md` for the execution contract.

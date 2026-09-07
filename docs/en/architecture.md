@@ -15,13 +15,13 @@ official source evidence
   → deterministic PERMIT parent transformation
       ↳ synthetic 39-column fixture: validated
       ↳ bounded real-snapshot compatibility: passed (256 rows/source)
-      ↳ full-snapshot streaming dry run: next gate
+      ↳ full-snapshot streaming dry run: implemented / user execution pending
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → separate publication review
 ```
 
-The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer has passed both synthetic validation and bounded real compatibility on 256 rows per source. The next gate is a progress-reporting full-snapshot streaming dry run. Production canonical materialization, full-history ingestion, episode reconstruction, and Kaggle publication are not implemented yet.
+The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer has passed both synthetic validation and bounded real compatibility on 256 rows per source. A progress-reporting full-snapshot dry-run validator is now implemented; the long local execution is pending user execution. Production canonical materialization, full-history ingestion, episode reconstruction, and Kaggle publication are not implemented yet.
 
 ## Data storage rule
 
