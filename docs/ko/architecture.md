@@ -66,13 +66,14 @@
       ↳ episode materializer/verifier: optional; 실행 시 all 7,320 snapshots complete/unique gate 유지
   → v1 release scope
       ↳ core v1: current PERMIT + local WGS84 sidecar, COMPLETE
-      ↳ Kaggle/public: verified privacy-minimized aggregate + approved canonical row-level PERMIT
+      ↳ Kaggle/public: canonical row-level PERMIT current snapshot 하나로 통합
+      ↳ historical privacy-minimized aggregate: 별도 Kaggle dataset은 중복 제품 정리로 삭제, 파생물/과거 provenance만 보존
       ↳ source EPSG:5174 coordinates: canonical row release에 포함
       ↳ derived WGS84 sidecar: private
       ↳ written source-specific clarification: optional additional assurance
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. **2026-09-08부터 core v1은 이 current snapshot 제품으로 완료**하며, nationwide history/episode는 optional advanced workflow로 둡니다. Kaggle에는 기존 k=10 aggregate와 별도로 canonical `PERMIT` 3,010,802행 × 26컬럼을 CSV/Parquet으로 공개했습니다. Canonical source EPSG:5174 좌표는 row-level 공개본에 포함되지만 별도 파생 WGS84 sidecar는 공개하지 않습니다. 최종 범위는 `provenance/v1_release_scope.json`이 규정합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. **2026-09-08부터 core v1은 이 current snapshot 제품으로 완료**하며, nationwide history/episode는 optional advanced workflow로 둡니다. 현재 Kaggle 제품은 canonical `PERMIT` **3,010,802행 × 26컬럼**을 CSV/Parquet으로 제공하는 단일 current-snapshot dataset입니다. 과거 k=10 aggregate의 별도 Kaggle dataset은 row-level 공개 뒤 중복 제품 정리를 위해 삭제했고, 검증된 파생물과 과거 publication provenance는 감사 이력으로 보존합니다. Canonical source EPSG:5174 좌표는 row-level 공개본에 포함되지만 별도 파생 WGS84 sidecar는 공개하지 않습니다. 최종 범위는 `provenance/v1_release_scope.json`이 규정합니다.
 
 ## 데이터 저장 원칙
 

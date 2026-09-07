@@ -30,9 +30,20 @@ def test_row_release_exact_shape_and_full_canonical_schema() -> None:
 def test_row_release_kaggle_metadata_exposes_csv_and_parquet() -> None:
     metadata = _metadata("taeyangg4")
     assert metadata["id"] == "taeyangg4/korea-food-service-permits"
+    assert metadata["title"] == "South Korea Food-Service Permits - Snapshot"
+    assert metadata["expectedUpdateFrequency"] == "monthly"
+    assert "Ministry of the Interior and Safety" in metadata["userSpecifiedSources"]
     paths = [resource["path"] for resource in metadata["resources"]]
     assert paths[:2] == [PUBLIC_CSV_FILENAME, PUBLIC_PARQUET_FILENAME]
     assert "3,010,802" in metadata["description"]
+    assert "korea-food-service-permits-3m-row-quickstart" in metadata["description"]
+    csv = metadata["resources"][0]
+    parquet = metadata["resources"][1]
+    assert len(csv["schema"]["fields"]) == 26
+    assert len(parquet["schema"]["fields"]) == 26
+    by_name = {field["name"]: field for field in csv["schema"]["fields"]}
+    assert "not necessarily the physical opening date" in by_name["permit_date"]["description"]
+    assert "EPSG:5174" in by_name["source_coordinate_x"]["description"]
 
 
 def test_csv_schema_keeps_26_columns_and_renders_utc_without_timezone_dependency() -> None:

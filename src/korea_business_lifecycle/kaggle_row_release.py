@@ -98,28 +98,192 @@ def _csv_table(table: pa.Table, csv_schema: pa.Schema) -> pa.Table:
     return result
 
 
+def _column_metadata() -> list[dict[str, str]]:
+    descriptions = {
+        "source_key": "Dataset category key: general_restaurants, rest_cafes, or bakeries.",
+        "source_row_number": (
+            "1-based row number within the retrieved source CSV. Lineage aid only; not a stable business identifier."
+        ),
+        "source_artifact_sha256": "SHA-256 of the exact retrieved source artifact used to create this record.",
+        "source_retrieved_at_utc": "UTC timestamp when the source artifact was retrieved for this snapshot.",
+        "authority_code": (
+            "Local-government authority code from the source field 개방자치단체코드. Stored as text to preserve leading zeroes."
+        ),
+        "management_number": (
+            "Source management number (관리번호). Useful as a bounded continuity candidate, but not asserted as an official primary key."
+        ),
+        "permit_date": (
+            "Source permit date (인허가일자). This is an administrative permit date, not necessarily the physical opening date."
+        ),
+        "permit_date_quality": "Parse-quality flag for permit_date: VALID, MISSING, or INVALID.",
+        "source_status_code": (
+            "Raw business-status code (영업상태코드) from the source. No project-level active/closed mapping is imposed."
+        ),
+        "source_status_name": "Raw business-status name (영업상태명) from the source.",
+        "source_detail_status_code": "Raw detailed business-status code (상세영업상태코드) from the source.",
+        "source_detail_status_name": "Raw detailed business-status name (상세영업상태명) from the source.",
+        "closure_date": (
+            "Source closure date (폐업일자), when present. It is not treated as proof of an irreversible terminal event."
+        ),
+        "closure_date_quality": "Parse-quality flag for closure_date: VALID, MISSING, or INVALID.",
+        "business_name": "Business or establishment name (사업장명) reported in the current source snapshot.",
+        "business_type_name": "Business-type label (업태구분명) reported by the source.",
+        "hygiene_business_type_name": "Hygiene business-type label (위생업태명) reported by the source.",
+        "lot_postal_code": "Postal code associated with the lot-address field (소재지우편번호), stored as text.",
+        "road_postal_code": "Postal code associated with the road-name address (도로명우편번호), stored as text.",
+        "lot_address": "Lot-based address (지번주소) reported in the source snapshot.",
+        "road_address": "Road-name address (도로명주소) reported in the source snapshot.",
+        "source_coordinate_x": (
+            "Source X coordinate (좌표정보(X)) in EPSG:5174; interpreted as easting for this verified snapshot."
+        ),
+        "source_coordinate_y": (
+            "Source Y coordinate (좌표정보(Y)) in EPSG:5174; interpreted as northing for this verified snapshot."
+        ),
+        "source_data_update_type": "Raw source data-update classification (데이터갱신구분).",
+        "source_data_updated_at_raw": (
+            "Raw source data-update timestamp text (데이터갱신시점). Kept as source text because timezone semantics are not normalized."
+        ),
+        "source_last_modified_at_raw": (
+            "Raw source last-modified timestamp text (최종수정시점). Kept as source text because timezone semantics are not normalized."
+        ),
+    }
+    kaggle_types = {
+        "source_row_number": "integer",
+        "source_retrieved_at_utc": "datetime",
+        "permit_date": "datetime",
+        "closure_date": "datetime",
+        "source_coordinate_x": "numeric",
+        "source_coordinate_y": "numeric",
+    }
+    schema = load_permit_parent_schema()
+    return [
+        {
+            "name": item["name"],
+            "description": descriptions[item["name"]],
+            "type": kaggle_types.get(item["name"], "string"),
+        }
+        for item in schema["columns"]
+    ]
+
+
+def _source_summary_fields() -> list[dict[str, str]]:
+    return [
+        {"name": "source_key", "description": "Dataset category key.", "type": "string"},
+        {
+            "name": "rows",
+            "description": "Number of canonical records contributed by this source category.",
+            "type": "integer",
+        },
+        {
+            "name": "parent_parquet_bytes",
+            "description": "Byte size of the verified per-source canonical parent Parquet artifact.",
+            "type": "integer",
+        },
+        {
+            "name": "parent_parquet_sha256",
+            "description": "SHA-256 of the verified per-source canonical parent Parquet artifact.",
+            "type": "string",
+        },
+    ]
+
+
 def _metadata(owner: str) -> dict[str, Any]:
+    main_fields = _column_metadata()
     return {
-        "title": "Korea Food-Service Permits - 3M Rows",
-        "subtitle": "Nationwide current permit snapshot for restaurants, rest cafes, and bakeries",
+        "title": "South Korea Food-Service Permits - Snapshot",
+        "subtitle": "3,010,802 restaurant, cafe and bakery permit records nationwide",
         "description": (
-            "Nationwide current-snapshot Korean local-government food-service permit records for general "
-            "restaurants, rest cafes, and bakeries. The canonical row-level release contains exactly "
-            "3,010,802 records and 26 columns, provided in both CSV and Parquet. It retains source permit "
-            "dates, closure dates, status fields, business names, addresses, management numbers, source "
-            "EPSG:5174 coordinates, and provenance fields from the verified canonical PERMIT build. "
-            "Management number is a bounded continuity candidate, not an asserted official primary key. "
-            "Permit date is not claimed to be physical opening date; closure date is not claimed to be an "
-            "irreversible terminal event. Status 03 is reversible in observed evidence and status 05 remains "
-            "unresolved. This release does not add WGS84 coordinates or lifecycle-history reconstruction."
+            "## What this dataset is\n\n"
+            "A nationwide **current snapshot** of South Korean local-government food-service permits from Ministry of "
+            "the Interior and Safety / LOCALDATA sources. It contains **3,010,802 records x 26 columns** across three "
+            "categories: general restaurants, rest cafes, and bakeries. **This is not a historical time series or a "
+            "lossless lifecycle event log.**\n\n"
+            "## Coverage\n\n"
+            "- General restaurants: **2,295,369** records\n"
+            "- Rest cafes: **645,952** records\n"
+            "- Bakeries: **69,481** records\n"
+            "- Nationwide current snapshot: **3,010,802** records\n\n"
+            "## Main files\n\n"
+            "- `korea_food_service_permits.csv` - 1.40 GB UTF-8 CSV for broad compatibility\n"
+            "- `korea_food_service_permits.parquet` - 165 MB typed ZSTD Parquet for fast analytics\n"
+            "- Both files contain the **same 3,010,802 rows and the same 26 columns**\n"
+            "- `DATA_DICTIONARY.md`, `schema.json`, `SOURCES.md`, and `release-manifest.json` document every field and "
+            "the release lineage\n\n"
+            "## Good starting points\n\n"
+            "Regional restaurant-market mapping, permit-status analysis, business-type profiling, address/geospatial "
+            "preprocessing, public-sector data engineering, and data-quality research.\n\n"
+            "Public Quickstart / EDA notebook: "
+            "https://www.kaggle.com/code/taeyangg4/korea-food-service-permits-3m-row-quickstart\n\n"
+            "## Important interpretation limits\n\n"
+            "- `management_number` is a bounded continuity candidate, **not an asserted official primary key**.\n"
+            "- `permit_date` is an administrative permit date, **not necessarily the physical opening date**.\n"
+            "- `closure_date` is contextual and **not treated as an irreversible terminal event**.\n"
+            "- Source status `03` is reversible in observed evidence; status `05` remains unresolved.\n"
+            "- `source_coordinate_x` / `source_coordinate_y` use **EPSG:5174** for this verified snapshot.\n"
+            "- The separately derived WGS84 sidecar and partial history are not included.\n\n"
+            "## Provenance\n\n"
+            "Official source identifiers and links are listed in `SOURCES.md`. The project repository is "
+            "https://github.com/TaeyanG4/korea-business-lifecycle.\n\n"
+            "## License / reuse\n\n"
+            "Kaggle license metadata is set to `Other` so this project does not claim to relicense upstream public "
+            "records. The three official Public Data Portal source pages currently display `이용허락범위 제한 없음` "
+            "(no restriction on the permitted-use scope). Attribution and source links are preserved in `SOURCES.md`."
         ),
         "id": f"{owner}/{DATASET_SLUG}",
         "licenses": [{"name": "other"}],
-        "keywords": ["business", "restaurants"],
+        "keywords": ["business", "restaurants", "food", "government", "geospatial analysis"],
+        "expectedUpdateFrequency": "monthly",
+        "userSpecifiedSources": (
+            "Ministry of the Interior and Safety (MOIS), Republic of Korea, via Public Data Portal / LOCALDATA: "
+            "[15154916 general restaurants](https://www.data.go.kr/data/15154916/openapi.do), "
+            "[15154921 rest cafes](https://www.data.go.kr/data/15154921/openapi.do), and "
+            "[15155252 bakeries](https://www.data.go.kr/data/15155252/openapi.do). "
+            "The official source pages report 이용허락범위 제한 없음. See `SOURCES.md` for attribution details."
+        ),
         "resources": [
-            {"path": PUBLIC_CSV_FILENAME, "description": "UTF-8 CSV with all 3,010,802 canonical PERMIT rows."},
-            {"path": PUBLIC_PARQUET_FILENAME, "description": "Typed ZSTD Parquet with the same 3,010,802 canonical PERMIT rows."},
-            {"path": SOURCE_SUMMARY_FILENAME, "description": "Per-source row counts and parent-artifact hashes."},
+            {
+                "path": PUBLIC_CSV_FILENAME,
+                "description": (
+                    "Primary compatibility file: UTF-8 CSV containing all 3,010,802 current-snapshot permit rows "
+                    "and all 26 canonical columns."
+                ),
+                "schema": {"fields": main_fields},
+            },
+            {
+                "path": PUBLIC_PARQUET_FILENAME,
+                "description": (
+                    "Primary analytics file: typed ZSTD Parquet containing the same 3,010,802 rows and 26 columns "
+                    "as the CSV, at much smaller size."
+                ),
+                "schema": {"fields": main_fields},
+            },
+            {
+                "path": SOURCE_SUMMARY_FILENAME,
+                "description": (
+                    "Three-row source inventory with per-category record counts and verified parent-artifact sizes/hashes."
+                ),
+                "schema": {"fields": _source_summary_fields()},
+            },
+            {
+                "path": DATA_DICTIONARY_FILENAME,
+                "description": "Human-readable 26-column data dictionary and interpretation caveats.",
+            },
+            {
+                "path": README_FILENAME,
+                "description": "Quick overview of dataset shape, files, scope, and semantic limitations.",
+            },
+            {
+                "path": SOURCES_FILENAME,
+                "description": "Official MOIS/Public Data Portal source identifiers, links, attribution, and source-use notes.",
+            },
+            {
+                "path": SCHEMA_FILENAME,
+                "description": "Machine-readable release schema, row grain, geospatial metadata, and semantic limits.",
+            },
+            {
+                "path": MANIFEST_FILENAME,
+                "description": "Release manifest with row counts, serialization guarantees, file hashes, sizes, and build lineage.",
+            },
         ],
     }
 
@@ -155,12 +319,13 @@ def _write_docs(output: Path, parent_build_id: str, rows_by_source: dict[str, in
         "",
         "This release contains the 26-column canonical PERMIT schema. One row is one source permit record in the selected current snapshot.",
         "",
-        "| Column | Type | Nullable | Role |",
+        "| Column | Type | Nullable | Description |",
         "| --- | --- | --- | --- |",
     ]
+    descriptions = {item["name"]: item["description"] for item in _column_metadata()}
     for item in schema["columns"]:
         dictionary_lines.append(
-            f"| `{item['name']}` | `{item['logical_type']}` | {'yes' if item['nullable'] else 'no'} | {item.get('role', '')} |"
+            f"| `{item['name']}` | `{item['logical_type']}` | {'yes' if item['nullable'] else 'no'} | {descriptions[item['name']]} |"
         )
     dictionary_lines.extend(
         [
@@ -174,7 +339,7 @@ def _write_docs(output: Path, parent_build_id: str, rows_by_source: dict[str, in
     dictionary_path = output / DATA_DICTIONARY_FILENAME
     dictionary_path.write_text("\n".join(dictionary_lines), encoding="utf-8", newline="\n")
 
-    readme = f"""# Korea Food-Service Permits - 3M Rows
+    readme = f"""# South Korea Food-Service Permits - Snapshot
 
 This is the row-level nationwide current-snapshot release for three Korean food-service permit categories.
 

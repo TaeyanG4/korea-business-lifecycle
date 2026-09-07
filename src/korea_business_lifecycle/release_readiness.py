@@ -17,9 +17,8 @@ from .provenance import (
     load_history_episode_materialization_plan,
     load_history_nationwide_acquisition_plan,
     load_history_observation_strategy,
-    load_kaggle_release,
+    load_kaggle_dataset_maintenance_v2,
     load_kaggle_row_release_v1,
-    load_kaggle_release_v2,
     load_license_review,
     load_permit_parent_full_dry_run,
     load_permit_parent_materialization,
@@ -31,6 +30,9 @@ from .provenance import (
     load_public_permit_aggregate_plan,
     load_redistribution_clarification_plan,
     load_v1_release_scope,
+    validate_kaggle_dataset_maintenance_v2,
+    validate_kaggle_row_release_v1,
+    validate_v1_release_scope,
 )
 
 
@@ -59,9 +61,11 @@ def compute_release_readiness() -> dict[str, Any]:
     license_review = load_license_review()
     redistribution_clarification = load_redistribution_clarification_plan()
     release_scope = load_v1_release_scope()
-    kaggle_release = load_kaggle_release()
-    kaggle_release_v2 = load_kaggle_release_v2()
     kaggle_row_release_v1 = load_kaggle_row_release_v1()
+    kaggle_maintenance_v2 = load_kaggle_dataset_maintenance_v2()
+    release_scope_valid = validate_v1_release_scope(release_scope) == []
+    kaggle_row_release_valid = validate_kaggle_row_release_v1(kaggle_row_release_v1) == []
+    kaggle_maintenance_valid = validate_kaggle_dataset_maintenance_v2(kaggle_maintenance_v2) == []
 
     episode = grain["selected_grains"]["lifecycle_analysis_grain"]
     semantics = grain["episode_semantics"]
@@ -85,22 +89,23 @@ def compute_release_readiness() -> dict[str, Any]:
         else "REVIEW_REQUIRED"
     )
     public_status = (
-        "PUBLISHED_AGGREGATE_AND_CANONICAL_ROW_LEVEL"
-        if release_scope["public_release"]["aggregate_publication_approved"] is True
+        "PUBLISHED_CANONICAL_CURRENT_SNAPSHOT"
+        if release_scope_valid
         and release_scope["public_release"]["row_level_permit_publication_approved"] is True
         and public_aggregate_result["verification"]["status"] == "PASS"
-        and kaggle_release["dataset"]["status"] == "READY"
-        and kaggle_release["dataset"]["visibility"] == "PUBLIC"
-        and kaggle_release_v2["dataset"]["status"] == "READY"
-        and kaggle_release_v2["dataset"]["visibility"] == "PUBLIC"
+        and kaggle_row_release_valid
         and kaggle_row_release_v1["dataset"]["status"] == "READY"
         and kaggle_row_release_v1["dataset"]["visibility"] == "PUBLIC"
+        and kaggle_maintenance_valid
+        and kaggle_maintenance_v2["dataset"]["status"] == "READY"
+        and kaggle_maintenance_v2["dataset"]["visibility"] == "PUBLIC"
+        and kaggle_maintenance_v2["dataset"]["current_version"] == 2
         else "BLOCKED"
     )
 
     return {
         "checked_at": "2026-09-08",
-        "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_AND_ROW_LEVEL_KAGGLE_PUBLISHED",
+        "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_CANONICAL_CURRENT_SNAPSHOT_KAGGLE_PUBLISHED",
         "tracks": {
             "core_v1": {
                 "status": "COMPLETE",
@@ -302,7 +307,7 @@ def compute_release_readiness() -> dict[str, Any]:
                     "row_level_permit_publication_approved"
                 ],
                 "source_use_license": license_review["evidence_refresh"]["source_use_license_gate"],
-                "kaggle_redistribution": "APPROVED_FOR_VERIFIED_AGGREGATE_AND_CANONICAL_ROW_LEVEL_RELEASE",
+                "kaggle_redistribution": "APPROVED_FOR_CANONICAL_ROW_LEVEL_CURRENT_SNAPSHOT_RELEASE",
                 "raw_external_mirror_gate": license_review["evidence_refresh"]["raw_external_mirror_gate"],
                 "aggregate_redistribution_gate": "PERMITTED_FOR_VERIFIED_AGGREGATE",
                 "canonical_row_level_release_gate": "APPROVED_BY_CURRENT_V1_RELEASE_SCOPE",
@@ -342,6 +347,13 @@ def compute_release_readiness() -> dict[str, Any]:
                 "aggregate_publication_approved": release_scope["public_release"][
                     "aggregate_publication_approved"
                 ],
+                "aggregate_current_kaggle_product": release_scope["public_release"][
+                    "aggregate_current_kaggle_product"
+                ],
+                "aggregate_kaggle_dataset_retired": release_scope["public_release"][
+                    "aggregate_kaggle_dataset_retired"
+                ],
+                "aggregate_retirement_reason": release_scope["public_release"]["aggregate_retirement_reason"],
                 "aggregate_release_decision_supersedes_build_time_candidate_gate": True,
                 "redistribution_clarification_plan": "OPTIONAL_ADDITIONAL_CONFIRMATION",
                 "redistribution_prepared_inquiry_status": redistribution_clarification[
@@ -363,67 +375,76 @@ def compute_release_readiness() -> dict[str, Any]:
                 "project_requires_source_attribution": release_scope["public_release"][
                     "project_requires_source_attribution"
                 ],
-                "dataset_id": kaggle_release["dataset"]["dataset_id"],
-                "dataset_url": kaggle_release["dataset"]["url"],
-                "dataset_visibility": kaggle_release["dataset"]["visibility"],
-                "dataset_status": kaggle_release["dataset"]["status"],
-                "initial_publication_provenance": "provenance/kaggle_release.json",
-                "latest_package_publication_provenance": "provenance/kaggle_release_v2.json",
-                "public_package_version": kaggle_release_v2["package"]["version"],
-                "aggregate_serializations": kaggle_release_v2["package"]["serializations"],
-                "published_file_count": kaggle_release_v2["package"]["published_file_count"],
+                "historical_aggregate_initial_publication_provenance": "provenance/kaggle_release.json",
+                "historical_aggregate_package_v2_provenance": "provenance/kaggle_release_v2.json",
+                "row_level_publication_provenance": "provenance/kaggle_row_release_v1.json",
+                "latest_dataset_maintenance_provenance": "provenance/kaggle_dataset_maintenance_v2.json",
+                "dataset_id": kaggle_maintenance_v2["dataset"]["dataset_id"],
+                "dataset_url": kaggle_maintenance_v2["dataset"]["url"],
+                "dataset_title": kaggle_maintenance_v2["dataset"]["title"],
+                "dataset_visibility": kaggle_maintenance_v2["dataset"]["visibility"],
+                "dataset_status": kaggle_maintenance_v2["dataset"]["status"],
+                "dataset_current_version": kaggle_maintenance_v2["dataset"]["current_version"],
+                "dataset_version_id": kaggle_maintenance_v2["dataset"]["dataset_version_id"],
+                "databundle_version_id": kaggle_maintenance_v2["dataset"]["databundle_version_id"],
+                "dataset_expected_update_frequency": kaggle_maintenance_v2["dataset"]["expected_update_frequency"],
+                "dataset_usability_score": kaggle_maintenance_v2["dataset"]["usability_score"],
+                "dataset_usability_target": kaggle_maintenance_v2["dataset"]["usability_target"],
+                "published_rows": kaggle_maintenance_v2["content"]["rows"],
+                "published_columns": kaggle_maintenance_v2["content"]["columns"],
+                "published_file_count": len(kaggle_maintenance_v2["published_files"]),
                 "published_csv_bytes": next(
                     item["published_bytes"]
-                    for item in kaggle_release_v2["published_files"]
-                    if item["name"] == "korea_food_service_permit_aggregate.csv"
+                    for item in kaggle_maintenance_v2["published_files"]
+                    if item["name"] == "korea_food_service_permits.csv"
                 ),
                 "published_csv_sha256": next(
-                    item["local_package_sha256"]
-                    for item in kaggle_release_v2["published_files"]
-                    if item["name"] == "korea_food_service_permit_aggregate.csv"
+                    item["verified_package_sha256"]
+                    for item in kaggle_maintenance_v2["published_files"]
+                    if item["name"] == "korea_food_service_permits.csv"
                 ),
                 "published_parquet_bytes": next(
                     item["published_bytes"]
-                    for item in kaggle_release_v2["published_files"]
-                    if item["name"] == "korea_food_service_permit_aggregate.parquet"
+                    for item in kaggle_maintenance_v2["published_files"]
+                    if item["name"] == "korea_food_service_permits.parquet"
                 ),
                 "published_parquet_sha256": next(
-                    item["local_package_sha256"]
-                    for item in kaggle_release_v2["published_files"]
-                    if item["name"] == "korea_food_service_permit_aggregate.parquet"
-                ),
-                "row_level_publication_provenance": "provenance/kaggle_row_release_v1.json",
-                "row_level_dataset_id": kaggle_row_release_v1["dataset"]["dataset_id"],
-                "row_level_dataset_url": kaggle_row_release_v1["dataset"]["url"],
-                "row_level_dataset_visibility": kaggle_row_release_v1["dataset"]["visibility"],
-                "row_level_dataset_status": kaggle_row_release_v1["dataset"]["status"],
-                "row_level_published_rows": kaggle_row_release_v1["package"]["rows"],
-                "row_level_published_columns": kaggle_row_release_v1["package"]["columns"],
-                "row_level_published_file_count": kaggle_row_release_v1["package"]["published_file_count"],
-                "row_level_published_csv_bytes": next(
-                    item["published_bytes"]
-                    for item in kaggle_row_release_v1["published_files"]
-                    if item["name"] == "korea_food_service_permits.csv"
-                ),
-                "row_level_published_csv_sha256": next(
-                    item["local_package_sha256"]
-                    for item in kaggle_row_release_v1["published_files"]
-                    if item["name"] == "korea_food_service_permits.csv"
-                ),
-                "row_level_published_parquet_bytes": next(
-                    item["published_bytes"]
-                    for item in kaggle_row_release_v1["published_files"]
+                    item["verified_package_sha256"]
+                    for item in kaggle_maintenance_v2["published_files"]
                     if item["name"] == "korea_food_service_permits.parquet"
                 ),
-                "row_level_published_parquet_sha256": next(
-                    item["local_package_sha256"]
-                    for item in kaggle_row_release_v1["published_files"]
-                    if item["name"] == "korea_food_service_permits.parquet"
-                ),
+                "metadata_file_descriptions_authored": kaggle_maintenance_v2["metadata"]["file_descriptions_authored"],
+                "metadata_csv_column_descriptions_authored": kaggle_maintenance_v2["metadata"][
+                    "csv_column_descriptions_authored"
+                ],
+                "metadata_parquet_column_descriptions_authored": kaggle_maintenance_v2["metadata"][
+                    "parquet_column_descriptions_authored"
+                ],
+                "metadata_source_summary_column_descriptions_authored": kaggle_maintenance_v2["metadata"][
+                    "source_summary_column_descriptions_authored"
+                ],
+                "metadata_pending_actions": kaggle_maintenance_v2["metadata"]["pending_actions"],
+                "metadata_column_description_score": kaggle_maintenance_v2["metadata"]["column_description_score"],
+                "metadata_data_explorer_file_descriptions_persisted": kaggle_maintenance_v2["metadata"][
+                    "data_explorer_file_descriptions_persisted"
+                ],
+                "metadata_data_explorer_column_descriptions_persisted": kaggle_maintenance_v2["metadata"][
+                    "data_explorer_column_descriptions_persisted"
+                ],
+                "metadata_sync_status": kaggle_maintenance_v2["data_explorer_sync"]["write_status"],
+                "metadata_sync_write_attempted": kaggle_maintenance_v2["data_explorer_sync"]["write_attempted"],
+                "metadata_sync_last_http_status": kaggle_maintenance_v2["data_explorer_sync"][
+                    "last_write_attempt_http_status"
+                ],
+                "metadata_sync_last_result": kaggle_maintenance_v2["data_explorer_sync"][
+                    "last_write_attempt_result"
+                ],
+                "quickstart_notebook_status": kaggle_maintenance_v2["notebook"]["status"],
+                "quickstart_notebook_ref": kaggle_maintenance_v2["notebook"]["ref"],
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "maintain the published aggregate and 3,010,802-row canonical Kaggle datasets and their provenance; keep the separately derived WGS84 sidecar private unless separately approved; history and episode reconstruction remain optional advanced workflows",
+        "next_product_action": "sync the remaining Kaggle Data Explorer file/column descriptions for Version 2 and recheck Usability/Pending Actions; then maintain the single 3,010,802-row canonical current-snapshot dataset, its public notebook, and monthly update cadence; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
         "hard_blocks": [
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
             "if optional production lifecycle episodes are materialized, require all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",

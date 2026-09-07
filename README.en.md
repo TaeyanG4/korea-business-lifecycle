@@ -8,47 +8,45 @@ A reproducible public-data project built from Korean Ministry of the Interior an
 
 **LOCAL V1 CORE: COMPLETE**
 
-**Kaggle aggregate: PUBLISHED** — [Korea Food-Service Permit Aggregate](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate)
+**Kaggle: PUBLISHED** — [South Korea Food-Service Permits - Snapshot](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permits)
 
-**Kaggle row-level: PUBLISHED** — [Korea Food-Service Permits - 3M Rows](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permits)
+**Quickstart Notebook** — [Korea Food-Service Permits: 3M-Row Quickstart](https://www.kaggle.com/code/taeyangg4/korea-food-service-permits-3m-row-quickstart)
 
 - Scope: general restaurants, rest cafes, and bakeries
 - Raw current CSV: **3,010,802 rows / 926,587,446 bytes (~926.6 MB)** retrieved and verified
 - Canonical `PERMIT`: **3,010,802 rows / 165,176,236 bytes (~165.2 MB)**, production materialized and independently verified
 - WGS84 sidecar: **3,010,802 rows / 50,805,782 bytes (~50.8 MB)**, 2,811,767 coordinates transformed and independently verified
-- Public aggregate: **67,267 cells**, k=10 suppression, independently verified
-- Kaggle formats: the same aggregate as **2,977,515-byte CSV + 108,019-byte Parquet**, plus schema/data dictionary/source summary
-- Row-level Kaggle: canonical `PERMIT` **3,010,802 rows × 26 columns**, **1,398,626,208-byte CSV + 165,170,021-byte Parquet**, `PUBLIC / READY`
+- Main Kaggle product: canonical `PERMIT` **3,010,802 rows × 26 columns**, **1,398,626,208-byte CSV + 165,170,021-byte Parquet**, `PUBLIC / READY`
+- Kaggle usability maintenance: structured Overview, cover, tags, official source provenance, monthly update cadence, and the public Quickstart Notebook are complete. Descriptions are authored for all 8 files and 56 Data Explorer columns (26+26+4), but live Usability is currently **8.24/10** with `EDIT_FILE_INFO` / `EDIT_COLUMN_DESCRIPTION` persistence still pending
+- Historical public aggregate: **67,267 cells** with k=10 suppression. The separate Kaggle dataset was retired after row-level publication to avoid duplicate products; the derived artifact and historical provenance remain preserved
 - Nationwide history/episodes: **not required for v1 completion**; runner, schema, and verifier remain available as optional tooling
 
 All real and derived runtime data stays under Git-ignored `data/local/`.
 
 ## Public release scope
 
-Kaggle/public v1 now contains two datasets: the existing privacy-minimized aggregate and a separately approved **3,010,802-row canonical `PERMIT` release**. The row-level release preserves the canonical 26 columns, including business name, address, management number, and source EPSG:5174 coordinates. Telephone/homepage fields are not part of the canonical 26-column parent.
+The current Kaggle/public v1 product is a single **3,010,802-row canonical `PERMIT` release**. It preserves the canonical 26 columns, including business name, address, management number, and source EPSG:5174 coordinates. Telephone/homepage fields are not part of the canonical 26-column parent.
 
 The separately derived WGS84 sidecar and incomplete history snapshots remain unpublished.
 
-The aggregate groups by source, authority code, raw status/detail-status code, permit year, and closure year, and suppresses cells below 10. **k=10 is a technical minimization threshold, not a legal privacy guarantee.**
+The historical privacy-minimized aggregate grouped by source, authority code, raw status/detail-status code, permit year, and closure year, suppressing cells below 10. **k=10 is a technical minimization threshold, not a legal privacy guarantee.** That derivative is no longer a separate Kaggle product.
 
-### Why the public files are much smaller than the source
+### Public file formats
 
-The 926.6 MB current source contains 3,010,802 row-level permits. The public product reduces that to 67,267 aggregate cells, suppresses 229,928 cells below k=10, and removes high-cardinality/linkable fields such as business names, exact addresses, management numbers, phone numbers, and precise coordinates. ZSTD compression is especially effective on the remaining low-cardinality aggregate columns, so the public Parquet is only 108,019 bytes. That does **not** mean only 108 KB was collected.
-
-Aggregate package v2 provides the same 67,267 cells as CSV and Parquet. The separate row-level dataset provides `korea_food_service_permits.csv` and `korea_food_service_permits.parquet`, both with exactly **3,010,802 rows × 26 columns**. CSV targets broad tooling and Parquet provides the typed compact analytical representation.
+`korea_food_service_permits.csv` and `korea_food_service_permits.parquet` contain the same **3,010,802 rows × 26 columns**. CSV targets spreadsheets, broad tooling, and direct downloads; Parquet is the typed compact analytical representation. They are two serializations of the verified canonical `PERMIT`, not duplicated aggregate rows.
 
 The package also includes `source_summary.csv`, `schema.json`, `DATA_DICTIONARY.md`, `README.md`, `SOURCES.md`, and `release-manifest.json`.
 
 ## Sources and permitted-use metadata
 
-As rechecked on 2026-09-08, all three official Public Data Portal API pages display `이용허락범위 제한 없음` (no restriction on the permitted-use scope). The current v1 release scope permits both the existing aggregate and the separately approved canonical row-level release. Separate written clarification remains optional additional assurance rather than a release prerequisite.
+As rechecked on 2026-09-08, all three official Public Data Portal API pages display `이용허락범위 제한 없음` (no restriction on the permitted-use scope). The current v1 release scope permits the canonical row-level release, and the Kaggle product is now consolidated around that one 3,010,802-row current snapshot. Separate written clarification remains optional additional assurance rather than a release prerequisite.
 
 - 15154916 — MOIS food/general restaurants API
 - 15154921 — MOIS food/rest cafes API
 - 15155252 — MOIS food/bakeries API
 
 The machine-readable final release decision is `provenance/v1_release_scope.json`.
-The initial aggregate publication is preserved in `provenance/kaggle_release.json`; aggregate package v2 is in `provenance/kaggle_release_v2.json`; the 3,010,802-row canonical publication is in `provenance/kaggle_row_release_v1.json`.
+The initial aggregate publication and package v2 are preserved as **historical evidence** in `provenance/kaggle_release.json` and `provenance/kaggle_release_v2.json`. The initial 3,010,802-row canonical publication is in `provenance/kaggle_row_release_v1.json`.
 
 ## Lifecycle caveats
 
@@ -64,7 +62,7 @@ The current snapshot is not promoted into invented lifecycle events.
 
 ## Optional history workflow
 
-Analysts who require longitudinal reconstruction can use the prepared monthly reference cadence and acquisition tooling. The reference plan is 10 dates × 3 sources × 244 date-effective authority codes = 7,320 snapshot tasks. This acquisition is **not required for core v1 or the Kaggle aggregate release**.
+Analysts who require longitudinal reconstruction can use the prepared monthly reference cadence and acquisition tooling. The reference plan is 10 dates × 3 sources × 244 date-effective authority codes = 7,320 snapshot tasks. This acquisition is **not required for core v1 or the current Kaggle snapshot release**.
 
 Key docs:
 

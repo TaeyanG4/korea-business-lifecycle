@@ -158,6 +158,10 @@ def load_kaggle_row_release_v1() -> dict[str, Any]:
     return load_json("provenance/kaggle_row_release_v1.json")
 
 
+def load_kaggle_dataset_maintenance_v2() -> dict[str, Any]:
+    return load_json("provenance/kaggle_dataset_maintenance_v2.json")
+
+
 def validate_kaggle_release(release: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if release.get("decision") != "KAGGLE_AGGREGATE_PUBLICATION_COMPLETED_VERIFIED":
@@ -417,10 +421,165 @@ def validate_kaggle_row_release_v1(release: dict[str, Any]) -> list[str]:
     return errors
 
 
+def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != "KAGGLE_CURRENT_SNAPSHOT_MAINTENANCE_PARTIAL_VERIFIED":
+        errors.append("Kaggle current-snapshot maintenance decision changed")
+    if review.get("preserves_initial_row_publication_evidence") is not True:
+        errors.append("Kaggle maintenance must preserve initial row-publication evidence")
+
+    dataset = review.get("dataset", {})
+    expected_dataset = {
+        "dataset_id": "taeyangg4/korea-food-service-permits",
+        "dataset_id_numeric": 11_936_072,
+        "title": "South Korea Food-Service Permits - Snapshot",
+        "subtitle": "3,010,802 restaurant, cafe and bakery permit records nationwide",
+        "visibility": "PUBLIC",
+        "status": "READY",
+        "current_version": 2,
+        "dataset_version_id": 19_491_720,
+        "databundle_version_id": 20_603_554,
+        "license_metadata": "other",
+        "expected_update_frequency": "monthly",
+    }
+    for key, expected in expected_dataset.items():
+        if dataset.get(key) != expected:
+            errors.append(f"Kaggle maintenance dataset field changed: {key}")
+    usability_score = dataset.get("usability_score")
+    usability_target = dataset.get("usability_target")
+    if not isinstance(usability_score, (int, float)) or not isinstance(usability_target, (int, float)):
+        errors.append("Kaggle maintenance usability evidence must be numeric")
+    elif not (0 <= usability_score <= usability_target <= 1):
+        errors.append("Kaggle maintenance usability evidence must be ordered in [0, 1]")
+    elif abs(float(usability_score) - 0.8235294) > 1e-7 or float(usability_target) != 1.0:
+        errors.append("Kaggle maintenance usability score/target changed")
+
+    content = review.get("content", {})
+    expected_content = {
+        "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+        "rows": 3_010_802,
+        "columns": 26,
+        "serializations": ["CSV", "PARQUET"],
+        "history_included": False,
+        "source_epsg5174_coordinates_included": True,
+        "wgs84_coordinates_included": False,
+    }
+    if content != expected_content:
+        errors.append("Kaggle maintenance content contract changed")
+
+    metadata = review.get("metadata", {})
+    expected_metadata = {
+        "structured_overview": True,
+        "cover_image_present": True,
+        "user_specified_sources_present": True,
+        "update_frequency_present": True,
+        "file_descriptions_authored": 8,
+        "csv_column_descriptions_authored": 26,
+        "parquet_column_descriptions_authored": 26,
+        "source_summary_column_descriptions_authored": 4,
+        "quickstart_notebook_linked": True,
+        "data_explorer_file_descriptions_persisted": False,
+        "data_explorer_column_descriptions_persisted": False,
+        "column_description_score": 0,
+        "metadata_sync_dry_run_verified": True,
+        "metadata_sync_files": 8,
+        "metadata_sync_columns": 56,
+    }
+    for key, expected in expected_metadata.items():
+        if metadata.get(key) != expected:
+            errors.append(f"Kaggle maintenance metadata field changed: {key}")
+    if metadata.get("keywords") != ["business", "restaurants", "food", "government", "geospatial analysis"]:
+        errors.append("Kaggle maintenance keyword set changed")
+    if metadata.get("pending_actions") != ["EDIT_FILE_INFO", "EDIT_COLUMN_DESCRIPTION"]:
+        errors.append("Kaggle maintenance pending action set changed")
+
+    data_explorer_sync = review.get("data_explorer_sync", {})
+    expected_sync = {
+        "script": "scripts/maintain_kaggle_dataset_metadata.py",
+        "target_version": 2,
+        "target_file_descriptions": 8,
+        "target_column_descriptions": 56,
+        "dry_run_passed": True,
+        "write_attempted": True,
+        "write_executed": False,
+        "write_status": "PENDING_AUTHENTICATED_WEB_SESSION",
+        "last_write_attempt_http_status": 401,
+        "last_write_attempt_result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION",
+    }
+    if data_explorer_sync != expected_sync:
+        errors.append("Kaggle Data Explorer sync evidence changed")
+
+    notebook = review.get("notebook", {})
+    expected_notebook = {
+        "ref": "taeyangg4/korea-food-service-permits-3m-row-quickstart",
+        "public": True,
+        "status": "COMPLETE",
+        "successful_version": 4,
+    }
+    for key, expected in expected_notebook.items():
+        if notebook.get(key) != expected:
+            errors.append(f"Kaggle quickstart notebook field changed: {key}")
+
+    historical = review.get("historical_aggregate", {})
+    if historical != {
+        "dataset_id": "taeyangg4/korea-food-service-permit-aggregate",
+        "retired": True,
+        "retirement_reason": "DUPLICATE_DERIVED_PRODUCT_AFTER_CANONICAL_ROW_LEVEL_PUBLICATION",
+        "initial_publication_provenance": "provenance/kaggle_release.json",
+        "package_v2_publication_provenance": "provenance/kaggle_release_v2.json",
+    }:
+        errors.append("historical aggregate retirement evidence changed")
+
+    expected_files = {
+        "DATA_DICTIONARY.md": 2_155,
+        "README.md": 1_362,
+        "SOURCES.md": 648,
+        "korea_food_service_permits.csv": 1_398_626_208,
+        "korea_food_service_permits.parquet": 165_170_021,
+        "release-manifest.json": 1_949,
+        "schema.json": 6_051,
+        "source_summary.csv": 342,
+    }
+    files = review.get("published_files", [])
+    if len(files) != len(expected_files) or {item.get("name") for item in files} != set(expected_files):
+        errors.append("Kaggle maintenance published file set changed")
+    for item in files:
+        name = item.get("name")
+        if name in expected_files and item.get("published_bytes") != expected_files[name]:
+            errors.append(f"Kaggle maintenance {name} byte size changed")
+        if item.get("published_byte_size_matches_verified_package") is not True:
+            errors.append(f"Kaggle maintenance {name} published/local size verification changed")
+
+    verification = review.get("verification", {})
+    for key in (
+        "current_version_is_2",
+        "dataset_version_id_verified",
+        "databundle_version_id_verified",
+        "kaggle_status_ready",
+        "public_visibility_verified",
+        "published_file_names_match_package_contract",
+        "published_file_sizes_match_verified_package",
+        "csv_rows_verified_locally",
+        "parquet_rows_verified_locally",
+        "csv_and_parquet_column_order_match_locally",
+        "payload_hashes_verified_locally",
+        "quickstart_notebook_completed",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"Kaggle maintenance verification must keep {key}=true")
+
+    auth = review.get("authentication", {})
+    if auth.get("method") != "KAGGLE_OAUTH":
+        errors.append("Kaggle maintenance authentication method changed")
+    if auth.get("credential_value_recorded") is not False or auth.get("credential_committed_to_git") is not False:
+        errors.append("Kaggle maintenance credentials must never be recorded or committed")
+    return errors
+
+
 def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if scope.get("decision") != (
-        "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_ROW_LEVEL_AND_AGGREGATE_KAGGLE_PUBLICATION_APPROVED"
+        "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_CANONICAL_CURRENT_SNAPSHOT_KAGGLE_PUBLICATION_APPROVED"
     ):
         errors.append("v1 release-scope decision changed")
 
@@ -455,7 +614,7 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
         errors.append("optional history must not be promoted to an event log")
 
     public = scope.get("public_release", {})
-    if public.get("kaggle_target") != "AGGREGATE_PLUS_CANONICAL_ROW_LEVEL":
+    if public.get("kaggle_target") != "CANONICAL_ROW_LEVEL_CURRENT_SNAPSHOT":
         errors.append("Kaggle release target changed")
     if public.get("aggregate_build_id") != "permit-public-agg-v1-bedd874de6619bee":
         errors.append("Kaggle aggregate build changed")
@@ -466,7 +625,15 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
     if public.get("aggregate_rows") != 67_267:
         errors.append("Kaggle aggregate row count changed")
     if public.get("aggregate_publication_approved") is not True:
-        errors.append("verified aggregate publication must remain approved")
+        errors.append("historical verified aggregate publication approval changed")
+    if public.get("aggregate_current_kaggle_product") is not False:
+        errors.append("aggregate must not be represented as a current Kaggle product")
+    if public.get("aggregate_kaggle_dataset_id") != "taeyangg4/korea-food-service-permit-aggregate":
+        errors.append("historical aggregate Kaggle dataset id changed")
+    if public.get("aggregate_kaggle_dataset_retired") is not True:
+        errors.append("historical aggregate Kaggle dataset retirement state changed")
+    if public.get("aggregate_retirement_reason") != "DUPLICATE_DERIVED_PRODUCT_AFTER_CANONICAL_ROW_LEVEL_PUBLICATION":
+        errors.append("historical aggregate retirement reason changed")
     if public.get("row_level_permit_publication_approved") is not True:
         errors.append("canonical row-level publication must remain approved")
     if public.get("row_level_publication_approval_basis") != "PROJECT_OWNER_CONFIRMED_PREEXISTING_APPROVAL_2026-09-08":
@@ -506,11 +673,11 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
         errors.append("Kaggle license metadata must remain 'other' unless source terms are remapped explicitly")
     if public.get("project_requires_source_attribution") is not True:
         errors.append("Kaggle release must retain source attribution")
-    if public.get("public_package_version") != 2:
-        errors.append("Kaggle public package version changed")
-    if public.get("aggregate_serializations") != ["CSV", "PARQUET"]:
-        errors.append("Kaggle aggregate serializations must remain CSV + PARQUET")
-    if public.get("public_package_files") != [
+    if public.get("historical_aggregate_package_version") != 2:
+        errors.append("historical Kaggle aggregate package version changed")
+    if public.get("historical_aggregate_serializations") != ["CSV", "PARQUET"]:
+        errors.append("historical Kaggle aggregate serializations must remain CSV + PARQUET")
+    if public.get("historical_aggregate_package_files") != [
         "korea_food_service_permit_aggregate.csv",
         "korea_food_service_permit_aggregate.parquet",
         "source_summary.csv",
@@ -520,7 +687,7 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
         "SOURCES.md",
         "release-manifest.json",
     ]:
-        errors.append("Kaggle public package file contract changed")
+        errors.append("historical Kaggle aggregate package file contract changed")
     if public.get("multiple_serializations_broaden_public_row_scope") is not False:
         errors.append("dual serialization must not broaden the aggregate-only public scope")
     return errors

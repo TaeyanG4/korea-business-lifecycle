@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from korea_business_lifecycle.release_readiness import compute_release_readiness
 
 
@@ -121,7 +123,7 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_lower_bound"] == 301_258
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_upper_bound"] == 308_380
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
-    assert readiness["tracks"]["public_kaggle"]["status"] == "PUBLISHED_AGGREGATE_AND_CANONICAL_ROW_LEVEL"
+    assert readiness["tracks"]["public_kaggle"]["status"] == "PUBLISHED_CANONICAL_CURRENT_SNAPSHOT"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is True
     assert readiness["tracks"]["public_kaggle"]["row_level_target_dataset_id"] == (
         "taeyangg4/korea-food-service-permits"
@@ -132,23 +134,39 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["current_row_level_release_scope_approved"] is True
     assert readiness["tracks"]["public_kaggle"]["canonical_source_epsg5174_public_build_allowed"] is True
     assert readiness["tracks"]["public_kaggle"]["precise_wgs84_public_build_allowed"] is False
+    assert readiness["tracks"]["public_kaggle"]["aggregate_current_kaggle_product"] is False
+    assert readiness["tracks"]["public_kaggle"]["aggregate_kaggle_dataset_retired"] is True
     assert readiness["tracks"]["public_kaggle"]["dataset_id"] == (
-        "taeyangg4/korea-food-service-permit-aggregate"
+        "taeyangg4/korea-food-service-permits"
     )
     assert readiness["tracks"]["public_kaggle"]["dataset_visibility"] == "PUBLIC"
     assert readiness["tracks"]["public_kaggle"]["dataset_status"] == "READY"
-    assert readiness["tracks"]["public_kaggle"]["public_package_version"] == 2
-    assert readiness["tracks"]["public_kaggle"]["aggregate_serializations"] == ["CSV", "PARQUET"]
+    assert readiness["tracks"]["public_kaggle"]["dataset_current_version"] == 2
+    assert readiness["tracks"]["public_kaggle"]["dataset_version_id"] == 19_491_720
+    assert readiness["tracks"]["public_kaggle"]["databundle_version_id"] == 20_603_554
+    assert readiness["tracks"]["public_kaggle"]["dataset_expected_update_frequency"] == "monthly"
+    assert readiness["tracks"]["public_kaggle"]["dataset_usability_score"] == pytest.approx(0.8235294)
+    assert readiness["tracks"]["public_kaggle"]["dataset_usability_target"] == 1.0
     assert readiness["tracks"]["public_kaggle"]["published_file_count"] == 8
-    assert readiness["tracks"]["public_kaggle"]["published_csv_bytes"] == 2_977_515
-    assert readiness["tracks"]["public_kaggle"]["published_parquet_bytes"] == 108_019
-    assert readiness["tracks"]["public_kaggle"]["row_level_dataset_id"] == (
-        "taeyangg4/korea-food-service-permits"
+    assert readiness["tracks"]["public_kaggle"]["published_rows"] == 3_010_802
+    assert readiness["tracks"]["public_kaggle"]["published_columns"] == 26
+    assert readiness["tracks"]["public_kaggle"]["published_csv_bytes"] == 1_398_626_208
+    assert readiness["tracks"]["public_kaggle"]["published_parquet_bytes"] == 165_170_021
+    assert readiness["tracks"]["public_kaggle"]["metadata_file_descriptions_authored"] == 8
+    assert readiness["tracks"]["public_kaggle"]["metadata_csv_column_descriptions_authored"] == 26
+    assert readiness["tracks"]["public_kaggle"]["metadata_parquet_column_descriptions_authored"] == 26
+    assert readiness["tracks"]["public_kaggle"]["metadata_source_summary_column_descriptions_authored"] == 4
+    assert readiness["tracks"]["public_kaggle"]["metadata_pending_actions"] == [
+        "EDIT_FILE_INFO",
+        "EDIT_COLUMN_DESCRIPTION",
+    ]
+    assert readiness["tracks"]["public_kaggle"]["metadata_column_description_score"] == 0
+    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_file_descriptions_persisted"] is False
+    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_column_descriptions_persisted"] is False
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_write_attempted"] is True
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_http_status"] == 401
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_result"] == (
+        "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION"
     )
-    assert readiness["tracks"]["public_kaggle"]["row_level_dataset_visibility"] == "PUBLIC"
-    assert readiness["tracks"]["public_kaggle"]["row_level_dataset_status"] == "READY"
-    assert readiness["tracks"]["public_kaggle"]["row_level_published_rows"] == 3_010_802
-    assert readiness["tracks"]["public_kaggle"]["row_level_published_columns"] == 26
-    assert readiness["tracks"]["public_kaggle"]["row_level_published_file_count"] == 8
-    assert readiness["tracks"]["public_kaggle"]["row_level_published_csv_bytes"] == 1_398_626_208
-    assert readiness["tracks"]["public_kaggle"]["row_level_published_parquet_bytes"] == 165_170_021
+    assert readiness["tracks"]["public_kaggle"]["quickstart_notebook_status"] == "COMPLETE"

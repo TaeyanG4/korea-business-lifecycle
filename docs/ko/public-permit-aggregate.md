@@ -2,7 +2,7 @@
 
 확인일: **2026-09-08**
 
-row-level `PERMIT`/WGS84 산출물은 공개하지 않고, 개인정보·연결 가능성을 줄인 **aggregate만 공개**합니다. 이 artifact는 기술적 privacy-minimization 검증을 완료했고, `provenance/v1_release_scope.json`의 별도 release decision에서 Kaggle/public 배포가 승인되었습니다.
+이 문서는 과거 privacy-minimized aggregate의 설계와 검증을 보존합니다. 이 artifact는 기술적 privacy-minimization 검증과 당시 Kaggle/public 배포를 완료했지만, 이후 canonical row-level `PERMIT` 공개가 승인·완료되면서 **별도 aggregate Kaggle dataset은 중복 제품 정리를 위해 삭제**했습니다. 현재 Kaggle 제품은 `taeyangg4/korea-food-service-permits`의 3,010,802행 current snapshot 하나입니다. WGS84 sidecar는 계속 별도 비공개 파생물입니다.
 
 ## 입력
 
@@ -10,7 +10,7 @@ row-level `PERMIT`/WGS84 산출물은 공개하지 않고, 개인정보·연결 
 - parent rows: 3,010,802
 - parent independent verifier: PASS
 - network access: 없음
-- row-level public projection: 승인하지 않음
+- build 당시 row-level public projection: 승인하지 않음 (이후 별도 release decision으로 canonical row-level 공개 승인)
 
 ## 7컬럼 aggregate schema
 
@@ -82,20 +82,20 @@ verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/Z
 - verified aggregate Parquet: 108,019 bytes, independent verifier PASS
 - deterministic aggregate CSV: 2,977,515 bytes / 동일 67,267 rows
 - technical minimization: VERIFIED
-- row-level public release: BLOCKED
+- row-level public release: **LATER APPROVED AND PUBLISHED** — `taeyangg4/korea-food-service-permits`
 - aggregate publication: **APPROVED**
 - Kaggle redistribution: **APPROVED FOR THIS VERIFIED AGGREGATE**
-- Kaggle publication: **PUBLISHED / READY** — `taeyangg4/korea-food-service-permit-aggregate`
-- row-level/precise-coordinate publication: BLOCKED
+- historical Kaggle publication: `taeyangg4/korea-food-service-permit-aggregate` — **RETIRED / DELETED AFTER CONSOLIDATION**
+- current Kaggle product: `taeyangg4/korea-food-service-permits` — canonical 3,010,802-row current snapshot
 - release decision: `provenance/v1_release_scope.json`
 - initial publication result: `provenance/kaggle_release.json`
 - package v2 publication result: `provenance/kaggle_release_v2.json` — **PUBLISHED / READY**, 8 files
 
-기존 build manifest/schema 안의 candidate-time publication flag는 immutable build 당시의 gate를 기록합니다. 2026-09-08 최종 release decision이 이 **동일 hash의 검증된 aggregate artifact** 공개를 별도로 승인하며, row-level 공개 승인을 의미하지 않습니다.
+기존 build manifest/schema 안의 candidate-time publication flag는 immutable build 당시의 gate를 기록합니다. 이후 release decision은 이 **동일 hash의 검증된 aggregate artifact** 공개와 canonical row-level 공개를 각각 승인했습니다. 현재 aggregate 자체는 로컬 검증 파생물과 historical publication evidence로만 유지합니다.
 
 ## Kaggle package v2 규격
 
-Kaggle에는 row-level을 추가하지 않고 같은 검증 aggregate를 사용성 중심으로 여러 파일에 직렬화합니다.
+Historical package v2는 같은 검증 aggregate를 사용성 중심으로 여러 파일에 직렬화했습니다. 이 package는 현재 별도 Kaggle 제품으로 운영하지 않습니다.
 
 - `korea_food_service_permit_aggregate.csv` — UTF-8, LF, null은 empty field, Parquet row order 유지
 - `korea_food_service_permit_aggregate.parquet` — 기존 검증 artifact를 byte-for-byte 복사; SHA-256 `112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb`

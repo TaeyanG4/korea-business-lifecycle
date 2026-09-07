@@ -1,3 +1,5 @@
+import pytest
+
 from korea_business_lifecycle.provenance import (
     load_authority_domain_reference,
     load_bounded_episode_reconstruction,
@@ -9,6 +11,7 @@ from korea_business_lifecycle.provenance import (
     load_geospatial_full_axis_plan,
     load_history_observation_strategy,
     load_kaggle_release,
+    load_kaggle_dataset_maintenance_v2,
     load_kaggle_row_release_v1,
     load_kaggle_release_v2,
     load_history_authority_partition_findings,
@@ -35,6 +38,7 @@ from korea_business_lifecycle.provenance import (
     load_redistribution_clarification_plan,
     load_v1_release_scope,
     validate_kaggle_row_release_v1,
+    validate_kaggle_dataset_maintenance_v2,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -357,13 +361,15 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["v1_release_scope"] == "provenance/v1_release_scope.json"
 
 
-def test_v1_release_scope_closes_core_and_approves_aggregate_and_row_level() -> None:
+def test_v1_release_scope_closes_core_and_consolidates_on_current_snapshot() -> None:
     scope = load_v1_release_scope()
     assert validate_v1_release_scope(scope) == []
     assert scope["core_v1"]["local_core_complete"] is True
     assert scope["core_v1"]["nationwide_history_required_for_core_v1"] is False
     assert scope["lifecycle_optional"]["status"] == "OPTIONAL_ADVANCED_WORKFLOW"
     assert scope["public_release"]["aggregate_publication_approved"] is True
+    assert scope["public_release"]["aggregate_current_kaggle_product"] is False
+    assert scope["public_release"]["aggregate_kaggle_dataset_retired"] is True
     assert scope["public_release"]["row_level_permit_publication_approved"] is True
     assert scope["public_release"]["row_level_kaggle_dataset_id"] == "taeyangg4/korea-food-service-permits"
     assert scope["public_release"]["row_level_rows"] == 3_010_802
@@ -373,8 +379,8 @@ def test_v1_release_scope_closes_core_and_approves_aggregate_and_row_level() -> 
     assert scope["public_release"]["canonical_source_epsg5174_coordinates_publication_approved"] is True
     assert scope["public_release"]["precise_wgs84_publication_approved"] is False
     assert scope["public_release"]["written_source_specific_confirmation_required_for_aggregate_publication"] is False
-    assert scope["public_release"]["public_package_version"] == 2
-    assert scope["public_release"]["aggregate_serializations"] == ["CSV", "PARQUET"]
+    assert scope["public_release"]["historical_aggregate_package_version"] == 2
+    assert scope["public_release"]["historical_aggregate_serializations"] == ["CSV", "PARQUET"]
     assert scope["public_release"]["multiple_serializations_broaden_public_row_scope"] is False
 
 
@@ -391,7 +397,33 @@ def test_kaggle_canonical_row_release_is_public_ready_and_exact_shape() -> None:
     assert release["package"]["wgs84_coordinates_included"] is False
 
 
-def test_kaggle_aggregate_release_is_public_ready_and_private_by_design() -> None:
+def test_kaggle_current_snapshot_maintenance_v2_tracks_remaining_pending_actions() -> None:
+    review = load_kaggle_dataset_maintenance_v2()
+    assert validate_kaggle_dataset_maintenance_v2(review) == []
+    assert review["dataset"]["dataset_id"] == "taeyangg4/korea-food-service-permits"
+    assert review["dataset"]["current_version"] == 2
+    assert review["dataset"]["dataset_version_id"] == 19_491_720
+    assert review["dataset"]["databundle_version_id"] == 20_603_554
+    assert review["dataset"]["usability_score"] == pytest.approx(0.8235294)
+    assert review["dataset"]["usability_target"] == 1.0
+    assert review["content"]["rows"] == 3_010_802
+    assert review["content"]["columns"] == 26
+    assert review["metadata"]["file_descriptions_authored"] == 8
+    assert review["metadata"]["csv_column_descriptions_authored"] == 26
+    assert review["metadata"]["parquet_column_descriptions_authored"] == 26
+    assert review["metadata"]["source_summary_column_descriptions_authored"] == 4
+    assert review["metadata"]["pending_actions"] == ["EDIT_FILE_INFO", "EDIT_COLUMN_DESCRIPTION"]
+    assert review["metadata"]["data_explorer_file_descriptions_persisted"] is False
+    assert review["metadata"]["data_explorer_column_descriptions_persisted"] is False
+    assert review["data_explorer_sync"]["dry_run_passed"] is True
+    assert review["data_explorer_sync"]["write_attempted"] is True
+    assert review["data_explorer_sync"]["write_executed"] is False
+    assert review["data_explorer_sync"]["write_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
+    assert review["data_explorer_sync"]["last_write_attempt_http_status"] == 401
+    assert review["notebook"]["status"] == "COMPLETE"
+
+
+def test_historical_kaggle_aggregate_publication_evidence_is_preserved() -> None:
     release = load_kaggle_release()
     assert validate_kaggle_release(release) == []
     assert release["dataset"]["dataset_id"] == "taeyangg4/korea-food-service-permit-aggregate"
@@ -402,7 +434,7 @@ def test_kaggle_aggregate_release_is_public_ready_and_private_by_design() -> Non
     assert release["privacy"]["precise_coordinates_published"] is False
 
 
-def test_kaggle_package_v2_is_dual_format_and_preserves_aggregate_only_scope() -> None:
+def test_historical_kaggle_aggregate_package_v2_evidence_is_preserved() -> None:
     release = load_kaggle_release_v2()
     assert validate_kaggle_release_v2(release) == []
     assert release["dataset"]["status"] == "READY"

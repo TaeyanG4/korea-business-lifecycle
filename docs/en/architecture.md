@@ -66,13 +66,14 @@ official source evidence
       ↳ episode materializer/verifier: optional; still requires all 7,320 snapshots complete/unique if executed
   → v1 release scope
       ↳ core v1: current PERMIT + local WGS84 sidecar, COMPLETE
-      ↳ Kaggle/public: verified privacy-minimized aggregate + approved canonical row-level PERMIT
+      ↳ Kaggle/public: consolidated around one canonical row-level PERMIT current snapshot
+      ↳ historical privacy-minimized aggregate: separate Kaggle dataset retired to remove duplicate products; derivative/provenance retained
       ↳ source EPSG:5174 coordinates: included in canonical row release
       ↳ derived WGS84 sidecar: private
       ↳ written source-specific clarification: optional additional assurance
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. Kaggle now carries both the existing k=10 aggregate and a separately approved canonical `PERMIT` release with 3,010,802 rows × 26 columns in CSV and Parquet. Source EPSG:5174 coordinates are included in that canonical release; the separately derived WGS84 sidecar remains unpublished. `provenance/v1_release_scope.json` is the current scope authority.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. The current Kaggle product is one canonical `PERMIT` current-snapshot dataset with **3,010,802 rows × 26 columns** in CSV and Parquet. The separate k=10 aggregate Kaggle dataset was retired after row-level publication to remove a duplicate product; the verified derivative and historical publication provenance remain available for audit. Source EPSG:5174 coordinates are included in the canonical release; the separately derived WGS84 sidecar remains unpublished. `provenance/v1_release_scope.json` is the current scope authority.
 
 ## Data storage rule
 

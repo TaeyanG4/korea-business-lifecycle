@@ -2,7 +2,7 @@
 
 Checked: **2026-09-08**
 
-The project does not publish row-level `PERMIT` or WGS84 artifacts. It publishes only the separate **privacy-minimized aggregate**. That artifact has passed technical minimization verification, and `provenance/v1_release_scope.json` separately approves it for Kaggle/public distribution.
+This document preserves the design and verification of the historical privacy-minimized aggregate. That artifact passed technical minimization checks and was published to Kaggle, but after canonical row-level `PERMIT` publication was separately approved and completed, the **separate aggregate Kaggle dataset was retired to remove a duplicate product**. The current Kaggle product is the 3,010,802-row snapshot at `taeyangg4/korea-food-service-permits`. The derived WGS84 sidecar remains separate and unpublished.
 
 ## Input
 
@@ -10,7 +10,7 @@ The project does not publish row-level `PERMIT` or WGS84 artifacts. It publishes
 - parent rows: 3,010,802
 - parent independent verifier: PASS
 - network access: none
-- row-level public projection: not approved
+- row-level public projection at aggregate build time: not approved (later approved by a separate release decision)
 
 ## Seven-column aggregate schema
 
@@ -82,20 +82,20 @@ The verifier re-verifies the parent build and checks the aggregate manifest/hash
 - verified aggregate Parquet: 108,019 bytes, independent verifier PASS
 - deterministic aggregate CSV: 2,977,515 bytes / same 67,267 rows
 - technical minimization: VERIFIED
-- row-level public release: BLOCKED
+- row-level public release: **LATER APPROVED AND PUBLISHED** — `taeyangg4/korea-food-service-permits`
 - aggregate publication: **APPROVED**
 - Kaggle redistribution: **APPROVED FOR THIS VERIFIED AGGREGATE**
-- Kaggle publication: **PUBLISHED / READY** — `taeyangg4/korea-food-service-permit-aggregate`
-- row-level/precise-coordinate publication: BLOCKED
+- historical Kaggle publication: `taeyangg4/korea-food-service-permit-aggregate` — **RETIRED / DELETED AFTER CONSOLIDATION**
+- current Kaggle product: `taeyangg4/korea-food-service-permits` — canonical 3,010,802-row current snapshot
 - release decision: `provenance/v1_release_scope.json`
 - initial publication result: `provenance/kaggle_release.json`
 - package-v2 publication result: `provenance/kaggle_release_v2.json` — **PUBLISHED / READY**, 8 files
 
-The candidate-time publication flag embedded in the immutable build records the gate at build time. The 2026-09-08 release decision separately approves publication of this **same verified hash** and does not approve row-level release.
+The candidate-time publication flag embedded in the immutable build records the gate at build time. Later release decisions separately approved publication of this **same verified aggregate hash** and the canonical row-level release. The aggregate now remains only as a verified local derivative plus historical publication evidence.
 
 ## Kaggle package v2 contract
 
-The Kaggle package adds usability files without adding row-level records. It serializes the same verified aggregate as:
+The historical package-v2 release added usability files without adding row-level records. It serialized the same verified aggregate as:
 
 - `korea_food_service_permit_aggregate.csv` — UTF-8, LF, empty fields for nulls, preserving Parquet row order;
 - `korea_food_service_permit_aggregate.parquet` — byte-for-byte copy of the verified artifact, SHA-256 `112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb`;

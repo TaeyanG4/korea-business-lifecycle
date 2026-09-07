@@ -14,7 +14,7 @@ Real data lives under the Git-ignored `data/local/` runtime tree by default. `KB
 
 ## Public access vs redistribution
 
-The 2026-09-08 refresh reconfirmed `이용허락범위 제한 없음` (no restriction on the permitted-use scope) on all three official MOIS OpenAPI detail pages, so the **source-use metadata gate is PASS**. The Public Data Portal policy still requires legitimate permission when third-party rights are actually included, and the project does not treat silence as legal proof that no such rights exist. The current v1 release scope approves both the existing privacy-minimized aggregate and the **3,010,802-row canonical PERMIT release**. Canonical source EPSG:5174 coordinates are included in the row-level release; the separately derived WGS84 sidecar and partial history remain unpublished. Written clarification remains optional additional assurance.
+The 2026-09-08 refresh reconfirmed `이용허락범위 제한 없음` (no restriction on the permitted-use scope) on all three official MOIS OpenAPI detail pages, so the **source-use metadata gate is PASS**. The Public Data Portal policy still requires legitimate permission when third-party rights are actually included, and the project does not treat silence as legal proof that no such rights exist. The current v1 release scope approves the **3,010,802-row canonical PERMIT release**, and the Kaggle product is consolidated around that one current snapshot. The historical privacy-minimized aggregate remains a verified derivative/audit artifact but is no longer operated as a separate Kaggle dataset. Canonical source EPSG:5174 coordinates are included in the row-level release; the separately derived WGS84 sidecar and partial history remain unpublished. Written clarification remains optional additional assurance.
 
 ## Privacy
 

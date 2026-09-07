@@ -4,7 +4,7 @@ Checked: **2026-09-08**
 
 All three official MOIS v1 OpenAPI pages show `이용허락범위 제한 없음` (no restriction on the permitted-use scope), so the source-use metadata gate is `PASS_METADATA_CONFIRMED`. The Public Data Portal policy also states that legitimate permission is required when public data contains third-party rights.
 
-The reviewed source pages do not separately establish as a legal fact that the datasets contain no third-party rights, and the project does not infer that fact merely from silence. However, all three official source pages display `이용허락범위 제한 없음`; the final v1 release decision uses that displayed metadata as the operational basis to approve **only the verified privacy-minimized aggregate** for publication. Row-level mirroring remains separately blocked.
+The reviewed source pages do not separately establish as a legal fact that the datasets contain no third-party rights, and the project does not infer that fact merely from silence. This document preserves the project's earlier conservative clarification plan. The later `provenance/v1_release_scope.json` decision supersedes that earlier scope decision and approves the verified 3,010,802-row canonical current-snapshot release while continuing to exclude the separately derived WGS84 sidecar and incomplete history.
 
 ## Optional written-confirmation questions
 
@@ -21,7 +21,7 @@ The reviewed source pages do not separately establish as a legal fact that the d
 - provider: Ministry of the Interior and Safety (MOIS); and
 - management department: Regional Digital Cooperation Division (`지역디지털협력과`).
 
-The project does not automatically send email or inquiries. A response can be archived as additional source-specific assurance and may support future review of broader release scopes. **It is not required for the current aggregate Kaggle release.**
+The project does not automatically send email or inquiries. A response can be archived as additional source-specific assurance. **It is optional additional assurance and is not a prerequisite for the current canonical Kaggle snapshot release.**
 
 ## Prepared inquiry
 
@@ -32,9 +32,10 @@ A Korean source-specific inquiry is frozen in `provenance/redistribution_clarifi
 - source-use metadata: PASS;
 - raw external mirror: `UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION`;
 - privacy-minimized aggregate redistribution: `APPROVED_BY_V1_RELEASE_SCOPE`;
-- row-level public release: BLOCKED;
+- canonical row-level current-snapshot release: APPROVED_BY_CURRENT_V1_RELEASE_SCOPE;
 - aggregate publication: APPROVED;
+- historical aggregate Kaggle dataset: RETIRED_AFTER_CANONICAL_PUBLICATION;
 - outreach performed: false; and
 - written response received: false.
 
-`provenance/v1_release_scope.json` is the current machine-readable decision. The older `provenance/redistribution_clarification_plan.json` is preserved as an audit record of the earlier conservative inquiry plan.
+`provenance/v1_release_scope.json` is the current machine-readable decision. The older `provenance/redistribution_clarification_plan.json` is preserved as an audit record of the earlier conservative inquiry plan and must not be read as the current row-level publication gate.

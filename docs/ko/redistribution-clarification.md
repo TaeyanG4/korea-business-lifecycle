@@ -4,7 +4,7 @@
 
 세 v1 행정안전부 OpenAPI 상세 페이지 모두 `이용허락범위 제한 없음`을 표시하므로 source-use metadata gate는 `PASS_METADATA_CONFIRMED`입니다. 그러나 공공데이터포털 정책은 공공데이터에 제3자 권리가 포함된 경우 권리자의 정당한 이용허락이 필요하다고 명시합니다.
 
-현재 상세 페이지에서는 이 세 source에 제3자 권리가 **없다**고 별도로 선언한 문구를 확인하지 못했습니다. 이 부재 자체를 제3자 권리 부재의 법적 증명으로 사용하지는 않습니다. 다만 세 source의 공식 표시가 모두 `이용허락범위 제한 없음`인 점을 최종 v1 release decision의 운영 근거로 삼아 **검증된 privacy-minimized aggregate 공개는 승인**했습니다. Row-level mirror는 계속 별도 검토 대상으로 남깁니다.
+현재 상세 페이지에서는 이 세 source에 제3자 권리가 **없다**고 별도로 선언한 문구를 확인하지 못했습니다. 이 부재 자체를 제3자 권리 부재의 법적 증명으로 사용하지는 않습니다. 이 문서는 당시의 보수적 서면확인 계획을 보존합니다. 이후의 `provenance/v1_release_scope.json` 결정이 이전 공개범위 판단을 supersede하여 검증된 **3,010,802행 canonical current-snapshot 공개를 승인**했고, 별도 파생 WGS84 sidecar와 불완전한 history는 계속 제외합니다.
 
 ## 선택적으로 서면 확인할 질문
 
@@ -21,7 +21,7 @@
 - 제공기관: 행정안전부
 - 관리부서: 지역디지털협력과
 
-자동으로 메일이나 문의를 전송하지 않습니다. 회신을 받으면 source-specific written evidence로 보관해 향후 row-level 또는 더 넓은 공개범위를 재검토할 수 있습니다. **현재 aggregate Kaggle 공개에는 회신이 필수가 아닙니다.**
+자동으로 메일이나 문의를 전송하지 않습니다. 회신을 받으면 source-specific written evidence로 보관할 수 있습니다. **서면 회신은 추가 assurance일 뿐 현재 canonical Kaggle snapshot 공개의 필수조건이 아닙니다.**
 
 ## 준비된 문의안
 
@@ -40,9 +40,10 @@
 - source-use metadata: PASS
 - raw external mirror: `UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION`
 - privacy-minimized aggregate redistribution: `APPROVED_BY_V1_RELEASE_SCOPE`
-- row-level public release: BLOCKED
+- canonical row-level current-snapshot release: APPROVED_BY_CURRENT_V1_RELEASE_SCOPE
 - aggregate publication: APPROVED
+- historical aggregate Kaggle dataset: RETIRED_AFTER_CANONICAL_PUBLICATION
 - outreach performed: false
 - written response received: false
 
-최신 기계 판독 결정은 `provenance/v1_release_scope.json`이며, 기존 `provenance/redistribution_clarification_plan.json`은 당시의 보수적 문의 계획을 감사 추적용으로 보존합니다.
+최신 기계 판독 결정은 `provenance/v1_release_scope.json`이며, 기존 `provenance/redistribution_clarification_plan.json`은 당시의 보수적 문의 계획을 감사 추적용으로 보존합니다. 이 과거 계획을 현재 row-level 공개 gate로 해석하면 안 됩니다.

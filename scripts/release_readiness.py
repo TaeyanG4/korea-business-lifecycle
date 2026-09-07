@@ -8,7 +8,7 @@ from korea_business_lifecycle.release_readiness import compute_release_readiness
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Compute aggregate-only release-readiness gates.")
+    parser = argparse.ArgumentParser(description="Compute current product release-readiness gates.")
     parser.add_argument("--output", type=Path, default=None)
     return parser.parse_args()
 

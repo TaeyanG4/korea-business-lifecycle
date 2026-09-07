@@ -8,47 +8,45 @@
 
 **LOCAL V1 CORE: COMPLETE**
 
-**Kaggle aggregate: PUBLISHED** — [Korea Food-Service Permit Aggregate](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate)
+**Kaggle: PUBLISHED** — [South Korea Food-Service Permits - Snapshot](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permits)
 
-**Kaggle row-level: PUBLISHED** — [Korea Food-Service Permits - 3M Rows](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permits)
+**Quickstart Notebook** — [Korea Food-Service Permits: 3M-Row Quickstart](https://www.kaggle.com/code/taeyangg4/korea-food-service-permits-3m-row-quickstart)
 
 - 대상: 일반음식점, 휴게음식점, 제과점영업
 - 원본 current CSV: **3,010,802행 / 926,587,446 bytes (~926.6 MB)** 수집·검증 완료
 - Canonical `PERMIT`: **3,010,802행 / 165,176,236 bytes (~165.2 MB)**, production materialization 및 독립 검증 완료
 - WGS84 sidecar: **3,010,802행 / 50,805,782 bytes (~50.8 MB)**, 2,811,767건 좌표 변환, 독립 검증 완료
-- 공개 aggregate: **67,267 cells**, k=10 suppression 적용, 독립 검증 완료
-- Kaggle 공개 형식: 동일 aggregate의 **CSV 2,977,515 bytes + Parquet 108,019 bytes** 및 schema/data dictionary/source summary
-- Row-level Kaggle: canonical `PERMIT` **3,010,802행 × 26컬럼**, **CSV 1,398,626,208 bytes + Parquet 165,170,021 bytes**, `PUBLIC / READY`
+- Kaggle 본체: canonical `PERMIT` **3,010,802행 × 26컬럼**, **CSV 1,398,626,208 bytes + Parquet 165,170,021 bytes**, `PUBLIC / READY`
+- Kaggle usability 관리: 구조화 Overview, cover, tags, 공식 source provenance, 월간 update cadence, 공개 Quickstart Notebook은 완료. 파일 8개와 Data Explorer 컬럼 56개(26+26+4) 설명도 작성했지만 현재 live Usability는 **8.24/10**이며 `EDIT_FILE_INFO` / `EDIT_COLUMN_DESCRIPTION` 저장이 남아 있음
+- 과거 공개 aggregate: **67,267 cells**, k=10 suppression 적용. Row-level 공개 후 중복 Kaggle 제품을 줄이기 위해 별도 dataset은 삭제했으며 로컬 파생물과 과거 provenance만 보존
 - 전국 history/episode: **v1 완료조건이 아님**. runner, schema, verifier는 optional 분석 도구로 유지
 
 실데이터와 derived runtime artifact는 모두 Git-ignored `data/local/` 아래에만 저장합니다.
 
 ## 공개 범위
 
-Kaggle/public v1은 두 데이터셋을 제공합니다. 기존 privacy-minimized aggregate와, 별도 승인된 **canonical row-level `PERMIT` 3,010,802행**입니다. Row-level 공개본은 canonical 26컬럼을 유지하므로 사업장명, 주소, 관리번호, 원천 EPSG:5174 좌표를 포함합니다. 전화번호/홈페이지는 canonical 26컬럼에 포함되지 않습니다.
+Kaggle/public v1의 현재 제품은 **canonical row-level `PERMIT` 3,010,802행** 하나입니다. 공개본은 canonical 26컬럼을 유지하므로 사업장명, 주소, 관리번호, 원천 EPSG:5174 좌표를 포함합니다. 전화번호/홈페이지는 canonical 26컬럼에 포함되지 않습니다.
 
 계속 공개하지 않는 항목은 별도 파생 WGS84 sidecar와 일부만 수집된 history snapshot입니다.
 
-공개 aggregate는 `source_key`, 자치단체 코드, 원천 상태코드/상세상태코드, 인허가연도, 폐업연도 단위로 집계하며 cell count가 10 미만인 셀을 제외합니다. **k=10은 기술적 최소화 기준일 뿐 법적 개인정보 안전을 보장하지 않습니다.**
+과거 privacy-minimized aggregate는 `source_key`, 자치단체 코드, 원천 상태코드/상세상태코드, 인허가연도, 폐업연도 단위로 집계하고 cell count가 10 미만인 셀을 제외했습니다. **k=10은 기술적 최소화 기준일 뿐 법적 개인정보 안전을 보장하지 않습니다.** 이 파생물은 현재 별도 Kaggle 제품이 아닙니다.
 
-### 왜 공개 파일이 원본보다 작은가
+### 공개 파일 형식
 
-약 926.6 MB의 원본 current CSV 3,010,802행을 그대로 공개하는 것이 아니라, row-level 연결 가능성을 제거한 67,267개 집계 cell로 축약합니다. 229,928개 k<10 cell을 suppress하고 사업장명·정확주소·관리번호·전화번호·정밀좌표 같은 고카디널리티 필드를 제거한 뒤 Parquet/ZSTD로 저장하므로 공개 Parquet은 108,019 bytes까지 작아집니다. 이는 수집량이 108 KB였다는 뜻이 아닙니다.
-
-Aggregate package v2는 같은 67,267 cells를 CSV/Parquet으로 제공합니다. 별도 row-level dataset은 `korea_food_service_permits.csv`와 `korea_food_service_permits.parquet`로 동일한 **3,010,802행 × 26컬럼**을 제공합니다. CSV는 범용 도구 접근성을 위한 형식이고 Parquet은 typed/compact 분석용입니다.
+`korea_food_service_permits.csv`와 `korea_food_service_permits.parquet`는 동일한 **3,010,802행 × 26컬럼**을 제공합니다. CSV는 스프레드시트·범용 분석 도구·다운로드 사용성을 위한 형식이고, Parquet은 typed/compact 분석용입니다. 원본 bulk CSV를 단순 복제한 것이 아니라 검증된 canonical `PERMIT`의 두 직렬화입니다.
 
 추가 파일은 `source_summary.csv`, `schema.json`, `DATA_DICTIONARY.md`, `README.md`, `SOURCES.md`, `release-manifest.json`입니다.
 
 ## 소스와 이용조건
 
-2026-09-08 재확인 기준 공공데이터포털의 세 공식 OpenAPI 상세페이지는 모두 `이용허락범위 제한 없음`을 표시합니다. 최신 v1 release scope는 기존 aggregate와 별도 승인된 canonical row-level 공개를 함께 허용합니다. 별도 서면 문의는 추가 assurance를 위한 선택사항으로 남깁니다.
+2026-09-08 재확인 기준 공공데이터포털의 세 공식 OpenAPI 상세페이지는 모두 `이용허락범위 제한 없음`을 표시합니다. 최신 v1 release scope는 canonical row-level 공개를 허용하며, 현재 Kaggle 제품도 이 3,010,802행 current snapshot 하나로 정리했습니다. 별도 서면 문의는 추가 assurance를 위한 선택사항으로 남깁니다.
 
 - 15154916 — 행정안전부_식품_일반음식점 조회서비스
 - 15154921 — 행정안전부_식품_휴게음식점 조회서비스
 - 15155252 — 행정안전부_식품_제과점영업 조회서비스
 
 최종 기계 판독 release 결정은 `provenance/v1_release_scope.json`에 있습니다.
-최초 aggregate Kaggle 공개 결과는 `provenance/kaggle_release.json`, aggregate package v2는 `provenance/kaggle_release_v2.json`, 3,010,802행 canonical row-level 공개는 `provenance/kaggle_row_release_v1.json`에 기록합니다.
+최초 aggregate Kaggle 공개 결과와 package v2는 각각 `provenance/kaggle_release.json`, `provenance/kaggle_release_v2.json`에 **historical evidence**로 보존합니다. 현재 3,010,802행 canonical 공개의 최초 증적은 `provenance/kaggle_row_release_v1.json`에 기록합니다.
 
 ## Lifecycle 사용 시 주의사항
 
@@ -64,7 +62,7 @@ Aggregate package v2는 같은 67,267 cells를 CSV/Parquet으로 제공합니다
 
 ## Optional history workflow
 
-전국 history가 필요한 분석가는 준비된 monthly reference cadence와 runner를 사용할 수 있습니다. 기준 cadence는 10개 날짜 × 3 sources × date-effective 244 authority codes = 7,320 snapshot tasks입니다. 이 수집은 **core v1 또는 Kaggle aggregate 공개에 필요하지 않습니다.**
+전국 history가 필요한 분석가는 준비된 monthly reference cadence와 runner를 사용할 수 있습니다. 기준 cadence는 10개 날짜 × 3 sources × date-effective 244 authority codes = 7,320 snapshot tasks입니다. 이 수집은 **core v1 또는 현재 Kaggle current-snapshot 공개에 필요하지 않습니다.**
 
 관련 문서:
 
