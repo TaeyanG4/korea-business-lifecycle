@@ -37,6 +37,12 @@
       ↳ Kaggle aggregate publication: approved by final v1 release scope
       ↳ public serialization: same 67,267 cells as UTF-8 CSV + verified Parquet
       ↳ package metadata: source summary + release schema + data dictionary + manifest
+  → approved canonical row-level Kaggle release
+      ↳ PERMIT parent rows preserved: 3,010,802
+      ↳ canonical columns preserved: 26
+      ↳ public serialization: CSV + Parquet
+      ↳ source EPSG:5174 coordinates included
+      ↳ separately derived WGS84 sidecar excluded
   → bounded PERMIT_STATUS_EPISODE tooling
       ↳ sparse explicit observations only
       ↳ max 100,000 observations/call, in-memory
@@ -60,12 +66,13 @@
       ↳ episode materializer/verifier: optional; 실행 시 all 7,320 snapshots complete/unique gate 유지
   → v1 release scope
       ↳ core v1: current PERMIT + local WGS84 sidecar, COMPLETE
-      ↳ Kaggle/public: verified privacy-minimized aggregate only
-      ↳ row-level PERMIT / precise coordinates: private
+      ↳ Kaggle/public: verified privacy-minimized aggregate + approved canonical row-level PERMIT
+      ↳ source EPSG:5174 coordinates: canonical row release에 포함
+      ↳ derived WGS84 sidecar: private
       ↳ written source-specific clarification: optional additional assurance
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. **2026-09-08부터 core v1은 이 current snapshot 제품으로 완료**하며, nationwide history/episode는 optional advanced workflow로 둡니다. 월별 10-date/7,320-task 계획과 episode gate는 longitudinal 분석을 선택한 경우에만 적용합니다. Kaggle에는 row-level이나 정밀좌표를 공개하지 않고, 이미 검증된 k=10 privacy-minimized aggregate만 공개합니다. 공개 package는 그 동일 aggregate를 CSV와 Parquet으로 함께 제공하고 source-summary/schema/data-dictionary/manifest를 덧붙이지만 public row scope를 넓히지 않습니다. 최종 범위는 `provenance/v1_release_scope.json`이 규정합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. **2026-09-08부터 core v1은 이 current snapshot 제품으로 완료**하며, nationwide history/episode는 optional advanced workflow로 둡니다. Kaggle에는 기존 k=10 aggregate와 별도로 canonical `PERMIT` 3,010,802행 × 26컬럼을 CSV/Parquet으로 공개했습니다. Canonical source EPSG:5174 좌표는 row-level 공개본에 포함되지만 별도 파생 WGS84 sidecar는 공개하지 않습니다. 최종 범위는 `provenance/v1_release_scope.json`이 규정합니다.
 
 ## 데이터 저장 원칙
 

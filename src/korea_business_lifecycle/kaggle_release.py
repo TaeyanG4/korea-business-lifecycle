@@ -411,8 +411,6 @@ def prepare_kaggle_release(
     public = release_scope["public_release"]
     if public.get("aggregate_publication_approved") is not True:
         raise KaggleReleaseError("final v1 release scope does not approve aggregate publication")
-    if public.get("row_level_permit_publication_approved") is not False:
-        raise KaggleReleaseError("row-level publication invariant changed")
     if public.get("precise_wgs84_publication_approved") is not False:
         raise KaggleReleaseError("precise-coordinate publication invariant changed")
     if public.get("aggregate_sha256") != actual_sha:

@@ -154,6 +154,10 @@ def load_kaggle_release_v2() -> dict[str, Any]:
     return load_json("provenance/kaggle_release_v2.json")
 
 
+def load_kaggle_row_release_v1() -> dict[str, Any]:
+    return load_json("provenance/kaggle_row_release_v1.json")
+
+
 def validate_kaggle_release(release: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if release.get("decision") != "KAGGLE_AGGREGATE_PUBLICATION_COMPLETED_VERIFIED":
@@ -321,10 +325,102 @@ def validate_kaggle_release_v2(release: dict[str, Any]) -> list[str]:
     return errors
 
 
+def validate_kaggle_row_release_v1(release: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if release.get("decision") != "KAGGLE_CANONICAL_ROW_LEVEL_PUBLICATION_COMPLETED_VERIFIED":
+        errors.append("Kaggle canonical row-level release decision changed")
+
+    dataset = release.get("dataset", {})
+    if dataset.get("dataset_id") != "taeyangg4/korea-food-service-permits":
+        errors.append("Kaggle canonical row-level dataset id changed")
+    if dataset.get("dataset_id_numeric") != 11_936_072:
+        errors.append("Kaggle canonical row-level numeric dataset id changed")
+    if dataset.get("visibility") != "PUBLIC" or dataset.get("status") != "READY":
+        errors.append("Kaggle canonical row-level dataset must remain public and ready")
+    if dataset.get("license_metadata") != "other":
+        errors.append("Kaggle canonical row-level license metadata changed")
+
+    expected_package = {
+        "version": 1,
+        "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+        "rows": 3_010_802,
+        "columns": 26,
+        "serializations": ["CSV", "PARQUET"],
+        "published_file_count": 8,
+        "source_epsg5174_coordinates_included": True,
+        "wgs84_coordinates_included": False,
+        "history_included": False,
+    }
+    if release.get("package") != expected_package:
+        errors.append("Kaggle canonical row-level package contract changed")
+
+    expected_files = {
+        "DATA_DICTIONARY.md": (2_155, "458ba4b0f4e9beaa0347a88d30b168aa35db57639ddab6a3b230197bd3f6afc9"),
+        "README.md": (1_362, "3f4717a5944dbcd86808f66492382c55ac4126a135fbe3b728bd88f8a2b0061d"),
+        "SOURCES.md": (648, "0d782519aee50bebe6e06299ef4d2940fc49fcf70816bba661980d5164b209b9"),
+        "korea_food_service_permits.csv": (
+            1_398_626_208,
+            "c128be97b9a3e62377bb55286a92e0df1c8191f0ed6f491a0804fbdcadf83f01",
+        ),
+        "korea_food_service_permits.parquet": (
+            165_170_021,
+            "1e190aba12234023a88e2a92b05bcf0526ec37f22b4d02df6cdba27b214578b3",
+        ),
+        "release-manifest.json": (
+            1_949,
+            "7c59b04f10c42f4e83fc7f55b8dde6d6060a2e4fd352ed21d8b06aae856bacdb",
+        ),
+        "schema.json": (6_051, "2d264592103f24caf7dfa2f78a2c4116fe14ab4a11b1b3f62915888da895f1b4"),
+        "source_summary.csv": (
+            342,
+            "d245a268a653e5a724d33fbeb0d7b42912478b566c3bfe39d3aae2198a3cd18a",
+        ),
+    }
+    files = release.get("published_files", [])
+    if len(files) != len(expected_files) or {item.get("name") for item in files} != set(expected_files):
+        errors.append("Kaggle canonical row-level published file set changed")
+    for item in files:
+        name = item.get("name")
+        expected = expected_files.get(name)
+        if expected is None:
+            continue
+        if item.get("published_bytes") != expected[0]:
+            errors.append(f"Kaggle canonical row-level {name} byte size changed")
+        if item.get("local_package_sha256") != expected[1]:
+            errors.append(f"Kaggle canonical row-level {name} local hash changed")
+        if item.get("published_byte_size_matches_local") is not True:
+            errors.append(f"Kaggle canonical row-level {name} published/local size verification changed")
+
+    verification = release.get("verification", {})
+    for key in (
+        "public_search_listing_found",
+        "published_file_names_match_package_contract",
+        "published_file_sizes_match_local_package",
+        "payload_hashes_verified_locally",
+        "dataset_metadata_download_verified",
+        "csv_and_parquet_column_order_match",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"Kaggle canonical row-level verification must keep {key}=true")
+    if verification.get("csv_rows_verified") != 3_010_802:
+        errors.append("Kaggle canonical row-level CSV row verification changed")
+    if verification.get("parquet_rows_verified") != 3_010_802:
+        errors.append("Kaggle canonical row-level Parquet row verification changed")
+    if verification.get("kaggle_status_command") != "READY":
+        errors.append("Kaggle canonical row-level status verification changed")
+
+    auth = release.get("authentication", {})
+    if auth.get("method") != "KAGGLE_OAUTH":
+        errors.append("Kaggle canonical row-level authentication method changed")
+    if auth.get("credential_value_recorded") is not False or auth.get("credential_committed_to_git") is not False:
+        errors.append("Kaggle canonical row-level credentials must never be recorded or committed")
+    return errors
+
+
 def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if scope.get("decision") != (
-        "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLICATION_APPROVED"
+        "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_ROW_LEVEL_AND_AGGREGATE_KAGGLE_PUBLICATION_APPROVED"
     ):
         errors.append("v1 release-scope decision changed")
 
@@ -359,7 +455,7 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
         errors.append("optional history must not be promoted to an event log")
 
     public = scope.get("public_release", {})
-    if public.get("kaggle_target") != "PRIVACY_MINIMIZED_AGGREGATE_ONLY":
+    if public.get("kaggle_target") != "AGGREGATE_PLUS_CANONICAL_ROW_LEVEL":
         errors.append("Kaggle release target changed")
     if public.get("aggregate_build_id") != "permit-public-agg-v1-bedd874de6619bee":
         errors.append("Kaggle aggregate build changed")
@@ -371,9 +467,33 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
         errors.append("Kaggle aggregate row count changed")
     if public.get("aggregate_publication_approved") is not True:
         errors.append("verified aggregate publication must remain approved")
-    for key in ("row_level_permit_publication_approved", "precise_wgs84_publication_approved"):
-        if public.get(key) is not False:
-            errors.append(f"v1 release scope must keep {key}=false")
+    if public.get("row_level_permit_publication_approved") is not True:
+        errors.append("canonical row-level publication must remain approved")
+    if public.get("row_level_publication_approval_basis") != "PROJECT_OWNER_CONFIRMED_PREEXISTING_APPROVAL_2026-09-08":
+        errors.append("row-level publication approval basis changed")
+    if public.get("row_level_kaggle_dataset_id") != "taeyangg4/korea-food-service-permits":
+        errors.append("row-level Kaggle dataset id changed")
+    if public.get("row_level_rows") != 3_010_802 or public.get("row_level_columns") != 26:
+        errors.append("row-level public shape changed")
+    if public.get("row_level_serializations") != ["CSV", "PARQUET"]:
+        errors.append("row-level serializations must remain CSV + PARQUET")
+    if public.get("row_level_package_version") != 1:
+        errors.append("row-level Kaggle package version changed")
+    if public.get("row_level_package_files") != [
+        "korea_food_service_permits.csv",
+        "korea_food_service_permits.parquet",
+        "source_summary.csv",
+        "schema.json",
+        "DATA_DICTIONARY.md",
+        "README.md",
+        "SOURCES.md",
+        "release-manifest.json",
+    ]:
+        errors.append("row-level Kaggle package file contract changed")
+    if public.get("canonical_source_epsg5174_coordinates_publication_approved") is not True:
+        errors.append("canonical EPSG:5174 source-coordinate publication approval changed")
+    if public.get("precise_wgs84_publication_approved") is not False:
+        errors.append("precise WGS84 publication must remain blocked")
     if public.get("all_three_source_pages_display_no_restriction") is not True:
         errors.append("official no-restriction metadata evidence changed")
     if public.get("written_source_specific_confirmation_required_for_aggregate_publication") is not False:

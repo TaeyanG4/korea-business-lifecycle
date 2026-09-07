@@ -1,0 +1,93 @@
+{
+  "checked_at": "2026-09-08",
+  "decision": "KAGGLE_CANONICAL_ROW_LEVEL_PUBLICATION_COMPLETED_VERIFIED",
+  "dataset": {
+    "dataset_id": "taeyangg4/korea-food-service-permits",
+    "dataset_id_numeric": 11936072,
+    "license_metadata": "other",
+    "status": "READY",
+    "title": "Korea Food-Service Permits - 3M Rows",
+    "url": "https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permits",
+    "visibility": "PUBLIC"
+  },
+  "package": {
+    "columns": 26,
+    "history_included": false,
+    "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+    "published_file_count": 8,
+    "rows": 3010802,
+    "serializations": [
+      "CSV",
+      "PARQUET"
+    ],
+    "source_epsg5174_coordinates_included": true,
+    "version": 1,
+    "wgs84_coordinates_included": false
+  },
+  "published_files": [
+    {
+      "local_package_sha256": "458ba4b0f4e9beaa0347a88d30b168aa35db57639ddab6a3b230197bd3f6afc9",
+      "name": "DATA_DICTIONARY.md",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 2155
+    },
+    {
+      "local_package_sha256": "3f4717a5944dbcd86808f66492382c55ac4126a135fbe3b728bd88f8a2b0061d",
+      "name": "README.md",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 1362
+    },
+    {
+      "local_package_sha256": "0d782519aee50bebe6e06299ef4d2940fc49fcf70816bba661980d5164b209b9",
+      "name": "SOURCES.md",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 648
+    },
+    {
+      "local_package_sha256": "c128be97b9a3e62377bb55286a92e0df1c8191f0ed6f491a0804fbdcadf83f01",
+      "name": "korea_food_service_permits.csv",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 1398626208
+    },
+    {
+      "local_package_sha256": "1e190aba12234023a88e2a92b05bcf0526ec37f22b4d02df6cdba27b214578b3",
+      "name": "korea_food_service_permits.parquet",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 165170021
+    },
+    {
+      "local_package_sha256": "7c59b04f10c42f4e83fc7f55b8dde6d6060a2e4fd352ed21d8b06aae856bacdb",
+      "name": "release-manifest.json",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 1949
+    },
+    {
+      "local_package_sha256": "2d264592103f24caf7dfa2f78a2c4116fe14ab4a11b1b3f62915888da895f1b4",
+      "name": "schema.json",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 6051
+    },
+    {
+      "local_package_sha256": "d245a268a653e5a724d33fbeb0d7b42912478b566c3bfe39d3aae2198a3cd18a",
+      "name": "source_summary.csv",
+      "published_byte_size_matches_local": true,
+      "published_bytes": 342
+    }
+  ],
+  "verification": {
+    "csv_and_parquet_column_order_match": true,
+    "csv_rows_verified": 3010802,
+    "dataset_metadata_download_verified": true,
+    "kaggle_status_command": "READY",
+    "parquet_rows_verified": 3010802,
+    "payload_hashes_verified_locally": true,
+    "public_search_listing_found": true,
+    "published_file_names_match_package_contract": true,
+    "published_file_sizes_match_local_package": true
+  },
+  "authentication": {
+    "credential_committed_to_git": false,
+    "credential_value_recorded": false,
+    "method": "KAGGLE_OAUTH"
+  }
+}

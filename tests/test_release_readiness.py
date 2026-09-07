@@ -121,8 +121,17 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_lower_bound"] == 301_258
     assert readiness["tracks"]["lifecycle_episode"]["monthly_window_request_upper_bound"] == 308_380
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
-    assert readiness["tracks"]["public_kaggle"]["status"] == "PUBLISHED_AGGREGATE_ONLY"
-    assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False
+    assert readiness["tracks"]["public_kaggle"]["status"] == "PUBLISHED_AGGREGATE_AND_CANONICAL_ROW_LEVEL"
+    assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is True
+    assert readiness["tracks"]["public_kaggle"]["row_level_target_dataset_id"] == (
+        "taeyangg4/korea-food-service-permits"
+    )
+    assert readiness["tracks"]["public_kaggle"]["row_level_target_rows"] == 3_010_802
+    assert readiness["tracks"]["public_kaggle"]["row_level_target_columns"] == 26
+    assert readiness["tracks"]["public_kaggle"]["row_level_serializations"] == ["CSV", "PARQUET"]
+    assert readiness["tracks"]["public_kaggle"]["current_row_level_release_scope_approved"] is True
+    assert readiness["tracks"]["public_kaggle"]["canonical_source_epsg5174_public_build_allowed"] is True
+    assert readiness["tracks"]["public_kaggle"]["precise_wgs84_public_build_allowed"] is False
     assert readiness["tracks"]["public_kaggle"]["dataset_id"] == (
         "taeyangg4/korea-food-service-permit-aggregate"
     )
@@ -133,3 +142,13 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["published_file_count"] == 8
     assert readiness["tracks"]["public_kaggle"]["published_csv_bytes"] == 2_977_515
     assert readiness["tracks"]["public_kaggle"]["published_parquet_bytes"] == 108_019
+    assert readiness["tracks"]["public_kaggle"]["row_level_dataset_id"] == (
+        "taeyangg4/korea-food-service-permits"
+    )
+    assert readiness["tracks"]["public_kaggle"]["row_level_dataset_visibility"] == "PUBLIC"
+    assert readiness["tracks"]["public_kaggle"]["row_level_dataset_status"] == "READY"
+    assert readiness["tracks"]["public_kaggle"]["row_level_published_rows"] == 3_010_802
+    assert readiness["tracks"]["public_kaggle"]["row_level_published_columns"] == 26
+    assert readiness["tracks"]["public_kaggle"]["row_level_published_file_count"] == 8
+    assert readiness["tracks"]["public_kaggle"]["row_level_published_csv_bytes"] == 1_398_626_208
+    assert readiness["tracks"]["public_kaggle"]["row_level_published_parquet_bytes"] == 165_170_021

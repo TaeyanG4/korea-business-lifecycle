@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-08",
-  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_AGGREGATE_KAGGLE_PUBLICATION_APPROVED",
+  "decision": "LOCAL_V1_CORE_COMPLETE_HISTORY_OPTIONAL_ROW_LEVEL_AND_AGGREGATE_KAGGLE_PUBLICATION_APPROVED",
   "core_v1": {
     "scope": "nationwide current permit snapshot for three food-service categories",
     "sources": ["general_restaurants", "rest_cafes", "bakeries"],
@@ -24,12 +24,29 @@
     "history_is_lossless_event_log": false
   },
   "public_release": {
-    "kaggle_target": "PRIVACY_MINIMIZED_AGGREGATE_ONLY",
+    "kaggle_target": "AGGREGATE_PLUS_CANONICAL_ROW_LEVEL",
     "aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
     "aggregate_sha256": "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb",
     "aggregate_rows": 67267,
     "aggregate_publication_approved": true,
-    "row_level_permit_publication_approved": false,
+    "row_level_permit_publication_approved": true,
+    "row_level_publication_approval_basis": "PROJECT_OWNER_CONFIRMED_PREEXISTING_APPROVAL_2026-09-08",
+    "row_level_kaggle_dataset_id": "taeyangg4/korea-food-service-permits",
+    "row_level_rows": 3010802,
+    "row_level_columns": 26,
+    "row_level_serializations": ["CSV", "PARQUET"],
+    "row_level_package_version": 1,
+    "row_level_package_files": [
+      "korea_food_service_permits.csv",
+      "korea_food_service_permits.parquet",
+      "source_summary.csv",
+      "schema.json",
+      "DATA_DICTIONARY.md",
+      "README.md",
+      "SOURCES.md",
+      "release-manifest.json"
+    ],
+    "canonical_source_epsg5174_coordinates_publication_approved": true,
     "precise_wgs84_publication_approved": false,
     "source_use_basis": "OFFICIAL_DATA_GO_KR_NO_RESTRICTION_METADATA",
     "official_source_pages": [
@@ -62,11 +79,11 @@
   },
   "supersedes_for_core_v1_and_aggregate_publication_only": [
     "the prior requirement that nationwide history acquisition complete before v1 product completion",
-    "the prior project-level requirement for written source-specific clarification before publishing the verified aggregate"
+    "the prior project-level requirement for written source-specific clarification before publishing the verified aggregate",
+    "the prior aggregate-only public-release scope; project owner confirmed preexisting approval for canonical row-level publication on 2026-09-08"
   ],
   "does_not_supersede": [
-    "row-level privacy restrictions",
-    "precise-coordinate publication restrictions",
+    "derived precise WGS84 coordinate publication restrictions",
     "MNG_NO identity limitations",
     "status 03 reversibility evidence",
     "status 05 unresolved semantics",

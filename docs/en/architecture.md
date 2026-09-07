@@ -37,6 +37,12 @@ official source evidence
       ↳ Kaggle aggregate publication: approved by final v1 release scope
       ↳ public serialization: same 67,267 cells as UTF-8 CSV + verified Parquet
       ↳ package metadata: source summary + release schema + data dictionary + manifest
+  → approved canonical row-level Kaggle release
+      ↳ PERMIT parent rows preserved: 3,010,802
+      ↳ canonical columns preserved: 26
+      ↳ public serialization: CSV + Parquet
+      ↳ source EPSG:5174 coordinates included
+      ↳ separately derived WGS84 sidecar excluded
   → bounded PERMIT_STATUS_EPISODE tooling
       ↳ sparse explicit observations only
       ↳ max 100,000 observations/call, in memory
@@ -60,12 +66,13 @@ official source evidence
       ↳ episode materializer/verifier: optional; still requires all 7,320 snapshots complete/unique if executed
   → v1 release scope
       ↳ core v1: current PERMIT + local WGS84 sidecar, COMPLETE
-      ↳ Kaggle/public: verified privacy-minimized aggregate only
-      ↳ row-level PERMIT / precise coordinates: private
+      ↳ Kaggle/public: verified privacy-minimized aggregate + approved canonical row-level PERMIT
+      ↳ source EPSG:5174 coordinates: included in canonical row release
+      ↳ derived WGS84 sidecar: private
       ↳ written source-specific clarification: optional additional assurance
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. The 10-date/7,320-task monthly plan and episode completeness gate apply only when an analyst chooses that workflow. Kaggle publication is limited to the already verified k=10 privacy-minimized aggregate; row-level and precise-coordinate artifacts remain private. The public package serializes that same aggregate as CSV and Parquet and adds source-summary/schema/data-dictionary/manifest files without broadening the public row scope. `provenance/v1_release_scope.json` is the current scope authority.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. Kaggle now carries both the existing k=10 aggregate and a separately approved canonical `PERMIT` release with 3,010,802 rows × 26 columns in CSV and Parquet. Source EPSG:5174 coordinates are included in that canonical release; the separately derived WGS84 sidecar remains unpublished. `provenance/v1_release_scope.json` is the current scope authority.
 
 ## Data storage rule
 

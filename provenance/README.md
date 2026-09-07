@@ -4,7 +4,7 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 
 - `source_registry.json`: current authoritative source identifiers and explicitly unresolved claims.
 - `license_review.json`: preserved 2026-09-07 conservative review of the official no-restriction source-use labels; its aggregate-publication caution is superseded only by the later `v1_release_scope.json` decision.
-- `privacy_review.json`: observed v1 field inventory plus the still-blocked public allowlist decision.
+- `privacy_review.json`: preserved historical v1 field inventory and conservative allowlist decision; the later row-level approval is recorded in `v1_release_scope.json`.
 - `observed_snapshot_summary.json`: privacy-safe aggregate findings from the three acquired current snapshots; no row-level source values.
 - `history_review.json`: official history-query contract, preserved historical 403 evidence, later authenticated success, and remaining authority-partition semantic blockers.
 - `authority_domain_reference.json`: time-scoped authority-domain evidence: the January manual's documented 245 count, the latest official attachment's exact 244 current numeric codes plus 16 `_ALL` aggregate tokens, and the exact 32 deleted numeric change-reference codes; Jan–Sep date-effective history-filter semantics remain pending.
@@ -32,10 +32,11 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `history_nationwide_acquisition_plan.json`: DRY_RUN-by-default resumable optional acquisition contract for 10 dates × three sources × 244 authorities = 7,320 snapshot tasks, with a 400,000-request hard cap and minimum 0.2-second request delay.
 - `history_episode_materialization_plan.json`: optional local episode writer/verifier contract; if used, all 7,320 history tasks must still be complete and unique and raw-page hashes are checked before reconstruction.
 - `redistribution_clarification_plan.json`: preserved conservative source-specific inquiry plan. Written confirmation is now optional additional assurance for the aggregate-only v1 release.
-- `v1_release_scope.json`: **current product-scope authority**: local current-snapshot core complete, history/episodes optional, verified aggregate approved for Kaggle, row-level and precise coordinates private.
+- `v1_release_scope.json`: **current product-scope authority**: local current-snapshot core complete, history/episodes optional, verified aggregate and canonical row-level PERMIT approved for Kaggle, source EPSG:5174 coordinates approved in that canonical release, derived WGS84 sidecar still excluded.
 - `kaggle_release.json`: preserved initial four-file Kaggle publication evidence for `taeyangg4/korea-food-service-permit-aggregate`; it is retained unchanged as historical publication evidence.
 - `kaggle_release_v2.json`: verified second Kaggle package version for the same dataset: dual CSV/Parquet serialization of the same 67,267-cell aggregate plus source summary, release schema, data dictionary, and expanded documentation. Row-level/private scope is unchanged.
-- `release_readiness.json`: current product-track summary derived from the evidence above; core v1 is complete, the aggregate is published/ready on Kaggle, and history remains optional.
+- `kaggle_row_release_v1.json`: verified public/ready publication evidence for `taeyangg4/korea-food-service-permits`: 3,010,802 canonical PERMIT rows × 26 columns in CSV and Parquet, plus package documentation; derived WGS84/history are excluded.
+- `release_readiness.json`: current product-track summary derived from the evidence above; core v1 is complete, both aggregate and canonical row-level datasets are published/ready on Kaggle, and history remains optional.
 - `feasibility.json`: current project gate state.
 
 Release evidence was rechecked on 2026-09-08 against official `data.go.kr` pages. Current v1 snapshots are stored under the repository-local Git-ignored runtime tree; only hashes and aggregate audit results are tracked here, never the source rows themselves.
