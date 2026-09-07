@@ -46,6 +46,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Reproducibility](docs/en/reproducibility.md)
 - [Bounded source profiling](docs/en/profiling.md)
 - [Bounded history audit findings](docs/en/bounded-history-findings.md)
+- [03→01 reverse-transition follow-up probe](docs/en/reverse-transition-probe.md)
 - [History sample expansion plan](docs/en/history-sample-expansion.md)
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)

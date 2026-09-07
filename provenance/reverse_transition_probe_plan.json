@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-09-07",
+  "purpose": "Bound the follow-up review of the two observed 03->01 transitions to three dates around each row's observed LAST_MDFCN_PNT date.",
+  "cases": [
+    {
+      "source_key": "rest_cafes",
+      "authority_code": "3830000",
+      "candidate_date_source": "LAST_MDFCN_PNT from the end snapshot reverse-transition row",
+      "candidate_date": "20260901",
+      "probe_dates": ["20260831", "20260901", "20260902"],
+      "max_pages_per_snapshot": 61
+    },
+    {
+      "source_key": "general_restaurants",
+      "authority_code": "4530000",
+      "candidate_date_source": "LAST_MDFCN_PNT from the end snapshot reverse-transition row",
+      "candidate_date": "20260317",
+      "probe_dates": ["20260316", "20260317", "20260318"],
+      "max_pages_per_snapshot": 76
+    }
+  ],
+  "planned_tasks": 6,
+  "max_network_requests": 411,
+  "privacy": {
+    "management_numbers_committed": false,
+    "business_names_committed": false,
+    "addresses_committed": false,
+    "coordinates_committed": false
+  },
+  "hard_limit": "This plan does not permit wider date crawling, nationwide enumeration, or MNG_NO publication. If the transition is not observed within the three-date window, a new bounded plan is required."
+}
+

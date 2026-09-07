@@ -3,12 +3,14 @@ from korea_business_lifecycle.provenance import (
     load_expanded_history_audit,
     load_history_review,
     load_history_sample_plan,
+    load_reverse_transition_probe_plan,
     load_license_review,
     load_observed_snapshot_summary,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
     validate_history_sample_plan,
+    validate_reverse_transition_probe_plan,
     validate_bounded_history_audit,
     validate_expanded_history_audit,
     validate_license_review,
@@ -81,6 +83,13 @@ def test_history_sample_plan_is_bounded_and_deterministic() -> None:
         "3830000",
         "3220000",
     ]
+
+
+def test_reverse_transition_probe_plan_is_tightly_bounded() -> None:
+    plan = load_reverse_transition_probe_plan()
+    assert validate_reverse_transition_probe_plan(plan) == []
+    assert plan["planned_tasks"] == 6
+    assert plan["max_network_requests"] == 411
 
 
 def test_observed_snapshot_summary_matches_empirical_v1_scale() -> None:

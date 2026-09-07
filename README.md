@@ -46,6 +46,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [재현성](docs/ko/reproducibility.md)
 - [Bounded source profiling](docs/ko/profiling.md)
 - [Bounded history audit 결과](docs/ko/bounded-history-findings.md)
+- [03→01 전환 후속 probe](docs/ko/reverse-transition-probe.md)
 - [History 표본 확장 계획](docs/ko/history-sample-expansion.md)
 - [5개 자치단체 History 표본 확장 결과](docs/ko/expanded-history-findings.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)

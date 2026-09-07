@@ -29,6 +29,10 @@ def load_history_sample_plan() -> dict[str, Any]:
     return load_json("provenance/history_sample_plan.json")
 
 
+def load_reverse_transition_probe_plan() -> dict[str, Any]:
+    return load_json("provenance/reverse_transition_probe_plan.json")
+
+
 def load_observed_snapshot_summary() -> dict[str, Any]:
     return load_json("provenance/observed_snapshot_summary.json")
 
@@ -121,6 +125,45 @@ def validate_history_sample_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("history sample request total must equal representative page totals")
     if plan.get("history_dates") != ["20260101", "20260906"]:
         errors.append("history sample dates changed")
+    return errors
+
+
+def validate_reverse_transition_probe_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    cases = plan.get("cases", [])
+    expected = {
+        ("rest_cafes", "3830000", "20260901"),
+        ("general_restaurants", "4530000", "20260317"),
+    }
+    observed = {
+        (
+            str(item.get("source_key")),
+            str(item.get("authority_code")),
+            str(item.get("candidate_date")),
+        )
+        for item in cases
+    }
+    if observed != expected:
+        errors.append("reverse-transition probe cases changed")
+    if len(cases) != 2:
+        errors.append("reverse-transition probe must contain exactly two cases")
+    task_count = sum(len(item.get("probe_dates", [])) for item in cases)
+    if task_count != plan.get("planned_tasks") or task_count != 6:
+        errors.append("reverse-transition probe must contain exactly six date tasks")
+    request_cap = sum(
+        len(item.get("probe_dates", [])) * int(item.get("max_pages_per_snapshot", 0))
+        for item in cases
+    )
+    if request_cap != plan.get("max_network_requests") or request_cap != 411:
+        errors.append("reverse-transition request cap changed")
+    privacy = plan.get("privacy", {})
+    if any(privacy.get(key) is not False for key in (
+        "management_numbers_committed",
+        "business_names_committed",
+        "addresses_committed",
+        "coordinates_committed",
+    )):
+        errors.append("reverse-transition probe privacy flags must remain false")
     return errors
 
 
