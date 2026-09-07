@@ -12,4 +12,4 @@ On 2026-09-07 the three nationwide current snapshots were acquired outside Git, 
 - General restaurants contain four non-blank unparseable permit dates and three closure dates after the retrieval date.
 - Telephone, business name, exact addresses, homepage and precise coordinates exist in the observed schema, so no public row-level allowlist is approved.
 
-These findings are current-snapshot evidence only. Relocation, reopening, category transitions, history ordering and longitudinal identifier stability remain unresolved until authenticated history queries can be tested.
+These findings are current-snapshot evidence only. The authenticated history probe is implemented, but on 2026-09-07 both the bakery `/info` and `/history` requests rejected the currently configured local key with `SERVICE_KEY_IS_NOT_REGISTERED_ERROR`. Relocation, reopening, category transitions, history ordering and longitudinal identifier stability therefore remain unresolved until a valid data.go.kr service key/API authorization is available.

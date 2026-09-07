@@ -8,7 +8,7 @@ import urllib.request
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, Callable
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import unquote, urlencode, urlsplit
 
 from .config import project_root
 from .provenance import V1_SOURCE_KEYS, load_history_review
@@ -20,6 +20,7 @@ MIN_BASE_DATE = date(2026, 1, 1)
 MAX_RESPONSE_BYTES = 5 * 1024 * 1024
 KST = timezone(timedelta(hours=9), name="Asia/Seoul")
 AUTHORITY_CODE_RE = re.compile(r"^[0-9]{7}$")
+PERCENT_ESCAPE_RE = re.compile(r"%[0-9A-Fa-f]{2}")
 
 
 class HistoryProbeError(RuntimeError):
@@ -121,8 +122,10 @@ def require_service_key(value: str | None = None) -> str:
     if not key:
         raise HistoryProbeError(
             f"{SERVICE_KEY_ENV} is required in the environment or local .env; "
-            "use the data.go.kr Decoding service key and keep it out of Git/logs"
+            "use a data.go.kr service key and keep it out of Git/logs"
         )
+    if PERCENT_ESCAPE_RE.search(key):
+        key = unquote(key)
     if any(char.isspace() for char in key):
         raise HistoryProbeError("service key must not contain whitespace")
     return key

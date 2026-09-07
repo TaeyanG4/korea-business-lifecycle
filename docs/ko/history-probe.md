@@ -12,11 +12,11 @@
 
 현재 snapshot에서 개방자치단체코드는 세 카테고리 모두 동일하게 230개가 관찰됐고 모두 7자리 숫자였습니다. 이는 probe 입력 검증에 사용하지만 공식 전국 코드 도메인의 완전성 증거로 사용하지 않습니다.
 
-`scripts/probe_history.py`는 page 1 한 번만 요청하고 응답 row를 저장하지 않으며 aggregate `totalCount`만 출력합니다. 인증키는 환경변수로만 전달합니다.
+`scripts/probe_history.py`는 page 1 한 번만 요청하고 응답 row를 저장하지 않으며 aggregate `totalCount`만 출력합니다. 인증키는 환경변수 또는 Git-ignored `.env`에서 읽습니다. data.go.kr Encoding 키와 Decoding 키를 모두 지원하며, Encoding 키는 메모리에서 한 번만 decode한 뒤 요청에 사용합니다.
 
 ```powershell
-$env:KBL_DATA_GO_KR_SERVICE_KEY = "<data.go.kr Decoding key>"
+$env:KBL_DATA_GO_KR_SERVICE_KEY = "<data.go.kr Encoding or Decoding key>"
 python scripts/probe_history.py bakeries 20260101 3000000
 ```
 
-인증키를 Git, `.env` 커밋, 명령행 인자, 로그, provenance에 넣지 마십시오.
+인증키를 Git, 명령행 인자, 로그, provenance에 넣지 마십시오. 로컬 `.env`는 Git에서 제외되어야 합니다.

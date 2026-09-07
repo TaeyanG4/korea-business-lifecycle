@@ -12,11 +12,11 @@ Responses include `totalCount`, so pagination for one `(category, BASE_DATE, aut
 
 The current snapshots contain the same 230 observed authority codes in all three categories, all seven-digit numeric strings. This is used for probe input validation, not as proof of an authoritative complete nationwide code domain.
 
-`scripts/probe_history.py` makes exactly one page-1 request, stores no returned row values, and prints only aggregate metadata such as `totalCount`. The service key is supplied only through an environment variable.
+`scripts/probe_history.py` makes exactly one page-1 request, stores no returned row values, and prints only aggregate metadata such as `totalCount`. The service key is read from the environment or a Git-ignored `.env`. Both data.go.kr Encoding and Decoding keys are supported; Encoding keys are decoded once in memory before request construction.
 
 ```powershell
-$env:KBL_DATA_GO_KR_SERVICE_KEY = "<data.go.kr Decoding key>"
+$env:KBL_DATA_GO_KR_SERVICE_KEY = "<data.go.kr Encoding or Decoding key>"
 python scripts/probe_history.py bakeries 20260101 3000000
 ```
 
-Never commit or place the key in command-line arguments, logs, provenance, or a tracked `.env` file.
+Never commit or place the key in command-line arguments, logs, or provenance. A local `.env` must remain Git-ignored.

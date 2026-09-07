@@ -12,4 +12,4 @@
 - 일반음식점에는 비어있지 않지만 파싱되지 않는 인허가일자 4건과 retrieval date 이후 폐업일자 3건이 있습니다.
 - 전화번호·사업장명·정확 주소·홈페이지·정밀 좌표가 실제 스키마에 존재하므로 public row-level allowlist는 승인하지 않았습니다.
 
-이 결과는 current snapshot에 한정됩니다. relocation, reopening, category transition, history ordering, longitudinal identifier stability는 authenticated history 조회 전까지 판단하지 않습니다.
+이 결과는 current snapshot에 한정됩니다. authenticated history probe는 구현되어 있으나, 2026-09-07 실제 제과점 `/info`와 `/history` 호출에서 현재 로컬 키가 `SERVICE_KEY_IS_NOT_REGISTERED_ERROR`로 거부되었습니다. 따라서 relocation, reopening, category transition, history ordering, longitudinal identifier stability는 유효한 data.go.kr 서비스키/활용권한이 확인될 때까지 판단하지 않습니다.

@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_EXECUTION_BLOCKED_BY_SERVICE_KEY",
+  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_EXECUTION_BLOCKED_BY_UNREGISTERED_SERVICE_KEY",
   "common_contract": {
     "lower_base_date": "2026-01-01",
     "upper_base_date_rule": "query date minus one day",
@@ -17,6 +17,13 @@
     "response_total_count": true,
     "authentication": "data.go.kr serviceKey required",
     "unauthenticated_probe": "HTTP 401",
+    "authenticated_probe_2026_09_07": {
+      "source_key": "bakeries",
+      "info_http_status": 403,
+      "history_http_status": 403,
+      "error_code": "SERVICE_KEY_IS_NOT_REGISTERED_ERROR",
+      "interpretation": "The locally configured key is present but is not recognized by data.go.kr as a registered service key. No key value is stored in provenance."
+    },
     "observed_current_authority_code_domain": {
       "distinct_count": 230,
       "format": "7-digit numeric strings",

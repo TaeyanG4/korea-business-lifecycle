@@ -35,6 +35,10 @@ def test_service_key_can_be_loaded_from_gitignored_dotenv(
     assert history_probe.require_service_key() == "synthetic-decoding-key"
 
 
+def test_encoding_service_key_is_normalized_once() -> None:
+    assert require_service_key("abc%2Bdef%2Fghi%3D") == "abc+def/ghi="
+
+
 class FakeResponse:
     def __init__(self, payload: dict, *, url: str) -> None:
         self._stream = io.BytesIO(json.dumps(payload).encode("utf-8"))
