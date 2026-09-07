@@ -35,14 +35,11 @@
 
 따라서 bounded evidence는 세 source 모두 **`좌표정보(X)=easting`, `좌표정보(Y)=northing`을 강하게 선호**합니다.
 
-## 아직 확정하지 않는 것
+## Full-snapshot review 결과
 
-이번 sample은 각 source의 첫 5,000 nonblank pair이므로 전국 stratified evidence가 아닙니다. 거시권역 envelope도 authoritative geocoding이 아닌 QA heuristic입니다. 따라서 현재도 다음 값은 유지합니다.
+후속 전수 실행에서 3,010,802행과 2,811,767 coordinate pair 전체를 검사했습니다. 주소 거시권역 평가 가능 2,631,605쌍 중 candidate A(X=easting/Y=northing)는 2,630,497쌍(99.958%)이 일치했고, candidate B는 686,673쌍이 일치했습니다. candidate A만 일치한 경우는 1,943,824쌍, candidate B만 일치한 경우는 0쌍, 둘 다 불일치는 1,108쌍이었습니다. 세 source 모두 동일한 방향으로 판정됐습니다.
 
-- `coordinate_axis_order_verified_nationwide = false`
-- `wgs84_generation_approved = false`
-- frozen `PERMIT` parent의 source X/Y는 원 source float64 그대로 유지
-- `wgs84_latitude` / `wgs84_longitude`는 생성하지 않음
+따라서 **정확히 현재 승인된 2026-09-07 v1 artifact 집합에 한해** `좌표정보(X)=easting`, `좌표정보(Y)=northing` 해석과 local WGS84 derivation을 승인합니다. 미래 snapshot은 재검증해야 합니다. public WGS84 release는 승인하지 않으며 frozen 26컬럼 `PERMIT` parent도 수정하지 않습니다.
 
 ## Full-snapshot validator
 
@@ -62,4 +59,4 @@ python scripts/validate_full_coordinate_axis.py --execute \
   | tee data/local/logs/geospatial-full-axis-20260907.json
 ```
 
-진행률은 stderr, 최종 aggregate JSON은 stdout입니다. full scan이 통과해도 결과 검토 전에는 schema의 `coordinate_axis_order_validated`를 true로 바꾸거나 WGS84 row-level column을 만들지 않습니다.
+진행률은 stderr, 최종 aggregate JSON은 stdout입니다. 실행 결과는 `provenance/geospatial_full_axis.json`에 aggregate-only로 고정했습니다. 다음 단계는 frozen parent를 변경하지 않는 별도 versioned WGS84 enrichment입니다.

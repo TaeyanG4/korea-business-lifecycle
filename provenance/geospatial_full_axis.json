@@ -1,0 +1,92 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "FULL_SNAPSHOT_AXIS_QA_PASSED_X_EASTING_Y_NORTHING_APPROVED_FOR_LOCAL_DERIVATION",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "rows_examined_total": 3010802,
+    "coordinate_pairs_total": 2811767,
+    "macro_region_eligible_pairs_total": 2631605,
+    "declared_source_crs": "EPSG:5174",
+    "exact_current_v1_artifacts_only": true,
+    "future_snapshot_revalidation_required": true,
+    "row_level_coordinate_values_recorded": false,
+    "row_level_address_values_recorded": false,
+    "wgs84_columns_generated": false
+  },
+  "software": {
+    "pyproj_version": "3.7.2",
+    "proj_version": "9.5.1"
+  },
+  "method": {
+    "name": "FULL_SNAPSHOT_AGGREGATE_AXIS_COMPARISON_WITH_COARSE_ADDRESS_MACRO_REGIONS",
+    "candidate_a": "source X as easting, source Y as northing",
+    "candidate_b": "source X as northing, source Y as easting",
+    "candidate_a_match": 2630497,
+    "candidate_b_match": 686673,
+    "candidate_a_only_match": 1943824,
+    "candidate_b_only_match": 0,
+    "neither_match": 1108,
+    "candidate_a_match_rate": 0.9995789641682548,
+    "candidate_b_match_rate": 0.26093315676174805,
+    "assessment_consistent_across_sources": true,
+    "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+  },
+  "results": [
+    {
+      "source_key": "general_restaurants",
+      "rows_examined": 2295369,
+      "coordinate_pairs": 2134446,
+      "missing_coordinate_pairs": 160923,
+      "partial_coordinate_pairs": 0,
+      "macro_region_eligible_pairs": 1995075,
+      "candidate_a_match": 1994178,
+      "candidate_b_match": 519354,
+      "candidate_a_only_match": 1474824,
+      "candidate_b_only_match": 0,
+      "neither_match": 897,
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "status": "PASS"
+    },
+    {
+      "source_key": "rest_cafes",
+      "rows_examined": 645952,
+      "coordinate_pairs": 611802,
+      "missing_coordinate_pairs": 34150,
+      "partial_coordinate_pairs": 0,
+      "macro_region_eligible_pairs": 574859,
+      "candidate_a_match": 574663,
+      "candidate_b_match": 151640,
+      "candidate_a_only_match": 423023,
+      "candidate_b_only_match": 0,
+      "neither_match": 196,
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "status": "PASS"
+    },
+    {
+      "source_key": "bakeries",
+      "rows_examined": 69481,
+      "coordinate_pairs": 65519,
+      "missing_coordinate_pairs": 3962,
+      "partial_coordinate_pairs": 0,
+      "macro_region_eligible_pairs": 61671,
+      "candidate_a_match": 61656,
+      "candidate_b_match": 15679,
+      "candidate_a_only_match": 45977,
+      "candidate_b_only_match": 0,
+      "neither_match": 15,
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "status": "PASS"
+    }
+  ],
+  "review": {
+    "source_x_interpretation": "EASTING",
+    "source_y_interpretation": "NORTHING",
+    "coordinate_axis_order_verified_nationwide": true,
+    "verification_scope": "the exact three 2026-09-07 current-v1 snapshot artifacts recorded by SHA-256",
+    "local_wgs84_derivation_approved": true,
+    "public_wgs84_release_approved": false,
+    "frozen_permit_parent_schema_mutated": false,
+    "reason": "candidate A matched 99.958% of macro-region-eligible pairs, candidate B had zero candidate-B-only matches, and all three sources reached the same assessment"
+  },
+  "next_gate": "implement a separately versioned local WGS84 enrichment derived from the verified immutable PERMIT build; keep publication blocked"
+}

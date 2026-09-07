@@ -35,14 +35,11 @@ The probe then reduced road/lot address first-level administrative prefixes in m
 
 The bounded evidence therefore **strongly prefers `좌표정보(X)=easting` and `좌표정보(Y)=northing`** across all three sources.
 
-## What remains unresolved
+## Full-snapshot review result
 
-The sample is the first 5,000 nonblank pairs per source, not nationwide stratified evidence. The macro-region envelopes are QA heuristics, not authoritative geocoding. The project therefore still keeps:
+The subsequent full execution inspected all 3,010,802 rows and all 2,811,767 coordinate pairs. Of 2,631,605 pairs eligible for coarse address-region comparison, candidate A (X=easting/Y=northing) matched 2,630,497 pairs (99.958%), while candidate B matched 686,673. Candidate-A-only matches totaled 1,943,824, candidate-B-only matches were zero, and 1,108 matched neither. All three sources reached the same assessment.
 
-- `coordinate_axis_order_verified_nationwide = false`;
-- `wgs84_generation_approved = false`;
-- frozen `PERMIT` source X/Y as unchanged source float64 values; and
-- no `wgs84_latitude` / `wgs84_longitude` columns.
+The project therefore approves `좌표정보(X)=easting`, `좌표정보(Y)=northing` and local WGS84 derivation **only for the exact approved 2026-09-07 current-v1 artifacts**. Future snapshots require revalidation. Public WGS84 release remains unapproved and the frozen 26-column `PERMIT` parent is not modified.
 
 ## Full-snapshot validator
 
@@ -62,4 +59,4 @@ python scripts/validate_full_coordinate_axis.py --execute \
   | tee data/local/logs/geospatial-full-axis-20260907.json
 ```
 
-Progress is emitted on stderr and the final aggregate JSON on stdout. Even if the full scan passes, schema metadata is not changed and WGS84 row-level columns are not enabled until the result is reviewed.
+Progress is emitted on stderr and the final aggregate JSON on stdout. The reviewed aggregate result is tracked as `provenance/geospatial_full_axis.json`. The next step is a separately versioned WGS84 enrichment that leaves the frozen parent unchanged.

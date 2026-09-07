@@ -13,10 +13,12 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `permit_parent_compatibility.json`: aggregate-only bounded validation of the frozen `PERMIT` transformer against 256 real current-snapshot rows per source; no row-level values or canonical output.
 - `permit_parent_full_dry_run_plan.json`: privacy-safe full-current-snapshot streaming dry-run execution contract, now marked completed-pass.
 - `permit_parent_full_dry_run.json`: aggregate-only result of the completed 3,010,802-row dry run; no row-level values.
-- `permit_parent_materialization_plan.json`: local-only Parquet/ZSTD production materialization contract plus independent immutable-build verifier; actual production build is not yet executed.
+- `permit_parent_materialization_plan.json`: local-only Parquet/ZSTD production materialization and independent-verifier contract, now marked completed-pass-verified.
+- `permit_parent_materialization.json`: aggregate-only evidence for the verified 3,010,802-row immutable PERMIT build; no row-level values.
 - `geospatial_axis_probe.json`: aggregate-only bounded EPSG:5174 source-field axis plausibility evidence; X=easting/Y=northing is strongly preferred in the sample, while nationwide axis verification and WGS84 generation remain blocked.
-- `geospatial_full_axis_plan.json`: aggregate-only full-current-snapshot coordinate-axis validation plan; implementation is ready, but the long local scan is not yet executed.
-- `release_readiness.json`: current product-track gate summary derived from the evidence above; local PERMIT production is ready for user execution while WGS84, lifecycle episodes, and public/Kaggle release remain separately blocked.
+- `geospatial_full_axis_plan.json`: aggregate-only full-current-snapshot coordinate-axis validation contract, now marked completed-pass-reviewed.
+- `geospatial_full_axis.json`: reviewed aggregate-only evidence from all 2,811,767 current-v1 coordinate pairs; X=easting/Y=northing is approved for local derivation on the exact current artifacts, while public release remains blocked.
+- `release_readiness.json`: current product-track gate summary derived from the evidence above; the local PERMIT parent is completed/verified, local WGS84 enrichment implementation is the next product step, and lifecycle/publication gates remain separately blocked.
 - `feasibility.json`: current project gate state.
 
 Evidence was rechecked on 2026-09-07 against official `data.go.kr` and Ministry of the Interior and Safety pages. Current v1 snapshots are stored under the repository-local Git-ignored runtime tree; only hashes and aggregate audit results are tracked here, never the source rows themselves.

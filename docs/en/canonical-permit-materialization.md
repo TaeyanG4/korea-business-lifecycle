@@ -86,4 +86,4 @@ The generated Parquet files contain row-level business names, addresses, and sou
 
 ## Current state
 
-Implementation, synthetic Parquet round trips, schema/compression validation, immutable-output protection, hash-mismatch atomic failure tests, the independent post-build verifier, and real-artifact plan validation are complete. The 3,010,802-row production materialization has not yet been executed.
+Production build `permit-v1-9908225df465e2ff` is complete at 3,010,802 rows with 165,176,236 bytes of Parquet output. The independent verifier rechecked the manifest, all three Parquet SHA-256 values, row counts, frozen Arrow schema, ZSTD compression, and full-dry-run quality aggregates and returned PASS. This completion does not approve public row-level release.

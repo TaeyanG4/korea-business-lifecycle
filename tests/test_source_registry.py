@@ -3,6 +3,7 @@ from korea_business_lifecycle.provenance import (
     load_expanded_history_audit,
     load_grain_decision,
     load_geospatial_axis_probe,
+    load_geospatial_full_axis,
     load_geospatial_full_axis_plan,
     load_history_review,
     load_history_sample_plan,
@@ -14,6 +15,7 @@ from korea_business_lifecycle.provenance import (
     load_permit_parent_full_dry_run,
     load_permit_parent_full_dry_run_plan,
     load_permit_parent_materialization_plan,
+    load_permit_parent_materialization,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -24,6 +26,7 @@ from korea_business_lifecycle.provenance import (
     validate_expanded_history_audit,
     validate_grain_decision,
     validate_geospatial_axis_probe,
+    validate_geospatial_full_axis,
     validate_geospatial_full_axis_plan,
     validate_license_review,
     validate_observed_snapshot_summary,
@@ -31,6 +34,7 @@ from korea_business_lifecycle.provenance import (
     validate_permit_parent_full_dry_run,
     validate_permit_parent_full_dry_run_plan,
     validate_permit_parent_materialization_plan,
+    validate_permit_parent_materialization,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -157,7 +161,7 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_parent_schema_status"] == "FROZEN"
     assert decision["next_gate"]["permit_status_episode_schema"] == "schemas/permit_status_episode.v1.json"
     assert decision["next_gate"]["permit_status_episode_schema_status"] == "FROZEN"
-    assert decision["next_gate"]["phase"] == "Phase 5 Canonical Parent Transformation"
+    assert decision["next_gate"]["phase"] == "Phase 6 Geospatial Enrichment"
     assert decision["next_gate"]["permit_parent_transformer"] == "src/korea_business_lifecycle/canonical_permit.py"
     assert decision["next_gate"]["permit_parent_transformer_status"] == "FULL_SNAPSHOT_VALIDATED"
     assert decision["next_gate"]["permit_parent_compatibility"] == "provenance/permit_parent_compatibility.json"
@@ -166,7 +170,10 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_parent_full_dry_run"] == "provenance/permit_parent_full_dry_run.json"
     assert decision["next_gate"]["permit_parent_full_dry_run_status"] == "PASSED_3010802_ROWS"
     assert decision["next_gate"]["permit_parent_materialization_plan"] == "provenance/permit_parent_materialization_plan.json"
-    assert decision["next_gate"]["permit_parent_materialization_status"] == "IMPLEMENTED_NOT_EXECUTED"
+    assert decision["next_gate"]["permit_parent_materialization"] == "provenance/permit_parent_materialization.json"
+    assert decision["next_gate"]["permit_parent_materialization_status"] == "COMPLETED_PASS_VERIFIED"
+    assert decision["next_gate"]["geospatial_full_axis"] == "provenance/geospatial_full_axis.json"
+    assert decision["next_gate"]["geospatial_full_axis_status"] == "PASSED_REVIEWED_CURRENT_V1"
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -201,10 +208,10 @@ def test_permit_parent_full_dry_run_is_complete_and_aggregate_only() -> None:
     assert all(value is False for value in review["privacy"].values())
 
 
-def test_permit_parent_materialization_plan_is_local_private_and_not_executed() -> None:
+def test_permit_parent_materialization_plan_records_completed_verified_execution() -> None:
     plan = load_permit_parent_materialization_plan()
     assert validate_permit_parent_materialization_plan(plan) == []
-    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["execution_status"] == "COMPLETED_PASS_VERIFIED"
     assert plan["scope"]["public_row_level_release_approved"] is False
     assert plan["writer_contract"]["library_version"] == "21.0.0"
     assert plan["writer_contract"]["compression"] == "ZSTD"
@@ -212,6 +219,18 @@ def test_permit_parent_materialization_plan_is_local_private_and_not_executed() 
         "src/korea_business_lifecycle/canonical_materialization_verify.py"
     )
     assert plan["implementation"]["verification_script"] == "scripts/verify_permit_parent_build.py"
+    assert plan["result_provenance"] == "provenance/permit_parent_materialization.json"
+
+
+def test_permit_parent_materialization_result_is_verified_and_private() -> None:
+    review = load_permit_parent_materialization()
+    assert validate_permit_parent_materialization(review) == []
+    assert review["scope"]["build_id"] == "permit-v1-9908225df465e2ff"
+    assert review["scope"]["rows_total"] == 3_010_802
+    assert review["scope"]["output_bytes_total"] == 165_176_236
+    assert review["verification"]["parquet_hashes_verified"] is True
+    assert review["verification"]["parquet_schemas_verified"] is True
+    assert review["privacy"]["publication_status_changed"] is False
 
 
 def test_bounded_geospatial_axis_probe_prefers_source_x_easting_without_enabling_wgs84() -> None:
@@ -224,11 +243,23 @@ def test_bounded_geospatial_axis_probe_prefers_source_x_easting_without_enabling
     assert review["scope"]["wgs84_generation_approved"] is False
 
 
-def test_full_geospatial_axis_plan_is_ready_but_keeps_wgs84_blocked() -> None:
+def test_full_geospatial_axis_plan_records_completed_reviewed_execution() -> None:
     plan = load_geospatial_full_axis_plan()
     assert validate_geospatial_full_axis_plan(plan) == []
     assert plan["scope"]["expected_rows_total"] == 3_010_802
     assert plan["scope"]["expected_coordinate_pairs_total_from_prior_profile"] == 2_811_767
-    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["execution_status"] == "COMPLETED_PASS_REVIEWED"
     assert plan["scope"]["wgs84_columns_generated"] is False
     assert plan["interpretation_policy"]["wgs84_generation_approved_before_execution"] is False
+    assert plan["result_provenance"] == "provenance/geospatial_full_axis.json"
+
+
+def test_full_geospatial_axis_result_approves_local_derivation_only() -> None:
+    review = load_geospatial_full_axis()
+    assert validate_geospatial_full_axis(review) == []
+    assert review["scope"]["coordinate_pairs_total"] == 2_811_767
+    assert review["method"]["candidate_a_only_match"] == 1_943_824
+    assert review["method"]["candidate_b_only_match"] == 0
+    assert review["review"]["coordinate_axis_order_verified_nationwide"] is True
+    assert review["review"]["local_wgs84_derivation_approved"] is True
+    assert review["review"]["public_wgs84_release_approved"] is False

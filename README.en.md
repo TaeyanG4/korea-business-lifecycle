@@ -20,7 +20,7 @@ No nationwide raw data, full-history harvesting, lifecycle reconstruction, or Ka
 - No source primary key is assumed.
 - Permit date is not automatically treated as physical opening date.
 - Closure dates and status values are not converted into closure labels before semantic verification.
-- EPSG:5174 is documented for the three v1 sources, but source X/Y meanings and axis order remain to be verified.
+- EPSG:5174 is documented for the three v1 sources, and full current-v1 QA supports `좌표정보(X)=easting` and `좌표정보(Y)=northing`. This interpretation is scoped to the currently approved artifacts and future snapshots require revalidation.
 - Public accessibility and permission to redistribute on Kaggle are separate gates.
 - Real source data lives in the repository-local but Git-ignored `data/local/` runtime directory. Raw/history/staging/processed/log artifacts under it are never tracked.
 
@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and two `03→01` source-state reversals are confirmed, so code `03` is not treated as irreversible terminal closure. The v1 `PERMIT` and `PERMIT_STATUS_EPISODE` schemas are frozen. The current-snapshot → `PERMIT` transformer passed synthetic validation, bounded real compatibility, and the **complete 3,010,802-row full dry run** with zero duplicate linkage candidates. A local-only Parquet/ZSTD materializer pinned to the exact approved hashes and an independent post-build verifier are implemented and tested. Bounded geospatial QA on 15,000 pairs strongly supports `좌표정보(X)=easting` and `좌표정보(Y)=northing` from coarse address-region consistency, but WGS84 remains blocked pending nationwide full-snapshot QA. That aggregate-only 3,010,802-row geospatial validator is also implemented and awaits the long user execution. Public row-level release, WGS84 generation, and episode reconstruction remain disabled.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and two `03→01` source-state reversals are confirmed, so code `03` is not treated as irreversible terminal closure. The v1 `PERMIT` and `PERMIT_STATUS_EPISODE` schemas remain frozen. The current-snapshot → `PERMIT` transformer passed the complete **3,010,802-row full dry run** with zero duplicate linkage candidates. Local production build `permit-v1-9908225df465e2ff` was then materialized as Parquet/ZSTD for all 3,010,802 rows, and an independent verifier rechecked hashes, schemas, ZSTD compression, and quality aggregates. Full geospatial QA inspected all 2,811,767 coordinate pairs; among 2,631,605 pairs eligible for coarse address-region comparison, `X=easting/Y=northing` matched 99.958% and there were zero candidate-B-only matches. Local WGS84 derivation is therefore approved for exactly these current-v1 artifacts, but it will be implemented as a separate enrichment rather than changing the frozen 26-column parent. Public row-level release and episode reconstruction remain blocked.
 
 ## Documentation
 

@@ -17,16 +17,17 @@ official source evidence
       ↳ bounded real-snapshot compatibility: passed (256 rows/source)
       ↳ full-snapshot streaming dry run: passed (3,010,802 rows)
   → local PERMIT Parquet/ZSTD materialization
-      ↳ builder: implemented/tested
-      ↳ production execution: pending user run
+      ↳ production build: completed (3,010,802 rows)
+      ↳ independent verifier: passed
   → geospatial source-field QA
       ↳ bounded axis probe: X=easting/Y=northing strongly preferred
-      ↳ full-snapshot aggregate validator: implemented / user execution pending
-      ↳ WGS84 generation: blocked
+      ↳ full-snapshot aggregate validator: passed/reviewed (2,811,767 coordinate pairs)
+      ↳ local WGS84 derivation: approved for exact current-v1 artifacts
+      ↳ frozen PERMIT parent mutation: prohibited; use separate enrichment
   → separate publication review
 ```
 
-The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer passed synthetic validation, bounded real compatibility, and the complete 3,010,802-row full dry run. A local-only Parquet/ZSTD builder restricted to exact approved SHA-256 inputs is implemented and tested. Bounded geospatial QA strongly supports source X=easting/Y=northing and a full-snapshot aggregate validator is implemented, but it has not run yet, so the schema axis-validation flag and WGS84 generation remain disabled. Production materialization and full geospatial validation await long user execution; publication and episode reconstruction remain blocked.
+The v1 grain and both canonical schema contracts remain frozen. The current-snapshot → `PERMIT` transformer and production Parquet/ZSTD build are both complete and verified at 3,010,802 rows. Full geospatial QA inspected all 2,811,767 coordinate pairs and adopted source X=easting/Y=northing for the exact approved current-v1 artifacts. The frozen `PERMIT` schema hash and parent build are not changed; WGS84 is added only through a separately versioned enrichment. Publication and episode reconstruction remain blocked.
 
 ## Data storage rule
 

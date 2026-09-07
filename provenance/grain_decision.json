@@ -71,9 +71,14 @@
     "bounded_geospatial_axis_probe": "provenance/geospatial_axis_probe.json",
     "bounded_geospatial_axis_assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
     "full_geospatial_axis_plan": "provenance/geospatial_full_axis_plan.json",
-    "full_geospatial_axis_status": "IMPLEMENTED_NOT_EXECUTED",
-    "coordinate_axis_order_verified_nationwide": false,
-    "wgs84_generation_approved": false
+    "full_geospatial_axis_result": "provenance/geospatial_full_axis.json",
+    "full_geospatial_axis_status": "PASSED_REVIEWED_CURRENT_V1",
+    "coordinate_axis_order_verified_nationwide": true,
+    "coordinate_axis_verification_scope": "exact 2026-09-07 current-v1 artifacts only; revalidate future snapshots",
+    "source_x_interpretation": "EASTING",
+    "source_y_interpretation": "NORTHING",
+    "local_wgs84_generation_approved": true,
+    "public_wgs84_release_approved": false
   },
   "hard_rules_for_next_phase": [
     "canonical schema must keep permit identity separate from establishment identity",
@@ -85,7 +90,7 @@
     "production episode reconstruction remains disabled until an explicit bounded history-observation strategy is approved"
   ],
   "next_gate": {
-    "phase": "Phase 5 Canonical Parent Transformation",
+    "phase": "Phase 6 Geospatial Enrichment",
     "permit_parent_schema": "schemas/permit_parent.v1.json",
     "permit_parent_schema_status": "FROZEN",
     "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
@@ -98,7 +103,10 @@
     "permit_parent_full_dry_run": "provenance/permit_parent_full_dry_run.json",
     "permit_parent_full_dry_run_status": "PASSED_3010802_ROWS",
     "permit_parent_materialization_plan": "provenance/permit_parent_materialization_plan.json",
-    "permit_parent_materialization_status": "IMPLEMENTED_NOT_EXECUTED",
-    "goal": "execute the local-only production PERMIT Parquet/ZSTD materialization for the exact full-dry-run-approved snapshots; keep public release, WGS84 generation and episode reconstruction disabled"
+    "permit_parent_materialization": "provenance/permit_parent_materialization.json",
+    "permit_parent_materialization_status": "COMPLETED_PASS_VERIFIED",
+    "geospatial_full_axis": "provenance/geospatial_full_axis.json",
+    "geospatial_full_axis_status": "PASSED_REVIEWED_CURRENT_V1",
+    "goal": "implement separately versioned local WGS84 enrichment from the verified immutable PERMIT build; keep the frozen parent unchanged, public release blocked, and episode reconstruction disabled"
   }
 }

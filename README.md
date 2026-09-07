@@ -20,7 +20,7 @@
 - 소스의 기본키(PK)를 추정하지 않습니다.
 - `인허가일자`를 실제 개업일로 자동 해석하지 않습니다.
 - 폐업일자나 상태값의 의미를 검증 전에는 폐업 라벨로 사용하지 않습니다.
-- EPSG:5174는 v1 공식 설명에서 확인되지만, 실제 X/Y 필드 의미와 축 순서는 별도로 검증합니다.
+- EPSG:5174는 v1 공식 설명에서 확인됐고, 현재 v1 전체 snapshot QA는 `좌표정보(X)=easting`, `좌표정보(Y)=northing`을 지지합니다. 이 해석은 현재 승인된 artifact에 한정하며 미래 snapshot은 재검증합니다.
 - 공공데이터의 공개 접근 가능성과 Kaggle 재배포 허가는 별개로 판정합니다.
 - 실데이터는 저장소 내부의 Git-ignored 전용 경로 `data/local/`에서 다룹니다. 이 경로 아래의 raw/history/staging/processed/log 산출물은 Git에 포함되지 않습니다.
 
@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 후속 3일 probe에서 두 `03→01` 사례가 실제 `폐업→영업/정상` source-state reversal로 확인됐습니다. 따라서 `03`을 irreversible terminal closure로 사용하는 규칙은 채택하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 두 schema를 동결했습니다. current snapshot → `PERMIT` transformer는 synthetic, source별 256행 bounded compatibility, **전체 3,010,802행 full dry run**을 모두 통과했고 linkage candidate 중복은 0건입니다. 동일 hash의 approved source만 받는 local-only Parquet/ZSTD materializer와 독립 post-build verifier도 구현·테스트했습니다. geospatial bounded QA에서는 15,000쌍 모두 주소 거시권역 비교가 `좌표정보(X)=easting`, `좌표정보(Y)=northing`을 강하게 지지했지만, 전국 전수 QA 전이므로 WGS84 생성은 계속 차단합니다. 3,010,802행 전체를 검사하는 aggregate-only geospatial validator도 구현되어 장시간 사용자 실행 대기 상태입니다. episode 경계는 censoring을 보존하며 status `03` terminal, status `05` 의미, exact transition을 추론하지 않습니다. public row-level release, WGS84 생성, episode reconstruction은 아직 활성화하지 않습니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 두 `03→01` source-state reversal이 확인되어 `03`을 irreversible terminal closure로 사용하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 두 schema를 동결했습니다. current snapshot → `PERMIT` transformer는 **전체 3,010,802행 full dry run**을 통과했고 linkage candidate 중복은 0건입니다. local-only Parquet/ZSTD production build `permit-v1-9908225df465e2ff`도 3,010,802행으로 생성됐으며 독립 verifier가 hash/schema/ZSTD/quality aggregate를 모두 재검증했습니다. geospatial full QA는 2,811,767 coordinate pair 전체를 검사했고, 주소 거시권역 평가 가능 2,631,605건에서 `X=easting/Y=northing`이 99.958% 일치하며 반대 해석만 단독으로 맞는 사례는 0건이었습니다. 따라서 정확히 이 current-v1 artifact 집합에 대해서는 local WGS84 derivation을 승인하되 frozen 26컬럼 parent는 변경하지 않고 별도 enrichment로 구현합니다. public row-level release와 episode reconstruction은 계속 차단합니다.
 
 ## 문서
 

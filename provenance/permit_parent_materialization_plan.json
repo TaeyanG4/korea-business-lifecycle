@@ -8,7 +8,7 @@
     "output_root": "data/local/canonical/permit/v1/<build_id>",
     "git_ignored": true,
     "public_row_level_release_approved": false,
-    "execution_status": "NOT_EXECUTED"
+    "execution_status": "COMPLETED_PASS_VERIFIED"
   },
   "writer_contract": {
     "library": "pyarrow",
@@ -48,5 +48,6 @@
     "default_mode": "PLAN_ONLY",
     "execute_flag": "--execute"
   },
-  "next_gate": "user executes the long local production materialization, then runs the independent immutable-build verifier before the tracked materialization gate is marked complete"
+  "result_provenance": "provenance/permit_parent_materialization.json",
+  "next_gate": "use the verified immutable local PERMIT build as parent input for separately versioned derived products; public redistribution remains blocked"
 }

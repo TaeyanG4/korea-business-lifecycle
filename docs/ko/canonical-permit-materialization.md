@@ -86,4 +86,4 @@ verifier도 row-level 값을 출력하지 않고 aggregate 검증 결과만 출�
 
 ## 현재 상태
 
-코드, synthetic Parquet round-trip, schema/압축 검증, immutable-output 보호, hash mismatch 실패 원자성 테스트, 독립 사후 verifier, 실제 artifact plan 검증까지 완료했습니다. 실제 3,010,802행 production materialization은 아직 실행하지 않았습니다.
+실제 production build `permit-v1-9908225df465e2ff`가 3,010,802행으로 완료됐고 총 Parquet 크기는 165,176,236 bytes입니다. 독립 verifier가 manifest, 세 Parquet SHA-256, row count, frozen Arrow schema, ZSTD, full-dry-run quality aggregate를 모두 재검증해 PASS했습니다. 이 완료는 public row-level release 승인을 의미하지 않습니다.

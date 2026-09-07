@@ -17,16 +17,17 @@
       ↳ bounded real-snapshot compatibility: passed (256 rows/source)
       ↳ full-snapshot streaming dry run: passed (3,010,802 rows)
   → local PERMIT Parquet/ZSTD materialization
-      ↳ builder: implemented/tested
-      ↳ production execution: pending user run
+      ↳ production build: completed (3,010,802 rows)
+      ↳ independent verifier: passed
   → geospatial source-field QA
       ↳ bounded axis probe: X=easting/Y=northing strongly preferred
-      ↳ full-snapshot aggregate validator: implemented / user execution pending
-      ↳ WGS84 generation: blocked
+      ↳ full-snapshot aggregate validator: passed/reviewed (2,811,767 coordinate pairs)
+      ↳ local WGS84 derivation: approved for exact current-v1 artifacts
+      ↳ frozen PERMIT parent mutation: prohibited; use separate enrichment
   → 별도 공개 검토
 ```
 
-v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer는 synthetic, source별 256행 bounded compatibility, 전체 3,010,802행 full dry run을 모두 통과했습니다. 동일 SHA-256 input에만 허용되는 local-only production Parquet/ZSTD builder도 구현·테스트했습니다. geospatial bounded QA는 source X=easting/Y=northing을 강하게 지지하며 전수 validator도 구현됐지만 아직 미실행이므로 schema의 axis 검증 flag와 WGS84 generation은 계속 비활성화합니다. production materialization, full geospatial scan은 사용자 장시간 실행 대기 상태이며 public release, episode reconstruction, Kaggle publication은 차단 상태입니다.
+v1 grain과 두 canonical schema 계약은 동결됐고, current snapshot → `PERMIT` transformer와 production Parquet/ZSTD build가 모두 3,010,802행 기준으로 완료·검증됐습니다. full geospatial QA도 2,811,767 coordinate pair 전체를 검사해 source X=easting/Y=northing 해석을 현재 승인된 v1 artifact 범위에서 채택했습니다. 기존 frozen `PERMIT` schema hash와 parent build는 변경하지 않고 WGS84는 별도 versioned enrichment로만 추가합니다. public release, episode reconstruction, Kaggle publication은 계속 차단 상태입니다.
 
 ## 데이터 저장 원칙
 

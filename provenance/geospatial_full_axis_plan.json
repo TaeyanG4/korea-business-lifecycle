@@ -6,7 +6,7 @@
     "expected_rows_total": 3010802,
     "expected_coordinate_pairs_total_from_prior_profile": 2811767,
     "declared_source_crs": "EPSG:5174",
-    "execution_status": "NOT_EXECUTED",
+    "execution_status": "COMPLETED_PASS_REVIEWED",
     "network_access_required": false,
     "row_level_coordinate_values_recorded": false,
     "row_level_address_values_recorded": false,
@@ -64,5 +64,6 @@
     "full_scan_pass_alone_does_not_approve_publication": true,
     "result_requires_review_before_schema_metadata_change": true
   },
-  "next_gate": "user executes the full-snapshot aggregate coordinate-axis validation and returns the result; review it before enabling any WGS84 derivation"
+  "result_provenance": "provenance/geospatial_full_axis.json",
+  "next_gate": "the reviewed result approves local WGS84 derivation for the exact current-v1 artifacts using source X as easting and source Y as northing; keep public release blocked"
 }

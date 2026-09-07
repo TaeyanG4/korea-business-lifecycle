@@ -69,12 +69,20 @@ def load_permit_parent_materialization_plan() -> dict[str, Any]:
     return load_json("provenance/permit_parent_materialization_plan.json")
 
 
+def load_permit_parent_materialization() -> dict[str, Any]:
+    return load_json("provenance/permit_parent_materialization.json")
+
+
 def load_geospatial_axis_probe() -> dict[str, Any]:
     return load_json("provenance/geospatial_axis_probe.json")
 
 
 def load_geospatial_full_axis_plan() -> dict[str, Any]:
     return load_json("provenance/geospatial_full_axis_plan.json")
+
+
+def load_geospatial_full_axis() -> dict[str, Any]:
+    return load_json("provenance/geospatial_full_axis.json")
 
 
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
@@ -393,12 +401,20 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("grain decision bounded geospatial assessment changed")
     if evidence.get("full_geospatial_axis_plan") != "provenance/geospatial_full_axis_plan.json":
         errors.append("grain decision full geospatial axis plan reference changed")
-    if evidence.get("full_geospatial_axis_status") != "IMPLEMENTED_NOT_EXECUTED":
+    if evidence.get("full_geospatial_axis_result") != "provenance/geospatial_full_axis.json":
+        errors.append("grain decision full geospatial axis result reference changed")
+    if evidence.get("full_geospatial_axis_status") != "PASSED_REVIEWED_CURRENT_V1":
         errors.append("grain decision full geospatial axis status changed")
-    if evidence.get("coordinate_axis_order_verified_nationwide") is not False:
-        errors.append("grain decision must not claim nationwide coordinate-axis verification")
-    if evidence.get("wgs84_generation_approved") is not False:
-        errors.append("grain decision must keep WGS84 generation blocked")
+    if evidence.get("coordinate_axis_order_verified_nationwide") is not True:
+        errors.append("grain decision must record completed current-v1 nationwide axis verification")
+    if evidence.get("source_x_interpretation") != "EASTING":
+        errors.append("grain decision source X interpretation changed")
+    if evidence.get("source_y_interpretation") != "NORTHING":
+        errors.append("grain decision source Y interpretation changed")
+    if evidence.get("local_wgs84_generation_approved") is not True:
+        errors.append("grain decision must approve local WGS84 derivation after reviewed full QA")
+    if evidence.get("public_wgs84_release_approved") is not False:
+        errors.append("grain decision must keep public WGS84 release blocked")
 
     next_gate = decision.get("next_gate", {})
     if next_gate.get("permit_parent_schema") != "schemas/permit_parent.v1.json":
@@ -409,8 +425,8 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit status episode schema gate reference changed")
     if next_gate.get("permit_status_episode_schema_status") != "FROZEN":
         errors.append("permit status episode schema gate must remain frozen")
-    if next_gate.get("phase") != "Phase 5 Canonical Parent Transformation":
-        errors.append("next gate must remain Phase 5 canonical parent transformation")
+    if next_gate.get("phase") != "Phase 6 Geospatial Enrichment":
+        errors.append("next gate must be Phase 6 geospatial enrichment")
     if next_gate.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
         errors.append("permit parent transformer reference changed")
     if next_gate.get("permit_parent_transformer_status") != "FULL_SNAPSHOT_VALIDATED":
@@ -429,8 +445,14 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit parent full dry-run pass status changed")
     if next_gate.get("permit_parent_materialization_plan") != "provenance/permit_parent_materialization_plan.json":
         errors.append("permit parent materialization plan reference changed")
-    if next_gate.get("permit_parent_materialization_status") != "IMPLEMENTED_NOT_EXECUTED":
+    if next_gate.get("permit_parent_materialization") != "provenance/permit_parent_materialization.json":
+        errors.append("permit parent materialization result reference changed")
+    if next_gate.get("permit_parent_materialization_status") != "COMPLETED_PASS_VERIFIED":
         errors.append("permit parent materialization status changed")
+    if next_gate.get("geospatial_full_axis") != "provenance/geospatial_full_axis.json":
+        errors.append("geospatial full-axis result reference changed")
+    if next_gate.get("geospatial_full_axis_status") != "PASSED_REVIEWED_CURRENT_V1":
+        errors.append("geospatial full-axis status changed")
     return errors
 
 
@@ -660,8 +682,8 @@ def validate_permit_parent_materialization_plan(plan: dict[str, Any]) -> list[st
         errors.append("materialization output must remain Git-ignored")
     if scope.get("public_row_level_release_approved") is not False:
         errors.append("materialization plan must keep public row-level release blocked")
-    if scope.get("execution_status") != "NOT_EXECUTED":
-        errors.append("tracked materialization plan must remain not executed")
+    if scope.get("execution_status") != "COMPLETED_PASS_VERIFIED":
+        errors.append("tracked materialization plan must record completed verified execution")
 
     writer = plan.get("writer_contract", {})
     expected_writer = {
@@ -714,6 +736,65 @@ def validate_permit_parent_materialization_plan(plan: dict[str, Any]) -> list[st
         errors.append("materialization default mode changed")
     if implementation.get("execute_flag") != "--execute":
         errors.append("materialization execute flag changed")
+    if plan.get("result_provenance") != "provenance/permit_parent_materialization.json":
+        errors.append("materialization result provenance reference changed")
+    return errors
+
+
+def validate_permit_parent_materialization(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != "LOCAL_PRODUCTION_PERMIT_PARENT_MATERIALIZED_AND_VERIFIED":
+        errors.append("permit materialization decision changed")
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("permit materialization scope must exactly match v1 sources")
+    if scope.get("build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("permit materialization build id changed")
+    if scope.get("rows_total") != 3_010_802:
+        errors.append("permit materialization row total changed")
+    if scope.get("output_bytes_total") != 165_176_236:
+        errors.append("permit materialization output byte total changed")
+    if scope.get("git_ignored") is not True:
+        errors.append("permit materialization output must remain Git-ignored")
+    for key in ("public_row_level_release_approved", "wgs84_generated", "episode_reconstruction_performed"):
+        if scope.get(key) is not False:
+            errors.append(f"permit materialization must keep {key}=false")
+
+    verification = review.get("verification", {})
+    for key in (
+        "manifest_verified",
+        "parquet_hashes_verified",
+        "parquet_schemas_verified",
+        "quality_aggregates_match_full_dry_run",
+        "zstd_verified",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"permit materialization verification {key} must remain true")
+    if verification.get("rows_verified_total") != 3_010_802:
+        errors.append("permit materialization verified row total changed")
+    if verification.get("row_level_values_recorded") is not False:
+        errors.append("permit materialization provenance must remain aggregate-only")
+
+    results = review.get("results", [])
+    expected_rows = {
+        "general_restaurants": 2_295_369,
+        "rest_cafes": 645_952,
+        "bakeries": 69_481,
+    }
+    if {item.get("source_key") for item in results} != V1_SOURCE_KEYS or len(results) != 3:
+        errors.append("permit materialization results must exactly cover three v1 sources")
+    if sum(int(item.get("rows", 0)) for item in results) != 3_010_802:
+        errors.append("permit materialization result rows do not sum to full scope")
+    if sum(int(item.get("output_bytes", 0)) for item in results) != 165_176_236:
+        errors.append("permit materialization result bytes do not sum to verified total")
+    for item in results:
+        source_key = item.get("source_key")
+        if item.get("rows") != expected_rows.get(source_key):
+            errors.append(f"{source_key}: materialized row count changed")
+        if item.get("status") != "PASS":
+            errors.append(f"{source_key}: materialization status changed")
+        if len(str(item.get("output_sha256", ""))) != 64:
+            errors.append(f"{source_key}: materialization output SHA-256 invalid")
     return errors
 
 
@@ -807,8 +888,8 @@ def validate_geospatial_full_axis_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("full geospatial axis expected coordinate-pair total changed")
     if scope.get("declared_source_crs") != "EPSG:5174":
         errors.append("full geospatial axis declared CRS changed")
-    if scope.get("execution_status") != "NOT_EXECUTED":
-        errors.append("tracked full geospatial axis plan must remain not executed")
+    if scope.get("execution_status") != "COMPLETED_PASS_REVIEWED":
+        errors.append("tracked full geospatial axis plan must record completed reviewed execution")
     for key in (
         "network_access_required",
         "row_level_coordinate_values_recorded",
@@ -863,4 +944,73 @@ def validate_geospatial_full_axis_plan(plan: dict[str, Any]) -> list[str]:
         errors.append("full geospatial axis scan must remain separate from publication approval")
     if policy.get("result_requires_review_before_schema_metadata_change") is not True:
         errors.append("full geospatial axis result must require review before schema change")
+    if plan.get("result_provenance") != "provenance/geospatial_full_axis.json":
+        errors.append("full geospatial axis result provenance reference changed")
+    return errors
+
+
+def validate_geospatial_full_axis(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != (
+        "FULL_SNAPSHOT_AXIS_QA_PASSED_X_EASTING_Y_NORTHING_APPROVED_FOR_LOCAL_DERIVATION"
+    ):
+        errors.append("full geospatial axis review decision changed")
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("full geospatial axis review must exactly cover v1 sources")
+    if scope.get("rows_examined_total") != 3_010_802:
+        errors.append("full geospatial axis reviewed row total changed")
+    if scope.get("coordinate_pairs_total") != 2_811_767:
+        errors.append("full geospatial axis coordinate-pair total changed")
+    if scope.get("macro_region_eligible_pairs_total") != 2_631_605:
+        errors.append("full geospatial axis eligible-pair total changed")
+    if scope.get("declared_source_crs") != "EPSG:5174":
+        errors.append("full geospatial axis reviewed CRS changed")
+    for key in ("row_level_coordinate_values_recorded", "row_level_address_values_recorded", "wgs84_columns_generated"):
+        if scope.get(key) is not False:
+            errors.append(f"full geospatial axis review must keep {key}=false")
+    if scope.get("future_snapshot_revalidation_required") is not True:
+        errors.append("future geospatial snapshots must require revalidation")
+
+    method = review.get("method", {})
+    if method.get("candidate_a_match") != 2_630_497:
+        errors.append("full geospatial candidate A match count changed")
+    if method.get("candidate_b_match") != 686_673:
+        errors.append("full geospatial candidate B match count changed")
+    if method.get("candidate_a_only_match") != 1_943_824:
+        errors.append("full geospatial candidate A-only count changed")
+    if method.get("candidate_b_only_match") != 0:
+        errors.append("full geospatial candidate B-only count changed")
+    if method.get("neither_match") != 1_108:
+        errors.append("full geospatial neither-match count changed")
+    if method.get("assessment_consistent_across_sources") is not True:
+        errors.append("full geospatial assessment must remain consistent across sources")
+    if method.get("assessment") != "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED":
+        errors.append("full geospatial assessment changed")
+
+    results = review.get("results", [])
+    if {item.get("source_key") for item in results} != V1_SOURCE_KEYS or len(results) != 3:
+        errors.append("full geospatial results must exactly cover three v1 sources")
+    if sum(int(item.get("coordinate_pairs", 0)) for item in results) != 2_811_767:
+        errors.append("full geospatial source coordinate-pair counts do not sum")
+    if any(item.get("partial_coordinate_pairs") != 0 for item in results):
+        errors.append("full geospatial review observed partial coordinate pairs")
+    if any(item.get("candidate_b_only_match") != 0 for item in results):
+        errors.append("full geospatial review observed candidate-B-only matches")
+    if any(item.get("status") != "PASS" for item in results):
+        errors.append("full geospatial review contains a non-passing source")
+
+    reviewed = review.get("review", {})
+    if reviewed.get("source_x_interpretation") != "EASTING":
+        errors.append("reviewed source X interpretation changed")
+    if reviewed.get("source_y_interpretation") != "NORTHING":
+        errors.append("reviewed source Y interpretation changed")
+    if reviewed.get("coordinate_axis_order_verified_nationwide") is not True:
+        errors.append("reviewed current-v1 axis order must remain verified")
+    if reviewed.get("local_wgs84_derivation_approved") is not True:
+        errors.append("reviewed full geospatial result must approve local WGS84 derivation")
+    if reviewed.get("public_wgs84_release_approved") is not False:
+        errors.append("reviewed full geospatial result must keep public WGS84 release blocked")
+    if reviewed.get("frozen_permit_parent_schema_mutated") is not False:
+        errors.append("geospatial review must not mutate the frozen PERMIT parent schema")
     return errors

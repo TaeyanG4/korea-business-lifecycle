@@ -1,0 +1,76 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "LOCAL_PRODUCTION_PERMIT_PARENT_MATERIALIZED_AND_VERIFIED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "build_id": "permit-v1-9908225df465e2ff",
+    "rows_total": 3010802,
+    "output_bytes_total": 165176236,
+    "output_root": "data/local/canonical/permit/v1/permit-v1-9908225df465e2ff",
+    "git_ignored": true,
+    "public_row_level_release_approved": false,
+    "wgs84_generated": false,
+    "episode_reconstruction_performed": false
+  },
+  "writer_contract": {
+    "library": "pyarrow",
+    "library_version": "21.0.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000
+  },
+  "verification": {
+    "manifest_verified": true,
+    "parquet_hashes_verified": true,
+    "parquet_schemas_verified": true,
+    "quality_aggregates_match_full_dry_run": true,
+    "zstd_verified": true,
+    "rows_verified_total": 3010802,
+    "row_level_values_recorded": false
+  },
+  "results": [
+    {
+      "source_key": "general_restaurants",
+      "rows": 2295369,
+      "output_file": "general_restaurants.parquet",
+      "output_bytes": 122363398,
+      "output_sha256": "15f11071b2dc6453707387a8b7aef013f1f991748c3b108397ce9345a269de03",
+      "parquet_row_groups": 46,
+      "permit_date_quality": {"INVALID": 4, "VALID": 2295365},
+      "closure_date_quality": {"MISSING": 676350, "VALID": 1619019},
+      "status": "PASS"
+    },
+    {
+      "source_key": "rest_cafes",
+      "rows": 645952,
+      "output_file": "rest_cafes.parquet",
+      "output_bytes": 38467652,
+      "output_sha256": "8ae5d99499ac7efd5924e717e448e4be87f85ffc3229f2a94bca6d208987deb3",
+      "parquet_row_groups": 13,
+      "permit_date_quality": {"VALID": 645952},
+      "closure_date_quality": {"MISSING": 198753, "VALID": 447199},
+      "status": "PASS"
+    },
+    {
+      "source_key": "bakeries",
+      "rows": 69481,
+      "output_file": "bakeries.parquet",
+      "output_bytes": 4345186,
+      "output_sha256": "be558165f1e1235e4b6eded1866df3d871e6ae9c2b339428f9c36b95858dee89",
+      "parquet_row_groups": 2,
+      "permit_date_quality": {"VALID": 69481},
+      "closure_date_quality": {"MISSING": 20015, "VALID": 49466},
+      "status": "PASS"
+    }
+  ],
+  "privacy": {
+    "row_level_values_recorded": false,
+    "output_artifacts_are_local_private_runtime_data": true,
+    "publication_status_changed": false
+  },
+  "next_gate": "use the verified immutable PERMIT build as the parent input for separately versioned geospatial enrichment; public redistribution remains blocked"
+}
