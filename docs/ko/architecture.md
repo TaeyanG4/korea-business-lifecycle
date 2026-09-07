@@ -9,15 +9,15 @@
   → Git-ignored 로컬 raw 저장소 (`data/local/`)
   → staging/profile
   → grain/identity/lifecycle audit
-  → canonical PERMIT parent
-  → derived PERMIT_STATUS_EPISODE
   → canonical schema freeze
+      ↳ PERMIT parent: frozen
+      ↳ PERMIT_STATUS_EPISODE: next gate
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → 별도 공개 검토
 ```
 
-v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했습니다. full-history ingestion, production episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
+v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고 `PERMIT` parent schema까지 동결했습니다. episode schema, full-history ingestion, production episode reconstruction, Kaggle publication은 아직 구현하지 않습니다.
 
 ## 데이터 저장 원칙
 

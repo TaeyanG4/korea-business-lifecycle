@@ -141,3 +141,5 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["identity_policy"]["mng_no_primary_key_declared"] is False
     assert decision["episode_semantics"]["active_end_observations"] == "right-censored"
     assert decision["episode_semantics"]["closure_code_03_irreversible"] is False
+    assert decision["next_gate"]["permit_parent_schema"] == "schemas/permit_parent.v1.json"
+    assert decision["next_gate"]["permit_parent_schema_status"] == "FROZEN"

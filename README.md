@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 후속 3일 probe에서 두 `03→01` 사례가 실제 `폐업→영업/정상` source-state reversal로 확인됐습니다. 따라서 `03`을 irreversible terminal closure로 사용하는 규칙은 채택하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했으며, production episode reconstruction은 아직 활성화하지 않습니다. 인증키는 활성화됐으며 프로젝트는 Encoding/Decoding serviceKey를 모두 지원합니다. 실제 키는 Git에 커밋하지 않고 로컬 `.env` 또는 `KBL_DATA_GO_KR_SERVICE_KEY` 환경변수로만 전달합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 후속 3일 probe에서 두 `03→01` 사례가 실제 `폐업→영업/정상` source-state reversal로 확인됐습니다. 따라서 `03`을 irreversible terminal closure로 사용하는 규칙은 채택하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했고, `PERMIT` parent의 26컬럼 schema도 동결했습니다. production episode reconstruction은 아직 활성화하지 않습니다. 인증키는 활성화됐으며 프로젝트는 Encoding/Decoding serviceKey를 모두 지원합니다. 실제 키는 Git에 커밋하지 않고 로컬 `.env` 또는 `KBL_DATA_GO_KR_SERVICE_KEY` 환경변수로만 전달합니다.
 
 ## 문서
 
@@ -48,6 +48,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [Bounded history audit 결과](docs/ko/bounded-history-findings.md)
 - [03→01 전환 후속 probe](docs/ko/reverse-transition-probe.md)
 - [v1 Grain 결정](docs/ko/grain-decision.md)
+- [Canonical PERMIT parent schema](docs/ko/canonical-permit-schema.md)
 - [History 표본 확장 계획](docs/ko/history-sample-expansion.md)
 - [5개 자치단체 History 표본 확장 결과](docs/ko/expanded-history-findings.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)

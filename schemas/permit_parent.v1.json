@@ -1,0 +1,98 @@
+{
+  "schema_name": "permit_parent",
+  "schema_version": 1,
+  "checked_at": "2026-09-07",
+  "grain": "PERMIT",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "source_observation": "one selected current nationwide snapshot per source",
+    "history_rows_used_to_materialize_parent": false,
+    "establishment_identity_claim": false,
+    "source_primary_key_claim": false
+  },
+  "build_policy": {
+    "expected_unique_candidate": ["source_key", "management_number"],
+    "expected_unique_candidate_is_primary_key_claim": false,
+    "on_candidate_duplicate": "FAIL_CLOSED_AND_REVIEW_GRAIN",
+    "string_normalization": "strict source decode; trim leading/trailing whitespace; blank becomes null; no case folding, punctuation normalization, address normalization or entity resolution",
+    "identifier_policy": "authority codes, management numbers and postal codes remain strings; leading zeroes must never be numerically coerced",
+    "date_policy": "parse source permit/closure dates to date32; blank becomes null with MISSING quality; nonblank unparseable input becomes null with INVALID quality and remains recoverable from raw/staging",
+    "status_policy": "retain source status code/name fields only; do not create a canonical active/closed/terminal state in the parent table",
+    "coordinate_policy": "parse nonblank X/Y to float64 without CRS transformation; documented EPSG:5174 is metadata only until geospatial QA passes",
+    "publication_policy": "NOT_APPROVED_FOR_PUBLIC_ROW_LEVEL_BUILD"
+  },
+  "metadata": {
+    "declared_source_crs": "EPSG:5174",
+    "coordinate_axis_order_validated": false,
+    "grain_decision": "provenance/grain_decision.json",
+    "privacy_review": "provenance/privacy_review.json",
+    "source_registry": "provenance/source_registry.json"
+  },
+  "columns": [
+    {"name": "source_key", "logical_type": "string", "nullable": false, "role": "lineage", "derivation": "v1 source registry key"},
+    {"name": "source_row_number", "logical_type": "int64", "nullable": false, "role": "lineage", "derivation": "1-based data row number after the CSV header"},
+    {"name": "source_artifact_sha256", "logical_type": "string", "nullable": false, "role": "lineage", "derivation": "retrieval artifact SHA-256", "constraints": ["lowercase hex", "length 64"]},
+    {"name": "source_retrieved_at_utc", "logical_type": "timestamp[us,UTC]", "nullable": false, "role": "lineage", "derivation": "retrieval manifest UTC timestamp"},
+
+    {"name": "authority_code", "logical_type": "string", "nullable": false, "role": "source_identifier_component", "source_column": "개방자치단체코드"},
+    {"name": "management_number", "logical_type": "string", "nullable": false, "role": "bounded_continuity_candidate", "source_column": "관리번호"},
+    {"name": "permit_date", "logical_type": "date32", "nullable": true, "role": "permit_attribute", "source_column": "인허가일자"},
+    {"name": "permit_date_quality", "logical_type": "string", "nullable": false, "role": "quality", "derivation": "parse quality for 인허가일자", "allowed_values": ["VALID", "MISSING", "INVALID"]},
+
+    {"name": "source_status_code", "logical_type": "string", "nullable": true, "role": "source_status", "source_column": "영업상태코드"},
+    {"name": "source_status_name", "logical_type": "string", "nullable": true, "role": "source_status", "source_column": "영업상태명"},
+    {"name": "source_detail_status_code", "logical_type": "string", "nullable": true, "role": "source_status", "source_column": "상세영업상태코드"},
+    {"name": "source_detail_status_name", "logical_type": "string", "nullable": true, "role": "source_status", "source_column": "상세영업상태명"},
+    {"name": "closure_date", "logical_type": "date32", "nullable": true, "role": "source_lifecycle_attribute", "source_column": "폐업일자"},
+    {"name": "closure_date_quality", "logical_type": "string", "nullable": false, "role": "quality", "derivation": "parse quality for 폐업일자", "allowed_values": ["VALID", "MISSING", "INVALID"]},
+
+    {"name": "business_name", "logical_type": "string", "nullable": true, "role": "business_context", "source_column": "사업장명"},
+    {"name": "business_type_name", "logical_type": "string", "nullable": true, "role": "business_context", "source_column": "업태구분명"},
+    {"name": "hygiene_business_type_name", "logical_type": "string", "nullable": true, "role": "business_context", "source_column": "위생업태명"},
+
+    {"name": "lot_postal_code", "logical_type": "string", "nullable": true, "role": "location", "source_column": "소재지우편번호"},
+    {"name": "road_postal_code", "logical_type": "string", "nullable": true, "role": "location", "source_column": "도로명우편번호"},
+    {"name": "lot_address", "logical_type": "string", "nullable": true, "role": "location", "source_column": "지번주소"},
+    {"name": "road_address", "logical_type": "string", "nullable": true, "role": "location", "source_column": "도로명주소"},
+    {"name": "source_coordinate_x", "logical_type": "float64", "nullable": true, "role": "source_coordinate", "source_column": "좌표정보(X)"},
+    {"name": "source_coordinate_y", "logical_type": "float64", "nullable": true, "role": "source_coordinate", "source_column": "좌표정보(Y)"},
+
+    {"name": "source_data_update_type", "logical_type": "string", "nullable": true, "role": "source_lineage_attribute", "source_column": "데이터갱신구분"},
+    {"name": "source_data_updated_at_raw", "logical_type": "string", "nullable": true, "role": "source_lineage_attribute", "source_column": "데이터갱신시점"},
+    {"name": "source_last_modified_at_raw", "logical_type": "string", "nullable": true, "role": "source_lineage_attribute", "source_column": "최종수정시점"}
+  ],
+  "source_column_inventory": [
+    "개방자치단체코드", "관리번호", "인허가일자", "영업상태명", "폐업일자", "소재지면적", "소재지우편번호", "도로명우편번호", "사업장명", "업태구분명", "데이터갱신구분", "건물소유구분명", "공장사무직직원수", "공장생산직직원수", "공장판매직직원수", "급수시설구분명", "남성종사자수", "다중이용업소여부", "데이터갱신시점", "도로명주소", "등급구분명", "보증액", "본사직원수", "상세영업상태명", "상세영업상태코드", "시설총규모", "여성종사자수", "영업상태코드", "영업장주변구분명", "월세액", "위생업태명", "전통업소주된음식", "전통업소지정번호", "전화번호", "좌표정보(X)", "좌표정보(Y)", "지번주소", "홈페이지", "최종수정시점"
+  ],
+  "deferred_source_columns": [
+    {"source_column": "소재지면적", "reason": "unit/semantic normalization not frozen in the permit-parent milestone"},
+    {"source_column": "건물소유구분명", "reason": "not required for permit identity or lifecycle parent"},
+    {"source_column": "공장사무직직원수", "reason": "sparse/non-core workforce attribute"},
+    {"source_column": "공장생산직직원수", "reason": "sparse/non-core workforce attribute"},
+    {"source_column": "공장판매직직원수", "reason": "sparse/non-core workforce attribute"},
+    {"source_column": "급수시설구분명", "reason": "non-core facility attribute"},
+    {"source_column": "남성종사자수", "reason": "sparse/non-core workforce attribute"},
+    {"source_column": "다중이용업소여부", "reason": "semantic normalization deferred"},
+    {"source_column": "등급구분명", "reason": "non-core classification attribute"},
+    {"source_column": "보증액", "reason": "financial attribute excluded from lifecycle parent"},
+    {"source_column": "본사직원수", "reason": "sparse/non-core workforce attribute"},
+    {"source_column": "시설총규모", "reason": "unit/semantic normalization deferred"},
+    {"source_column": "여성종사자수", "reason": "sparse/non-core workforce attribute"},
+    {"source_column": "영업장주변구분명", "reason": "non-core location context"},
+    {"source_column": "월세액", "reason": "financial attribute excluded from lifecycle parent"},
+    {"source_column": "전통업소주된음식", "reason": "special-program attribute outside v1 parent core"},
+    {"source_column": "전통업소지정번호", "reason": "special-program attribute outside v1 parent core"},
+    {"source_column": "전화번호", "reason": "not required for lifecycle parent and public allowlist is not approved"},
+    {"source_column": "홈페이지", "reason": "not required for lifecycle parent and public allowlist is not approved"}
+  ],
+  "explicitly_absent_fields": [
+    "establishment_id",
+    "canonical_active_flag",
+    "canonical_closed_flag",
+    "terminal_event_flag",
+    "physical_open_date",
+    "wgs84_latitude",
+    "wgs84_longitude"
+  ],
+  "next_gate": "freeze PERMIT_STATUS_EPISODE schema; do not build nationwide episodes yet"
+}

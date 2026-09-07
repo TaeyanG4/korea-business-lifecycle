@@ -78,6 +78,8 @@
   ],
   "next_gate": {
     "phase": "Phase 4 Canonical Schema Freeze",
-    "goal": "define permit-parent columns and lifecycle-episode columns without resolving establishment identity or inventing terminal closure semantics"
+    "permit_parent_schema": "schemas/permit_parent.v1.json",
+    "permit_parent_schema_status": "FROZEN",
+    "goal": "freeze PERMIT_STATUS_EPISODE columns next without resolving establishment identity or inventing terminal closure semantics"
   }
 }
