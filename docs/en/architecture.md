@@ -46,7 +46,9 @@ official source evidence
       ↳ latest current numeric authority domain: exact 244 ingested/validated
       ↳ exact deleted numeric change-reference codes: 32; current+deleted candidate union: 276
       ↳ current observed authority count: 230; all are a subset of current 244
-      ↳ deleted-code date-effective history-filter semantics: unresolved
+      ↳ bounded semantics: deleted partitions freeze after reform while current partitions can keep evolving
+      ↳ full 32-code count-only probe: prepared, 384 requests, not executed
+      ↳ frozen legacy-partition inclusion policy: unresolved
       ↳ approved cadence: none
   → redistribution clarification gate
       ↳ source-use metadata: PASS
@@ -54,7 +56,7 @@ official source evidence
       ↳ raw/aggregate external redistribution: unresolved
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified. A bounded sparse-observation episode reconstructor and a network-free nationwide history cost model are implemented as well. The latest July official attachment is now parsed reproducibly: the exact 244 current numeric authority codes and 32 deleted numeric change-reference codes are ingested, hashed, and validated. Production Jan–Sep enumeration remains blocked because the pre-change `BASE_DATE` filtering semantics of deleted codes are not yet established by official documentation or execution. Source-use metadata is PASS, but external redistribution remains blocked until source-specific written clarification is archived.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified. The exact 244 current numeric authority codes and 32 deleted numeric codes are ingested, hashed, and validated, and authenticated bounded history execution is now available. Direct execution evidence shows deleted partitions evolving before the reform and then remaining queryable as frozen legacy state, while current partitions can continue evolving. The 276-code union therefore remains a cost-planning candidate rather than a current-state equivalent. Production enumeration stays blocked pending the full 32-code count probe, a legacy-partition inclusion policy, and cadence approval. Source-use metadata is PASS, but external redistribution remains blocked until source-specific written clarification is archived.
 
 ## Data storage rule
 

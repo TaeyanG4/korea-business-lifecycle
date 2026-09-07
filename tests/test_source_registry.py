@@ -8,6 +8,8 @@ from korea_business_lifecycle.provenance import (
     load_geospatial_full_axis,
     load_geospatial_full_axis_plan,
     load_history_observation_strategy,
+    load_history_authority_partition_findings,
+    load_history_authority_partition_probe_plan,
     load_history_review,
     load_history_sample_plan,
     load_reverse_transition_probe_plan,
@@ -39,6 +41,8 @@ from korea_business_lifecycle.provenance import (
     validate_geospatial_full_axis,
     validate_geospatial_full_axis_plan,
     validate_history_observation_strategy,
+    validate_history_authority_partition_findings,
+    validate_history_authority_partition_probe_plan,
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_permit_parent_compatibility,
@@ -110,6 +114,10 @@ def test_privacy_review_keeps_public_allowlist_blocked() -> None:
 def test_history_review_is_finite_but_not_an_event_log() -> None:
     review = load_history_review()
     assert validate_history_review(review) == []
+    assert review["decision"] == (
+        "FINITE_AS_OF_DATE_QUERY_CONFIRMED_AUTHENTICATED_EXECUTION_AVAILABLE_"
+        "LEGACY_AUTHORITY_PARTITION_SEMANTICS_REVIEW_REQUIRED"
+    )
     assert review["common_contract"]["lower_base_date"] == "2026-01-01"
     assert review["common_contract"]["max_num_of_rows"] == 100
     assert review["common_contract"]["event_log_claim"] is False
@@ -121,6 +129,9 @@ def test_history_review_is_finite_but_not_an_event_log() -> None:
     assert review["common_contract"]["official_authority_reference"]["exact_current_official_numeric_code_values_ingested"] is True
     assert review["common_contract"]["official_authority_reference"]["exact_deleted_numeric_code_values_ingested"] is True
     assert review["common_contract"]["official_authority_reference"]["date_effective_history_authority_filter_semantics_verified"] is False
+    assert review["common_contract"]["authenticated_probe_refresh_2026_09_07"]["result_code"] == "0"
+    assert review["common_contract"]["authority_partition_semantics"]["authenticated_execution_available"] is True
+    assert review["common_contract"]["authority_partition_semantics"]["full_32_deleted_count_probe_executed"] is False
 
 
 def test_official_authority_reference_tracks_current_and_deleted_exact_codes_without_overclaiming_history_semantics() -> None:
@@ -137,6 +148,28 @@ def test_official_authority_reference_tracks_current_and_deleted_exact_codes_wit
     assert review["ingestion_gate"]["exact_deleted_numeric_code_values_ingested"] is True
     assert review["ingestion_gate"]["current_reference_numeric_enumeration_ready"] is True
     assert review["ingestion_gate"]["history_window_date_effective_numeric_enumeration_ready"] is False
+
+
+def test_deleted_authority_partition_probe_plan_is_bounded_and_not_executed() -> None:
+    plan = load_history_authority_partition_probe_plan()
+    assert validate_history_authority_partition_probe_plan(plan) == []
+    assert plan["scope"]["deleted_numeric_authority_count"] == 32
+    assert plan["scope"]["tasks"] == 384
+    assert plan["scope"]["maximum_network_requests"] == 384
+    assert plan["execution"]["default_mode"] == "DRY_RUN"
+    assert plan["execution"]["execution_performed"] is False
+    assert plan["privacy"]["only_authority_date_source_total_count_emitted"] is True
+
+
+def test_bounded_deleted_authority_findings_confirm_freeze_without_overgeneralizing() -> None:
+    findings = load_history_authority_partition_findings()
+    assert validate_history_authority_partition_findings(findings) == []
+    assert findings["count_probe_assessment"]["pairs_with_equal_counts_20260630_20260701_20260906"] == 9
+    assert findings["count_probe_assessment"]["simple_deleted_code_becomes_zero_on_effective_date_model_rejected"] is True
+    assert findings["bounded_overlap_audit"]["mng_no_overlap"] == 0
+    assert findings["bounded_overlap_audit"]["management_number_values_emitted"] is False
+    assert findings["interpretation"]["deleted_partition_frozen_after_reform_in_bounded_full_row_sample"] is True
+    assert findings["interpretation"]["bounded_zero_overlap_proves_all_old_new_partitions_are_disjoint"] is False
 
 
 def test_redistribution_clarification_plan_is_prepared_but_not_executed() -> None:

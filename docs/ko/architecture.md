@@ -46,7 +46,9 @@
       ↳ latest current numeric authority domain: exact 244 ingested/validated
       ↳ exact deleted numeric change-reference codes: 32; current+deleted candidate union: 276
       ↳ current observed authority count: 230; all are a subset of current 244
-      ↳ deleted-code date-effective history filter semantics: unresolved
+      ↳ bounded semantics: deleted partition freezes after reform; current partition can keep evolving
+      ↳ full 32-code count-only probe: prepared, 384 requests, not executed
+      ↳ frozen legacy-partition inclusion policy: unresolved
       ↳ approved cadence: none
   → redistribution clarification gate
       ↳ source-use metadata: PASS
@@ -54,7 +56,7 @@
       ↳ raw/aggregate external redistribution: unresolved
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. 추가로 bounded sparse-observation episode reconstructor와 network-free nationwide history cost model을 구현했습니다. authority domain은 최신 7월 공식 첨부에서 현재 244개 숫자 코드와 삭제 32개 숫자 코드를 exact ingestion/hash/validation했습니다. 다만 Jan–Sep history에서 삭제 코드가 pre-change `BASE_DATE`에 어떤 filter 의미를 갖는지는 공식 문서/실행으로 아직 확인되지 않아 production enumeration은 계속 차단합니다. redistribution도 source-use metadata는 PASS이나 source-specific 서면 확인 전에는 외부 공개를 계속 차단합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety local aggregate 후보도 전수 스캔과 독립 검증까지 완료됐습니다. authority domain은 현재 244개 숫자 코드와 삭제 32개 숫자 코드를 exact ingestion/hash/validation했고 authenticated bounded 실행도 가능해졌습니다. 실행 증거에서는 삭제 partition이 개편 전까지 변화한 뒤 post-reform frozen legacy state로 남고 current partition은 계속 진화했습니다. 따라서 276 candidate union은 비용 계획용이며 current-state equivalence를 주장하지 않습니다. 전체 32개 count probe와 legacy inclusion policy, cadence 승인이 남아 production enumeration은 계속 차단합니다. redistribution도 source-use metadata는 PASS이나 source-specific 서면 확인 전에는 외부 공개를 계속 차단합니다.
 
 ## 데이터 저장 원칙
 

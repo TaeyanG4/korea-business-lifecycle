@@ -114,6 +114,14 @@ def load_authority_domain_reference() -> dict[str, Any]:
     return load_json("provenance/authority_domain_reference.json")
 
 
+def load_history_authority_partition_probe_plan() -> dict[str, Any]:
+    return load_json("provenance/history_authority_partition_probe_plan.json")
+
+
+def load_history_authority_partition_findings() -> dict[str, Any]:
+    return load_json("provenance/history_authority_partition_findings.json")
+
+
 def load_redistribution_clarification_plan() -> dict[str, Any]:
     return load_json("provenance/redistribution_clarification_plan.json")
 
@@ -218,6 +226,11 @@ def validate_privacy_review(review: dict[str, Any]) -> list[str]:
 
 def validate_history_review(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+    if review.get("decision") != (
+        "FINITE_AS_OF_DATE_QUERY_CONFIRMED_AUTHENTICATED_EXECUTION_AVAILABLE_"
+        "LEGACY_AUTHORITY_PARTITION_SEMANTICS_REVIEW_REQUIRED"
+    ):
+        errors.append("history-review decision changed")
     if review.get("common_contract", {}).get("event_log_claim") is not False:
         errors.append("history must not be represented as a lossless event log")
     if review.get("common_contract", {}).get("authentication") != "data.go.kr serviceKey required":
@@ -246,8 +259,214 @@ def validate_history_review(review: dict[str, Any]) -> list[str]:
     }
     if official_domain != expected_official_domain:
         errors.append("history official authority reference state changed")
+    refresh = common.get("authenticated_probe_refresh_2026_09_07", {})
+    expected_refresh = {
+        "source_key": "bakeries",
+        "base_date": "20260630",
+        "authority_code": "3490000",
+        "result_code": "0",
+        "total_count": 314,
+        "service_key_value_recorded": False,
+        "interpretation": (
+            "A later bounded authenticated page-1 probe succeeded. The earlier 403 remains "
+            "historical evidence rather than the current execution state."
+        ),
+    }
+    if refresh != expected_refresh:
+        errors.append("history authenticated probe refresh changed")
+    partition = common.get("authority_partition_semantics", {})
+    expected_partition = {
+        "findings": "provenance/history_authority_partition_findings.json",
+        "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+        "authenticated_execution_available": True,
+        "bounded_deleted_partition_post_reform_freeze_confirmed": True,
+        "bounded_current_partition_post_reform_evolution_confirmed": True,
+        "simple_date_effective_active_authority_domain_model_supported": False,
+        "full_32_deleted_count_probe_executed": False,
+    }
+    if partition != expected_partition:
+        errors.append("history authority-partition semantics state changed")
     if {item.get("source_key") for item in review.get("categories", [])} != V1_SOURCE_KEYS:
         errors.append("history-review scope must exactly match v1 sources")
+    return errors
+
+
+def validate_history_authority_partition_probe_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_PREPARED_NOT_EXECUTED":
+        errors.append("deleted-authority probe-plan decision changed")
+    scope = plan.get("scope", {})
+    expected_scope = {
+        "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+        "authority_reference": "provenance/authority_domain_reference.json",
+        "deleted_numeric_authority_count": 32,
+        "probe_dates": ["20260101", "20260630", "20260701", "20260906"],
+        "tasks": 384,
+        "requests_per_task": 1,
+        "maximum_network_requests": 384,
+        "page_no": 1,
+        "num_rows": 1,
+    }
+    if scope != expected_scope:
+        errors.append("deleted-authority probe-plan scope changed")
+    purpose = plan.get("purpose", {})
+    for key in (
+        "verify_all_deleted_codes_remain_queryable",
+        "measure_pre_reform_count_change",
+        "test_post_reform_count_freeze_pattern",
+    ):
+        if purpose.get(key) is not True:
+            errors.append(f"deleted-authority probe-plan purpose must keep {key}=true")
+    for key in ("prove_row_level_overlap_or_identity", "prove_history_is_lossless_event_log"):
+        if purpose.get(key) is not False:
+            errors.append(f"deleted-authority probe-plan purpose must keep {key}=false")
+    execution = plan.get("execution", {})
+    if execution.get("default_mode") != "DRY_RUN" or execution.get("execute_flag") != "--execute":
+        errors.append("deleted-authority probe-plan execution defaults changed")
+    if execution.get("execution_performed") is not False:
+        errors.append("deleted-authority full count probe must remain not executed")
+    if execution.get("long_running_action_requires_visible_user_command") is not True:
+        errors.append("deleted-authority long-run visibility policy changed")
+    privacy = plan.get("privacy", {})
+    for key in (
+        "source_rows_emitted",
+        "management_numbers_emitted",
+        "business_names_emitted",
+        "addresses_emitted",
+        "coordinates_emitted",
+        "service_key_emitted",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"deleted-authority probe-plan privacy must keep {key}=false")
+    if privacy.get("only_authority_date_source_total_count_emitted") is not True:
+        errors.append("deleted-authority probe-plan aggregate-only output changed")
+    implementation = plan.get("implementation", {})
+    expected_implementation = {
+        "module": "src/korea_business_lifecycle/history_authority_semantics.py",
+        "script": "scripts/probe_deleted_authority_semantics.py",
+        "test_module": "tests/test_history_authority_semantics.py",
+    }
+    if implementation != expected_implementation:
+        errors.append("deleted-authority probe-plan implementation changed")
+    return errors
+
+
+def validate_history_authority_partition_findings(findings: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if findings.get("decision") != (
+        "BOUNDED_DELETED_AUTHORITY_PARTITIONS_FREEZE_AFTER_REFORM_LEGACY_STATE_CONFIRMED"
+    ):
+        errors.append("authority-partition findings decision changed")
+    scope = findings.get("scope", {})
+    if set(scope.get("count_probe_deleted_codes", [])) != {"3490000", "3590000", "4800000"}:
+        errors.append("authority-partition bounded deleted-code scope changed")
+    if set(scope.get("count_probe_sources", [])) != V1_SOURCE_KEYS:
+        errors.append("authority-partition bounded source scope changed")
+    if scope.get("count_probe_dates") != ["20260101", "20260630", "20260701", "20260906"]:
+        errors.append("authority-partition bounded count-probe dates changed")
+    if scope.get("count_probe_source_authority_pairs") != 9 or scope.get("bounded_not_nationwide") is not True:
+        errors.append("authority-partition bounded scope accounting changed")
+
+    auth = findings.get("authentication_refresh", {})
+    if auth.get("authenticated_history_probe_now_succeeds") is not True:
+        errors.append("authority-partition authenticated probe success changed")
+    if auth.get("service_key_value_recorded") is not False:
+        errors.append("authority-partition findings must not record the service key")
+    first = auth.get("first_successful_deleted_code_probe", {})
+    if first != {
+        "source_key": "bakeries",
+        "base_date": "20260630",
+        "authority_code": "3490000",
+        "result_code": "0",
+        "total_count": 314,
+    }:
+        errors.append("authority-partition first successful probe evidence changed")
+
+    rows = findings.get("count_probe_results", [])
+    if len(rows) != 9:
+        errors.append("authority-partition bounded count probe must contain nine source/code pairs")
+    pair_keys = {(item.get("source_key"), item.get("authority_code")) for item in rows}
+    if len(pair_keys) != 9:
+        errors.append("authority-partition bounded count probe pairs must be unique")
+    for item in rows:
+        try:
+            start = int(item["20260101"])
+            pre = int(item["20260630"])
+            effective = int(item["20260701"])
+            end = int(item["20260906"])
+        except (KeyError, TypeError, ValueError):
+            errors.append("authority-partition count probe values must be integers")
+            continue
+        if not (start < pre and pre > 0 and pre == effective == end):
+            errors.append("authority-partition bounded freeze count pattern changed")
+    assessment = findings.get("count_probe_assessment", {})
+    expected_assessment = {
+        "pairs_queryable_on_all_four_dates": 9,
+        "pairs_with_positive_20260630_count": 9,
+        "pairs_with_count_growth_20260101_to_20260630": 9,
+        "pairs_with_equal_counts_20260630_20260701_20260906": 9,
+        "simple_deleted_code_becomes_zero_on_effective_date_model_rejected": True,
+    }
+    if assessment != expected_assessment:
+        errors.append("authority-partition bounded count assessment changed")
+
+    audits = findings.get("full_row_audits", [])
+    if len(audits) != 3:
+        errors.append("authority-partition full-row audit scope changed")
+    by_code = {str(item.get("authority_code")): item for item in audits}
+    for code, rows_expected, active_expected in (("3490000", 314, 101), ("4800000", 332, 75)):
+        item = by_code.get(code, {})
+        if item.get("start_rows") != rows_expected or item.get("end_rows") != rows_expected:
+            errors.append(f"{code}: deleted partition row count changed")
+        if item.get("common_mng_no") != rows_expected or item.get("added_mng_no") != 0 or item.get("disappeared_mng_no") != 0:
+            errors.append(f"{code}: deleted partition bounded linkage accounting changed")
+        if any(int(value) != 0 for value in item.get("changed_common_rows", {}).values()):
+            errors.append(f"{code}: deleted partition is no longer fully frozen in bounded audit")
+        if item.get("active_status_01_rows_at_end") != active_expected:
+            errors.append(f"{code}: deleted partition active-status evidence changed")
+    control = by_code.get("3491000", {})
+    if control.get("role") != "CURRENT_CODE_CONTROL" or control.get("changed_common_rows", {}).get("status") != 1:
+        errors.append("authority-partition current-code control must retain observed evolution")
+
+    overlap = findings.get("bounded_overlap_audit", {})
+    expected_overlap_scalars = {
+        "source_key": "bakeries",
+        "base_date": "20260906",
+        "deleted_authority_code": "3490000",
+        "deleted_partition_rows": 314,
+        "current_partition_union_rows": 932,
+        "mng_no_overlap": 0,
+        "deleted_only_mng_no": 314,
+        "current_union_only_mng_no": 932,
+        "current_snapshot_deleted_authority_rows": 0,
+        "current_snapshot_current_authority_rows": 932,
+        "current_snapshot_current_authority_counts_match_20260906_history": True,
+        "management_number_values_emitted": False,
+    }
+    for key, expected in expected_overlap_scalars.items():
+        if overlap.get(key) != expected:
+            errors.append(f"authority-partition overlap evidence {key} changed")
+    if set(overlap.get("current_authority_codes", [])) != {"3491000", "3501000", "3561000", "3565000"}:
+        errors.append("authority-partition current-code overlap scope changed")
+
+    interpretation = findings.get("interpretation", {})
+    for key in (
+        "deleted_partition_queryable_after_reform",
+        "deleted_partition_frozen_after_reform_in_bounded_full_row_sample",
+        "deleted_partition_may_contain_source_status_01_after_reform",
+        "current_code_partition_can_continue_evolving_after_reform",
+    ):
+        if interpretation.get(key) is not True:
+            errors.append(f"authority-partition interpretation must keep {key}=true")
+    for key in (
+        "authority_filter_is_simple_date_effective_active_code_domain",
+        "current_plus_deleted_union_is_semantically_equivalent_to_current_snapshot",
+        "bounded_zero_overlap_proves_all_old_new_partitions_are_disjoint",
+        "mng_no_primary_key_declared",
+        "history_is_lossless_event_log",
+    ):
+        if interpretation.get(key) is not False:
+            errors.append(f"authority-partition safety interpretation must keep {key}=false")
     return errors
 
 
@@ -863,15 +1082,29 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
     if next_gate.get("history_observation_strategy") != "provenance/history_observation_strategy.json":
         errors.append("history observation strategy evidence reference changed")
     if next_gate.get("history_observation_strategy_status") != (
-        "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
+        "LEGACY_AUTHORITY_PARTITION_POLICY_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
     ):
         errors.append("history observation strategy status changed")
     if next_gate.get("authority_domain_reference") != "provenance/authority_domain_reference.json":
         errors.append("authority-domain reference evidence changed")
     if next_gate.get("authority_domain_reference_status") != (
-        "CURRENT_244_AND_DELETED_32_INGESTED_DATE_EFFECTIVE_HISTORY_SEMANTICS_PENDING"
+        "CURRENT_244_AND_DELETED_32_INGESTED_LEGACY_PARTITION_SEMANTICS_BOUNDED"
     ):
         errors.append("authority-domain reference status changed")
+    if next_gate.get("history_authority_partition_findings") != (
+        "provenance/history_authority_partition_findings.json"
+    ):
+        errors.append("history authority-partition findings reference changed")
+    if next_gate.get("history_authority_partition_findings_status") != "BOUNDED_FREEZE_PATTERN_CONFIRMED":
+        errors.append("history authority-partition findings status changed")
+    if next_gate.get("history_authority_partition_probe_plan") != (
+        "provenance/history_authority_partition_probe_plan.json"
+    ):
+        errors.append("history authority-partition probe plan reference changed")
+    if next_gate.get("history_authority_partition_probe_status") != (
+        "FULL_32_COUNT_PROBE_PREPARED_NOT_EXECUTED"
+    ):
+        errors.append("history authority-partition probe status changed")
     if next_gate.get("redistribution_clarification_plan") != "provenance/redistribution_clarification_plan.json":
         errors.append("redistribution clarification plan reference changed")
     if next_gate.get("redistribution_clarification_status") != "PREPARED_WRITTEN_RESPONSE_PENDING":
@@ -963,7 +1196,7 @@ def validate_bounded_episode_reconstruction(review: dict[str, Any]) -> list[str]
 def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if review.get("decision") != (
-        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED"
+        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED"
     ):
         errors.append("history observation strategy decision changed")
     scope = review.get("scope", {})
@@ -1059,6 +1292,19 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
     ):
         if limits.get(key) is not False:
             errors.append(f"history observation semantic limit must keep {key}=false")
+    partition = review.get("authority_partition_semantics", {})
+    expected_partition = {
+        "findings": "provenance/history_authority_partition_findings.json",
+        "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+        "authenticated_execution_available": True,
+        "bounded_deleted_partition_post_reform_freeze_confirmed": True,
+        "bounded_current_partition_post_reform_evolution_confirmed": True,
+        "current_plus_deleted_union_semantically_equivalent_to_current_snapshot": False,
+        "full_32_deleted_count_probe_executed": False,
+        "full_32_deleted_count_probe_request_cap": 384,
+    }
+    if partition != expected_partition:
+        errors.append("history observation authority-partition semantics changed")
     implementation = review.get("implementation", {})
     if implementation.get("module") != "src/korea_business_lifecycle/history_observation_strategy.py":
         errors.append("history observation strategy module reference changed")

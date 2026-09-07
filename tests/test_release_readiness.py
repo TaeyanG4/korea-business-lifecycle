@@ -61,15 +61,28 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["redistribution_prepared_inquiry_source_count"] == 3
     assert readiness["tracks"]["public_kaggle"]["redistribution_clarification_outreach_performed"] is False
     assert readiness["tracks"]["public_kaggle"]["redistribution_written_response_received"] is False
-    assert readiness["next_long_local_actions"] == []
+    assert readiness["next_long_local_actions"] == [
+        {
+            "name": "full_deleted_authority_count_probe",
+            "command": "py -3.12 scripts/probe_deleted_authority_semantics.py --execute --max-requests 384 --request-delay-seconds 0.2",
+            "maximum_network_requests": 384,
+            "default_mode_without_execute": "DRY_RUN",
+        }
+    ]
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor"] == (
         "IMPLEMENTED_SYNTHETIC_VALIDATED"
     )
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_max_observations"] == 100_000
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_in_memory_only"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_observation_strategy"] == (
-        "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
+        "LEGACY_AUTHORITY_PARTITION_POLICY_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
     )
+    assert readiness["tracks"]["lifecycle_episode"]["history_authenticated_execution_available"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_bounded_deleted_partition_post_reform_freeze_confirmed"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_bounded_current_partition_post_reform_evolution_confirmed"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_current_plus_deleted_union_semantically_equivalent_to_current_snapshot"] is False
+    assert readiness["tracks"]["lifecycle_episode"]["history_full_deleted_authority_count_probe_status"] == "PREPARED_NOT_EXECUTED"
+    assert readiness["tracks"]["lifecycle_episode"]["history_full_deleted_authority_count_probe_request_cap"] == 384
     assert readiness["tracks"]["lifecycle_episode"]["history_manual_reference_authority_count"] == 245
     assert readiness["tracks"]["lifecycle_episode"]["history_current_official_numeric_authority_count"] == 244
     assert readiness["tracks"]["lifecycle_episode"]["history_current_official_aggregate_token_count"] == 16

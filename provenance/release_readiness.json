@@ -5,10 +5,18 @@
     "do not publish row-level data until privacy allowlist and redistribution review pass",
     "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
     "do not reconstruct production lifecycle episodes until the explicit history-observation strategy is approved; status 05 remains unmapped",
+    "do not treat frozen deleted-authority history partitions as semantically equivalent to current-state partitions after the 2026-07-01 reform",
     "do not declare MNG_NO an official source primary key"
   ],
-  "next_long_local_actions": [],
-  "next_product_action": "verify date-effective history filtering for the exact deleted authority codes, obtain source-specific written redistribution clarification, and then make an explicit history cadence/request-budget decision",
+  "next_long_local_actions": [
+    {
+      "command": "py -3.12 scripts/probe_deleted_authority_semantics.py --execute --max-requests 384 --request-delay-seconds 0.2",
+      "default_mode_without_execute": "DRY_RUN",
+      "maximum_network_requests": 384,
+      "name": "full_deleted_authority_count_probe"
+    }
+  ],
+  "next_product_action": "execute the full 32-deleted-authority count probe, define a frozen-legacy-partition inclusion policy, obtain source-specific written redistribution clarification, and then make an explicit history cadence/request-budget decision",
   "tracks": {
     "geospatial_derivation": {
       "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
@@ -37,17 +45,23 @@
       "bounded_reconstructor_module": "src/korea_business_lifecycle/episode_reconstruction.py",
       "daily_window_request_lower_bound": 7531503,
       "daily_window_request_upper_bound": 7702566,
+      "history_authenticated_execution_available": true,
+      "history_bounded_current_partition_post_reform_evolution_confirmed": true,
+      "history_bounded_deleted_partition_post_reform_freeze_confirmed": true,
       "history_current_official_aggregate_token_count": 16,
       "history_current_official_numeric_authority_count": 244,
       "history_current_official_numeric_domain_authoritatively_complete": true,
       "history_current_official_unobserved_count": 14,
+      "history_current_plus_deleted_union_semantically_equivalent_to_current_snapshot": false,
       "history_current_reference_numeric_enumeration_ready": true,
       "history_date_effective_authority_filter_semantics_verified": false,
       "history_exact_current_official_numeric_codes_ingested": true,
       "history_exact_deleted_numeric_codes_ingested": true,
+      "history_full_deleted_authority_count_probe_request_cap": 384,
+      "history_full_deleted_authority_count_probe_status": "PREPARED_NOT_EXECUTED",
       "history_future_authority_reference_refresh_required": true,
       "history_manual_reference_authority_count": 245,
-      "history_observation_strategy": "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
+      "history_observation_strategy": "LEGACY_AUTHORITY_PARTITION_POLICY_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
       "history_observed_current_authority_count": 230,
       "history_official_deleted_numeric_authority_count": 32,
       "history_requests_per_asof_date_lower_bound": 30247,

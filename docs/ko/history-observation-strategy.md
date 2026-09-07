@@ -16,8 +16,10 @@ production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of
 - current snapshot에서 candidate union 중 관찰되지 않은 code: source당 46개
 - history API 최대 page size: 100
 - exact current 244와 deleted 32 list ingestion/hash/validation: 완료
-- deleted code의 pre-change `BASE_DATE` query semantics: 미확인
-- network access: 없음
+- authenticated bounded history execution: 가능
+- bounded semantics: sampled deleted partition은 개편 전까지 변화한 뒤 post-reform frozen legacy state로 유지
+- sampled current partition은 post-reform에도 변화 가능
+- 32개 전체 deleted-code count probe: 준비 완료, 미실행
 
 비용 계획은 current snapshot의 230개 non-empty partition에 대한 paging 수학적 범위에 candidate union의 나머지 46개를 source별 1-request probe로 더합니다.
 
@@ -28,7 +30,7 @@ production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of
 | 제과점영업 | 69,481 | 695–924 | 46 | 741–970 |
 | **합계** | **3,010,802** | **30,109–30,796** | **138** | **30,247–30,934** |
 
-이 범위는 historical row volume의 upper/lower bound가 아닙니다. 특히 삭제 code가 과거 날짜에는 non-empty일 수 있습니다.
+이 범위는 historical row volume의 upper/lower bound가 아닙니다. bounded 실행에서는 삭제 code가 개편 후에도 non-empty인 frozen legacy partition으로 계속 query됐으므로, candidate union을 특정 날짜의 current-state와 동일하게 해석하지 않습니다.
 
 ## 2026-01-01 ~ 2026-09-06 planning scenarios
 
@@ -55,15 +57,18 @@ daily cadence는 interval-censoring width를 줄일 뿐 event-log semantics를 �
 
 ## 현재 결정
 
-`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED`
+`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED`
 
 production reconstruction 전에는 최소한 다음이 필요합니다.
 
-1. 삭제된 exact 32개 authority code의 pre/post-reform `BASE_DATE` filter semantics 확인
-2. 허용 가능한 request budget 결정
-3. 분석 목적에 필요한 최대 censoring gap 결정
-4. snapshot retention/중간 변화 손실 한계 수용 여부 결정
-5. status `05` 및 reopening-vs-correction unresolved 상태 유지
+1. 준비된 384-request count-only probe로 삭제 32개 전체의 freeze/queryability 패턴 확인
+2. frozen legacy partition을 날짜별 분석에 포함/제외하는 명시적 정책 결정
+3. 허용 가능한 request budget 결정
+4. 분석 목적에 필요한 최대 censoring gap 결정
+5. snapshot retention/중간 변화 손실 한계 수용 여부 결정
+6. status `05` 및 reopening-vs-correction unresolved 상태 유지
+
+bounded 실행 결과는 [History Authority Partition Semantics](history-authority-partition-semantics.md)에 기록합니다.
 
 비용 모델은 network-free로 재현할 수 있습니다.
 

@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_EXECUTION_BLOCKED_BY_UNREGISTERED_SERVICE_KEY",
+  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_AUTHENTICATED_EXECUTION_AVAILABLE_LEGACY_AUTHORITY_PARTITION_SEMANTICS_REVIEW_REQUIRED",
   "common_contract": {
     "lower_base_date": "2026-01-01",
     "upper_base_date_rule": "query date minus one day",
@@ -23,6 +23,15 @@
       "history_http_status": 403,
       "error_code": "SERVICE_KEY_IS_NOT_REGISTERED_ERROR",
       "interpretation": "The locally configured key is present but is not recognized by data.go.kr as a registered service key. No key value is stored in provenance."
+    },
+    "authenticated_probe_refresh_2026_09_07": {
+      "source_key": "bakeries",
+      "base_date": "20260630",
+      "authority_code": "3490000",
+      "result_code": "0",
+      "total_count": 314,
+      "service_key_value_recorded": false,
+      "interpretation": "A later bounded authenticated page-1 probe succeeded. The earlier 403 remains historical evidence rather than the current execution state."
     },
     "observed_current_authority_code_domain": {
       "distinct_count": 230,
@@ -47,7 +56,16 @@
       "history_window_date_effective_numeric_enumeration_ready": false,
       "future_reference_refresh_required": true
     },
-    "nationwide_completeness_blocker": "the latest official current 244 numeric codes and 32 deleted numeric codes are ingested exactly, but the history API's date-effective filter behavior for deleted pre-reform authority codes is not documented or verified; no nationwide cadence/request budget is approved"
+    "authority_partition_semantics": {
+      "findings": "provenance/history_authority_partition_findings.json",
+      "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+      "authenticated_execution_available": true,
+      "bounded_deleted_partition_post_reform_freeze_confirmed": true,
+      "bounded_current_partition_post_reform_evolution_confirmed": true,
+      "simple_date_effective_active_authority_domain_model_supported": false,
+      "full_32_deleted_count_probe_executed": false
+    },
+    "nationwide_completeness_blocker": "authenticated execution is available, but bounded evidence shows deleted authority partitions remain queryable as frozen legacy state after the reform while current partitions can continue evolving; the prepared full 32-code count probe and an explicit legacy-partition inclusion policy are required before any nationwide cadence/request budget can be approved"
   },
   "categories": [
     {

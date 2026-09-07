@@ -1,14 +1,24 @@
 {
   "authority_domain_reference": "provenance/authority_domain_reference.json",
+  "authority_partition_semantics": {
+    "authenticated_execution_available": true,
+    "bounded_current_partition_post_reform_evolution_confirmed": true,
+    "bounded_deleted_partition_post_reform_freeze_confirmed": true,
+    "current_plus_deleted_union_semantically_equivalent_to_current_snapshot": false,
+    "findings": "provenance/history_authority_partition_findings.json",
+    "full_32_deleted_count_probe_executed": false,
+    "full_32_deleted_count_probe_request_cap": 384,
+    "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json"
+  },
   "checked_at": "2026-09-07",
-  "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED",
+  "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED",
   "implementation": {
     "module": "src/korea_business_lifecycle/history_observation_strategy.py",
     "network_required": false,
     "script": "scripts/history_observation_strategy.py",
     "test_module": "tests/test_history_observation_strategy.py"
   },
-  "next_gate": "verify date-effective history filtering for the exact 32 deleted numeric authority codes, then make an explicit cadence/request-budget decision before any nationwide acquisition or production episode reconstruction",
+  "next_gate": "execute the prepared 384-request count-only probe across all 32 deleted authority codes, define an explicit frozen-legacy-partition inclusion policy, then make a cadence/request-budget decision before any nationwide acquisition or production episode reconstruction",
   "paging_basis": {
     "cost_basis": "CURRENT_ROW_SCALE_WITH_276_CURRENT_PLUS_DELETED_NUMERIC_CANDIDATE_UNION_230_CURRENTLY_NONEMPTY_PLUS_46_ONE_REQUEST_PROBES_PER_SOURCE_DATE_EFFECTIVE_HISTORY_SEMANTICS_UNVERIFIED_NOT_HISTORICAL_ROW_COUNT_FORECAST",
     "current_official_aggregate_token_count": 16,

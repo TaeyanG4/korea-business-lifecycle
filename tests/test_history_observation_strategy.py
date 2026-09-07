@@ -85,9 +85,16 @@ def test_daily_asof_sampling_is_not_promoted_to_lossless_event_history() -> None
     assert limits["exact_transition_timestamp_claimed"] is False
     assert limits["status_code_05_semantics_resolved"] is False
     assert limits["reopening_vs_correction_resolved"] is False
+    partition = plan["authority_partition_semantics"]
+    assert partition["authenticated_execution_available"] is True
+    assert partition["bounded_deleted_partition_post_reform_freeze_confirmed"] is True
+    assert partition["bounded_current_partition_post_reform_evolution_confirmed"] is True
+    assert partition["current_plus_deleted_union_semantically_equivalent_to_current_snapshot"] is False
+    assert partition["full_32_deleted_count_probe_executed"] is False
+    assert partition["full_32_deleted_count_probe_request_cap"] == 384
     assert plan["scope"]["production_episode_reconstruction_enabled"] is False
     assert plan["decision"] == (
-        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED"
+        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED"
     )
 
 

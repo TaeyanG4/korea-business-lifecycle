@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. Production `PERMIT` build `permit-v1-9908225df465e2ff` and separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` are both materialized and independently verified across all **3,010,802 rows**. Lifecycle semantic hard rules remain unchanged: `03` is not irreversible terminal closure and `05` remains unmapped. The publication-safety local aggregate candidate is also fully scanned and independently verified; 67,267 of 297,195 pre-suppression cells remain at k>=10. That is technical minimization, not public/Kaggle approval. Authority evidence now distinguishes the January manual's documented **245** count from the latest July official attachment: the exact current **244** numeric codes and **32** deleted numeric codes are ingested, hashed, and validated, while the **230** codes observed in all three current snapshots are a subset of the current 244. Production Jan–Sep history enumeration remains blocked because date-effective filtering semantics for the deleted codes are still unverified. Written redistribution questions/contact routes are prepared, but external publication remains unapproved.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. Production `PERMIT` build `permit-v1-9908225df465e2ff` and separate WGS84 sidecar `permit-geo-v1-c4af8799de0283bb` are both materialized and independently verified across all **3,010,802 rows**. Lifecycle semantic hard rules remain unchanged: `03` is not irreversible terminal closure and `05` remains unmapped. The publication-safety local aggregate candidate is fully scanned and independently verified, but that is not public/Kaggle approval. The exact current **244** numeric authority codes and **32** deleted numeric codes are ingested, hashed, and validated. New authenticated bounded probes show deleted partitions evolving until the reform boundary and then remaining queryable as frozen legacy state, while current partitions can continue evolving. The 276-code current-plus-deleted union therefore remains a cost-planning candidate, not a date-specific current-state equivalent. Production enumeration remains blocked pending the full 32-code count-only probe and an explicit legacy-partition inclusion policy. Written redistribution questions/contact routes are prepared, but external publication remains unapproved.
 
 ## Documentation
 
@@ -52,6 +52,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Canonical PERMIT_STATUS_EPISODE schema](docs/en/canonical-episode-schema.md)
 - [Bounded PERMIT_STATUS_EPISODE reconstruction](docs/en/bounded-episode-reconstruction.md)
 - [Nationwide history observation strategy cost gate](docs/en/history-observation-strategy.md)
+- [History authority partition semantics](docs/en/history-authority-partition-semantics.md)
 - [Official authority-domain reference gate](docs/en/authority-domain-reference.md)
 - [Redistribution written-clarification gate](docs/en/redistribution-clarification.md)
 - [Canonical PERMIT transformer](docs/en/canonical-permit-transformer.md)

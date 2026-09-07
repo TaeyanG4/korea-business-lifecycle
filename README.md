@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. `PERMIT` parent build `permit-v1-9908225df465e2ff`와 별도 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`는 모두 **3,010,802행** 기준 production materialization·독립 검증까지 완료했습니다. lifecycle semantic hard rules도 유지합니다: `03`은 irreversible terminal이 아니고 `05`는 unmapped입니다. publication-safety의 local aggregate 후보도 3,010,802행 전수 스캔·독립 검증을 완료했고 297,195개 pre-suppression cell 중 k=10 이상 67,267개만 candidate에 남겼습니다. 이는 기술적 최소화 검증이지 public/Kaggle 승인 의미가 아닙니다. authority reference는 1월 매뉴얼의 **245** 설명값과 7월 최신 공식 첨부를 분리해 검증했습니다. 최신 첨부의 현재 숫자 domain **244개**와 개편 삭제 숫자 코드 **32개**를 exact ingestion/hash/validation했고, 세 current snapshot의 **230개**는 현재 244개의 subset입니다. 다만 Jan–Sep history에서 삭제 코드의 date-effective filter semantics는 아직 미확인이므로 production enumeration은 계속 차단합니다. redistribution 서면확인 질문/문의 경로도 준비했지만 외부 공개 승인은 아직 아닙니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. `PERMIT` parent build `permit-v1-9908225df465e2ff`와 별도 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`는 모두 **3,010,802행** 기준 production materialization·독립 검증까지 완료했습니다. lifecycle semantic hard rules도 유지합니다: `03`은 irreversible terminal이 아니고 `05`는 unmapped입니다. publication-safety local aggregate 후보도 전수 스캔·독립 검증됐지만 public/Kaggle 승인은 아닙니다. 최신 authority reference의 current 숫자 domain **244개**와 삭제 숫자 코드 **32개**는 exact ingestion/hash/validation 완료입니다. 추가 authenticated bounded probe에서는 삭제 partition이 개편 직전까지 진화하다가 이후 frozen legacy state로 계속 queryable하고 current partition은 계속 변화할 수 있음을 확인했습니다. 따라서 276-code current+deleted union은 비용 계획에는 쓰지만 날짜별 current-state와 동일하다고 보지 않습니다. 32개 전체 count-only probe와 legacy-partition inclusion policy 결정 전에는 production enumeration을 계속 차단합니다. redistribution 서면확인 질문/문의 경로도 준비했지만 외부 공개 승인은 아직 아닙니다.
 
 ## 문서
 
@@ -52,6 +52,7 @@ current snapshot 취득/프로파일링과 5개 자치단체 bounded history aud
 - [Canonical PERMIT_STATUS_EPISODE schema](docs/ko/canonical-episode-schema.md)
 - [Bounded PERMIT_STATUS_EPISODE reconstruction](docs/ko/bounded-episode-reconstruction.md)
 - [Nationwide history observation strategy cost gate](docs/ko/history-observation-strategy.md)
+- [History authority partition semantics](docs/ko/history-authority-partition-semantics.md)
 - [Official authority-domain reference gate](docs/ko/authority-domain-reference.md)
 - [Redistribution written-clarification gate](docs/ko/redistribution-clarification.md)
 - [Canonical PERMIT transformer](docs/ko/canonical-permit-transformer.md)

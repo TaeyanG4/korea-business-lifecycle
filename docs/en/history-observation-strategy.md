@@ -16,8 +16,10 @@ Before production `PERMIT_STATUS_EPISODE` reconstruction can expand nationwide, 
 - candidate-union codes not observed in the current snapshot: 46 per source;
 - maximum history API page size: 100;
 - exact current 244 and deleted 32 lists: ingested, hashed, and validated;
-- pre-reform `BASE_DATE` query semantics for deleted codes: unverified; and
-- network access: none.
+- authenticated bounded history execution: available;
+- bounded semantics: sampled deleted partitions evolve before the reform and remain frozen afterward;
+- a sampled current partition continues evolving after the reform; and
+- the full 32-deleted-code count probe is prepared but not executed.
 
 For cost planning, the current mathematical paging range over the 230 non-empty partitions is augmented with one probe for each of the remaining 46 candidate-union codes per source.
 
@@ -28,7 +30,7 @@ For cost planning, the current mathematical paging range over the 230 non-empty 
 | Bakeries | 69,481 | 695–924 | 46 | 741–970 |
 | **Total** | **3,010,802** | **30,109–30,796** | **138** | **30,247–30,934** |
 
-This is not an upper/lower bound on historical row volume. Deleted codes can be non-empty on earlier dates.
+This is not an upper/lower bound on historical row volume. Bounded execution shows that deleted codes can remain non-empty after the reform as frozen legacy partitions, so the candidate union is not treated as semantically equivalent to a date-specific current-state snapshot.
 
 ## 2026-01-01 through 2026-09-06 planning scenarios
 
@@ -55,15 +57,18 @@ Daily cadence narrows interval-censoring width; it does not create event-log sem
 
 ## Current decision
 
-`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED`
+`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED`
 
 Before production reconstruction, at least these decisions remain:
 
-1. verify pre/post-reform `BASE_DATE` filter semantics for the exact 32 deleted authority codes;
-2. choose an acceptable request budget;
-3. choose the maximum censoring gap required by the analytical goal;
-4. accept or reject snapshot-retention/intermediate-change loss; and
-5. preserve unresolved status `05` and reopening-vs-correction semantics.
+1. execute the prepared 384-request count-only probe across all 32 deleted authority codes;
+2. define an explicit inclusion/exclusion policy for frozen legacy partitions;
+3. choose an acceptable request budget;
+4. choose the maximum censoring gap required by the analytical goal;
+5. accept or reject snapshot-retention/intermediate-change loss; and
+6. preserve unresolved status `05` and reopening-vs-correction semantics.
+
+The bounded execution findings are documented in [History Authority Partition Semantics](history-authority-partition-semantics.md).
 
 The cost model is reproducible without network access:
 

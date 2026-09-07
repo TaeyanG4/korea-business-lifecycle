@@ -7,6 +7,8 @@ from typing import Any
 
 from .provenance import (
     load_authority_domain_reference,
+    load_history_authority_partition_findings,
+    load_history_authority_partition_probe_plan,
     load_history_review,
     load_observed_snapshot_summary,
 )
@@ -85,6 +87,8 @@ def history_observation_strategy_plan(
     summary = load_observed_snapshot_summary()
     review = load_history_review()
     authority_reference = load_authority_domain_reference()
+    authority_partition_findings = load_history_authority_partition_findings()
+    authority_partition_probe_plan = load_history_authority_partition_probe_plan()
     common = review["common_contract"]
     authority_domain = common["observed_current_authority_code_domain"]
     authority_count = int(authority_domain["distinct_count"])
@@ -125,6 +129,16 @@ def history_observation_strategy_plan(
         raise HistoryObservationStrategyError("history-window enumeration must remain unapproved")
     if cost_policy["current_unobserved_authorities_may_be_assumed_historically_empty"] is not False:
         raise HistoryObservationStrategyError("historical-empty authority assumption must remain disabled")
+    if authority_partition_findings["interpretation"][
+        "deleted_partition_frozen_after_reform_in_bounded_full_row_sample"
+    ] is not True:
+        raise HistoryObservationStrategyError("bounded deleted-authority freeze evidence changed")
+    if authority_partition_findings["interpretation"][
+        "current_plus_deleted_union_is_semantically_equivalent_to_current_snapshot"
+    ] is not False:
+        raise HistoryObservationStrategyError("candidate authority union must not be promoted to current-state semantics")
+    if authority_partition_probe_plan["execution"]["execution_performed"] is not False:
+        raise HistoryObservationStrategyError("full deleted-authority count probe execution state changed")
 
     per_source: list[dict[str, Any]] = []
     lower_per_date = 0
@@ -232,6 +246,16 @@ def history_observation_strategy_plan(
             "status_code_05_semantics_resolved": False,
             "reopening_vs_correction_resolved": False,
         },
+        "authority_partition_semantics": {
+            "findings": "provenance/history_authority_partition_findings.json",
+            "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+            "authenticated_execution_available": True,
+            "bounded_deleted_partition_post_reform_freeze_confirmed": True,
+            "bounded_current_partition_post_reform_evolution_confirmed": True,
+            "current_plus_deleted_union_semantically_equivalent_to_current_snapshot": False,
+            "full_32_deleted_count_probe_executed": False,
+            "full_32_deleted_count_probe_request_cap": 384,
+        },
         "implementation": {
             "module": "src/korea_business_lifecycle/history_observation_strategy.py",
             "script": "scripts/history_observation_strategy.py",
@@ -239,10 +263,10 @@ def history_observation_strategy_plan(
             "network_required": False,
         },
         "authority_domain_reference": "provenance/authority_domain_reference.json",
-        "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED",
+        "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED",
         "next_gate": (
-            "verify date-effective history filtering for the exact 32 deleted numeric authority "
-            "codes, then make an explicit cadence/request-budget decision before any nationwide "
-            "acquisition or production episode reconstruction"
+            "execute the prepared 384-request count-only probe across all 32 deleted authority codes, "
+            "define an explicit frozen-legacy-partition inclusion policy, then make a cadence/request-budget "
+            "decision before any nationwide acquisition or production episode reconstruction"
         ),
     }

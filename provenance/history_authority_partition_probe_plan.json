@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_PREPARED_NOT_EXECUTED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "authority_reference": "provenance/authority_domain_reference.json",
+    "deleted_numeric_authority_count": 32,
+    "probe_dates": ["20260101", "20260630", "20260701", "20260906"],
+    "tasks": 384,
+    "requests_per_task": 1,
+    "maximum_network_requests": 384,
+    "page_no": 1,
+    "num_rows": 1
+  },
+  "purpose": {
+    "verify_all_deleted_codes_remain_queryable": true,
+    "measure_pre_reform_count_change": true,
+    "test_post_reform_count_freeze_pattern": true,
+    "prove_row_level_overlap_or_identity": false,
+    "prove_history_is_lossless_event_log": false
+  },
+  "execution": {
+    "default_mode": "DRY_RUN",
+    "execute_flag": "--execute",
+    "execution_performed": false,
+    "long_running_action_requires_visible_user_command": true,
+    "recommended_request_delay_seconds": 0.2,
+    "result_stream": "stdout",
+    "progress_stream": "stderr"
+  },
+  "privacy": {
+    "source_rows_emitted": false,
+    "management_numbers_emitted": false,
+    "business_names_emitted": false,
+    "addresses_emitted": false,
+    "coordinates_emitted": false,
+    "service_key_emitted": false,
+    "only_authority_date_source_total_count_emitted": true
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/history_authority_semantics.py",
+    "script": "scripts/probe_deleted_authority_semantics.py",
+    "test_module": "tests/test_history_authority_semantics.py"
+  },
+  "next_gate": "execute the exact 384-request count-only probe and archive its aggregate output before generalizing the bounded freeze pattern to all 32 deleted authority codes"
+}

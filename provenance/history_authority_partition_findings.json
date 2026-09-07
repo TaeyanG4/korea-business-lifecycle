@@ -1,0 +1,128 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "BOUNDED_DELETED_AUTHORITY_PARTITIONS_FREEZE_AFTER_REFORM_LEGACY_STATE_CONFIRMED",
+  "scope": {
+    "count_probe_deleted_codes": ["3490000", "3590000", "4800000"],
+    "count_probe_sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "count_probe_dates": ["20260101", "20260630", "20260701", "20260906"],
+    "count_probe_source_authority_pairs": 9,
+    "full_row_audit_source": "bakeries",
+    "full_row_deleted_codes": ["3490000", "4800000"],
+    "full_row_current_control_code": "3491000",
+    "overlap_audit_date": "20260906",
+    "bounded_not_nationwide": true
+  },
+  "authentication_refresh": {
+    "historical_403_probe_retained_in": "provenance/history_review.json",
+    "authenticated_history_probe_now_succeeds": true,
+    "first_successful_deleted_code_probe": {
+      "source_key": "bakeries",
+      "base_date": "20260630",
+      "authority_code": "3490000",
+      "result_code": "0",
+      "total_count": 314
+    },
+    "service_key_value_recorded": false
+  },
+  "count_probe_results": [
+    {"authority_code": "3490000", "source_key": "bakeries", "20260101": 308, "20260630": 314, "20260701": 314, "20260906": 314},
+    {"authority_code": "3490000", "source_key": "general_restaurants", "20260101": 8940, "20260630": 9151, "20260701": 9151, "20260906": 9151},
+    {"authority_code": "3490000", "source_key": "rest_cafes", "20260101": 2339, "20260630": 2410, "20260701": 2410, "20260906": 2410},
+    {"authority_code": "3590000", "source_key": "bakeries", "20260101": 213, "20260630": 229, "20260701": 229, "20260906": 229},
+    {"authority_code": "3590000", "source_key": "general_restaurants", "20260101": 8545, "20260630": 8669, "20260701": 8669, "20260906": 8669},
+    {"authority_code": "3590000", "source_key": "rest_cafes", "20260101": 2359, "20260630": 2455, "20260701": 2455, "20260906": 2455},
+    {"authority_code": "4800000", "source_key": "bakeries", "20260101": 328, "20260630": 332, "20260701": 332, "20260906": 332},
+    {"authority_code": "4800000", "source_key": "general_restaurants", "20260101": 14494, "20260630": 14601, "20260701": 14601, "20260906": 14601},
+    {"authority_code": "4800000", "source_key": "rest_cafes", "20260101": 2815, "20260630": 2856, "20260701": 2856, "20260906": 2856}
+  ],
+  "count_probe_assessment": {
+    "pairs_queryable_on_all_four_dates": 9,
+    "pairs_with_positive_20260630_count": 9,
+    "pairs_with_count_growth_20260101_to_20260630": 9,
+    "pairs_with_equal_counts_20260630_20260701_20260906": 9,
+    "simple_deleted_code_becomes_zero_on_effective_date_model_rejected": true
+  },
+  "full_row_audits": [
+    {
+      "authority_code": "3490000",
+      "source_key": "bakeries",
+      "start_date": "20260630",
+      "end_date": "20260906",
+      "start_rows": 314,
+      "end_rows": 314,
+      "common_mng_no": 314,
+      "added_mng_no": 0,
+      "disappeared_mng_no": 0,
+      "changed_common_rows": {"status": 0, "detail_status": 0, "closure_date": 0, "permit_date": 0, "business_name": 0, "address": 0, "coordinates": 0},
+      "status_code_transitions": {"01->01": 101, "03->03": 213},
+      "active_status_01_rows_at_end": 101,
+      "start_manifest_sha256": "1d66613e499174ea21ddf1e4f69adbe795cadf81a506df18f1acace7b275283b",
+      "end_manifest_sha256": "6547441f43fdad21f5e214ed68145fea2d7b147295a8fc8f667c5c476a44511e"
+    },
+    {
+      "authority_code": "4800000",
+      "source_key": "bakeries",
+      "start_date": "20260630",
+      "end_date": "20260906",
+      "start_rows": 332,
+      "end_rows": 332,
+      "common_mng_no": 332,
+      "added_mng_no": 0,
+      "disappeared_mng_no": 0,
+      "changed_common_rows": {"status": 0, "detail_status": 0, "closure_date": 0, "permit_date": 0, "business_name": 0, "address": 0, "coordinates": 0},
+      "status_code_transitions": {"01->01": 75, "03->03": 257},
+      "active_status_01_rows_at_end": 75,
+      "start_manifest_sha256": "a8f8d259400f039260e94baa3ab4af6acc8426f26867c55f2b85702b397b41af",
+      "end_manifest_sha256": "78644bbe493155bc682c24e77e894661751cd18549e7ce0bb6a73d2312632556"
+    },
+    {
+      "authority_code": "3491000",
+      "source_key": "bakeries",
+      "role": "CURRENT_CODE_CONTROL",
+      "start_date": "20260630",
+      "end_date": "20260906",
+      "start_rows": 217,
+      "end_rows": 217,
+      "common_mng_no": 217,
+      "added_mng_no": 0,
+      "disappeared_mng_no": 0,
+      "changed_common_rows": {"status": 1, "detail_status": 1, "closure_date": 1, "permit_date": 0, "business_name": 0, "address": 0, "coordinates": 1},
+      "status_code_transitions": {"01->01": 70, "01->03": 1, "03->03": 146},
+      "start_manifest_sha256": "0b7728b5df6a14e895388f3f0d3d332a7202ed4e596891bbf639678908a24a84",
+      "end_manifest_sha256": "0ee913939106da6133a29371be4633d103db2ce2ce6cc7801f97813e8b5c5484"
+    }
+  ],
+  "bounded_overlap_audit": {
+    "source_key": "bakeries",
+    "base_date": "20260906",
+    "deleted_authority_code": "3490000",
+    "current_authority_codes": ["3491000", "3501000", "3561000", "3565000"],
+    "deleted_partition_rows": 314,
+    "current_partition_union_rows": 932,
+    "mng_no_overlap": 0,
+    "deleted_only_mng_no": 314,
+    "current_union_only_mng_no": 932,
+    "current_snapshot_deleted_authority_rows": 0,
+    "current_snapshot_current_authority_rows": 932,
+    "current_snapshot_current_authority_counts_match_20260906_history": true,
+    "management_number_values_emitted": false,
+    "current_code_manifest_sha256": {
+      "3491000": "0ee913939106da6133a29371be4633d103db2ce2ce6cc7801f97813e8b5c5484",
+      "3501000": "39b41bacca16a33fd90a3789bdbc865f21a02d113b66fdd1e50aa593c9fc9dab",
+      "3561000": "217d664deadcd7cef9ddea01461c23962ae95c4eaf3b0e4297eb96139ca8e7e8",
+      "3565000": "18243d33229cf0ce17183806f216576beebde10a302eea6aa5c42ef530a2a1c0"
+    }
+  },
+  "interpretation": {
+    "deleted_partition_queryable_after_reform": true,
+    "deleted_partition_frozen_after_reform_in_bounded_full_row_sample": true,
+    "deleted_partition_may_contain_source_status_01_after_reform": true,
+    "current_code_partition_can_continue_evolving_after_reform": true,
+    "authority_filter_is_simple_date_effective_active_code_domain": false,
+    "current_plus_deleted_union_is_semantically_equivalent_to_current_snapshot": false,
+    "bounded_zero_overlap_proves_all_old_new_partitions_are_disjoint": false,
+    "mng_no_primary_key_declared": false,
+    "history_is_lossless_event_log": false
+  },
+  "next_gate": "complete the prepared 384-request count-only probe across all 32 deleted authority codes, then define an explicit legacy-partition inclusion policy before approving any nationwide cadence or production episode reconstruction"
+}
