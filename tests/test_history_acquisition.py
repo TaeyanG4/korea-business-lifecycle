@@ -99,4 +99,3 @@ def test_history_snapshot_refuses_page_count_above_cap(external_tmp_path: Path) 
             service_key="synthetic",
             opener=opener,
         )
-

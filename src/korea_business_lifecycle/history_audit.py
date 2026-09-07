@@ -100,4 +100,3 @@ def compare_history_snapshots(start_dir: Path, end_dir: Path) -> dict[str, Any]:
             "it is not declared as a source primary key or establishment identity."
         ),
     }
-

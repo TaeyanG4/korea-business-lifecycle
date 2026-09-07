@@ -51,4 +51,3 @@ def test_compare_history_snapshots_is_aggregate_only(tmp_path: Path) -> None:
     rendered = json.dumps(result)
     assert "secret-A" not in rendered
     assert "Private Name" not in rendered
-
