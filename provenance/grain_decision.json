@@ -85,7 +85,9 @@
     "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
     "permit_status_episode_schema_status": "FROZEN",
     "permit_parent_transformer": "src/korea_business_lifecycle/canonical_permit.py",
-    "permit_parent_transformer_status": "SYNTHETIC_VALIDATED",
-    "goal": "perform bounded real-snapshot compatibility validation without exposing row-level values or writing production canonical output; keep episode reconstruction disabled"
+    "permit_parent_transformer_status": "BOUNDED_REAL_VALIDATED",
+    "permit_parent_compatibility": "provenance/permit_parent_compatibility.json",
+    "permit_parent_compatibility_status": "PASSED_256_ROWS_PER_SOURCE",
+    "goal": "implement a progress-reporting full-snapshot streaming dry-run validator for user execution; do not write production canonical output and keep episode reconstruction disabled"
   }
 }

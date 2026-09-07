@@ -8,6 +8,7 @@ from korea_business_lifecycle.provenance import (
     load_reverse_transition_findings,
     load_license_review,
     load_observed_snapshot_summary,
+    load_permit_parent_compatibility,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -19,6 +20,7 @@ from korea_business_lifecycle.provenance import (
     validate_grain_decision,
     validate_license_review,
     validate_observed_snapshot_summary,
+    validate_permit_parent_compatibility,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -147,4 +149,17 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_status_episode_schema_status"] == "FROZEN"
     assert decision["next_gate"]["phase"] == "Phase 5 Canonical Parent Transformation"
     assert decision["next_gate"]["permit_parent_transformer"] == "src/korea_business_lifecycle/canonical_permit.py"
-    assert decision["next_gate"]["permit_parent_transformer_status"] == "SYNTHETIC_VALIDATED"
+    assert decision["next_gate"]["permit_parent_transformer_status"] == "BOUNDED_REAL_VALIDATED"
+    assert decision["next_gate"]["permit_parent_compatibility"] == "provenance/permit_parent_compatibility.json"
+    assert decision["next_gate"]["permit_parent_compatibility_status"] == "PASSED_256_ROWS_PER_SOURCE"
+
+
+def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
+    review = load_permit_parent_compatibility()
+    assert validate_permit_parent_compatibility(review) == []
+    assert review["decision"] == "BOUNDED_REAL_CURRENT_SNAPSHOT_COMPATIBILITY_PASSED"
+    assert review["aggregate"]["rows_examined"] == 768
+    assert review["aggregate"]["all_sources_passed"] is True
+    assert review["scope"]["production_materialization_performed"] is False
+    assert review["scope"]["full_snapshot_scan_performed"] is False
+    assert all(value is False for value in review["privacy"].values())

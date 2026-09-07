@@ -53,6 +53,10 @@ def load_grain_decision() -> dict[str, Any]:
     return load_json("provenance/grain_decision.json")
 
 
+def load_permit_parent_compatibility() -> dict[str, Any]:
+    return load_json("provenance/permit_parent_compatibility.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -375,6 +379,81 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("next gate must remain Phase 5 canonical parent transformation")
     if next_gate.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
         errors.append("permit parent transformer reference changed")
-    if next_gate.get("permit_parent_transformer_status") != "SYNTHETIC_VALIDATED":
-        errors.append("permit parent transformer must remain synthetic-validated at this gate")
+    if next_gate.get("permit_parent_transformer_status") != "BOUNDED_REAL_VALIDATED":
+        errors.append("permit parent transformer must remain bounded-real validated at this gate")
+    if next_gate.get("permit_parent_compatibility") != "provenance/permit_parent_compatibility.json":
+        errors.append("permit parent compatibility provenance reference changed")
+    if next_gate.get("permit_parent_compatibility_status") != "PASSED_256_ROWS_PER_SOURCE":
+        errors.append("permit parent compatibility gate status changed")
+    return errors
+
+
+def validate_permit_parent_compatibility(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != "BOUNDED_REAL_CURRENT_SNAPSHOT_COMPATIBILITY_PASSED":
+        errors.append("bounded real-snapshot compatibility decision changed")
+
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("permit compatibility scope must exactly match v1 sources")
+    if scope.get("sample_policy") != "HEAD_ROWS_AFTER_HEADER":
+        errors.append("permit compatibility sample policy changed")
+    if scope.get("max_rows_per_source") != 256:
+        errors.append("permit compatibility bounded row cap changed")
+    for key in (
+        "production_materialization_performed",
+        "full_snapshot_scan_performed",
+        "row_level_values_recorded",
+    ):
+        if scope.get(key) is not False:
+            errors.append(f"permit compatibility must keep {key}=false")
+
+    contracts = review.get("contracts", {})
+    if contracts.get("permit_parent_schema") != "schemas/permit_parent.v1.json":
+        errors.append("permit compatibility parent schema reference changed")
+    if contracts.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
+        errors.append("permit compatibility transformer reference changed")
+    if contracts.get("compatibility_validator") != (
+        "src/korea_business_lifecycle/canonical_compatibility.py"
+    ):
+        errors.append("permit compatibility validator reference changed")
+
+    results = review.get("results", [])
+    if {item.get("source_key") for item in results} != V1_SOURCE_KEYS or len(results) != 3:
+        errors.append("permit compatibility must contain exactly three v1 source results")
+    for item in results:
+        source_key = item.get("source_key")
+        if item.get("status") != "PASS":
+            errors.append(f"{source_key}: bounded compatibility did not pass")
+        if item.get("rows_examined") != 256 or item.get("rows_transformed") != 256:
+            errors.append(f"{source_key}: bounded compatibility row count changed")
+        if item.get("source_column_count") != 39 or item.get("output_column_count") != 26:
+            errors.append(f"{source_key}: source/canonical column count changed")
+        if item.get("encoding") != "cp949":
+            errors.append(f"{source_key}: observed bounded compatibility encoding changed")
+        if item.get("duplicate_linkage_candidates") != 0:
+            errors.append(f"{source_key}: duplicate linkage candidate observed in bounded sample")
+        if sum(item.get("permit_date_quality", {}).values()) != 256:
+            errors.append(f"{source_key}: permit-date quality counts do not sum to sample size")
+        if sum(item.get("closure_date_quality", {}).values()) != 256:
+            errors.append(f"{source_key}: closure-date quality counts do not sum to sample size")
+
+    aggregate = review.get("aggregate", {})
+    if aggregate.get("rows_examined") != 768 or aggregate.get("rows_transformed") != 768:
+        errors.append("permit compatibility aggregate row count changed")
+    if aggregate.get("duplicate_linkage_candidates") != 0:
+        errors.append("permit compatibility aggregate duplicate count changed")
+    if aggregate.get("all_sources_passed") is not True:
+        errors.append("permit compatibility aggregate pass flag changed")
+
+    privacy = review.get("privacy", {})
+    for key in (
+        "management_numbers_recorded",
+        "business_names_recorded",
+        "addresses_recorded",
+        "telephone_numbers_recorded",
+        "coordinate_values_recorded",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"permit compatibility provenance must keep {key}=false")
     return errors

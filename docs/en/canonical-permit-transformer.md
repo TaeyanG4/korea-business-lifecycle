@@ -46,4 +46,4 @@ The current functions are for synthetic/bounded in-memory validation and are not
 
 ## Next gate
 
-The next single step is a **bounded compatibility validation** against the real current snapshots under Git-ignored `data/local/`, without printing row-level values. That gate still will not write a production canonical dataset.
+Bounded compatibility has now passed on 256 real current-snapshot rows per source. The next single step is a progress-reporting **full-snapshot streaming dry-run validator**. The potentially long full scan will be run by the user, and that gate will still write no production canonical dataset.

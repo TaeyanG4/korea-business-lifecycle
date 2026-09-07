@@ -14,13 +14,14 @@ official source evidence
       ↳ PERMIT_STATUS_EPISODE: frozen
   → deterministic PERMIT parent transformation
       ↳ synthetic 39-column fixture: validated
-      ↳ bounded real-snapshot compatibility: next gate
+      ↳ bounded real-snapshot compatibility: passed (256 rows/source)
+      ↳ full-snapshot streaming dry run: next gate
   → geospatial normalization
   → deterministic Parquet/ZSTD build
   → separate publication review
 ```
 
-The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`, and both schema contracts are frozen. The current-snapshot → `PERMIT` transformation core is now validated on frozen 39-column synthetic fixtures. The next gate is bounded real-snapshot compatibility validation without exposing row-level values. Production canonical materialization, full-history ingestion, episode reconstruction, and Kaggle publication are not implemented yet.
+The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer has passed both synthetic validation and bounded real compatibility on 256 rows per source. The next gate is a progress-reporting full-snapshot streaming dry run. Production canonical materialization, full-history ingestion, episode reconstruction, and Kaggle publication are not implemented yet.
 
 ## Data storage rule
 

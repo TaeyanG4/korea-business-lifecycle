@@ -1,0 +1,94 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "BOUNDED_REAL_CURRENT_SNAPSHOT_COMPATIBILITY_PASSED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "sample_policy": "HEAD_ROWS_AFTER_HEADER",
+    "max_rows_per_source": 256,
+    "production_materialization_performed": false,
+    "full_snapshot_scan_performed": false,
+    "row_level_values_recorded": false
+  },
+  "contracts": {
+    "permit_parent_schema": "schemas/permit_parent.v1.json",
+    "permit_parent_transformer": "src/korea_business_lifecycle/canonical_permit.py",
+    "compatibility_validator": "src/korea_business_lifecycle/canonical_compatibility.py"
+  },
+  "results": [
+    {
+      "source_key": "general_restaurants",
+      "retrieval_id": "20260907T022234Z-0cfae3c716d5",
+      "artifact_sha256": "0cfae3c716d5bc61b63832308897d15ca1d7f25f3547bc7b146f933bff2d6fd8",
+      "artifact_bytes": 696584488,
+      "encoding": "cp949",
+      "rows_examined": 256,
+      "rows_transformed": 256,
+      "source_column_count": 39,
+      "output_column_count": 26,
+      "permit_date_quality": {"VALID": 256},
+      "closure_date_quality": {"MISSING": 69, "VALID": 187},
+      "null_source_coordinate_x": 33,
+      "null_source_coordinate_y": 33,
+      "duplicate_linkage_candidates": 0,
+      "status": "PASS"
+    },
+    {
+      "source_key": "rest_cafes",
+      "retrieval_id": "20260907T021951Z-64b884979e15",
+      "artifact_sha256": "64b884979e1533d0672ed11060b9c0438c5124e0f8b66d804bd1bae54afa3082",
+      "artifact_bytes": 207347981,
+      "encoding": "cp949",
+      "rows_examined": 256,
+      "rows_transformed": 256,
+      "source_column_count": 39,
+      "output_column_count": 26,
+      "permit_date_quality": {"VALID": 256},
+      "closure_date_quality": {"MISSING": 69, "VALID": 187},
+      "null_source_coordinate_x": 19,
+      "null_source_coordinate_y": 19,
+      "duplicate_linkage_candidates": 0,
+      "status": "PASS"
+    },
+    {
+      "source_key": "bakeries",
+      "retrieval_id": "20260907T021916Z-32e93fdc827b",
+      "artifact_sha256": "32e93fdc827bf8bb8066acbeaecc02e458d2b920957407dd00651c87243879c3",
+      "artifact_bytes": 22654977,
+      "encoding": "cp949",
+      "rows_examined": 256,
+      "rows_transformed": 256,
+      "source_column_count": 39,
+      "output_column_count": 26,
+      "permit_date_quality": {"VALID": 256},
+      "closure_date_quality": {"MISSING": 145, "VALID": 111},
+      "null_source_coordinate_x": 16,
+      "null_source_coordinate_y": 16,
+      "duplicate_linkage_candidates": 0,
+      "status": "PASS"
+    }
+  ],
+  "aggregate": {
+    "rows_examined": 768,
+    "rows_transformed": 768,
+    "permit_date_quality": {"VALID": 768},
+    "closure_date_quality": {"MISSING": 283, "VALID": 485},
+    "null_source_coordinate_x": 68,
+    "null_source_coordinate_y": 68,
+    "duplicate_linkage_candidates": 0,
+    "all_sources_passed": true
+  },
+  "privacy": {
+    "management_numbers_recorded": false,
+    "business_names_recorded": false,
+    "addresses_recorded": false,
+    "telephone_numbers_recorded": false,
+    "coordinate_values_recorded": false
+  },
+  "limitations": [
+    "the deterministic sample is the first 256 data rows after the header for each source and is not statistically representative",
+    "passing the bounded sample does not prove that every row in the nationwide artifacts satisfies the transformer contract",
+    "the absence of INVALID permit dates in this bounded sample does not supersede previously observed full-snapshot profiling anomalies",
+    "no canonical dataset, Parquet file, WGS84 coordinate, lifecycle episode or public row-level artifact was produced"
+  ],
+  "next_gate": "implement a progress-reporting full-snapshot streaming dry-run validator and let the user run the potentially long local scan; do not write production canonical output yet"
+}
