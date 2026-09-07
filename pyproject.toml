@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "korea-business-lifecycle"
+version = "0.0.0"
+description = "Reproducible lifecycle research for Korean local-government business licensing data"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8,<9",
+  "pytest-socket>=0.7,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --disable-socket"
+markers = [
+  "real_data: opt-in tests requiring locally stored approved source artifacts",
+]
+

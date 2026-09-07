@@ -1,0 +1,15 @@
+[
+  {
+    "synthetic_id": "fixture-001",
+    "category": "일반음식점",
+    "event_label": "synthetic-permit",
+    "event_date": "2020-01-02"
+  },
+  {
+    "synthetic_id": "fixture-002",
+    "category": "제과점영업",
+    "event_label": "synthetic-status-change",
+    "event_date": "2021-03-04"
+  }
+]
+

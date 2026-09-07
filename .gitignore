@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*
+secrets*
+**/credentials/**
+**/secrets/**
+
+# Real or derived data: only placeholders are tracked.
+data/raw/**
+!data/raw/.gitkeep
+data/staging/**
+!data/staging/.gitkeep
+data/processed/**
+!data/processed/.gitkeep
+data/logs/**
+!data/logs/.gitkeep
+
+# Common bulk-data artifacts anywhere in the repository
+*.parquet
+*.feather
+*.arrow
+*.sqlite
+*.sqlite3
+*.db
+
+# Local/private work material
+.private/
+private/
+local/
+prompts/private/
+tasks/private/
+*.private.*
+*.prompt.local.*
+*.task.local.*
+
+# Local AI / agent instructions
+**/AGENTS.md
+**/SKILL.md
+**/CLAUDE.md
+.ai/
+.claude/
+.cursor/
+.continue/
+.windsurf/
+

@@ -1,0 +1,11 @@
+[project]
+name = "korea-business-lifecycle"
+python_min = "3.11"
+python_max_exclusive = "3.13"
+
+[scope]
+categories = ["general_restaurants", "rest_cafes", "bakeries"]
+allow_network_in_tests = false
+allow_real_data_in_git = false
+allow_kaggle_publication = false
+
