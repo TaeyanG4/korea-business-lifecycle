@@ -397,14 +397,14 @@ def test_kaggle_canonical_row_release_is_public_ready_and_exact_shape() -> None:
     assert release["package"]["wgs84_coordinates_included"] is False
 
 
-def test_kaggle_current_snapshot_maintenance_v2_tracks_remaining_pending_actions() -> None:
+def test_kaggle_current_snapshot_maintenance_v2_tracks_usability_10_completion() -> None:
     review = load_kaggle_dataset_maintenance_v2()
     assert validate_kaggle_dataset_maintenance_v2(review) == []
     assert review["dataset"]["dataset_id"] == "taeyangg4/korea-food-service-permits"
     assert review["dataset"]["current_version"] == 2
     assert review["dataset"]["dataset_version_id"] == 19_491_720
     assert review["dataset"]["databundle_version_id"] == 20_603_554
-    assert review["dataset"]["usability_score"] == pytest.approx(0.8235294)
+    assert review["dataset"]["usability_score"] == 1.0
     assert review["dataset"]["usability_target"] == 1.0
     assert review["content"]["rows"] == 3_010_802
     assert review["content"]["columns"] == 26
@@ -412,14 +412,36 @@ def test_kaggle_current_snapshot_maintenance_v2_tracks_remaining_pending_actions
     assert review["metadata"]["csv_column_descriptions_authored"] == 26
     assert review["metadata"]["parquet_column_descriptions_authored"] == 26
     assert review["metadata"]["source_summary_column_descriptions_authored"] == 4
-    assert review["metadata"]["pending_actions"] == ["EDIT_FILE_INFO", "EDIT_COLUMN_DESCRIPTION"]
-    assert review["metadata"]["data_explorer_file_descriptions_persisted"] is False
-    assert review["metadata"]["data_explorer_column_descriptions_persisted"] is False
+    assert review["metadata"]["pending_actions"] == []
+    assert review["metadata"]["data_explorer_file_descriptions_persisted"] is True
+    assert review["metadata"]["data_explorer_file_descriptions_observed"] == 8
+    assert review["metadata"]["data_explorer_file_descriptions_exact_match_verified"] is True
+    assert review["metadata"]["file_information_requirement_satisfied"] is True
+    assert review["metadata"]["data_explorer_column_descriptions_persisted"] is True
+    assert review["metadata"]["data_explorer_column_descriptions_observed"] == 56
+    assert review["metadata"]["data_explorer_column_descriptions_exact_match_verified"] is True
+    assert review["metadata"]["column_description_score"] == 1
     assert review["data_explorer_sync"]["dry_run_passed"] is True
     assert review["data_explorer_sync"]["write_attempted"] is True
-    assert review["data_explorer_sync"]["write_executed"] is False
-    assert review["data_explorer_sync"]["write_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
-    assert review["data_explorer_sync"]["last_write_attempt_http_status"] == 401
+    assert review["data_explorer_sync"]["write_executed"] is True
+    assert review["data_explorer_sync"]["write_status"] == "COMPLETE_USABILITY_10_VERIFIED"
+    assert review["data_explorer_sync"]["cli_oauth_direct_internal_api"]["http_status"] == 401
+    assert review["data_explorer_sync"]["authenticated_web_session_sdk"]["sdk_update_calls_completed"] == 8
+    assert review["data_explorer_sync"]["authenticated_web_session_sdk"][
+        "file_descriptions_observed_in_databundle_tree"
+    ] == 8
+    assert review["data_explorer_sync"]["authenticated_web_session_sdk"][
+        "file_descriptions_exact_match_verified"
+    ] is True
+    assert review["data_explorer_sync"]["authenticated_web_session_sdk"]["credentials_extracted"] is False
+    assert review["data_explorer_sync"]["authenticated_web_session_sdk"]["version_2_usability_score"] == 1.0
+    assert review["data_explorer_sync"]["authenticated_web_session_sdk"]["version_2_column_description_score"] == 1
+    assert review["data_explorer_sync"]["legacy_dataset_id_only_usability_endpoint"]["score"] == pytest.approx(
+        0.8235294
+    )
+    assert review["data_explorer_sync"]["legacy_dataset_id_only_usability_endpoint"][
+        "authoritative_for_explicit_version_2"
+    ] is False
     assert review["data_explorer_sync"]["official_dataset_metadata_update"]["request_completed"] is True
     assert review["data_explorer_sync"]["official_dataset_metadata_update"]["data_explorer_file_descriptions_after"] == 0
     assert review["data_explorer_sync"]["official_dataset_metadata_update"]["data_explorer_column_descriptions_after"] == 0

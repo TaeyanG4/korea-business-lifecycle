@@ -7,6 +7,7 @@ import pytest
 
 from korea_business_lifecycle.kaggle_dataset_maintenance import (
     GET_DATABUNDLE_EXTERNAL,
+    GET_DATABUNDLE_EXTERNAL_CHILDREN,
     GET_DATABUNDLE_EXTERNAL_COLUMNS,
     GET_DATABUNDLE_EXTERNAL_COLUMNS_BY_PATH,
     GET_DATASET_BASICS,
@@ -17,6 +18,7 @@ from korea_business_lifecycle.kaggle_dataset_maintenance import (
     apply_metadata_update_plan,
     build_metadata_update_plan,
     get_usability_rating,
+    get_live_metadata_coverage,
     load_live_context,
     summarize_plan,
 )
@@ -93,6 +95,20 @@ class FakeSession:
                     }
                 }
             )
+        if endpoint == GET_DATABUNDLE_EXTERNAL_CHILDREN:
+            assert json["firestorePath"] == ROOT_PATH
+            return FakeResponse(
+                {
+                    "files": [
+                        {
+                            "name": name,
+                            "path": f"{ROOT_PATH}/files/{name}",
+                            "description": resource["description"],
+                        }
+                        for name, resource in self.resources.items()
+                    ]
+                }
+            )
         if endpoint == GET_DATABUNDLE_EXTERNAL_COLUMNS:
             file_name = json["firestorePath"].rsplit("/", 1)[-1]
             fields = self.resources[file_name]["schema"]["fields"]
@@ -109,17 +125,22 @@ class FakeSession:
                 }
             )
         if endpoint == GET_DATABUNDLE_EXTERNAL_COLUMNS_BY_PATH:
+            def hydrated_column(path: str) -> dict[str, Any]:
+                parts = path.split("/")
+                file_name = parts[parts.index("files") + 1]
+                index = int(parts[-1])
+                field = self.resources[file_name]["schema"]["fields"][index]
+                return {
+                    "path": path,
+                    "description": field["description"],
+                    "tableColumnInfo": (
+                        {"type": "NUMERIC"} if path.endswith("/1") else {}
+                    ),
+                }
+
             return FakeResponse(
                 {
-                    "columns": [
-                        {
-                            "path": path,
-                            "tableColumnInfo": (
-                                {"type": "NUMERIC"} if path.endswith("/1") else {}
-                            ),
-                        }
-                        for path in json["firestorePaths"]
-                    ]
+                    "columns": [hydrated_column(path) for path in json["firestorePaths"]]
                 }
             )
         if endpoint == GET_DATASET_USABILITY:
@@ -163,6 +184,19 @@ def test_build_plan_targets_all_files_and_all_live_columns() -> None:
 def test_build_plan_fails_closed_if_live_main_shape_changes() -> None:
     with pytest.raises(KaggleDatasetMaintenanceError, match="live table shape changed"):
         build_metadata_update_plan(FakeSession(wrong_rows=True))
+
+
+def test_live_metadata_coverage_requires_exact_8_file_and_56_column_descriptions() -> None:
+    session = FakeSession()
+    context = load_live_context(session, dataset_version_number=2)
+    coverage = get_live_metadata_coverage(session, context)
+    assert coverage["exact_file_descriptions"] == 8
+    assert coverage["target_file_descriptions"] == 8
+    assert coverage["exact_column_descriptions"] == 56
+    assert coverage["target_column_descriptions"] == 56
+    assert coverage["all_file_descriptions_exact"] is True
+    assert coverage["all_column_descriptions_exact"] is True
+    assert coverage["metadata_complete"] is True
 
 
 def test_explicit_version_is_sent_to_dataset_basics() -> None:

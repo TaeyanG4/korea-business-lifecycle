@@ -423,7 +423,7 @@ def validate_kaggle_row_release_v1(release: dict[str, Any]) -> list[str]:
 
 def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if review.get("decision") != "KAGGLE_CURRENT_SNAPSHOT_MAINTENANCE_PARTIAL_VERIFIED":
+    if review.get("decision") != "KAGGLE_CURRENT_SNAPSHOT_USABILITY_10_VERIFIED":
         errors.append("Kaggle current-snapshot maintenance decision changed")
     if review.get("preserves_initial_row_publication_evidence") is not True:
         errors.append("Kaggle maintenance must preserve initial row-publication evidence")
@@ -451,8 +451,10 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         errors.append("Kaggle maintenance usability evidence must be numeric")
     elif not (0 <= usability_score <= usability_target <= 1):
         errors.append("Kaggle maintenance usability evidence must be ordered in [0, 1]")
-    elif abs(float(usability_score) - 0.8235294) > 1e-7 or float(usability_target) != 1.0:
+    elif float(usability_score) != 1.0 or float(usability_target) != 1.0:
         errors.append("Kaggle maintenance usability score/target changed")
+    if dataset.get("usability_verification_source") != "EXPLICIT_VERSION_2_WEB_UI_AND_AUTHENTICATED_WEB_SDK":
+        errors.append("Kaggle maintenance usability verification source changed")
 
     content = review.get("content", {})
     expected_content = {
@@ -478,9 +480,15 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "parquet_column_descriptions_authored": 26,
         "source_summary_column_descriptions_authored": 4,
         "quickstart_notebook_linked": True,
-        "data_explorer_file_descriptions_persisted": False,
-        "data_explorer_column_descriptions_persisted": False,
-        "column_description_score": 0,
+        "data_explorer_file_descriptions_persisted": True,
+        "data_explorer_file_descriptions_observed": 8,
+        "data_explorer_file_descriptions_exact_match_verified": True,
+        "file_information_requirement_satisfied": True,
+        "data_explorer_column_descriptions_persisted": True,
+        "data_explorer_column_descriptions_observed": 56,
+        "data_explorer_column_descriptions_exact_match_verified": True,
+        "column_description_score": 1,
+        "version_2_usability_complete": True,
         "metadata_sync_dry_run_verified": True,
         "metadata_sync_files": 8,
         "metadata_sync_columns": 56,
@@ -490,7 +498,7 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
             errors.append(f"Kaggle maintenance metadata field changed: {key}")
     if metadata.get("keywords") != ["business", "restaurants", "food", "government", "geospatial analysis"]:
         errors.append("Kaggle maintenance keyword set changed")
-    if metadata.get("pending_actions") != ["EDIT_FILE_INFO", "EDIT_COLUMN_DESCRIPTION"]:
+    if metadata.get("pending_actions") != []:
         errors.append("Kaggle maintenance pending action set changed")
 
     monthly_operations = review.get("monthly_operations", {})
@@ -524,16 +532,40 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
 
     data_explorer_sync = review.get("data_explorer_sync", {})
     expected_sync = {
+        "authenticated_web_session_sdk": {
+            "column_description_pending_action_cleared": True,
+            "column_descriptions_observed": 56,
+            "credentials_extracted": False,
+            "existing_web_session_used": True,
+            "file_descriptions_observed_in_databundle_tree": 8,
+            "file_descriptions_exact_match_verified": True,
+            "file_information_pending_action_cleared": True,
+            "payload_rows_or_files_reuploaded": False,
+            "pending_actions_after": [],
+            "sdk_update_calls_completed": 8,
+            "version_2_column_description_score": 1,
+            "version_2_usability_score": 1.0,
+            "version_2_web_ui_display": "10.00",
+        },
+        "cli_oauth_direct_internal_api": {
+            "attempted": True,
+            "http_status": 401,
+            "result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION",
+        },
+        "legacy_dataset_id_only_usability_endpoint": {
+            "authoritative_for_explicit_version_2": False,
+            "column_description_score": 0,
+            "score": 0.8235294,
+            "version_scope": "UNPINNED_AND_INCONSISTENT_WITH_EXPLICIT_VERSION_2",
+        },
         "script": "scripts/maintain_kaggle_dataset_metadata.py",
         "target_version": 2,
         "target_file_descriptions": 8,
         "target_column_descriptions": 56,
         "dry_run_passed": True,
         "write_attempted": True,
-        "write_executed": False,
-        "write_status": "PENDING_AUTHENTICATED_WEB_SESSION",
-        "last_write_attempt_http_status": 401,
-        "last_write_attempt_result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION",
+        "write_executed": True,
+        "write_status": "COMPLETE_USABILITY_10_VERIFIED",
         "official_dataset_metadata_update": {
             "attempted": True,
             "request_completed": True,
@@ -614,12 +646,16 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "payload_hashes_verified_locally",
         "quickstart_notebook_completed",
         "regional_market_notebook_completed",
+        "data_explorer_8_file_descriptions_verified",
+        "data_explorer_56_column_descriptions_verified",
+        "version_2_pending_actions_cleared",
+        "version_2_usability_10_verified",
     ):
         if verification.get(key) is not True:
             errors.append(f"Kaggle maintenance verification must keep {key}=true")
 
     auth = review.get("authentication", {})
-    if auth.get("method") != "KAGGLE_OAUTH":
+    if auth.get("method") != "KAGGLE_OAUTH_PLUS_AUTHENTICATED_WEB_SESSION":
         errors.append("Kaggle maintenance authentication method changed")
     if auth.get("credential_value_recorded") is not False or auth.get("credential_committed_to_git") is not False:
         errors.append("Kaggle maintenance credentials must never be recorded or committed")

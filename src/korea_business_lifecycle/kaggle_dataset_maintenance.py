@@ -19,6 +19,9 @@ APPROVED_PUBLIC_VERSION_NUMBER = 2
 
 GET_DATASET_BASICS = "/api/i/datasets.DatasetDetailService/GetDatasetBasics"
 GET_DATABUNDLE_EXTERNAL = "/api/i/datasets.databundles.DatabundleService/GetDatabundleExternal"
+GET_DATABUNDLE_EXTERNAL_CHILDREN = (
+    "/api/i/datasets.databundles.DatabundleService/GetDatabundleExternalChildren"
+)
 GET_DATABUNDLE_EXTERNAL_COLUMNS = (
     "/api/i/datasets.databundles.DatabundleService/GetDatabundleExternalColumns"
 )
@@ -355,6 +358,126 @@ def build_metadata_update_plan(
             }
         )
     return context, updates
+
+
+def get_live_metadata_coverage(
+    session: _Session,
+    context: LiveDatasetContext,
+) -> dict[str, Any]:
+    """Compare explicit-version Data Explorer descriptions with the approved metadata.
+
+    The nested file tree returned by GetDatabundleExternal can omit file
+    descriptions even when they are persisted. GetDatabundleExternalChildren
+    at the version root returns the authoritative file-description view used
+    here. Column descriptions are hydrated by their exact Firestore paths.
+    """
+
+    resources = {
+        str(resource["path"]): resource
+        for resource in _metadata(KAGGLE_OWNER)["resources"]
+    }
+    verification = _verification_info(context)
+    root_children = _post_json(
+        session,
+        GET_DATABUNDLE_EXTERNAL_CHILDREN,
+        {
+            "verificationInfo": verification,
+            "firestorePath": context.root_firestore_path,
+            "offset": 0,
+            "count": max(100, len(resources)),
+            "depth": 1,
+        },
+    )
+    live_files = root_children.get("files")
+    if not isinstance(live_files, list):
+        raise KaggleDatasetMaintenanceError("Kaggle root file metadata is unavailable")
+    descriptions_by_file = {
+        str(item.get("name") or ""): str(item.get("description") or "")
+        for item in live_files
+        if isinstance(item, dict) and item.get("name")
+    }
+    if set(descriptions_by_file) != set(resources):
+        raise KaggleDatasetMaintenanceError(
+            "Kaggle root file metadata set changed: "
+            f"expected {sorted(resources)}, got {sorted(descriptions_by_file)}"
+        )
+
+    exact_files = sum(
+        descriptions_by_file[name] == str(resource["description"])
+        for name, resource in resources.items()
+    )
+    target_columns = 0
+    exact_columns = 0
+    per_table: dict[str, dict[str, int]] = {}
+    for name, resource in resources.items():
+        fields = resource.get("schema", {}).get("fields", [])
+        if not fields:
+            continue
+        target_columns += len(fields)
+        file_path = context.file_firestore_paths[name]
+        base = _post_json(
+            session,
+            GET_DATABUNDLE_EXTERNAL_COLUMNS,
+            {"verificationInfo": verification, "firestorePath": file_path},
+        )
+        columns = base.get("columns")
+        if not isinstance(columns, list):
+            raise KaggleDatasetMaintenanceError(f"{name}: Kaggle column listing is unavailable")
+        ordered = sorted(
+            (item for item in columns if isinstance(item, dict)),
+            key=lambda item: int(item.get("order", 0) or 0),
+        )
+        live_names = [str(item.get("name") or "") for item in ordered]
+        expected_names = [str(field["name"]) for field in fields]
+        if live_names != expected_names:
+            raise KaggleDatasetMaintenanceError(
+                f"{name}: live column order changed: expected {expected_names}, got {live_names}"
+            )
+        paths = [str(item.get("firestorePath") or "") for item in ordered]
+        if any(not path for path in paths) or len(set(paths)) != len(paths):
+            raise KaggleDatasetMaintenanceError(f"{name}: invalid column Firestore paths")
+        hydrated = _post_json(
+            session,
+            GET_DATABUNDLE_EXTERNAL_COLUMNS_BY_PATH,
+            {"verificationInfo": verification, "firestorePaths": paths},
+        )
+        full_columns = hydrated.get("columns")
+        if not isinstance(full_columns, list):
+            raise KaggleDatasetMaintenanceError(f"{name}: hydrated column metadata is unavailable")
+        by_path = {
+            str(item.get("path") or item.get("firestorePath") or ""): item
+            for item in full_columns
+            if isinstance(item, dict)
+        }
+        if set(by_path) != set(paths):
+            raise KaggleDatasetMaintenanceError(f"{name}: hydrated column paths changed")
+
+        exact_for_table = 0
+        for item, field, path in zip(ordered, fields, paths, strict=True):
+            if str(item.get("name") or "") != str(field["name"]):
+                raise KaggleDatasetMaintenanceError(f"{name}: column name/order mismatch")
+            full = by_path[path]
+            info = full.get("tableColumnInfo")
+            nested_description = info.get("description") if isinstance(info, dict) else None
+            live_description = str(full.get("description") or nested_description or "")
+            if live_description == str(field["description"]):
+                exact_for_table += 1
+        exact_columns += exact_for_table
+        per_table[name] = {
+            "exact_column_descriptions": exact_for_table,
+            "target_column_descriptions": len(fields),
+        }
+
+    return {
+        "target_file_descriptions": len(resources),
+        "exact_file_descriptions": exact_files,
+        "target_column_descriptions": target_columns,
+        "exact_column_descriptions": exact_columns,
+        "all_file_descriptions_exact": exact_files == len(resources),
+        "all_column_descriptions_exact": exact_columns == target_columns,
+        "metadata_complete": exact_files == len(resources) and exact_columns == target_columns,
+        "per_table": per_table,
+    }
 
 
 def get_usability_rating(session: _Session) -> dict[str, Any]:

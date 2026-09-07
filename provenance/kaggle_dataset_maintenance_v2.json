@@ -2,7 +2,7 @@
   "authentication": {
     "credential_committed_to_git": false,
     "credential_value_recorded": false,
-    "method": "KAGGLE_OAUTH"
+    "method": "KAGGLE_OAUTH_PLUS_AUTHENTICATED_WEB_SESSION"
   },
   "checked_at": "2026-09-08",
   "content": {
@@ -18,15 +18,39 @@
     "wgs84_coordinates_included": false
   },
   "data_explorer_sync": {
+    "authenticated_web_session_sdk": {
+      "column_description_pending_action_cleared": true,
+      "column_descriptions_observed": 56,
+      "credentials_extracted": false,
+      "existing_web_session_used": true,
+      "file_descriptions_exact_match_verified": true,
+      "file_descriptions_observed_in_databundle_tree": 8,
+      "file_information_pending_action_cleared": true,
+      "payload_rows_or_files_reuploaded": false,
+      "pending_actions_after": [],
+      "sdk_update_calls_completed": 8,
+      "version_2_column_description_score": 1,
+      "version_2_usability_score": 1.0,
+      "version_2_web_ui_display": "10.00"
+    },
+    "cli_oauth_direct_internal_api": {
+      "attempted": true,
+      "http_status": 401,
+      "result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION"
+    },
     "dry_run_passed": true,
-    "last_write_attempt_http_status": 401,
-    "last_write_attempt_result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION",
+    "legacy_dataset_id_only_usability_endpoint": {
+      "authoritative_for_explicit_version_2": false,
+      "column_description_score": 0,
+      "score": 0.8235294,
+      "version_scope": "UNPINNED_AND_INCONSISTENT_WITH_EXPLICIT_VERSION_2"
+    },
     "official_dataset_metadata_update": {
       "attempted": true,
-      "request_completed": true,
       "data_explorer_column_descriptions_after": 0,
       "data_explorer_file_descriptions_after": 0,
       "data_explorer_persistence_observed": false,
+      "request_completed": true,
       "usability_score_after": 0.8235294
     },
     "script": "scripts/maintain_kaggle_dataset_metadata.py",
@@ -34,26 +58,27 @@
     "target_file_descriptions": 8,
     "target_version": 2,
     "write_attempted": true,
-    "write_executed": false,
-    "write_status": "PENDING_AUTHENTICATED_WEB_SESSION"
+    "write_executed": true,
+    "write_status": "COMPLETE_USABILITY_10_VERIFIED"
   },
   "dataset": {
+    "current_version": 2,
     "databundle_version_id": 20603554,
     "dataset_id": "taeyangg4/korea-food-service-permits",
     "dataset_id_numeric": 11936072,
     "dataset_version_id": 19491720,
-    "current_version": 2,
     "expected_update_frequency": "monthly",
     "license_metadata": "other",
     "status": "READY",
     "subtitle": "3,010,802 restaurant, cafe and bakery permit records nationwide",
     "title": "South Korea Food-Service Permits - Snapshot",
     "url": "https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permits",
-    "usability_score": 0.8235294,
+    "usability_score": 1.0,
     "usability_target": 1.0,
+    "usability_verification_source": "EXPLICIT_VERSION_2_WEB_UI_AND_AUTHENTICATED_WEB_SDK",
     "visibility": "PUBLIC"
   },
-  "decision": "KAGGLE_CURRENT_SNAPSHOT_MAINTENANCE_PARTIAL_VERIFIED",
+  "decision": "KAGGLE_CURRENT_SNAPSHOT_USABILITY_10_VERIFIED",
   "historical_aggregate": {
     "dataset_id": "taeyangg4/korea-food-service-permit-aggregate",
     "initial_publication_provenance": "provenance/kaggle_release.json",
@@ -62,12 +87,17 @@
     "retirement_reason": "DUPLICATE_DERIVED_PRODUCT_AFTER_CANONICAL_ROW_LEVEL_PUBLICATION"
   },
   "metadata": {
-    "column_description_score": 0,
+    "column_description_score": 1,
     "cover_image_present": true,
     "csv_column_descriptions_authored": 26,
-    "data_explorer_column_descriptions_persisted": false,
-    "data_explorer_file_descriptions_persisted": false,
+    "data_explorer_column_descriptions_exact_match_verified": true,
+    "data_explorer_column_descriptions_observed": 56,
+    "data_explorer_column_descriptions_persisted": true,
+    "data_explorer_file_descriptions_exact_match_verified": true,
+    "data_explorer_file_descriptions_observed": 8,
+    "data_explorer_file_descriptions_persisted": true,
     "file_descriptions_authored": 8,
+    "file_information_requirement_satisfied": true,
     "keywords": [
       "business",
       "restaurants",
@@ -79,15 +109,13 @@
     "metadata_sync_dry_run_verified": true,
     "metadata_sync_files": 8,
     "parquet_column_descriptions_authored": 26,
-    "pending_actions": [
-      "EDIT_FILE_INFO",
-      "EDIT_COLUMN_DESCRIPTION"
-    ],
+    "pending_actions": [],
     "quickstart_notebook_linked": true,
     "source_summary_column_descriptions_authored": 4,
     "structured_overview": true,
     "update_frequency_present": true,
-    "user_specified_sources_present": true
+    "user_specified_sources_present": true,
+    "version_2_usability_complete": true
   },
   "monthly_operations": {
     "cadence": "MONTHLY",
@@ -116,13 +144,6 @@
     "ref": "taeyangg4/korea-food-service-permits-3m-row-quickstart",
     "status": "COMPLETE",
     "successful_version": 6
-  },
-  "regional_market_notebook": {
-    "local_full_row_execution_verified": true,
-    "public": true,
-    "ref": "taeyangg4/south-korea-food-service-market-map",
-    "status": "COMPLETE",
-    "successful_version": 1
   },
   "preserves_initial_row_publication_evidence": true,
   "published_files": [
@@ -175,10 +196,19 @@
       "verified_package_sha256": "d245a268a653e5a724d33fbeb0d7b42912478b566c3bfe39d3aae2198a3cd18a"
     }
   ],
+  "regional_market_notebook": {
+    "local_full_row_execution_verified": true,
+    "public": true,
+    "ref": "taeyangg4/south-korea-food-service-market-map",
+    "status": "COMPLETE",
+    "successful_version": 1
+  },
   "verification": {
     "csv_and_parquet_column_order_match_locally": true,
     "csv_rows_verified_locally": true,
     "current_version_is_2": true,
+    "data_explorer_56_column_descriptions_verified": true,
+    "data_explorer_8_file_descriptions_verified": true,
     "databundle_version_id_verified": true,
     "dataset_version_id_verified": true,
     "kaggle_status_ready": true,
@@ -188,6 +218,8 @@
     "published_file_names_match_package_contract": true,
     "published_file_sizes_match_verified_package": true,
     "quickstart_notebook_completed": true,
-    "regional_market_notebook_completed": true
+    "regional_market_notebook_completed": true,
+    "version_2_pending_actions_cleared": true,
+    "version_2_usability_10_verified": true
   }
 }

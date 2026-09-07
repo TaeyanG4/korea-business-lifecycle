@@ -428,16 +428,43 @@ def compute_release_readiness() -> dict[str, Any]:
                 "metadata_data_explorer_file_descriptions_persisted": kaggle_maintenance_v2["metadata"][
                     "data_explorer_file_descriptions_persisted"
                 ],
+                "metadata_data_explorer_file_descriptions_observed": kaggle_maintenance_v2["metadata"][
+                    "data_explorer_file_descriptions_observed"
+                ],
+                "metadata_data_explorer_file_descriptions_exact_match_verified": kaggle_maintenance_v2["metadata"][
+                    "data_explorer_file_descriptions_exact_match_verified"
+                ],
+                "metadata_file_information_requirement_satisfied": kaggle_maintenance_v2["metadata"][
+                    "file_information_requirement_satisfied"
+                ],
                 "metadata_data_explorer_column_descriptions_persisted": kaggle_maintenance_v2["metadata"][
                     "data_explorer_column_descriptions_persisted"
                 ],
+                "metadata_data_explorer_column_descriptions_observed": kaggle_maintenance_v2["metadata"][
+                    "data_explorer_column_descriptions_observed"
+                ],
+                "metadata_data_explorer_column_descriptions_exact_match_verified": kaggle_maintenance_v2["metadata"][
+                    "data_explorer_column_descriptions_exact_match_verified"
+                ],
                 "metadata_sync_status": kaggle_maintenance_v2["data_explorer_sync"]["write_status"],
                 "metadata_sync_write_attempted": kaggle_maintenance_v2["data_explorer_sync"]["write_attempted"],
-                "metadata_sync_last_http_status": kaggle_maintenance_v2["data_explorer_sync"][
-                    "last_write_attempt_http_status"
-                ],
+                "metadata_sync_cli_oauth_http_status": kaggle_maintenance_v2["data_explorer_sync"][
+                    "cli_oauth_direct_internal_api"
+                ]["http_status"],
+                "metadata_sync_web_sdk_update_calls": kaggle_maintenance_v2["data_explorer_sync"][
+                    "authenticated_web_session_sdk"
+                ]["sdk_update_calls_completed"],
+                "metadata_sync_web_sdk_credentials_extracted": kaggle_maintenance_v2["data_explorer_sync"][
+                    "authenticated_web_session_sdk"
+                ]["credentials_extracted"],
+                "legacy_dataset_id_only_usability_score": kaggle_maintenance_v2["data_explorer_sync"][
+                    "legacy_dataset_id_only_usability_endpoint"
+                ]["score"],
+                "legacy_dataset_id_only_usability_authoritative_for_version_2": kaggle_maintenance_v2[
+                    "data_explorer_sync"
+                ]["legacy_dataset_id_only_usability_endpoint"]["authoritative_for_explicit_version_2"],
                 "metadata_sync_last_result": kaggle_maintenance_v2["data_explorer_sync"][
-                    "last_write_attempt_result"
+                    "write_status"
                 ],
                 "quickstart_notebook_status": kaggle_maintenance_v2["notebook"]["status"],
                 "quickstart_notebook_ref": kaggle_maintenance_v2["notebook"]["ref"],
@@ -456,7 +483,7 @@ def compute_release_readiness() -> dict[str, Any]:
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "sync the remaining Kaggle Data Explorer file/column descriptions for Version 2 through an authenticated Kaggle web session and recheck Usability/Pending Actions; then maintain the single 3,010,802-row canonical current-snapshot dataset, both public notebooks, and monthly update cadence; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
+        "next_product_action": "maintain the single 3,010,802-row canonical current-snapshot dataset on the monthly cadence: refresh and verify source/package evidence, recheck Version 2 Usability 10.00 and both public notebooks, and record Version Notes; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
         "hard_blocks": [
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
             "if optional production lifecycle episodes are materialized, require all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",

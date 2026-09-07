@@ -17,6 +17,7 @@ from korea_business_lifecycle.kaggle_dataset_maintenance import (  # noqa: E402
     KaggleDatasetMaintenanceError,
     apply_metadata_update_plan,
     build_metadata_update_plan,
+    get_live_metadata_coverage,
     get_usability_rating,
     load_live_context,
     summarize_plan,
@@ -84,16 +85,23 @@ def main() -> int:
                 "authenticated Kaggle view disagrees with the current public dataset version"
             )
         context, updates = build_metadata_update_plan(session, authenticated_context)
+        coverage = get_live_metadata_coverage(public_session, public_context)
         before = get_usability_rating(public_session)
         output: dict[str, object] = {
             "mode": "apply" if args.apply else "dry-run",
             "plan": summarize_plan(context, updates),
-            "usability_before": before,
+            "version_2_metadata_coverage": coverage,
+            "legacy_dataset_id_only_usability": before,
+            "usability_scope_warning": (
+                "GetDatasetUsabilityRating cannot pin a dataset version and is known to return a stale implicit-version "
+                "rating for this dataset. Use the explicit Version 2 web UI or authenticated Version 2 SDK response "
+                "for the current usability score."
+            ),
         }
         if args.apply:
             responses = apply_metadata_update_plan(session, updates)
             output["update_calls"] = len(responses)
-            output["usability_after"] = get_usability_rating(public_session)
+            output["legacy_dataset_id_only_usability_after"] = get_usability_rating(public_session)
         print(json.dumps(output, ensure_ascii=True, indent=2, sort_keys=True))
         return 0
     except KaggleDatasetMaintenanceError as exc:

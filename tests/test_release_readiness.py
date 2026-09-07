@@ -145,7 +145,7 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["dataset_version_id"] == 19_491_720
     assert readiness["tracks"]["public_kaggle"]["databundle_version_id"] == 20_603_554
     assert readiness["tracks"]["public_kaggle"]["dataset_expected_update_frequency"] == "monthly"
-    assert readiness["tracks"]["public_kaggle"]["dataset_usability_score"] == pytest.approx(0.8235294)
+    assert readiness["tracks"]["public_kaggle"]["dataset_usability_score"] == 1.0
     assert readiness["tracks"]["public_kaggle"]["dataset_usability_target"] == 1.0
     assert readiness["tracks"]["public_kaggle"]["published_file_count"] == 8
     assert readiness["tracks"]["public_kaggle"]["published_rows"] == 3_010_802
@@ -156,20 +156,30 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["metadata_csv_column_descriptions_authored"] == 26
     assert readiness["tracks"]["public_kaggle"]["metadata_parquet_column_descriptions_authored"] == 26
     assert readiness["tracks"]["public_kaggle"]["metadata_source_summary_column_descriptions_authored"] == 4
-    assert readiness["tracks"]["public_kaggle"]["metadata_pending_actions"] == [
-        "EDIT_FILE_INFO",
-        "EDIT_COLUMN_DESCRIPTION",
-    ]
-    assert readiness["tracks"]["public_kaggle"]["metadata_column_description_score"] == 0
-    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_file_descriptions_persisted"] is False
-    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_column_descriptions_persisted"] is False
-    assert readiness["tracks"]["public_kaggle"]["metadata_sync_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
+    assert readiness["tracks"]["public_kaggle"]["metadata_pending_actions"] == []
+    assert readiness["tracks"]["public_kaggle"]["metadata_column_description_score"] == 1
+    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_file_descriptions_persisted"] is True
+    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_file_descriptions_observed"] == 8
+    assert readiness["tracks"]["public_kaggle"][
+        "metadata_data_explorer_file_descriptions_exact_match_verified"
+    ] is True
+    assert readiness["tracks"]["public_kaggle"]["metadata_file_information_requirement_satisfied"] is True
+    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_column_descriptions_persisted"] is True
+    assert readiness["tracks"]["public_kaggle"]["metadata_data_explorer_column_descriptions_observed"] == 56
+    assert readiness["tracks"]["public_kaggle"][
+        "metadata_data_explorer_column_descriptions_exact_match_verified"
+    ] is True
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_status"] == "COMPLETE_USABILITY_10_VERIFIED"
     assert readiness["tracks"]["public_kaggle"]["metadata_sync_write_attempted"] is True
-    assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_http_status"] == 401
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_cli_oauth_http_status"] == 401
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_web_sdk_update_calls"] == 8
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_web_sdk_credentials_extracted"] is False
+    assert readiness["tracks"]["public_kaggle"]["legacy_dataset_id_only_usability_score"] == pytest.approx(0.8235294)
+    assert readiness["tracks"]["public_kaggle"][
+        "legacy_dataset_id_only_usability_authoritative_for_version_2"
+    ] is False
     assert readiness["tracks"]["public_kaggle"]["quickstart_notebook_version"] == 6
-    assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_result"] == (
-        "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION"
-    )
+    assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_result"] == "COMPLETE_USABILITY_10_VERIFIED"
     assert readiness["tracks"]["public_kaggle"]["quickstart_notebook_status"] == "COMPLETE"
     assert readiness["tracks"]["public_kaggle"]["regional_market_notebook_status"] == "COMPLETE"
     assert readiness["tracks"]["public_kaggle"]["regional_market_notebook_version"] == 1

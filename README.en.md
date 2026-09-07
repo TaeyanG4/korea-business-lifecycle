@@ -19,7 +19,7 @@ A reproducible public-data project built from Korean Ministry of the Interior an
 - Canonical `PERMIT`: **3,010,802 rows / 165,176,236 bytes (~165.2 MB)**, production materialized and independently verified
 - WGS84 sidecar: **3,010,802 rows / 50,805,782 bytes (~50.8 MB)**, 2,811,767 coordinates transformed and independently verified
 - Main Kaggle product: canonical `PERMIT` **3,010,802 rows × 26 columns**, **1,398,626,208-byte CSV + 165,170,021-byte Parquet**, `PUBLIC / READY`
-- Kaggle usability maintenance: structured Overview, cover, tags, official source provenance, monthly update cadence, Quickstart v6, and Regional Market Map v1 are public and complete. Descriptions are authored for all 8 files and 56 Data Explorer columns (26+26+4), but live Usability is currently **8.24/10** with `EDIT_FILE_INFO` / `EDIT_COLUMN_DESCRIPTION` persistence still pending
+- Kaggle usability maintenance: structured Overview, cover, tags, official source provenance, monthly update cadence, Quickstart v6, and Regional Market Map v1 are public and complete. All **8/8** Version 2 file descriptions and **56/56** Data Explorer column descriptions are live and exact-match the approved release metadata; the current web UI shows **10.00/10** Usability with no Pending Actions
 - Historical public aggregate: **67,267 cells** with k=10 suppression. The separate Kaggle dataset was retired after row-level publication to avoid duplicate products; the derived artifact and historical provenance remain preserved
 - Nationwide history/episodes: **not required for v1 completion**; runner, schema, and verifier remain available as optional tooling
 
