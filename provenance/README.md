@@ -18,8 +18,9 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `geospatial_axis_probe.json`: aggregate-only bounded EPSG:5174 source-field axis plausibility evidence; X=easting/Y=northing is strongly preferred in the sample, while nationwide axis verification and WGS84 generation remain blocked.
 - `geospatial_full_axis_plan.json`: aggregate-only full-current-snapshot coordinate-axis validation contract, now marked completed-pass-reviewed.
 - `geospatial_full_axis.json`: reviewed aggregate-only evidence from all 2,811,767 current-v1 coordinate pairs; X=easting/Y=northing is approved for local derivation on the exact current artifacts, while public release remains blocked.
-- `permit_geospatial_materialization_plan.json`: local-only, separately versioned WGS84 enrichment writer/verifier contract; implementation is complete but long local execution is not yet performed.
-- `release_readiness.json`: current product-track gate summary derived from the evidence above; the local PERMIT parent is completed/verified, local WGS84 enrichment implementation is the next product step, and lifecycle/publication gates remain separately blocked.
+- `permit_geospatial_materialization_plan.json`: local-only, separately versioned WGS84 enrichment writer/verifier contract, now marked completed-pass-verified.
+- `permit_geospatial_materialization.json`: aggregate-only evidence for the verified 3,010,802-row WGS84 sidecar build; no row-level coordinates or identifiers are tracked here.
+- `release_readiness.json`: current product-track gate summary derived from the evidence above; the local PERMIT parent and WGS84 enrichment are completed/verified, while lifecycle/publication gates remain separately blocked.
 - `feasibility.json`: current project gate state.
 
 Evidence was rechecked on 2026-09-07 against official `data.go.kr` and Ministry of the Interior and Safety pages. Current v1 snapshots are stored under the repository-local Git-ignored runtime tree; only hashes and aggregate audit results are tracked here, never the source rows themselves.

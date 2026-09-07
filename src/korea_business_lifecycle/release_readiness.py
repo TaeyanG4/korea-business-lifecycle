@@ -13,6 +13,7 @@ from .provenance import (
     load_permit_parent_materialization,
     load_permit_parent_materialization_plan,
     load_permit_geospatial_materialization_plan,
+    load_permit_geospatial_materialization,
     load_privacy_review,
 )
 
@@ -25,6 +26,7 @@ def compute_release_readiness() -> dict[str, Any]:
     geospatial_full = load_geospatial_full_axis_plan()
     geospatial_result = load_geospatial_full_axis()
     geospatial_materialization = load_permit_geospatial_materialization_plan()
+    geospatial_materialization_result = load_permit_geospatial_materialization()
     grain = load_grain_decision()
     privacy = load_privacy_review()
     license_review = load_license_review()
@@ -40,10 +42,14 @@ def compute_release_readiness() -> dict[str, Any]:
         else "REVIEW_REQUIRED"
     )
     geospatial_status = (
-        "READY_FOR_WGS84_ENRICHMENT_USER_EXECUTION"
+        "COMPLETED_VERIFIED"
         if geospatial_full["scope"]["execution_status"] == "COMPLETED_PASS_REVIEWED"
         and geospatial_result["review"]["local_wgs84_derivation_approved"] is True
-        and geospatial_materialization["scope"]["execution_status"] == "NOT_EXECUTED"
+        and geospatial_materialization["scope"]["execution_status"] == "COMPLETED_PASS_VERIFIED"
+        and geospatial_materialization_result["verification"]["parent_build_verified"] is True
+        and geospatial_materialization_result["verification"]["parquet_hashes_verified"] is True
+        and geospatial_materialization_result["verification"]["parquet_schemas_verified"] is True
+        and geospatial_materialization_result["verification"]["coordinate_invariants_verified"] is True
         else "REVIEW_REQUIRED"
     )
     public_status = (
@@ -58,7 +64,7 @@ def compute_release_readiness() -> dict[str, Any]:
 
     return {
         "checked_at": "2026-09-07",
-        "decision": "LOCAL_PERMIT_BUILD_VERIFIED_WGS84_ENRICHMENT_READY_USER_EXECUTION_PUBLICATION_BLOCKED",
+        "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_PUBLICATION_SAFETY_REVIEW_NEXT",
         "tracks": {
             "local_permit_parent": {
                 "status": local_status,
@@ -81,16 +87,18 @@ def compute_release_readiness() -> dict[str, Any]:
                 "local_wgs84_generation_approved": grain["evidence"]["local_wgs84_generation_approved"],
                 "public_wgs84_release_approved": grain["evidence"]["public_wgs84_release_approved"],
                 "enrichment_schema": "FROZEN",
-                "enrichment_builder": "IMPLEMENTED_TESTED_NOT_EXECUTED",
-                "expected_build_id": geospatial_materialization["scope"]["geospatial_build_id"],
-                "expected_rows": geospatial_materialization["scope"]["expected_rows_total"],
-                "expected_transformed_coordinates": geospatial_materialization["scope"][
-                    "expected_transformed_total"
+                "enrichment_builder": "COMPLETED_PASS",
+                "independent_build_verifier": "PASS",
+                "build_id": geospatial_materialization_result["scope"]["geospatial_build_id"],
+                "rows": geospatial_materialization_result["scope"]["rows_total"],
+                "transformed_coordinates": geospatial_materialization_result["scope"][
+                    "transformed_coordinates_total"
                 ],
-                "expected_missing_source_coordinates": geospatial_materialization["scope"][
-                    "expected_missing_total"
+                "missing_source_coordinates": geospatial_materialization_result["scope"][
+                    "missing_source_coordinates_total"
                 ],
-                "parent_permit_build_id": geospatial_materialization["scope"]["parent_permit_build_id"],
+                "output_bytes": geospatial_materialization_result["scope"]["output_bytes_total"],
+                "parent_permit_build_id": geospatial_materialization_result["scope"]["parent_permit_build_id"],
             },
             "lifecycle_episode": {
                 "status": "BLOCKED_PRODUCTION_RECONSTRUCTION",
@@ -108,14 +116,10 @@ def compute_release_readiness() -> dict[str, Any]:
                 "local_materialization_completion_does_not_change_publication_status": True,
             },
         },
-        "next_long_local_actions": [
-            {
-                "priority": 1,
-                "name": "materialize_permit_geospatial",
-                "command": "python scripts/materialize_permit_geospatial.py --execute",
-                "follow_up": "python scripts/verify_permit_geospatial_build.py",
-            }
-        ],
+        "next_long_local_actions": [],
+        "next_product_action": (
+            "define and validate a privacy-minimized public projection candidate; redistribution remains a separate gate"
+        ),
         "hard_blocks": [
             "do not publish row-level data until privacy allowlist and redistribution review pass",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "LOCAL_WGS84_PERMIT_ENRICHMENT_IMPLEMENTED_USER_EXECUTION_REQUIRED",
+  "decision": "LOCAL_WGS84_PERMIT_ENRICHMENT_IMPLEMENTED_AND_VERIFIED",
   "scope": {
     "sources": ["general_restaurants", "rest_cafes", "bakeries"],
     "parent_permit_build_id": "permit-v1-9908225df465e2ff",
@@ -9,7 +9,7 @@
     "expected_transformed_total": 2811767,
     "expected_missing_total": 199035,
     "output_root": "data/local/canonical/permit_geospatial/v1/permit-geo-v1-c4af8799de0283bb",
-    "execution_status": "NOT_EXECUTED",
+    "execution_status": "COMPLETED_PASS_VERIFIED",
     "parent_mutated": false,
     "public_row_level_release_approved": false,
     "network_access_required": false
@@ -66,5 +66,6 @@
     "progress_stream": "stderr",
     "final_aggregate_json_stream": "stdout"
   },
-  "next_gate": "user executes the local WGS84 enrichment and independent verifier; keep row-level publication and lifecycle episode reconstruction blocked"
+  "result_provenance": "provenance/permit_geospatial_materialization.json",
+  "next_gate": "review a privacy-minimized public projection and redistribution evidence separately; keep row-level publication and lifecycle episode reconstruction blocked until their gates pass"
 }

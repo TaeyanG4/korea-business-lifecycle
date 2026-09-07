@@ -87,4 +87,4 @@ The verifier re-verifies the parent build and then rechecks the WGS84 sidecar ma
 
 WGS84 coordinates are precise coordinates. They remain non-public until the `privacy_review.json` field allowlist and the separate redistribution gate pass. Building this sidecar does not approve public row-level release, status semantics, or lifecycle episode reconstruction.
 
-Implementation, synthetic round trips, negative fail-closed tests, and real plan validation are complete. The long 3,010,802-row sidecar materialization awaits user execution.
+The 3,010,802-row sidecar materialization and independent verification are complete. Build `permit-geo-v1-c4af8799de0283bb` totals 50,805,782 Parquet bytes; 2,811,767 rows are `TRANSFORMED` and 199,035 are `MISSING_SOURCE_COORDINATES`. Parent re-verification, manifest/hash/schema/ZSTD checks, and full coordinate-invariant validation all passed. This completion still does not approve public row-level release.

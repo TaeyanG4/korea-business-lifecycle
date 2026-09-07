@@ -36,7 +36,7 @@ pytest -v
 
 ## 현재 history 상태
 
-current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 두 `03→01` source-state reversal이 확인되어 `03`을 irreversible terminal closure로 사용하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했습니다. current snapshot → `PERMIT` transformer와 local Parquet/ZSTD production build `permit-v1-9908225df465e2ff`는 **전체 3,010,802행** 기준으로 완료·독립 검증됐습니다. geospatial full QA는 2,811,767 coordinate pair 전체를 검사해 현재 승인 artifact에 대해 `X=easting/Y=northing`을 채택했습니다. frozen 26컬럼 parent는 그대로 유지하면서 별도 7컬럼 `PERMIT_GEOSPATIAL_ENRICHMENT` schema와 deterministic WGS84 builder/verifier를 구현·테스트했습니다. 예정 build `permit-geo-v1-c4af8799de0283bb`는 3,010,802행 중 2,811,767건을 변환하고 199,035건은 source 좌표 누락으로 null 보존합니다. 실제 장시간 WGS84 materialization은 사용자 실행 대기 상태이며 public row-level release와 episode reconstruction은 계속 차단합니다.
+current snapshot 취득/프로파일링과 5개 자치단체 bounded history audit이 완료되었습니다. 15/15 source×authority pair에서 `MNG_NO` continuity는 강하게 유지됐고, 두 `03→01` source-state reversal이 확인되어 `03`을 irreversible terminal closure로 사용하지 않습니다. v1 grain은 canonical `PERMIT` parent + derived `PERMIT_STATUS_EPISODE`로 고정했습니다. current snapshot → `PERMIT` transformer와 local Parquet/ZSTD production build `permit-v1-9908225df465e2ff`는 **전체 3,010,802행** 기준으로 완료·독립 검증됐습니다. geospatial full QA는 2,811,767 coordinate pair 전체를 검사해 현재 승인 artifact에 대해 `X=easting/Y=northing`을 채택했습니다. frozen 26컬럼 parent는 그대로 유지하면서 별도 7컬럼 WGS84 sidecar `permit-geo-v1-c4af8799de0283bb`도 **3,010,802행 전체**로 materialize·독립 검증 완료했습니다. 2,811,767건은 변환됐고 199,035건은 source 좌표 누락으로 null 보존됩니다. public row-level release와 episode reconstruction은 계속 차단합니다.
 
 ## 문서
 

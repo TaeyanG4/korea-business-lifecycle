@@ -87,4 +87,4 @@ verifier는 parent build를 다시 검증하고, WGS84 sidecar의 manifest, file
 
 WGS84는 precise coordinate이므로 `privacy_review.json`의 public allowlist가 승인되고 redistribution gate가 별도로 통과하기 전에는 공개하지 않습니다. 이 sidecar를 만드는 것은 public row-level release, status semantics, lifecycle episode reconstruction을 승인하지 않습니다.
 
-현재 구현·synthetic round-trip·negative fail-closed tests·실제 plan 검증까지 완료됐고, 실제 3,010,802행 sidecar materialization은 사용자 장시간 실행 대기 상태입니다.
+실제 3,010,802행 sidecar materialization과 독립 검증까지 완료됐습니다. build ID는 `permit-geo-v1-c4af8799de0283bb`이고 총 Parquet 용량은 50,805,782 bytes입니다. 2,811,767행은 `TRANSFORMED`, 199,035행은 `MISSING_SOURCE_COORDINATES`이며 parent 재검증, manifest/hash/schema/ZSTD, 전체 coordinate invariant 검사가 모두 PASS했습니다. 이 완료 상태도 public row-level release 승인을 의미하지 않습니다.

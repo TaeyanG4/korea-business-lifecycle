@@ -17,6 +17,7 @@ from korea_business_lifecycle.provenance import (
     load_permit_parent_materialization_plan,
     load_permit_parent_materialization,
     load_permit_geospatial_materialization_plan,
+    load_permit_geospatial_materialization,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -37,6 +38,7 @@ from korea_business_lifecycle.provenance import (
     validate_permit_parent_materialization_plan,
     validate_permit_parent_materialization,
     validate_permit_geospatial_materialization_plan,
+    validate_permit_geospatial_materialization,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -163,7 +165,7 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_parent_schema_status"] == "FROZEN"
     assert decision["next_gate"]["permit_status_episode_schema"] == "schemas/permit_status_episode.v1.json"
     assert decision["next_gate"]["permit_status_episode_schema_status"] == "FROZEN"
-    assert decision["next_gate"]["phase"] == "Phase 6 Geospatial Enrichment"
+    assert decision["next_gate"]["phase"] == "Phase 7 Publication Safety Review"
     assert decision["next_gate"]["permit_parent_transformer"] == "src/korea_business_lifecycle/canonical_permit.py"
     assert decision["next_gate"]["permit_parent_transformer_status"] == "FULL_SNAPSHOT_VALIDATED"
     assert decision["next_gate"]["permit_parent_compatibility"] == "provenance/permit_parent_compatibility.json"
@@ -181,7 +183,10 @@ def test_v1_grain_is_permit_parent_with_reversible_status_episodes() -> None:
     assert decision["next_gate"]["permit_geospatial_materialization_plan"] == (
         "provenance/permit_geospatial_materialization_plan.json"
     )
-    assert decision["next_gate"]["permit_geospatial_materialization_status"] == "IMPLEMENTED_NOT_EXECUTED"
+    assert decision["next_gate"]["permit_geospatial_materialization"] == (
+        "provenance/permit_geospatial_materialization.json"
+    )
+    assert decision["next_gate"]["permit_geospatial_materialization_status"] == "COMPLETED_PASS_VERIFIED"
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:
@@ -273,7 +278,7 @@ def test_full_geospatial_axis_result_approves_local_derivation_only() -> None:
     assert review["review"]["public_wgs84_release_approved"] is False
 
 
-def test_permit_geospatial_materialization_plan_is_ready_and_private() -> None:
+def test_permit_geospatial_materialization_plan_records_completed_verified_execution() -> None:
     plan = load_permit_geospatial_materialization_plan()
     assert validate_permit_geospatial_materialization_plan(plan) == []
     assert plan["scope"]["parent_permit_build_id"] == "permit-v1-9908225df465e2ff"
@@ -281,6 +286,20 @@ def test_permit_geospatial_materialization_plan_is_ready_and_private() -> None:
     assert plan["scope"]["expected_rows_total"] == 3_010_802
     assert plan["scope"]["expected_transformed_total"] == 2_811_767
     assert plan["scope"]["expected_missing_total"] == 199_035
-    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["execution_status"] == "COMPLETED_PASS_VERIFIED"
     assert plan["scope"]["parent_mutated"] is False
     assert plan["scope"]["public_row_level_release_approved"] is False
+    assert plan["result_provenance"] == "provenance/permit_geospatial_materialization.json"
+
+
+def test_permit_geospatial_materialization_result_is_verified_and_private() -> None:
+    review = load_permit_geospatial_materialization()
+    assert validate_permit_geospatial_materialization(review) == []
+    assert review["scope"]["geospatial_build_id"] == "permit-geo-v1-c4af8799de0283bb"
+    assert review["scope"]["rows_total"] == 3_010_802
+    assert review["scope"]["transformed_coordinates_total"] == 2_811_767
+    assert review["scope"]["missing_source_coordinates_total"] == 199_035
+    assert review["scope"]["output_bytes_total"] == 50_805_782
+    assert review["verification"]["parent_build_verified"] is True
+    assert review["verification"]["coordinate_invariants_verified"] is True
+    assert review["privacy"]["public_row_level_release_status_changed"] is False

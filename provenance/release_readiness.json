@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "LOCAL_PERMIT_BUILD_VERIFIED_WGS84_ENRICHMENT_READY_USER_EXECUTION_PUBLICATION_BLOCKED",
+  "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_PUBLICATION_SAFETY_REVIEW_NEXT",
   "tracks": {
     "local_permit_parent": {
       "status": "COMPLETED_VERIFIED",
@@ -13,7 +13,7 @@
       "public_release_implied": false
     },
     "geospatial_derivation": {
-      "status": "READY_FOR_WGS84_ENRICHMENT_USER_EXECUTION",
+      "status": "COMPLETED_VERIFIED",
       "bounded_axis_evidence": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
       "full_axis_validator": "PASSED_REVIEWED_CURRENT_V1",
       "coordinate_pairs_reviewed": 2811767,
@@ -23,11 +23,13 @@
       "local_wgs84_generation_approved": true,
       "public_wgs84_release_approved": false,
       "enrichment_schema": "FROZEN",
-      "enrichment_builder": "IMPLEMENTED_TESTED_NOT_EXECUTED",
-      "expected_build_id": "permit-geo-v1-c4af8799de0283bb",
-      "expected_rows": 3010802,
-      "expected_transformed_coordinates": 2811767,
-      "expected_missing_source_coordinates": 199035,
+      "enrichment_builder": "COMPLETED_PASS",
+      "independent_build_verifier": "PASS",
+      "build_id": "permit-geo-v1-c4af8799de0283bb",
+      "rows": 3010802,
+      "transformed_coordinates": 2811767,
+      "missing_source_coordinates": 199035,
+      "output_bytes": 50805782,
       "parent_permit_build_id": "permit-v1-9908225df465e2ff"
     },
     "lifecycle_episode": {
@@ -46,14 +48,8 @@
       "local_materialization_completion_does_not_change_publication_status": true
     }
   },
-  "next_long_local_actions": [
-    {
-      "priority": 1,
-      "name": "materialize_permit_geospatial",
-      "command": "python scripts/materialize_permit_geospatial.py --execute",
-      "follow_up": "python scripts/verify_permit_geospatial_build.py"
-    }
-  ],
+  "next_long_local_actions": [],
+  "next_product_action": "define and validate a privacy-minimized public projection candidate; redistribution remains a separate gate",
   "hard_blocks": [
     "do not publish row-level data until privacy allowlist and redistribution review pass",
     "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

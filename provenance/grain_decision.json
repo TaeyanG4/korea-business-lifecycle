@@ -90,7 +90,7 @@
     "production episode reconstruction remains disabled until an explicit bounded history-observation strategy is approved"
   ],
   "next_gate": {
-    "phase": "Phase 6 Geospatial Enrichment",
+    "phase": "Phase 7 Publication Safety Review",
     "permit_parent_schema": "schemas/permit_parent.v1.json",
     "permit_parent_schema_status": "FROZEN",
     "permit_status_episode_schema": "schemas/permit_status_episode.v1.json",
@@ -110,7 +110,8 @@
     "permit_geospatial_schema": "schemas/permit_geospatial.v1.json",
     "permit_geospatial_schema_status": "FROZEN",
     "permit_geospatial_materialization_plan": "provenance/permit_geospatial_materialization_plan.json",
-    "permit_geospatial_materialization_status": "IMPLEMENTED_NOT_EXECUTED",
-    "goal": "execute and independently verify the separately versioned local WGS84 enrichment; keep the frozen parent unchanged, public release blocked, and episode reconstruction disabled"
+    "permit_geospatial_materialization": "provenance/permit_geospatial_materialization.json",
+    "permit_geospatial_materialization_status": "COMPLETED_PASS_VERIFIED",
+    "goal": "define and validate a privacy-minimized public projection candidate while redistribution remains a separate unresolved gate; keep episode reconstruction disabled"
   }
 }

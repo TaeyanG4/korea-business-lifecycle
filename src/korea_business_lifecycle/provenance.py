@@ -89,6 +89,10 @@ def load_permit_geospatial_materialization_plan() -> dict[str, Any]:
     return load_json("provenance/permit_geospatial_materialization_plan.json")
 
 
+def load_permit_geospatial_materialization() -> dict[str, Any]:
+    return load_json("provenance/permit_geospatial_materialization.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -429,8 +433,8 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("permit status episode schema gate reference changed")
     if next_gate.get("permit_status_episode_schema_status") != "FROZEN":
         errors.append("permit status episode schema gate must remain frozen")
-    if next_gate.get("phase") != "Phase 6 Geospatial Enrichment":
-        errors.append("next gate must be Phase 6 geospatial enrichment")
+    if next_gate.get("phase") != "Phase 7 Publication Safety Review":
+        errors.append("next gate must be Phase 7 publication safety review")
     if next_gate.get("permit_parent_transformer") != "src/korea_business_lifecycle/canonical_permit.py":
         errors.append("permit parent transformer reference changed")
     if next_gate.get("permit_parent_transformer_status") != "FULL_SNAPSHOT_VALIDATED":
@@ -465,7 +469,11 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         "provenance/permit_geospatial_materialization_plan.json"
     ):
         errors.append("permit geospatial materialization plan reference changed")
-    if next_gate.get("permit_geospatial_materialization_status") != "IMPLEMENTED_NOT_EXECUTED":
+    if next_gate.get("permit_geospatial_materialization") != (
+        "provenance/permit_geospatial_materialization.json"
+    ):
+        errors.append("permit geospatial materialization result reference changed")
+    if next_gate.get("permit_geospatial_materialization_status") != "COMPLETED_PASS_VERIFIED":
         errors.append("permit geospatial materialization status changed")
     return errors
 
@@ -1032,7 +1040,7 @@ def validate_geospatial_full_axis(review: dict[str, Any]) -> list[str]:
 
 def validate_permit_geospatial_materialization_plan(plan: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if plan.get("decision") != "LOCAL_WGS84_PERMIT_ENRICHMENT_IMPLEMENTED_USER_EXECUTION_REQUIRED":
+    if plan.get("decision") != "LOCAL_WGS84_PERMIT_ENRICHMENT_IMPLEMENTED_AND_VERIFIED":
         errors.append("permit geospatial materialization plan decision changed")
 
     scope = plan.get("scope", {})
@@ -1048,8 +1056,8 @@ def validate_permit_geospatial_materialization_plan(plan: dict[str, Any]) -> lis
         errors.append("permit geospatial expected transformed total changed")
     if scope.get("expected_missing_total") != 199_035:
         errors.append("permit geospatial expected missing total changed")
-    if scope.get("execution_status") != "NOT_EXECUTED":
-        errors.append("permit geospatial tracked plan must remain not executed until user run")
+    if scope.get("execution_status") != "COMPLETED_PASS_VERIFIED":
+        errors.append("permit geospatial tracked plan must record completed verified execution")
     for key in ("parent_mutated", "public_row_level_release_approved", "network_access_required"):
         if scope.get(key) is not False:
             errors.append(f"permit geospatial plan must keep {key}=false")
@@ -1130,4 +1138,85 @@ def validate_permit_geospatial_materialization_plan(plan: dict[str, Any]) -> lis
         errors.append("permit geospatial progress stream changed")
     if execution.get("final_aggregate_json_stream") != "stdout":
         errors.append("permit geospatial final JSON stream changed")
+    if plan.get("result_provenance") != "provenance/permit_geospatial_materialization.json":
+        errors.append("permit geospatial result provenance reference changed")
+    return errors
+
+
+def validate_permit_geospatial_materialization(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != "LOCAL_WGS84_PERMIT_ENRICHMENT_MATERIALIZED_AND_VERIFIED":
+        errors.append("permit geospatial materialization decision changed")
+
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("permit geospatial materialization scope must exactly match v1 sources")
+    if scope.get("parent_permit_build_id") != "permit-v1-9908225df465e2ff":
+        errors.append("permit geospatial materialization parent build id changed")
+    if scope.get("geospatial_build_id") != "permit-geo-v1-c4af8799de0283bb":
+        errors.append("permit geospatial materialization build id changed")
+    if scope.get("rows_total") != 3_010_802:
+        errors.append("permit geospatial materialization row total changed")
+    if scope.get("transformed_coordinates_total") != 2_811_767:
+        errors.append("permit geospatial transformed coordinate total changed")
+    if scope.get("missing_source_coordinates_total") != 199_035:
+        errors.append("permit geospatial missing coordinate total changed")
+    if scope.get("output_bytes_total") != 50_805_782:
+        errors.append("permit geospatial output byte total changed")
+    if scope.get("git_ignored") is not True:
+        errors.append("permit geospatial output must remain Git-ignored")
+    for key in ("parent_mutated", "public_row_level_release_approved"):
+        if scope.get(key) is not False:
+            errors.append(f"permit geospatial materialization must keep {key}=false")
+
+    verification = review.get("verification", {})
+    for key in (
+        "parent_build_verified",
+        "manifest_verified",
+        "parquet_hashes_verified",
+        "parquet_schemas_verified",
+        "zstd_verified",
+        "coordinate_invariants_verified",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"permit geospatial verification {key} must remain true")
+    if verification.get("rows_verified_total") != 3_010_802:
+        errors.append("permit geospatial verified row total changed")
+    if verification.get("row_level_values_recorded") is not False:
+        errors.append("permit geospatial provenance must remain aggregate-only")
+
+    results = review.get("results", [])
+    expected = {
+        "general_restaurants": (2_295_369, 2_134_446, 160_923, 38_060_311),
+        "rest_cafes": (645_952, 611_802, 34_150, 11_420_027),
+        "bakeries": (69_481, 65_519, 3_962, 1_325_444),
+    }
+    if {item.get("source_key") for item in results} != V1_SOURCE_KEYS or len(results) != 3:
+        errors.append("permit geospatial materialization results must exactly cover v1 sources")
+    for item in results:
+        source_key = item.get("source_key")
+        expected_values = expected.get(source_key)
+        if expected_values is None:
+            continue
+        observed = (
+            item.get("rows"),
+            item.get("transformed_coordinates"),
+            item.get("missing_source_coordinates"),
+            item.get("output_bytes"),
+        )
+        if observed != expected_values:
+            errors.append(f"{source_key}: permit geospatial aggregate changed")
+        if item.get("status") != "PASS":
+            errors.append(f"{source_key}: permit geospatial status changed")
+        if len(str(item.get("output_sha256", ""))) != 64:
+            errors.append(f"{source_key}: permit geospatial output SHA-256 invalid")
+
+    privacy = review.get("privacy", {})
+    for key in (
+        "row_level_values_recorded_in_provenance",
+        "public_row_level_release_status_changed",
+        "redistribution_status_changed",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"permit geospatial provenance must keep {key}=false")
     return errors
