@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-09-07",
+  "purpose": "Expand the bounded longitudinal audit across deterministic authority-code scale representatives without nationwide daily-history crawling.",
+  "baseline_authority": "3000000",
+  "selection": {
+    "source": "three observed v1 current snapshots",
+    "eligible_authorities": 229,
+    "eligibility_rule": "authority code appears in all three v1 current snapshots; baseline 3000000 excluded before representative selection",
+    "sort_key": "combined current row count across general_restaurants, rest_cafes, bakeries; authority code as deterministic tie-break",
+    "method": "nearest-index q10, q50, q90 plus maximum",
+    "representatives": [
+      {
+        "label": "q10",
+        "authority_code": "4420000",
+        "current_rows": {
+          "general_restaurants": 1546,
+          "rest_cafes": 401,
+          "bakeries": 37,
+          "total": 1984
+        },
+        "history_pages_two_dates": 43
+      },
+      {
+        "label": "q50",
+        "authority_code": "4530000",
+        "current_rows": {
+          "general_restaurants": 7336,
+          "rest_cafes": 1806,
+          "bakeries": 181,
+          "total": 9323
+        },
+        "history_pages_two_dates": 188
+      },
+      {
+        "label": "q90",
+        "authority_code": "3830000",
+        "current_rows": {
+          "general_restaurants": 21425,
+          "rest_cafes": 5864,
+          "bakeries": 847,
+          "total": 28136
+        },
+        "history_pages_two_dates": 561
+      },
+      {
+        "label": "max",
+        "authority_code": "3220000",
+        "current_rows": {
+          "general_restaurants": 51296,
+          "rest_cafes": 17337,
+          "bakeries": 2016,
+          "total": 70649
+        },
+        "history_pages_two_dates": 1400
+      }
+    ]
+  },
+  "history_dates": ["20260101", "20260906"],
+  "probe_results": {
+    "4420000": {
+      "general_restaurants": {"20260101": 1524, "20260906": 1546},
+      "rest_cafes": {"20260101": 390, "20260906": 401},
+      "bakeries": {"20260101": 36, "20260906": 37}
+    },
+    "4530000": {
+      "general_restaurants": {"20260101": 7215, "20260906": 7336},
+      "rest_cafes": {"20260101": 1728, "20260906": 1806},
+      "bakeries": {"20260101": 176, "20260906": 181}
+    },
+    "3830000": {
+      "general_restaurants": {"20260101": 21118, "20260906": 21425},
+      "rest_cafes": {"20260101": 5664, "20260906": 5864},
+      "bakeries": {"20260101": 830, "20260906": 847}
+    },
+    "3220000": {
+      "general_restaurants": {"20260101": 50404, "20260906": 51297},
+      "rest_cafes": {"20260101": 16686, "20260906": 17337},
+      "bakeries": {"20260101": 1942, "20260906": 2017}
+    }
+  },
+  "additional_history_requests": 2192,
+  "hard_limit": "This is a bounded scale-stratified audit sample, not a statistically representative nationwide sample and not a replacement for full history."
+}

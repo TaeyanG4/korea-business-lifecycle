@@ -188,6 +188,7 @@ def acquire_history_snapshot(
     max_pages: int = DEFAULT_MAX_PAGES,
     max_attempts: int = DEFAULT_MAX_ATTEMPTS,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
+    request_delay_seconds: float = 0.0,
     service_key: str | None = None,
     opener: Callable[[urllib.request.Request, int], Any] = _open_url,
     sleep: Callable[[float], None] = time.sleep,
@@ -201,6 +202,8 @@ def acquire_history_snapshot(
         raise HistoryAcquisitionError("max_attempts must be between 1 and 5")
     if timeout_seconds < 1 or timeout_seconds > 120:
         raise HistoryAcquisitionError("timeout_seconds must be between 1 and 120")
+    if request_delay_seconds < 0 or request_delay_seconds > 5:
+        raise HistoryAcquisitionError("request_delay_seconds must be between 0 and 5")
     key = unquote(require_service_key(service_key))
     root = resolve_data_root(data_root)
     root.mkdir(parents=True, exist_ok=True)
@@ -258,6 +261,8 @@ def acquire_history_snapshot(
             )
             if total_pages == 0 or page_no >= total_pages:
                 break
+            if request_delay_seconds:
+                sleep(request_delay_seconds)
         else:
             raise HistoryAcquisitionError("history acquisition reached page cap without completion")
 
@@ -291,6 +296,7 @@ def acquire_history_snapshot(
                 "max_pages": max_pages,
                 "max_attempts": max_attempts,
                 "timeout_seconds": timeout_seconds,
+                "request_delay_seconds": request_delay_seconds,
             },
             "observed": {
                 "total_count": total_count,

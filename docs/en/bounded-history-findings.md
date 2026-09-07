@@ -1,5 +1,7 @@
 # Bounded History Audit Findings
 
+> The follow-up sample expansion is complete. See [Five-Authority History Sample Findings](expanded-history-findings.md) for the current scoped conclusion.
+
 Checked: **2026-09-07**
 
 This is not a nationwide history harvest. It compares only two as-of snapshots, `2026-01-01` and `2026-09-06`, for one authority code (`3000000`) across general restaurants, rest cafes, and bakeries.

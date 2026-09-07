@@ -1,0 +1,122 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "MNG_NO_CONTINUITY_CONSISTENT_REVERSIBLE_SIGNAL_PRESENT",
+  "scope": {
+    "authorities": ["3000000", "3220000", "3830000", "4420000", "4530000"],
+    "source_count": 3,
+    "pair_count": 15,
+    "start_date": "20260101",
+    "end_date": "20260906",
+    "sampling_note": "One completed baseline authority plus deterministic q10/q50/q90/max scale representatives from authorities present in all three v1 current snapshots. This is not a probability sample."
+  },
+  "evidence": {
+    "snapshot_manifest_count": 30,
+    "aggregate_audit_sha256": "905ad1c8ea17659d26cd7f6a31df273fe26588c0f47aeddf04d912e94af35657",
+    "raw_values_committed": false
+  },
+  "totals": {
+    "start_rows": 133832,
+    "end_rows": 136598,
+    "common_mng_no": 133832,
+    "added_mng_no": 2766,
+    "disappeared_mng_no": 0,
+    "start_duplicate_mng_no_rows": 0,
+    "end_duplicate_mng_no_rows": 0,
+    "simultaneous_name_address_coordinate_changes": 42
+  },
+  "changed_common_rows": {
+    "status": 1994,
+    "detail_status": 1994,
+    "closure_date": 1994,
+    "permit_date": 0,
+    "business_name": 1440,
+    "address": 262,
+    "coordinates": 592
+  },
+  "status_closure_alignment": {
+    "status_and_closure_changed": 1994,
+    "status_changed_without_closure_change": 0,
+    "closure_changed_without_status_change": 0
+  },
+  "status_code_transitions": {
+    "01->01": 34789,
+    "01->03": 1992,
+    "03->01": 2,
+    "03->03": 97049
+  },
+  "status_transition_closure_patterns": {
+    "01->03|blank->value": 1992,
+    "03->01|value->blank": 2
+  },
+  "assessment_counts": {
+    "mng_no_continuity": {"STRONG": 15},
+    "lifecycle_signal": {
+      "USABLE_FOR_FURTHER_AUDIT": 12,
+      "REVERSIBLE_OR_CORRECTION_SIGNAL": 2,
+      "INSUFFICIENT_EVENT_EVIDENCE": 1
+    }
+  },
+  "anomalies": {
+    "reverse_03_to_01": [
+      {
+        "authority_code": "3830000",
+        "source_key": "rest_cafes",
+        "count": 1,
+        "closure_change": "value->blank",
+        "permit_date_changed": 0,
+        "business_name_changed": 0,
+        "address_changed": 0,
+        "coordinates_changed": 0
+      },
+      {
+        "authority_code": "4530000",
+        "source_key": "general_restaurants",
+        "count": 1,
+        "closure_change": "value->blank",
+        "permit_date_changed": 0,
+        "business_name_changed": 0,
+        "address_changed": 0,
+        "coordinates_changed": 0
+      }
+    ],
+    "status_vocabulary_changes": [
+      {
+        "authority_code": "3000000",
+        "source_key": "rest_cafes",
+        "status_codes_added": ["05"]
+      },
+      {
+        "authority_code": "3220000",
+        "source_key": "bakeries",
+        "status_codes_added": ["05"]
+      }
+    ],
+    "insufficient_event_evidence": [
+      {
+        "authority_code": "4420000",
+        "source_key": "bakeries",
+        "reason": "No status change occurred between the two bounded dates."
+      }
+    ],
+    "pairs_with_simultaneous_name_address_coordinate_changes": 9
+  },
+  "identity_claim": {
+    "source_primary_key_declared": false,
+    "establishment_identity_declared": false,
+    "bounded_sample_interpretation": "MNG_NO continuity is consistent across all 15 bounded source/authority pairs, but this does not prove nationwide longitudinal stability or establishment identity."
+  },
+  "lifecycle_claim": {
+    "terminal_closure_declared_irreversible": false,
+    "reopening_or_correction_signal_present": true,
+    "interpretation": "The two 03->01 transitions with closure value->blank and unchanged permit/name/address/coordinates require reopening-versus-correction review before a terminal-event survival model is frozen."
+  },
+  "next_gate": {
+    "required": true,
+    "items": [
+      "review the two 03->01 cases using additional bounded dates around the observed transition window without publishing row values",
+      "review selected name+address+coordinate simultaneous-change cases for relocation, correction, entity replacement or identifier reuse",
+      "resolve status code 05 semantics from the official status-code reference before canonical state mapping",
+      "do not freeze a survival event definition until reversible/correction semantics are resolved"
+    ]
+  }
+}

@@ -99,3 +99,28 @@ def test_history_snapshot_refuses_page_count_above_cap(external_tmp_path: Path) 
             service_key="synthetic",
             opener=opener,
         )
+
+
+def test_history_snapshot_can_pace_requests(external_tmp_path: Path) -> None:
+    root = external_tmp_path / "data"
+    root.mkdir()
+    sleeps: list[float] = []
+
+    def opener(request: Request, _timeout: int) -> FakeResponse:
+        page_no = 1 if "pageNo=1" in request.full_url else 2
+        body = payload(page_no, 101, ["A"] * 100 if page_no == 1 else ["B"])
+        return FakeResponse(body, request.full_url)
+
+    acquire_history_snapshot(
+        "bakeries",
+        base_date="20260101",
+        authority_code="3000000",
+        data_root=root,
+        max_pages=2,
+        max_attempts=1,
+        request_delay_seconds=0.25,
+        service_key="synthetic-secret",
+        opener=opener,
+        sleep=sleeps.append,
+    )
+    assert sleeps == [0.25]

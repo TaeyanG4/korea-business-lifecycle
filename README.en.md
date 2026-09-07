@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the first bounded history audit are complete. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, but two `03→01` reverse transitions prevent irreversible terminal-closure semantics from being frozen. The service key is active, and the project supports both Encoding and Decoding data.go.kr keys. The real key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
 
 ## Documentation
 
@@ -46,6 +46,8 @@ Current-snapshot acquisition/profiling and the first bounded history audit are c
 - [Reproducibility](docs/en/reproducibility.md)
 - [Bounded source profiling](docs/en/profiling.md)
 - [Bounded history audit findings](docs/en/bounded-history-findings.md)
+- [History sample expansion plan](docs/en/history-sample-expansion.md)
+- [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)
 
 ## License

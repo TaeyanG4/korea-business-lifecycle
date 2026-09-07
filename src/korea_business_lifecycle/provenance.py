@@ -25,12 +25,20 @@ def load_history_review() -> dict[str, Any]:
     return load_json("provenance/history_review.json")
 
 
+def load_history_sample_plan() -> dict[str, Any]:
+    return load_json("provenance/history_sample_plan.json")
+
+
 def load_observed_snapshot_summary() -> dict[str, Any]:
     return load_json("provenance/observed_snapshot_summary.json")
 
 
 def load_bounded_history_audit() -> dict[str, Any]:
     return load_json("provenance/bounded_history_audit.json")
+
+
+def load_expanded_history_audit() -> dict[str, Any]:
+    return load_json("provenance/expanded_history_audit.json")
 
 
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
@@ -95,6 +103,27 @@ def validate_history_review(review: dict[str, Any]) -> list[str]:
     return errors
 
 
+def validate_history_sample_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    representatives = plan.get("selection", {}).get("representatives", [])
+    codes = [item.get("authority_code") for item in representatives]
+    labels = [item.get("label") for item in representatives]
+    if labels != ["q10", "q50", "q90", "max"]:
+        errors.append("history sample labels must be q10/q50/q90/max in deterministic order")
+    if len(set(codes)) != 4:
+        errors.append("history sample must contain four distinct added authority codes")
+    if plan.get("baseline_authority") in set(codes):
+        errors.append("baseline authority must be excluded from added representatives")
+    if plan.get("selection", {}).get("eligible_authorities") != 229:
+        errors.append("history sample eligible-authority count changed")
+    page_total = sum(int(item.get("history_pages_two_dates", 0)) for item in representatives)
+    if page_total != plan.get("additional_history_requests"):
+        errors.append("history sample request total must equal representative page totals")
+    if plan.get("history_dates") != ["20260101", "20260906"]:
+        errors.append("history sample dates changed")
+    return errors
+
+
 def validate_observed_snapshot_summary(summary: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     totals = summary.get("totals", {})
@@ -137,4 +166,42 @@ def validate_bounded_history_audit(audit: dict[str, Any]) -> list[str]:
             errors.append(f"{item.get('source_key')}: status changed without closure-date change")
         if alignment.get("closure_changed_without_status_change") != 0:
             errors.append(f"{item.get('source_key')}: closure date changed without status change")
+    return errors
+
+
+def validate_expanded_history_audit(audit: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    scope = audit.get("scope", {})
+    if scope.get("pair_count") != 15:
+        errors.append("expanded-history audit must contain 15 source/authority pairs")
+    if set(scope.get("authorities", [])) != {
+        "3000000",
+        "3220000",
+        "3830000",
+        "4420000",
+        "4530000",
+    }:
+        errors.append("expanded-history authority scope changed")
+    if audit.get("assessment_counts", {}).get("mng_no_continuity", {}).get("STRONG") != 15:
+        errors.append("expanded-history MNG_NO continuity is no longer strong across all pairs")
+    totals = audit.get("totals", {})
+    if totals.get("disappeared_mng_no") != 0:
+        errors.append("expanded-history starting MNG_NO values disappeared")
+    if totals.get("start_duplicate_mng_no_rows") != 0 or totals.get("end_duplicate_mng_no_rows") != 0:
+        errors.append("expanded-history duplicate MNG_NO values observed")
+    if audit.get("changed_common_rows", {}).get("permit_date") != 0:
+        errors.append("expanded-history permit-date changes observed")
+    alignment = audit.get("status_closure_alignment", {})
+    if alignment.get("status_changed_without_closure_change") != 0:
+        errors.append("expanded-history status/closure alignment changed")
+    if alignment.get("closure_changed_without_status_change") != 0:
+        errors.append("expanded-history closure/status alignment changed")
+    if audit.get("status_code_transitions", {}).get("03->01") != 2:
+        errors.append("expanded-history reverse-transition evidence changed")
+    if audit.get("identity_claim", {}).get("source_primary_key_declared") is not False:
+        errors.append("expanded-history audit must not declare a source primary key")
+    if audit.get("identity_claim", {}).get("establishment_identity_declared") is not False:
+        errors.append("expanded-history audit must not declare establishment identity")
+    if audit.get("lifecycle_claim", {}).get("terminal_closure_declared_irreversible") is not False:
+        errors.append("expanded-history audit must not freeze irreversible closure semantics")
     return errors

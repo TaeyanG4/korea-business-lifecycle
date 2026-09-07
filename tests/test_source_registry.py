@@ -1,12 +1,16 @@
 from korea_business_lifecycle.provenance import (
     load_bounded_history_audit,
+    load_expanded_history_audit,
     load_history_review,
+    load_history_sample_plan,
     load_license_review,
     load_observed_snapshot_summary,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
+    validate_history_sample_plan,
     validate_bounded_history_audit,
+    validate_expanded_history_audit,
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_privacy_review,
@@ -67,6 +71,18 @@ def test_history_review_is_finite_but_not_an_event_log() -> None:
     assert review["common_contract"]["event_log_claim"] is False
 
 
+def test_history_sample_plan_is_bounded_and_deterministic() -> None:
+    plan = load_history_sample_plan()
+    assert validate_history_sample_plan(plan) == []
+    assert plan["additional_history_requests"] == 2192
+    assert [item["authority_code"] for item in plan["selection"]["representatives"]] == [
+        "4420000",
+        "4530000",
+        "3830000",
+        "3220000",
+    ]
+
+
 def test_observed_snapshot_summary_matches_empirical_v1_scale() -> None:
     summary = load_observed_snapshot_summary()
     assert validate_observed_snapshot_summary(summary) == []
@@ -83,3 +99,13 @@ def test_bounded_history_audit_keeps_identity_claim_scoped() -> None:
     assert rest["status_codes_added"] == ["05"]
     assert audit["identity_claim"]["source_primary_key_declared"] is False
     assert audit["identity_claim"]["establishment_identity_declared"] is False
+
+
+def test_expanded_history_audit_records_reversibility_without_pk_claim() -> None:
+    audit = load_expanded_history_audit()
+    assert validate_expanded_history_audit(audit) == []
+    assert audit["decision"] == "MNG_NO_CONTINUITY_CONSISTENT_REVERSIBLE_SIGNAL_PRESENT"
+    assert audit["status_code_transitions"]["03->01"] == 2
+    assert audit["assessment_counts"]["mng_no_continuity"] == {"STRONG": 15}
+    assert audit["identity_claim"]["source_primary_key_declared"] is False
+    assert audit["lifecycle_claim"]["terminal_closure_declared_irreversible"] is False
