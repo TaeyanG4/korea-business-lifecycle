@@ -61,28 +61,26 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["redistribution_prepared_inquiry_source_count"] == 3
     assert readiness["tracks"]["public_kaggle"]["redistribution_clarification_outreach_performed"] is False
     assert readiness["tracks"]["public_kaggle"]["redistribution_written_response_received"] is False
-    assert readiness["next_long_local_actions"] == [
-        {
-            "name": "full_deleted_authority_count_probe",
-            "command": "py -3.12 scripts/probe_deleted_authority_semantics.py --execute --max-requests 384 --request-delay-seconds 0.2",
-            "maximum_network_requests": 384,
-            "default_mode_without_execute": "DRY_RUN",
-        }
-    ]
+    assert readiness["next_long_local_actions"] == []
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor"] == (
         "IMPLEMENTED_SYNTHETIC_VALIDATED"
     )
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_max_observations"] == 100_000
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_in_memory_only"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_observation_strategy"] == (
-        "LEGACY_AUTHORITY_PARTITION_POLICY_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
+        "PRE_REFORM_AUTHORITY_DOMAIN_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
     )
     assert readiness["tracks"]["lifecycle_episode"]["history_authenticated_execution_available"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_bounded_deleted_partition_post_reform_freeze_confirmed"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_bounded_current_partition_post_reform_evolution_confirmed"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_current_plus_deleted_union_semantically_equivalent_to_current_snapshot"] is False
-    assert readiness["tracks"]["lifecycle_episode"]["history_full_deleted_authority_count_probe_status"] == "PREPARED_NOT_EXECUTED"
+    assert readiness["tracks"]["lifecycle_episode"]["history_full_deleted_authority_count_probe_status"] == "COMPLETED_VERIFIED"
     assert readiness["tracks"]["lifecycle_episode"]["history_full_deleted_authority_count_probe_request_cap"] == 384
+    assert readiness["tracks"]["lifecycle_episode"]["history_full_deleted_authority_count_probe_requests_executed"] == 384
+    assert readiness["tracks"]["lifecycle_episode"]["history_deleted_source_authority_pairs_post_reform_count_frozen"] == 96
+    assert readiness["tracks"]["lifecycle_episode"]["history_post_reform_current_state_enumeration_policy"] == "CURRENT_244_ONLY_EXCLUDE_DELETED_32"
+    assert readiness["tracks"]["lifecycle_episode"]["history_pre_reform_current_plus_deleted_union_policy"] == "UNRESOLVED_DO_NOT_AUTO_UNION"
+    assert readiness["tracks"]["lifecycle_episode"]["history_pre_reform_authority_domain_resolved"] is False
     assert readiness["tracks"]["lifecycle_episode"]["history_manual_reference_authority_count"] == 245
     assert readiness["tracks"]["lifecycle_episode"]["history_current_official_numeric_authority_count"] == 244
     assert readiness["tracks"]["lifecycle_episode"]["history_current_official_aggregate_token_count"] == 16
@@ -98,10 +96,12 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["lifecycle_episode"]["history_window_date_effective_numeric_enumeration_ready"] is False
     assert readiness["tracks"]["lifecycle_episode"]["history_current_official_numeric_domain_authoritatively_complete"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_future_authority_reference_refresh_required"] is True
-    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_lower_bound"] == 30_247
-    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_upper_bound"] == 30_934
-    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_lower_bound"] == 7_531_503
-    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_upper_bound"] == 7_702_566
+    assert readiness["tracks"]["lifecycle_episode"]["history_pre_reform_requests_per_asof_date_lower_bound"] == 30_247
+    assert readiness["tracks"]["lifecycle_episode"]["history_pre_reform_requests_per_asof_date_upper_bound"] == 30_934
+    assert readiness["tracks"]["lifecycle_episode"]["history_post_reform_requests_per_asof_date_lower_bound"] == 30_151
+    assert readiness["tracks"]["lifecycle_episode"]["history_post_reform_requests_per_asof_date_upper_bound"] == 30_838
+    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_lower_bound"] == 7_524_975
+    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_upper_bound"] == 7_696_038
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
     assert readiness["tracks"]["public_kaggle"]["status"] == "BLOCKED"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False

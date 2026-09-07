@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_COMPLETED_POST_REFORM_COUNT_FREEZE_CONFIRMED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "deleted_numeric_authority_count": 32,
+    "probe_dates": ["20260101", "20260630", "20260701", "20260906"],
+    "tasks": 384,
+    "source_authority_pairs": 96
+  },
+  "execution": {
+    "mode": "EXECUTED",
+    "requests_executed": 384,
+    "unique_tasks": 384,
+    "stderr_progress_lines": 384,
+    "errors_detected": false,
+    "service_key_value_recorded": false,
+    "row_level_values_emitted": false,
+    "local_json_bytes": 56827,
+    "local_json_sha256": "3f8326fe2b82835ffda148b2bb1fda0049452e7719c67d58f439c9977e19ad7f",
+    "local_stderr_bytes": 21600,
+    "local_stderr_sha256": "1a24ab5c37ab2914628dde3bb049cd31ee27aef328d2eb48671b6b66d794055a",
+    "local_artifacts_git_tracked": false
+  },
+  "assessment": {
+    "complete_four_date_pairs": 96,
+    "pairs_queryable_on_all_four_dates": 96,
+    "pairs_with_positive_20260630_count": 90,
+    "pairs_with_all_zero_counts": 6,
+    "all_zero_authority_codes": ["6290000", "6460000"],
+    "pairs_with_count_growth_20260101_to_20260630": 81,
+    "positive_no_growth_pair_count": 9,
+    "positive_no_growth_pair_source": "bakeries",
+    "pairs_with_equal_counts_20260630_20260701_20260906": 96,
+    "post_reform_count_freeze_confirmed_all_pairs": true,
+    "post_reform_row_content_freeze_confirmed_all_pairs": false
+  },
+  "legacy_partition_policy": {
+    "effective_date": "2026-07-01",
+    "post_reform_current_state_enumeration": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
+    "post_reform_policy_approved": true,
+    "pre_reform_current_plus_deleted_union": "UNRESOLVED_DO_NOT_AUTO_UNION",
+    "pre_reform_policy_approved": false,
+    "full_window_numeric_enumeration_ready": false,
+    "reason": "all 96 deleted-code source pairs keep identical counts from 2026-06-30 through 2026-09-06, while bounded full-row evidence confirms frozen deleted partitions and evolving current partitions; current/new codes are also queryable before the reform, so a pre-reform union cannot be assumed complete or non-overlapping"
+  },
+  "semantic_limits": {
+    "count_freeze_proves_row_content_freeze_for_all_96_pairs": false,
+    "current_plus_deleted_union_is_semantically_equivalent_to_current_snapshot": false,
+    "history_is_lossless_event_log": false,
+    "mng_no_primary_key_declared": false
+  },
+  "next_gate": "resolve pre-reform old/new authority partition completeness and overlap semantics before approving a nationwide Jan-Sep enumeration domain or observation cadence"
+}

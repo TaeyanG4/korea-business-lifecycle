@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_PREPARED_NOT_EXECUTED",
+  "decision": "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_COMPLETED_VERIFIED",
   "scope": {
     "sources": ["general_restaurants", "rest_cafes", "bakeries"],
     "authority_reference": "provenance/authority_domain_reference.json",
@@ -22,7 +22,8 @@
   "execution": {
     "default_mode": "DRY_RUN",
     "execute_flag": "--execute",
-    "execution_performed": false,
+    "execution_performed": true,
+    "result_provenance": "provenance/history_authority_partition_full_probe.json",
     "long_running_action_requires_visible_user_command": true,
     "recommended_request_delay_seconds": 0.2,
     "result_stream": "stdout",
@@ -42,5 +43,5 @@
     "script": "scripts/probe_deleted_authority_semantics.py",
     "test_module": "tests/test_history_authority_semantics.py"
   },
-  "next_gate": "execute the exact 384-request count-only probe and archive its aggregate output before generalizing the bounded freeze pattern to all 32 deleted authority codes"
+  "next_gate": "use the completed 384-request aggregate result to enforce post-reform deleted-partition exclusion and resolve the still-ambiguous pre-reform old/new partition domain"
 }

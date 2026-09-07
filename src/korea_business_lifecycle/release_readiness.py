@@ -11,6 +11,7 @@ from .provenance import (
     load_geospatial_full_axis_plan,
     load_grain_decision,
     load_history_authority_partition_findings,
+    load_history_authority_partition_full_probe,
     load_history_authority_partition_probe_plan,
     load_history_observation_strategy,
     load_license_review,
@@ -41,6 +42,7 @@ def compute_release_readiness() -> dict[str, Any]:
     history_strategy = load_history_observation_strategy()
     authority_reference = load_authority_domain_reference()
     authority_partition_findings = load_history_authority_partition_findings()
+    authority_partition_full_probe = load_history_authority_partition_full_probe()
     authority_partition_probe_plan = load_history_authority_partition_probe_plan()
     grain = load_grain_decision()
     privacy = load_privacy_review()
@@ -125,7 +127,7 @@ def compute_release_readiness() -> dict[str, Any]:
                     "maximum_observations_per_call"
                 ],
                 "bounded_reconstructor_in_memory_only": bounded_episode["scope"]["bounded_in_memory_only"],
-                "history_observation_strategy": "LEGACY_AUTHORITY_PARTITION_POLICY_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
+                "history_observation_strategy": "PRE_REFORM_AUTHORITY_DOMAIN_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
                 "history_authenticated_execution_available": authority_partition_findings[
                     "authentication_refresh"
                 ]["authenticated_history_probe_now_succeeds"],
@@ -138,10 +140,25 @@ def compute_release_readiness() -> dict[str, Any]:
                 "history_current_plus_deleted_union_semantically_equivalent_to_current_snapshot": authority_partition_findings[
                     "interpretation"
                 ]["current_plus_deleted_union_is_semantically_equivalent_to_current_snapshot"],
-                "history_full_deleted_authority_count_probe_status": "PREPARED_NOT_EXECUTED",
+                "history_full_deleted_authority_count_probe_status": "COMPLETED_VERIFIED",
                 "history_full_deleted_authority_count_probe_request_cap": authority_partition_probe_plan[
                     "scope"
                 ]["maximum_network_requests"],
+                "history_full_deleted_authority_count_probe_requests_executed": authority_partition_full_probe[
+                    "execution"
+                ]["requests_executed"],
+                "history_deleted_source_authority_pairs_post_reform_count_frozen": authority_partition_full_probe[
+                    "assessment"
+                ]["pairs_with_equal_counts_20260630_20260701_20260906"],
+                "history_post_reform_current_state_enumeration_policy": authority_partition_full_probe[
+                    "legacy_partition_policy"
+                ]["post_reform_current_state_enumeration"],
+                "history_pre_reform_current_plus_deleted_union_policy": authority_partition_full_probe[
+                    "legacy_partition_policy"
+                ]["pre_reform_current_plus_deleted_union"],
+                "history_pre_reform_authority_domain_resolved": authority_partition_full_probe[
+                    "legacy_partition_policy"
+                ]["pre_reform_policy_approved"],
                 "history_manual_reference_authority_count": authority_reference[
                     "official_reference"
                 ]["manual_claim_count"],
@@ -187,11 +204,17 @@ def compute_release_readiness() -> dict[str, Any]:
                 "history_future_authority_reference_refresh_required": history_strategy["paging_basis"][
                     "future_authority_reference_refresh_required"
                 ],
-                "history_requests_per_asof_date_lower_bound": history_strategy["paging_basis"][
-                    "request_lower_bound_per_asof_date"
+                "history_pre_reform_requests_per_asof_date_lower_bound": history_strategy["paging_basis"][
+                    "pre_reform_request_lower_bound_per_asof_date"
                 ],
-                "history_requests_per_asof_date_upper_bound": history_strategy["paging_basis"][
-                    "request_upper_bound_per_asof_date"
+                "history_pre_reform_requests_per_asof_date_upper_bound": history_strategy["paging_basis"][
+                    "pre_reform_request_upper_bound_per_asof_date"
+                ],
+                "history_post_reform_requests_per_asof_date_lower_bound": history_strategy["paging_basis"][
+                    "post_reform_request_lower_bound_per_asof_date"
+                ],
+                "history_post_reform_requests_per_asof_date_upper_bound": history_strategy["paging_basis"][
+                    "post_reform_request_upper_bound_per_asof_date"
                 ],
                 "daily_window_request_lower_bound": next(
                     item["request_lower_bound"]
@@ -249,20 +272,14 @@ def compute_release_readiness() -> dict[str, Any]:
                 "local_materialization_completion_does_not_change_publication_status": True,
             },
         },
-        "next_long_local_actions": [
-            {
-                "name": "full_deleted_authority_count_probe",
-                "command": "py -3.12 scripts/probe_deleted_authority_semantics.py --execute --max-requests 384 --request-delay-seconds 0.2",
-                "maximum_network_requests": 384,
-                "default_mode_without_execute": "DRY_RUN",
-            }
-        ],
-        "next_product_action": "execute the full 32-deleted-authority count probe, define a frozen-legacy-partition inclusion policy, obtain source-specific written redistribution clarification, and then make an explicit history cadence/request-budget decision",
+        "next_long_local_actions": [],
+        "next_product_action": "resolve pre-reform old/new authority partition completeness and overlap semantics, obtain source-specific written redistribution clarification, and then make an explicit history cadence/request-budget decision",
         "hard_blocks": [
             "do not publish row-level data until privacy allowlist and redistribution review pass",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
             "do not reconstruct production lifecycle episodes until the explicit history-observation strategy is approved; status 05 remains unmapped",
             "do not treat frozen deleted-authority history partitions as semantically equivalent to current-state partitions after the 2026-07-01 reform",
+            "do not auto-union current and deleted authority partitions for pre-reform dates until old/new partition completeness and overlap semantics are resolved",
             "do not declare MNG_NO an official source primary key",
         ],
     }

@@ -2,7 +2,7 @@
 
 Checked: **2026-09-07**
 
-A bounded probe was used to test how `OPN_ATMY_GRP_CD` values deleted by the 2026-07-01 administrative reform behave in the history API. The findings are direct execution evidence, not a nationwide generalization across all 32 deleted codes.
+Bounded probes and the full 32-code count-only probe were used to test how `OPN_ATMY_GRP_CD` values deleted by the 2026-07-01 administrative reform behave in the history API. Count-level freeze is verified across the full deleted-code domain, while row-content freeze remains limited to the bounded full-row sample.
 
 ## Authentication state
 
@@ -46,17 +46,38 @@ This shows that the bounded old/new partitions are not a simple duplicate projec
 
 The history authority filter must not be modeled as a simple **date-effective active-code domain**. In the bounded evidence, deleted partitions evolve until the reform boundary and then remain queryable as frozen legacy state, while current partitions can continue evolving. The 244-current + 32-deleted = 276-code candidate union is useful for cost planning, but it is not represented as semantically equivalent to a current-state snapshot for a given date.
 
-## Next gate
+## Completed full 32-code count-only probe
 
-The complete count-only probe covers all 32 deleted codes × 3 sources × 4 dates: **384 requests**. It is DRY_RUN by default.
+The exact 32 deleted codes were probed across three sources and four dates, for **384 requests** total.
+
+- requests: 384/384;
+- unique tasks: 384;
+- complete four-date source/authority pairs: 96/96;
+- equal counts on `2026-06-30`, `2026-07-01`, and `2026-09-06`: 96/96 pairs;
+- non-empty on 2026-06-30: 90 pairs;
+- count growth from 2026-01-01 to 2026-06-30: 81 pairs;
+- zero on all four dates: six pairs, authority codes `6290000` and `6460000`;
+- no row-level values or service key recorded.
+
+The local result JSON SHA-256 is `3f8326fe2b82835ffda148b2bb1fda0049452e7719c67d58f439c9977e19ad7f`; only aggregate provenance is tracked in Git. Count freeze in 96/96 pairs does **not** prove row-content freeze in all 96 pairs.
+
+Offline verification is reproducible with:
 
 ```bash
-py -3.12 scripts/probe_deleted_authority_semantics.py
+py -3.12 scripts/verify_deleted_authority_semantics.py \
+  data/local/logs/deleted-authority-semantics-20260907.json
 ```
 
-Network execution requires an explicit `--execute`; this long-running action is not started automatically.
+## Legacy partition inclusion policy
 
-In Git Bash, preserve the aggregate result and progress streams separately under the Git-ignored local log tree:
+- **On/after 2026-07-01:** enumerate the official current **244 numeric codes only** and exclude the 32 deleted codes from current-state enumeration.
+- **Before 2026-07-01:** do not auto-union current 244 and deleted 32, because current/new codes are already queryable for pre-reform dates.
+- Do not approve a nationwide Jan-Sep enumeration domain until pre-reform old/new partition completeness and overlap are resolved.
+- The 276-code union remains a conservative pre-reform cost-planning candidate, not an authoritative snapshot domain.
+
+## Next gate
+
+The next core gate is pre-reform old/new authority-partition completeness and overlap semantics. Only after that can an observation cadence and request budget be approved. The completed network command is retained below only for reproducibility; it does not need to be rerun.
 
 ```bash
 mkdir -p data/local/logs

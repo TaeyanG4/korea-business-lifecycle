@@ -2,7 +2,7 @@
 
 확인일: **2026-09-07**
 
-2026-07-01 행정체제개편으로 공식 current reference에서 삭제된 `OPN_ATMY_GRP_CD`가 history API에서 어떻게 동작하는지 bounded probe로 확인했습니다. 이 결과는 전국 32개 삭제 코드 전체에 대한 일반화가 아니라, production enumeration 전에 반드시 보존해야 하는 직접 실행 증거입니다.
+2026-07-01 행정체제개편으로 공식 current reference에서 삭제된 `OPN_ATMY_GRP_CD`가 history API에서 어떻게 동작하는지 bounded probe와 전체 32-code count-only probe로 확인했습니다. count-level freeze는 전체 삭제-code domain에 대해 검증했지만 row-content freeze는 bounded full-row sample에만 적용합니다.
 
 ## 인증 상태
 
@@ -46,17 +46,38 @@ row-level 값은 Git에 남기지 않고 Git-ignored local history snapshot에�
 
 history authority filter는 단순한 **date-effective active-code domain**으로 모델링하면 안 됩니다. bounded evidence에서는 삭제 partition이 개편 전까지 진화하다가 이후 frozen legacy state로 계속 queryable하고, current partition은 이후에도 변화할 수 있습니다. 따라서 current 244 + deleted 32 = 276 후보 union은 비용 계획에는 사용할 수 있지만, 특정 날짜의 current-state snapshot과 의미적으로 동일하다고 주장하지 않습니다.
 
-## 다음 gate
+## Full 32-code count-only probe 완료
 
-32개 삭제 코드 전체에 대해 3 source × 4 dates의 count-only probe를 완료해야 합니다. 총 **384 requests**이며 기본 실행은 DRY_RUN입니다.
+32개 삭제 코드 전체에 대해 3 source × 4 dates, 총 **384 requests**의 count-only probe를 완료했습니다.
+
+- requests: 384/384
+- unique task: 384
+- complete four-date source/authority pair: 96/96
+- `2026-06-30 = 2026-07-01 = 2026-09-06` count: 96/96 pair
+- 2026-06-30 non-empty: 90 pair
+- 2026-01-01 → 2026-06-30 count 증가: 81 pair
+- 네 날짜 모두 0건: 6 pair, authority code `6290000`, `6460000`
+- row-level 값 / service key: 기록하지 않음
+
+로컬 결과 JSON SHA-256은 `3f8326fe2b82835ffda148b2bb1fda0049452e7719c67d58f439c9977e19ad7f`이며 Git에는 aggregate provenance만 추적합니다. 96/96 pair의 count 고정은 96개 pair의 row 내용까지 모두 동결됐다는 증명은 아닙니다.
+
+offline 검증은 다음 명령으로 재현할 수 있습니다.
 
 ```bash
-py -3.12 scripts/probe_deleted_authority_semantics.py
+py -3.12 scripts/verify_deleted_authority_semantics.py \
+  data/local/logs/deleted-authority-semantics-20260907.json
 ```
 
-실제 네트워크 실행은 별도 `--execute`가 필요합니다. 이 장시간 실행은 자동으로 시작하지 않습니다.
+## Legacy partition inclusion policy
 
-Git Bash에서 실행 결과와 progress를 Git-ignored local log로 분리해 보존하려면 다음 명령을 사용합니다.
+- **2026-07-01 이후:** current-state enumeration은 공식 current numeric **244개만 사용**하고 deleted 32는 제외합니다.
+- **2026-07-01 이전:** current/new code도 이미 query 가능하므로 current 244와 deleted 32를 자동 union하지 않습니다.
+- pre-reform old/new partition completeness/overlap가 해결되기 전에는 Jan–Sep 전국 enumeration domain을 승인하지 않습니다.
+- 276-code union은 pre-reform 비용 계획용 candidate일 뿐 authoritative snapshot domain이 아닙니다.
+
+## 다음 gate
+
+다음 핵심 gate는 pre-reform old/new authority partition completeness/overlap semantics입니다. 이것이 해결된 뒤에만 observation cadence와 request budget을 최종 결정할 수 있습니다. 이미 완료한 full probe는 재실행할 필요가 없으며, 원 실행 명령은 재현성 목적으로만 아래에 보존합니다.
 
 ```bash
 mkdir -p data/local/logs

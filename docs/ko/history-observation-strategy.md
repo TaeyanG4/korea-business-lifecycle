@@ -19,29 +19,31 @@ production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of
 - authenticated bounded history execution: 가능
 - bounded semantics: sampled deleted partition은 개편 전까지 변화한 뒤 post-reform frozen legacy state로 유지
 - sampled current partition은 post-reform에도 변화 가능
-- 32개 전체 deleted-code count probe: 준비 완료, 미실행
+- 32개 전체 deleted-code count probe: **384/384 완료**, 96개 source/authority pair 모두 post-reform count freeze 확인
+- post-reform current-state enumeration policy: current 244 only, deleted 32 제외
+- pre-reform old/new partition domain: 미확정, current+deleted 자동 union 금지
 
-비용 계획은 current snapshot의 230개 non-empty partition에 대한 paging 수학적 범위에 candidate union의 나머지 46개를 source별 1-request probe로 더합니다.
+비용 계획은 2026-07-01을 경계로 분리합니다. pre-reform은 보수적으로 276 candidate union의 나머지 46개를 source별 1-request probe로 더하고, post-reform은 current 244만 사용하므로 current 공식 domain에서 관찰되지 않은 14개만 source별 probe합니다.
 
-| Source | Current rows | 230 non-empty paging | Candidate probes | Planning range/date |
-|---|---:|---:|---:|---:|
-| 일반음식점 | 2,295,369 | 22,954–23,183 | 46 | 23,000–23,229 |
-| 휴게음식점 | 645,952 | 6,460–6,689 | 46 | 6,506–6,735 |
-| 제과점영업 | 69,481 | 695–924 | 46 | 741–970 |
-| **합계** | **3,010,802** | **30,109–30,796** | **138** | **30,247–30,934** |
+| Source | 230 non-empty paging | Pre-reform probes/range | Post-reform probes/range |
+|---|---:|---:|---:|
+| 일반음식점 | 22,954–23,183 | 46 / 23,000–23,229 | 14 / 22,968–23,197 |
+| 휴게음식점 | 6,460–6,689 | 46 / 6,506–6,735 | 14 / 6,474–6,703 |
+| 제과점영업 | 695–924 | 46 / 741–970 | 14 / 709–938 |
+| **합계** | **30,109–30,796** | **138 / 30,247–30,934** | **42 / 30,151–30,838** |
 
 이 범위는 historical row volume의 upper/lower bound가 아닙니다. bounded 실행에서는 삭제 code가 개편 후에도 non-empty인 frozen legacy partition으로 계속 query됐으므로, candidate union을 특정 날짜의 current-state와 동일하게 해석하지 않습니다.
 
 ## 2026-01-01 ~ 2026-09-06 planning scenarios
 
-249 calendar-day window를 동일한 current-scale planning range로 비교합니다.
+249 calendar-day window를 reform boundary에 맞춰 mixed planning range로 비교합니다.
 
-| Scenario | Observation dates | 최대 observation gap | Request lower | Request upper | 승인 |
+| Scenario | Dates (pre/post) | 최대 gap | Request lower | Request upper | 승인 |
 |---|---:|---:|---:|---:|---|
-| endpoints only | 2 | 248일 | 60,494 | 61,868 | 아니오 |
-| monthly anchor + end | 10 | 31일 | 302,470 | 309,340 | 아니오 |
-| weekly 7-day + end | 37 | 7일 | 1,119,139 | 1,144,558 | 아니오 |
-| daily | 249 | 1일 | 7,531,503 | 7,702,566 | 아니오 |
+| endpoints only | 2 (1/1) | 248일 | 60,398 | 61,772 | 아니오 |
+| monthly anchor + end | 10 (6/4) | 31일 | 302,086 | 308,956 | 아니오 |
+| weekly 7-day + end | 37 (26/11) | 7일 | 1,118,083 | 1,143,502 | 아니오 |
+| daily | 249 (181/68) | 1일 | 7,524,975 | 7,696,038 | 아니오 |
 
 ## 왜 daily도 lossless event log가 아닌가
 
@@ -57,16 +59,15 @@ daily cadence는 interval-censoring width를 줄일 뿐 event-log semantics를 �
 
 ## 현재 결정
 
-`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED`
+`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_PRE_REFORM_AUTHORITY_DOMAIN_AND_COST_REVIEW_REQUIRED`
 
 production reconstruction 전에는 최소한 다음이 필요합니다.
 
-1. 준비된 384-request count-only probe로 삭제 32개 전체의 freeze/queryability 패턴 확인
-2. frozen legacy partition을 날짜별 분석에 포함/제외하는 명시적 정책 결정
-3. 허용 가능한 request budget 결정
-4. 분석 목적에 필요한 최대 censoring gap 결정
-5. snapshot retention/중간 변화 손실 한계 수용 여부 결정
-6. status `05` 및 reopening-vs-correction unresolved 상태 유지
+1. pre-reform old/new authority partition completeness와 overlap semantics 확인
+2. 허용 가능한 request budget 결정
+3. 분석 목적에 필요한 최대 censoring gap 결정
+4. snapshot retention/중간 변화 손실 한계 수용 여부 결정
+5. status `05` 및 reopening-vs-correction unresolved 상태 유지
 
 bounded 실행 결과는 [History Authority Partition Semantics](history-authority-partition-semantics.md)에 기록합니다.
 

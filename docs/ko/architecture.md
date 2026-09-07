@@ -41,14 +41,16 @@
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
       ↳ production nationwide reconstruction: disabled
   → nationwide history observation cost gate
-      ↳ current-scale 276-code candidate-union planning: 30,247..30,934 requests/as-of date
-      ↳ daily 249-date scenario: 7,531,503..7,702,566 requests
+      ↳ pre-reform current-scale conservative planning: 30,247..30,934 requests/as-of date
+      ↳ post-reform current-244-only planning: 30,151..30,838 requests/as-of date
+      ↳ daily mixed-policy 249-date scenario: 7,524,975..7,696,038 requests
       ↳ latest current numeric authority domain: exact 244 ingested/validated
       ↳ exact deleted numeric change-reference codes: 32; current+deleted candidate union: 276
       ↳ current observed authority count: 230; all are a subset of current 244
       ↳ bounded semantics: deleted partition freezes after reform; current partition can keep evolving
-      ↳ full 32-code count-only probe: prepared, 384 requests, not executed
-      ↳ frozen legacy-partition inclusion policy: unresolved
+      ↳ full 32-code count-only probe: completed, 384/384 requests; post-reform count freeze 96/96 pairs
+      ↳ post-reform policy: current 244 only, exclude deleted 32
+      ↳ pre-reform old/new partition domain: unresolved; do not auto-union
       ↳ approved cadence: none
   → redistribution clarification gate
       ↳ source-use metadata: PASS
@@ -56,7 +58,7 @@
       ↳ raw/aggregate external redistribution: unresolved
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety local aggregate 후보도 전수 스캔과 독립 검증까지 완료됐습니다. authority domain은 현재 244개 숫자 코드와 삭제 32개 숫자 코드를 exact ingestion/hash/validation했고 authenticated bounded 실행도 가능해졌습니다. 실행 증거에서는 삭제 partition이 개편 전까지 변화한 뒤 post-reform frozen legacy state로 남고 current partition은 계속 진화했습니다. 따라서 276 candidate union은 비용 계획용이며 current-state equivalence를 주장하지 않습니다. 전체 32개 count probe와 legacy inclusion policy, cadence 승인이 남아 production enumeration은 계속 차단합니다. redistribution도 source-use metadata는 PASS이나 source-specific 서면 확인 전에는 외부 공개를 계속 차단합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety local aggregate 후보도 전수 스캔과 독립 검증까지 완료됐습니다. authority domain은 현재 244개 숫자 코드와 삭제 32개 숫자 코드를 exact ingestion/hash/validation했고 authenticated bounded 실행도 가능해졌습니다. 전체 384-request count-only probe에서 96개 deleted-code source pair 모두 개편 경계 이후 count freeze를 보였습니다. 따라서 2026-07-01 이후 current-state enumeration은 current 244만 사용하고 deleted 32를 제외합니다. 반면 pre-reform에는 current/new partition도 이미 query되므로 current+deleted 276을 자동 union하지 않습니다. pre-reform old/new partition completeness/overlap와 cadence 승인이 남아 전국 production enumeration은 계속 차단합니다. redistribution도 source-use metadata는 PASS이나 source-specific 서면 확인 전에는 외부 공개를 계속 차단합니다.
 
 ## 데이터 저장 원칙
 

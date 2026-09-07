@@ -105,6 +105,82 @@ def summarize_deleted_authority_probe_results(results: list[dict[str, Any]]) -> 
     }
 
 
+def verify_completed_deleted_authority_probe(
+    payload: Mapping[str, Any],
+    authority_reference: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Verify an executed aggregate-only probe result without reading or emitting source rows."""
+    if payload.get("mode") != "EXECUTED":
+        raise HistoryAuthoritySemanticsError("completed probe payload must have mode=EXECUTED")
+    if payload.get("planned_tasks") != EXPECTED_TASK_COUNT:
+        raise HistoryAuthoritySemanticsError("completed probe planned_tasks changed")
+    if payload.get("requests_executed") != EXPECTED_TASK_COUNT:
+        raise HistoryAuthoritySemanticsError("completed probe must contain exactly 384 requests")
+    if payload.get("row_level_values_emitted") is not False:
+        raise HistoryAuthoritySemanticsError("completed probe must not emit row-level values")
+    raw_results = payload.get("results")
+    if not isinstance(raw_results, list) or len(raw_results) != EXPECTED_TASK_COUNT:
+        raise HistoryAuthoritySemanticsError("completed probe must contain exactly 384 result rows")
+    expected = {
+        (task.source_key, task.authority_code, task.base_date)
+        for task in build_deleted_authority_probe_tasks(authority_reference)
+    }
+    actual: set[tuple[str, str, str]] = set()
+    normalized: list[dict[str, Any]] = []
+    for item in raw_results:
+        if not isinstance(item, Mapping) or set(item) != {
+            "source_key",
+            "authority_code",
+            "base_date",
+            "total_count",
+        }:
+            raise HistoryAuthoritySemanticsError("completed probe result fields changed")
+        normalized_item = {
+            "source_key": str(item["source_key"]),
+            "authority_code": str(item["authority_code"]),
+            "base_date": str(item["base_date"]),
+            "total_count": int(item["total_count"]),
+        }
+        key = (
+            normalized_item["source_key"],
+            normalized_item["authority_code"],
+            normalized_item["base_date"],
+        )
+        if key in actual:
+            raise HistoryAuthoritySemanticsError("completed probe contains a duplicate task")
+        actual.add(key)
+        normalized.append(normalized_item)
+    if actual != expected:
+        raise HistoryAuthoritySemanticsError("completed probe task coverage differs from exact 384-task plan")
+    assessment = summarize_deleted_authority_probe_results(normalized)
+    if payload.get("assessment") != assessment:
+        raise HistoryAuthoritySemanticsError("completed probe embedded assessment does not recompute exactly")
+
+    by_pair: dict[tuple[str, str], dict[str, int]] = {}
+    for item in normalized:
+        by_pair.setdefault((item["source_key"], item["authority_code"]), {})[
+            item["base_date"]
+        ] = item["total_count"]
+    all_zero_pairs = [key for key, values in by_pair.items() if all(value == 0 for value in values.values())]
+    all_zero_codes = sorted({authority for _, authority in all_zero_pairs})
+    positive_no_growth_pairs = [
+        key
+        for key, values in by_pair.items()
+        if values["20260630"] > 0 and values["20260630"] == values["20260101"]
+    ]
+    return {
+        **assessment,
+        "unique_tasks": len(actual),
+        "pairs_with_all_zero_counts": len(all_zero_pairs),
+        "all_zero_authority_codes": all_zero_codes,
+        "positive_no_growth_pair_count": len(positive_no_growth_pairs),
+        "post_reform_count_freeze_confirmed_all_pairs": (
+            assessment["pairs_with_equal_counts_20260630_20260701_20260906"] == 96
+        ),
+        "post_reform_row_content_freeze_confirmed_all_pairs": False,
+    }
+
+
 def run_deleted_authority_count_probe(
     *,
     execute: bool = False,

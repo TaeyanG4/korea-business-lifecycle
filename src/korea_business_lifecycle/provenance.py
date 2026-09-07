@@ -118,6 +118,10 @@ def load_history_authority_partition_probe_plan() -> dict[str, Any]:
     return load_json("provenance/history_authority_partition_probe_plan.json")
 
 
+def load_history_authority_partition_full_probe() -> dict[str, Any]:
+    return load_json("provenance/history_authority_partition_full_probe.json")
+
+
 def load_history_authority_partition_findings() -> dict[str, Any]:
     return load_json("provenance/history_authority_partition_findings.json")
 
@@ -278,11 +282,15 @@ def validate_history_review(review: dict[str, Any]) -> list[str]:
     expected_partition = {
         "findings": "provenance/history_authority_partition_findings.json",
         "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+        "full_deleted_count_probe_result": "provenance/history_authority_partition_full_probe.json",
         "authenticated_execution_available": True,
         "bounded_deleted_partition_post_reform_freeze_confirmed": True,
         "bounded_current_partition_post_reform_evolution_confirmed": True,
         "simple_date_effective_active_authority_domain_model_supported": False,
-        "full_32_deleted_count_probe_executed": False,
+        "full_32_deleted_count_probe_executed": True,
+        "all_96_deleted_source_authority_pairs_post_reform_count_frozen": True,
+        "post_reform_deleted_partition_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
+        "pre_reform_old_new_partition_domain_resolved": False,
     }
     if partition != expected_partition:
         errors.append("history authority-partition semantics state changed")
@@ -293,7 +301,7 @@ def validate_history_review(review: dict[str, Any]) -> list[str]:
 
 def validate_history_authority_partition_probe_plan(plan: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if plan.get("decision") != "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_PREPARED_NOT_EXECUTED":
+    if plan.get("decision") != "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_COMPLETED_VERIFIED":
         errors.append("deleted-authority probe-plan decision changed")
     scope = plan.get("scope", {})
     expected_scope = {
@@ -323,8 +331,10 @@ def validate_history_authority_partition_probe_plan(plan: dict[str, Any]) -> lis
     execution = plan.get("execution", {})
     if execution.get("default_mode") != "DRY_RUN" or execution.get("execute_flag") != "--execute":
         errors.append("deleted-authority probe-plan execution defaults changed")
-    if execution.get("execution_performed") is not False:
-        errors.append("deleted-authority full count probe must remain not executed")
+    if execution.get("execution_performed") is not True:
+        errors.append("deleted-authority full count probe execution must remain recorded")
+    if execution.get("result_provenance") != "provenance/history_authority_partition_full_probe.json":
+        errors.append("deleted-authority full count probe result reference changed")
     if execution.get("long_running_action_requires_visible_user_command") is not True:
         errors.append("deleted-authority long-run visibility policy changed")
     privacy = plan.get("privacy", {})
@@ -348,6 +358,84 @@ def validate_history_authority_partition_probe_plan(plan: dict[str, Any]) -> lis
     }
     if implementation != expected_implementation:
         errors.append("deleted-authority probe-plan implementation changed")
+    return errors
+
+
+def validate_history_authority_partition_full_probe(result: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if result.get("decision") != (
+        "FULL_32_DELETED_AUTHORITY_COUNT_PROBE_COMPLETED_POST_REFORM_COUNT_FREEZE_CONFIRMED"
+    ):
+        errors.append("deleted-authority full-probe decision changed")
+    scope = result.get("scope", {})
+    expected_scope = {
+        "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+        "deleted_numeric_authority_count": 32,
+        "probe_dates": ["20260101", "20260630", "20260701", "20260906"],
+        "tasks": 384,
+        "source_authority_pairs": 96,
+    }
+    if scope != expected_scope:
+        errors.append("deleted-authority full-probe scope changed")
+    execution = result.get("execution", {})
+    expected_execution = {
+        "mode": "EXECUTED",
+        "requests_executed": 384,
+        "unique_tasks": 384,
+        "stderr_progress_lines": 384,
+        "errors_detected": False,
+        "service_key_value_recorded": False,
+        "row_level_values_emitted": False,
+        "local_json_bytes": 56827,
+        "local_json_sha256": "3f8326fe2b82835ffda148b2bb1fda0049452e7719c67d58f439c9977e19ad7f",
+        "local_stderr_bytes": 21600,
+        "local_stderr_sha256": "1a24ab5c37ab2914628dde3bb049cd31ee27aef328d2eb48671b6b66d794055a",
+        "local_artifacts_git_tracked": False,
+    }
+    if execution != expected_execution:
+        errors.append("deleted-authority full-probe execution evidence changed")
+    assessment = result.get("assessment", {})
+    expected_assessment = {
+        "complete_four_date_pairs": 96,
+        "pairs_queryable_on_all_four_dates": 96,
+        "pairs_with_positive_20260630_count": 90,
+        "pairs_with_all_zero_counts": 6,
+        "all_zero_authority_codes": ["6290000", "6460000"],
+        "pairs_with_count_growth_20260101_to_20260630": 81,
+        "positive_no_growth_pair_count": 9,
+        "positive_no_growth_pair_source": "bakeries",
+        "pairs_with_equal_counts_20260630_20260701_20260906": 96,
+        "post_reform_count_freeze_confirmed_all_pairs": True,
+        "post_reform_row_content_freeze_confirmed_all_pairs": False,
+    }
+    if assessment != expected_assessment:
+        errors.append("deleted-authority full-probe assessment changed")
+    policy = result.get("legacy_partition_policy", {})
+    expected_policy = {
+        "effective_date": "2026-07-01",
+        "post_reform_current_state_enumeration": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
+        "post_reform_policy_approved": True,
+        "pre_reform_current_plus_deleted_union": "UNRESOLVED_DO_NOT_AUTO_UNION",
+        "pre_reform_policy_approved": False,
+        "full_window_numeric_enumeration_ready": False,
+        "reason": (
+            "all 96 deleted-code source pairs keep identical counts from 2026-06-30 through "
+            "2026-09-06, while bounded full-row evidence confirms frozen deleted partitions and "
+            "evolving current partitions; current/new codes are also queryable before the reform, "
+            "so a pre-reform union cannot be assumed complete or non-overlapping"
+        ),
+    }
+    if policy != expected_policy:
+        errors.append("deleted-authority legacy-partition policy changed")
+    limits = result.get("semantic_limits", {})
+    for key in (
+        "count_freeze_proves_row_content_freeze_for_all_96_pairs",
+        "current_plus_deleted_union_is_semantically_equivalent_to_current_snapshot",
+        "history_is_lossless_event_log",
+        "mng_no_primary_key_declared",
+    ):
+        if limits.get(key) is not False:
+            errors.append(f"deleted-authority full-probe semantic limit must keep {key}=false")
     return errors
 
 
@@ -1082,7 +1170,7 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
     if next_gate.get("history_observation_strategy") != "provenance/history_observation_strategy.json":
         errors.append("history observation strategy evidence reference changed")
     if next_gate.get("history_observation_strategy_status") != (
-        "LEGACY_AUTHORITY_PARTITION_POLICY_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
+        "PRE_REFORM_AUTHORITY_DOMAIN_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
     ):
         errors.append("history observation strategy status changed")
     if next_gate.get("authority_domain_reference") != "provenance/authority_domain_reference.json":
@@ -1102,9 +1190,17 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
     ):
         errors.append("history authority-partition probe plan reference changed")
     if next_gate.get("history_authority_partition_probe_status") != (
-        "FULL_32_COUNT_PROBE_PREPARED_NOT_EXECUTED"
+        "FULL_32_COUNT_PROBE_COMPLETED_VERIFIED"
     ):
         errors.append("history authority-partition probe status changed")
+    if next_gate.get("history_authority_partition_full_probe") != (
+        "provenance/history_authority_partition_full_probe.json"
+    ):
+        errors.append("history authority-partition full-probe reference changed")
+    if next_gate.get("history_authority_partition_full_probe_status") != (
+        "POST_REFORM_COUNT_FREEZE_96_OF_96_CONFIRMED"
+    ):
+        errors.append("history authority-partition full-probe status changed")
     if next_gate.get("redistribution_clarification_plan") != "provenance/redistribution_clarification_plan.json":
         errors.append("redistribution clarification plan reference changed")
     if next_gate.get("redistribution_clarification_status") != "PREPARED_WRITTEN_RESPONSE_PENDING":
@@ -1196,7 +1292,7 @@ def validate_bounded_episode_reconstruction(review: dict[str, Any]) -> list[str]
 def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if review.get("decision") != (
-        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_LEGACY_AUTHORITY_PARTITION_POLICY_AND_COST_REVIEW_REQUIRED"
+        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_PRE_REFORM_AUTHORITY_DOMAIN_AND_COST_REVIEW_REQUIRED"
     ):
         errors.append("history observation strategy decision changed")
     scope = review.get("scope", {})
@@ -1229,20 +1325,24 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
         "date_effective_history_authority_filter_semantics_verified": False,
         "future_authority_reference_refresh_required": True,
         "page_size": 100,
-        "current_scale_candidate_union_probe_requests_per_source_per_asof_date": 46,
-        "current_scale_candidate_union_probe_requests_total_per_asof_date": 138,
-        "request_lower_bound_per_asof_date": 30_247,
-        "request_upper_bound_per_asof_date": 30_934,
-        "cost_basis": "CURRENT_ROW_SCALE_WITH_276_CURRENT_PLUS_DELETED_NUMERIC_CANDIDATE_UNION_230_CURRENTLY_NONEMPTY_PLUS_46_ONE_REQUEST_PROBES_PER_SOURCE_DATE_EFFECTIVE_HISTORY_SEMANTICS_UNVERIFIED_NOT_HISTORICAL_ROW_COUNT_FORECAST",
+        "pre_reform_candidate_union_probe_requests_per_source_per_asof_date": 46,
+        "pre_reform_candidate_union_probe_requests_total_per_asof_date": 138,
+        "pre_reform_request_lower_bound_per_asof_date": 30_247,
+        "pre_reform_request_upper_bound_per_asof_date": 30_934,
+        "post_reform_current_domain_probe_requests_per_source_per_asof_date": 14,
+        "post_reform_current_domain_probe_requests_total_per_asof_date": 42,
+        "post_reform_request_lower_bound_per_asof_date": 30_151,
+        "post_reform_request_upper_bound_per_asof_date": 30_838,
+        "cost_basis": "CURRENT_ROW_SCALE_SPLIT_BY_20260701_POLICY_PRE_REFORM_276_CANDIDATE_UNION_WITH_46_PROBES_PER_SOURCE_POST_REFORM_CURRENT_244_ONLY_WITH_14_PROBES_PER_SOURCE_NOT_HISTORICAL_ROW_COUNT_FORECAST",
     }
     for key, expected in expected_paging.items():
         if paging.get(key) != expected:
             errors.append(f"history observation paging basis {key} changed")
     per_source = paging.get("per_source", [])
     expected_sources = {
-        "general_restaurants": (2_295_369, 22_954, 23_183, 46, 23_000, 23_229),
-        "rest_cafes": (645_952, 6_460, 6_689, 46, 6_506, 6_735),
-        "bakeries": (69_481, 695, 924, 46, 741, 970),
+        "general_restaurants": (2_295_369, 22_954, 23_183, 46, 23_000, 23_229, 14, 22_968, 23_197),
+        "rest_cafes": (645_952, 6_460, 6_689, 46, 6_506, 6_735, 14, 6_474, 6_703),
+        "bakeries": (69_481, 695, 924, 46, 741, 970, 14, 709, 938),
     }
     if {item.get("source_key") for item in per_source} != V1_SOURCE_KEYS or len(per_source) != 3:
         errors.append("history observation per-source paging scope changed")
@@ -1253,19 +1353,22 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
             item.get("current_rows"),
             item.get("observed_nonempty_request_lower_bound_per_asof_date"),
             item.get("observed_nonempty_request_upper_bound_per_asof_date"),
-            item.get("current_scale_candidate_union_probe_requests_per_asof_date"),
-            item.get("request_lower_bound_per_asof_date"),
-            item.get("request_upper_bound_per_asof_date"),
+            item.get("pre_reform_candidate_union_probe_requests_per_asof_date"),
+            item.get("pre_reform_request_lower_bound_per_asof_date"),
+            item.get("pre_reform_request_upper_bound_per_asof_date"),
+            item.get("post_reform_current_domain_probe_requests_per_asof_date"),
+            item.get("post_reform_request_lower_bound_per_asof_date"),
+            item.get("post_reform_request_upper_bound_per_asof_date"),
         )
         if expected is not None and observed != expected:
             errors.append(f"{source_key}: history observation request bounds changed")
 
     scenarios = {item.get("name"): item for item in review.get("scenarios", [])}
     expected_scenarios = {
-        "ENDPOINTS_ONLY": (2, 248, 60_494, 61_868),
-        "MONTHLY_ANCHOR_PLUS_END": (10, 31, 302_470, 309_340),
-        "WEEKLY_7D_PLUS_END": (37, 7, 1_119_139, 1_144_558),
-        "DAILY": (249, 1, 7_531_503, 7_702_566),
+        "ENDPOINTS_ONLY": (2, 1, 1, 248, 60_398, 61_772),
+        "MONTHLY_ANCHOR_PLUS_END": (10, 6, 4, 31, 302_086, 308_956),
+        "WEEKLY_7D_PLUS_END": (37, 26, 11, 7, 1_118_083, 1_143_502),
+        "DAILY": (249, 181, 68, 1, 7_524_975, 7_696_038),
     }
     if set(scenarios) != set(expected_scenarios):
         errors.append("history observation scenario set changed")
@@ -1273,6 +1376,8 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
         item = scenarios.get(name, {})
         observed = (
             item.get("observation_dates"),
+            item.get("pre_reform_observation_dates"),
+            item.get("post_reform_observation_dates"),
             item.get("maximum_gap_days"),
             item.get("request_lower_bound"),
             item.get("request_upper_bound"),
@@ -1296,12 +1401,17 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
     expected_partition = {
         "findings": "provenance/history_authority_partition_findings.json",
         "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+        "full_deleted_count_probe_result": "provenance/history_authority_partition_full_probe.json",
         "authenticated_execution_available": True,
         "bounded_deleted_partition_post_reform_freeze_confirmed": True,
         "bounded_current_partition_post_reform_evolution_confirmed": True,
         "current_plus_deleted_union_semantically_equivalent_to_current_snapshot": False,
-        "full_32_deleted_count_probe_executed": False,
+        "full_32_deleted_count_probe_executed": True,
         "full_32_deleted_count_probe_request_cap": 384,
+        "post_reform_count_frozen_source_authority_pairs": 96,
+        "post_reform_current_state_enumeration_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
+        "pre_reform_current_plus_deleted_union_policy": "UNRESOLVED_DO_NOT_AUTO_UNION",
+        "pre_reform_authority_domain_resolved": False,
     }
     if partition != expected_partition:
         errors.append("history observation authority-partition semantics changed")

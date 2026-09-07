@@ -9,6 +9,7 @@ from korea_business_lifecycle.provenance import (
     load_geospatial_full_axis_plan,
     load_history_observation_strategy,
     load_history_authority_partition_findings,
+    load_history_authority_partition_full_probe,
     load_history_authority_partition_probe_plan,
     load_history_review,
     load_history_sample_plan,
@@ -42,6 +43,7 @@ from korea_business_lifecycle.provenance import (
     validate_geospatial_full_axis_plan,
     validate_history_observation_strategy,
     validate_history_authority_partition_findings,
+    validate_history_authority_partition_full_probe,
     validate_history_authority_partition_probe_plan,
     validate_license_review,
     validate_observed_snapshot_summary,
@@ -131,7 +133,10 @@ def test_history_review_is_finite_but_not_an_event_log() -> None:
     assert review["common_contract"]["official_authority_reference"]["date_effective_history_authority_filter_semantics_verified"] is False
     assert review["common_contract"]["authenticated_probe_refresh_2026_09_07"]["result_code"] == "0"
     assert review["common_contract"]["authority_partition_semantics"]["authenticated_execution_available"] is True
-    assert review["common_contract"]["authority_partition_semantics"]["full_32_deleted_count_probe_executed"] is False
+    assert review["common_contract"]["authority_partition_semantics"]["full_32_deleted_count_probe_executed"] is True
+    assert review["common_contract"]["authority_partition_semantics"]["all_96_deleted_source_authority_pairs_post_reform_count_frozen"] is True
+    assert review["common_contract"]["authority_partition_semantics"]["post_reform_deleted_partition_policy"] == "CURRENT_244_ONLY_EXCLUDE_DELETED_32"
+    assert review["common_contract"]["authority_partition_semantics"]["pre_reform_old_new_partition_domain_resolved"] is False
 
 
 def test_official_authority_reference_tracks_current_and_deleted_exact_codes_without_overclaiming_history_semantics() -> None:
@@ -150,15 +155,29 @@ def test_official_authority_reference_tracks_current_and_deleted_exact_codes_wit
     assert review["ingestion_gate"]["history_window_date_effective_numeric_enumeration_ready"] is False
 
 
-def test_deleted_authority_partition_probe_plan_is_bounded_and_not_executed() -> None:
+def test_deleted_authority_partition_probe_plan_is_bounded_and_completed() -> None:
     plan = load_history_authority_partition_probe_plan()
     assert validate_history_authority_partition_probe_plan(plan) == []
     assert plan["scope"]["deleted_numeric_authority_count"] == 32
     assert plan["scope"]["tasks"] == 384
     assert plan["scope"]["maximum_network_requests"] == 384
     assert plan["execution"]["default_mode"] == "DRY_RUN"
-    assert plan["execution"]["execution_performed"] is False
+    assert plan["execution"]["execution_performed"] is True
+    assert plan["execution"]["result_provenance"] == "provenance/history_authority_partition_full_probe.json"
     assert plan["privacy"]["only_authority_date_source_total_count_emitted"] is True
+
+
+def test_full_deleted_authority_probe_confirms_count_freeze_without_overclaiming_rows() -> None:
+    result = load_history_authority_partition_full_probe()
+    assert validate_history_authority_partition_full_probe(result) == []
+    assert result["execution"]["requests_executed"] == 384
+    assert result["assessment"]["pairs_with_equal_counts_20260630_20260701_20260906"] == 96
+    assert result["assessment"]["post_reform_count_freeze_confirmed_all_pairs"] is True
+    assert result["assessment"]["post_reform_row_content_freeze_confirmed_all_pairs"] is False
+    assert result["legacy_partition_policy"]["post_reform_current_state_enumeration"] == (
+        "CURRENT_244_ONLY_EXCLUDE_DELETED_32"
+    )
+    assert result["legacy_partition_policy"]["pre_reform_policy_approved"] is False
 
 
 def test_bounded_deleted_authority_findings_confirm_freeze_without_overgeneralizing() -> None:
@@ -452,12 +471,14 @@ def test_bounded_episode_reconstructor_is_validated_but_production_remains_disab
 def test_history_observation_strategy_quantifies_cost_without_approving_nationwide_cadence() -> None:
     review = load_history_observation_strategy()
     assert validate_history_observation_strategy(review) == []
-    assert review["paging_basis"]["request_lower_bound_per_asof_date"] == 30_247
-    assert review["paging_basis"]["request_upper_bound_per_asof_date"] == 30_934
+    assert review["paging_basis"]["pre_reform_request_lower_bound_per_asof_date"] == 30_247
+    assert review["paging_basis"]["pre_reform_request_upper_bound_per_asof_date"] == 30_934
+    assert review["paging_basis"]["post_reform_request_lower_bound_per_asof_date"] == 30_151
+    assert review["paging_basis"]["post_reform_request_upper_bound_per_asof_date"] == 30_838
     assert review["paging_basis"]["current_official_numeric_domain_authoritatively_complete_for_reference_date"] is True
     assert review["paging_basis"]["history_window_date_effective_numeric_enumeration_ready"] is False
     daily = next(item for item in review["scenarios"] if item["name"] == "DAILY")
-    assert daily["request_lower_bound"] == 7_531_503
-    assert daily["request_upper_bound"] == 7_702_566
+    assert daily["request_lower_bound"] == 7_524_975
+    assert daily["request_upper_bound"] == 7_696_038
     assert daily["approved_for_production"] is False
     assert review["scope"]["production_episode_reconstruction_enabled"] is False

@@ -11,6 +11,7 @@ from korea_business_lifecycle.history_authority_semantics import (
     build_deleted_authority_probe_tasks,
     run_deleted_authority_count_probe,
     summarize_deleted_authority_probe_results,
+    verify_completed_deleted_authority_probe,
 )
 
 
@@ -74,3 +75,33 @@ def test_summary_rejects_duplicate_task_result() -> None:
     }
     with pytest.raises(HistoryAuthoritySemanticsError, match="duplicate"):
         summarize_deleted_authority_probe_results([item, dict(item)])
+
+
+def test_completed_probe_verifier_requires_exact_384_task_coverage() -> None:
+    def fake_probe(source_key: str, *, base_date: str, authority_code: str, num_rows: int):
+        counts = {"20260101": 10, "20260630": 12, "20260701": 12, "20260906": 12}
+        return SimpleNamespace(total_count=counts[base_date])
+
+    payload = run_deleted_authority_count_probe(
+        execute=True,
+        probe=fake_probe,
+        sleep=lambda _: None,
+        request_delay_seconds=0,
+    )
+    summary = verify_completed_deleted_authority_probe(payload)
+    assert summary["unique_tasks"] == 384
+    assert summary["post_reform_count_freeze_confirmed_all_pairs"] is True
+    assert summary["post_reform_row_content_freeze_confirmed_all_pairs"] is False
+
+
+def test_completed_probe_verifier_rejects_partial_payload() -> None:
+    payload = {
+        "mode": "EXECUTED",
+        "planned_tasks": 384,
+        "requests_executed": 383,
+        "row_level_values_emitted": False,
+        "results": [],
+        "assessment": {},
+    }
+    with pytest.raises(HistoryAuthoritySemanticsError, match="384 requests"):
+        verify_completed_deleted_authority_probe(payload)

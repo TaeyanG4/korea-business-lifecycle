@@ -59,13 +59,17 @@
     "authority_partition_semantics": {
       "findings": "provenance/history_authority_partition_findings.json",
       "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
+      "full_deleted_count_probe_result": "provenance/history_authority_partition_full_probe.json",
       "authenticated_execution_available": true,
       "bounded_deleted_partition_post_reform_freeze_confirmed": true,
       "bounded_current_partition_post_reform_evolution_confirmed": true,
       "simple_date_effective_active_authority_domain_model_supported": false,
-      "full_32_deleted_count_probe_executed": false
+      "full_32_deleted_count_probe_executed": true,
+      "all_96_deleted_source_authority_pairs_post_reform_count_frozen": true,
+      "post_reform_deleted_partition_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
+      "pre_reform_old_new_partition_domain_resolved": false
     },
-    "nationwide_completeness_blocker": "authenticated execution is available, but bounded evidence shows deleted authority partitions remain queryable as frozen legacy state after the reform while current partitions can continue evolving; the prepared full 32-code count probe and an explicit legacy-partition inclusion policy are required before any nationwide cadence/request budget can be approved"
+    "nationwide_completeness_blocker": "the full 384-request count probe confirms post-reform count freeze across all 96 deleted-code source pairs, so deleted codes are excluded from post-reform current-state enumeration; however current/new codes are also queryable for pre-reform dates, so pre-reform old/new partition completeness and overlap semantics remain unresolved and no nationwide cadence/request budget is approved"
   },
   "categories": [
     {
