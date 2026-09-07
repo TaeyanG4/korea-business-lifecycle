@@ -19,11 +19,14 @@ official source evidence
   → local PERMIT Parquet/ZSTD materialization
       ↳ builder: implemented/tested
       ↳ production execution: pending user run
-  → separate geospatial QA / derived normalization
+  → geospatial source-field QA
+      ↳ bounded axis probe: X=easting/Y=northing strongly preferred
+      ↳ full-snapshot aggregate validator: implemented / user execution pending
+      ↳ WGS84 generation: blocked
   → separate publication review
 ```
 
-The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer has passed synthetic validation, bounded real compatibility on 256 rows per source, and the complete 3,010,802-row full dry run. A local-only production Parquet/ZSTD builder restricted to the exact approved input SHA-256 values is also implemented and tested. The long production materialization remains pending user execution; public row-level release, WGS84 generation, full-history ingestion, episode reconstruction, and Kaggle publication remain disabled.
+The v1 grain and both canonical schema contracts are frozen, and the current-snapshot → `PERMIT` transformer passed synthetic validation, bounded real compatibility, and the complete 3,010,802-row full dry run. A local-only Parquet/ZSTD builder restricted to exact approved SHA-256 inputs is implemented and tested. Bounded geospatial QA strongly supports source X=easting/Y=northing and a full-snapshot aggregate validator is implemented, but it has not run yet, so the schema axis-validation flag and WGS84 generation remain disabled. Production materialization and full geospatial validation await long user execution; publication and episode reconstruction remain blocked.
 
 ## Data storage rule
 

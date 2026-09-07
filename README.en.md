@@ -36,7 +36,7 @@ Tests are offline and use synthetic fixtures only.
 
 ## Current history status
 
-Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and a three-date follow-up confirmed both `03→01` cases as source-level `closed→operating/normal` reversals. The project therefore rejects code `03` as an assumed irreversible terminal closure. The v1 grain is frozen as a canonical `PERMIT` parent plus derived `PERMIT_STATUS_EPISODE`; both the 26-column `PERMIT` parent schema and the 23-column `PERMIT_STATUS_EPISODE` schema are frozen. The current-snapshot → `PERMIT` deterministic transformer has passed synthetic fixtures, bounded compatibility on 256 real rows per source, and the **complete 3,010,802-row full-snapshot dry run**. The full scan found zero duplicate linkage candidates; the four `INVALID` permit dates match the prior profiling anomaly and remain null plus quality flags. A local-only Parquet/ZSTD production materializer is now implemented and tested, pinned to the exact approved input hashes; only the long production build awaits user execution. Episode boundaries preserve left/interval/right censoring without inferring exact transition times, canonical active/closed states, or terminal events. Public row-level release, WGS84 generation, and episode reconstruction remain disabled. The real service key remains local-only via `.env` or `KBL_DATA_GO_KR_SERVICE_KEY` and is never committed.
+Current-snapshot acquisition/profiling and the five-authority bounded history audit are complete. `MNG_NO` continuity remains strong across all 15 source×authority pairs, and two `03→01` source-state reversals are confirmed, so code `03` is not treated as irreversible terminal closure. The v1 `PERMIT` and `PERMIT_STATUS_EPISODE` schemas are frozen. The current-snapshot → `PERMIT` transformer passed synthetic validation, bounded real compatibility, and the **complete 3,010,802-row full dry run** with zero duplicate linkage candidates. A local-only Parquet/ZSTD materializer pinned to the exact approved hashes is implemented and tested. Bounded geospatial QA on 15,000 pairs strongly supports `좌표정보(X)=easting` and `좌표정보(Y)=northing` from coarse address-region consistency, but WGS84 remains blocked pending nationwide full-snapshot QA. That aggregate-only 3,010,802-row geospatial validator is also implemented and awaits the long user execution. Public row-level release, WGS84 generation, and episode reconstruction remain disabled.
 
 ## Documentation
 
@@ -54,6 +54,7 @@ Current-snapshot acquisition/profiling and the five-authority bounded history au
 - [Canonical PERMIT bounded real-data compatibility](docs/en/canonical-permit-compatibility.md)
 - [Canonical PERMIT full-snapshot dry run](docs/en/canonical-permit-full-dry-run.md)
 - [Canonical PERMIT production materialization](docs/en/canonical-permit-materialization.md)
+- [Geospatial source X/Y axis QA](docs/en/geospatial-axis-qa.md)
 - [History sample expansion plan](docs/en/history-sample-expansion.md)
 - [Five-authority history sample findings](docs/en/expanded-history-findings.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)

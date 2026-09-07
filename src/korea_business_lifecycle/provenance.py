@@ -69,6 +69,14 @@ def load_permit_parent_materialization_plan() -> dict[str, Any]:
     return load_json("provenance/permit_parent_materialization_plan.json")
 
 
+def load_geospatial_axis_probe() -> dict[str, Any]:
+    return load_json("provenance/geospatial_axis_probe.json")
+
+
+def load_geospatial_full_axis_plan() -> dict[str, Any]:
+    return load_json("provenance/geospatial_full_axis_plan.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -377,6 +385,20 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("grain decision continuity evidence changed")
     if evidence.get("confirmed_03_to_01_reversals") != 2:
         errors.append("grain decision reversal evidence changed")
+    if evidence.get("bounded_geospatial_axis_probe") != "provenance/geospatial_axis_probe.json":
+        errors.append("grain decision bounded geospatial evidence reference changed")
+    if evidence.get("bounded_geospatial_axis_assessment") != (
+        "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+    ):
+        errors.append("grain decision bounded geospatial assessment changed")
+    if evidence.get("full_geospatial_axis_plan") != "provenance/geospatial_full_axis_plan.json":
+        errors.append("grain decision full geospatial axis plan reference changed")
+    if evidence.get("full_geospatial_axis_status") != "IMPLEMENTED_NOT_EXECUTED":
+        errors.append("grain decision full geospatial axis status changed")
+    if evidence.get("coordinate_axis_order_verified_nationwide") is not False:
+        errors.append("grain decision must not claim nationwide coordinate-axis verification")
+    if evidence.get("wgs84_generation_approved") is not False:
+        errors.append("grain decision must keep WGS84 generation blocked")
 
     next_gate = decision.get("next_gate", {})
     if next_gate.get("permit_parent_schema") != "schemas/permit_parent.v1.json":
@@ -676,4 +698,153 @@ def validate_permit_parent_materialization_plan(plan: dict[str, Any]) -> list[st
     ):
         if safety.get(key) is not False:
             errors.append(f"materialization safety control {key} must remain disabled")
+    return errors
+
+
+def validate_geospatial_axis_probe(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != (
+        "BOUNDED_AXIS_EVIDENCE_X_EASTING_Y_NORTHING_STRONGLY_PREFERRED_WGS84_STILL_BLOCKED"
+    ):
+        errors.append("bounded geospatial axis decision changed")
+
+    scope = review.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("bounded geospatial axis scope must exactly match v1 sources")
+    if scope.get("declared_source_crs") != "EPSG:5174":
+        errors.append("bounded geospatial axis CRS reference changed")
+    if scope.get("sample_policy") != "FIRST_NONBLANK_COORDINATE_PAIRS_AFTER_HEADER":
+        errors.append("bounded geospatial sample policy changed")
+    if scope.get("max_coordinate_pairs_per_source") != 5_000:
+        errors.append("bounded geospatial per-source sample size changed")
+    if scope.get("coordinate_pairs_sampled_total") != 15_000:
+        errors.append("bounded geospatial total sample size changed")
+    for key in (
+        "coordinate_axis_order_verified_nationwide",
+        "wgs84_generation_approved",
+        "row_level_coordinate_values_recorded",
+        "row_level_address_values_recorded",
+    ):
+        if scope.get(key) is not False:
+            errors.append(f"bounded geospatial gate must keep {key}=false")
+
+    software = review.get("software", {})
+    if software.get("pyproj_version") != "3.7.2":
+        errors.append("bounded geospatial pyproj version changed")
+    if software.get("proj_version") != "9.5.1":
+        errors.append("bounded geospatial PROJ version changed")
+
+    crs_reference = review.get("crs_reference", {})
+    if crs_reference.get("authority") != "EPSG:5174":
+        errors.append("bounded geospatial EPSG authority changed")
+    if crs_reference.get("formal_axis_1", {}).get("direction") != "north":
+        errors.append("EPSG:5174 formal first-axis direction changed")
+    if crs_reference.get("formal_axis_2", {}).get("direction") != "east":
+        errors.append("EPSG:5174 formal second-axis direction changed")
+
+    results = review.get("results", [])
+    if {item.get("source_key") for item in results} != V1_SOURCE_KEYS or len(results) != 3:
+        errors.append("bounded geospatial results must contain exactly three v1 sources")
+    for item in results:
+        source_key = item.get("source_key")
+        if item.get("coordinate_pairs_sampled") != 5_000:
+            errors.append(f"{source_key}: bounded geospatial sample count changed")
+        if item.get("broad_korea_candidate_a_inside") != 5_000:
+            errors.append(f"{source_key}: candidate A broad plausibility count changed")
+        if item.get("broad_korea_candidate_b_inside") != 5_000:
+            errors.append(f"{source_key}: candidate B broad plausibility count changed")
+        if item.get("macro_region_eligible_pairs") != 5_000:
+            errors.append(f"{source_key}: macro-region eligible count changed")
+        if item.get("macro_region_candidate_a_match") != 5_000:
+            errors.append(f"{source_key}: candidate A macro-region match count changed")
+        if item.get("macro_region_candidate_b_match") != 0:
+            errors.append(f"{source_key}: candidate B macro-region match count changed")
+        if item.get("assessment") != "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED":
+            errors.append(f"{source_key}: bounded geospatial axis assessment changed")
+
+    aggregate = review.get("aggregate", {})
+    if aggregate.get("coordinate_pairs_sampled") != 15_000:
+        errors.append("bounded geospatial aggregate sample count changed")
+    if aggregate.get("macro_region_candidate_a_match") != 15_000:
+        errors.append("bounded geospatial aggregate candidate A match count changed")
+    if aggregate.get("macro_region_candidate_b_match") != 0:
+        errors.append("bounded geospatial aggregate candidate B match count changed")
+    if aggregate.get("assessment_consistent_across_sources") is not True:
+        errors.append("bounded geospatial assessment must remain consistent across sources")
+    if aggregate.get("assessment") != "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED":
+        errors.append("bounded geospatial aggregate assessment changed")
+    if review.get("full_snapshot_plan") != "provenance/geospatial_full_axis_plan.json":
+        errors.append("bounded geospatial full-snapshot plan reference changed")
+    return errors
+
+
+def validate_geospatial_full_axis_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "FULL_SNAPSHOT_GEOSPATIAL_AXIS_VALIDATOR_IMPLEMENTED_USER_EXECUTION_REQUIRED":
+        errors.append("full geospatial axis plan decision changed")
+    scope = plan.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("full geospatial axis plan must exactly cover v1 sources")
+    if scope.get("expected_rows_total") != 3_010_802:
+        errors.append("full geospatial axis expected row total changed")
+    if scope.get("expected_coordinate_pairs_total_from_prior_profile") != 2_811_767:
+        errors.append("full geospatial axis expected coordinate-pair total changed")
+    if scope.get("declared_source_crs") != "EPSG:5174":
+        errors.append("full geospatial axis declared CRS changed")
+    if scope.get("execution_status") != "NOT_EXECUTED":
+        errors.append("tracked full geospatial axis plan must remain not executed")
+    for key in (
+        "network_access_required",
+        "row_level_coordinate_values_recorded",
+        "row_level_address_values_recorded",
+        "wgs84_columns_generated",
+    ):
+        if scope.get(key) is not False:
+            errors.append(f"full geospatial axis plan must keep {key}=false")
+
+    input_gate = plan.get("input_gate", {})
+    if input_gate.get("approved_evidence") != "provenance/permit_parent_full_dry_run.json":
+        errors.append("full geospatial axis approved input evidence changed")
+    for key in (
+        "require_exact_retrieval_id",
+        "require_exact_artifact_bytes",
+        "require_exact_artifact_sha256",
+        "recompute_artifact_sha256_before_scan",
+    ):
+        if input_gate.get(key) is not True:
+            errors.append(f"full geospatial axis input gate {key} must remain enabled")
+
+    method = plan.get("method", {})
+    if method.get("name") != "FULL_SNAPSHOT_AGGREGATE_AXIS_COMPARISON_WITH_COARSE_ADDRESS_MACRO_REGIONS":
+        errors.append("full geospatial axis method changed")
+    if method.get("progress_every_rows") != 50_000:
+        errors.append("full geospatial axis progress interval changed")
+    if method.get("software", {}).get("pyproj_version") != "3.7.2":
+        errors.append("full geospatial axis pyproj version changed")
+
+    artifacts = plan.get("expected_artifacts", [])
+    if {item.get("source_key") for item in artifacts} != V1_SOURCE_KEYS or len(artifacts) != 3:
+        errors.append("full geospatial axis expected artifacts must exactly cover v1 sources")
+    if sum(int(item.get("expected_rows", 0)) for item in artifacts) != 3_010_802:
+        errors.append("full geospatial axis source row totals changed")
+    if sum(int(item.get("artifact_bytes", 0)) for item in artifacts) != 926_587_446:
+        errors.append("full geospatial axis artifact byte total changed")
+
+    execution = plan.get("execution", {})
+    if execution.get("execute_command") != "python scripts/validate_full_coordinate_axis.py --execute":
+        errors.append("full geospatial axis execute command changed")
+    if execution.get("progress_stream") != "stderr":
+        errors.append("full geospatial axis progress stream changed")
+    if execution.get("final_aggregate_json_stream") != "stdout":
+        errors.append("full geospatial axis result stream changed")
+
+    policy = plan.get("interpretation_policy", {})
+    if policy.get("coordinate_axis_order_verified_nationwide_before_execution") is not False:
+        errors.append("full geospatial axis plan must not pre-verify nationwide axis order")
+    if policy.get("wgs84_generation_approved_before_execution") is not False:
+        errors.append("full geospatial axis plan must keep WGS84 blocked before execution")
+    if policy.get("full_scan_pass_alone_does_not_approve_publication") is not True:
+        errors.append("full geospatial axis scan must remain separate from publication approval")
+    if policy.get("result_requires_review_before_schema_metadata_change") is not True:
+        errors.append("full geospatial axis result must require review before schema change")
     return errors

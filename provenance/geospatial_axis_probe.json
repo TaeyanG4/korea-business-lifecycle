@@ -1,0 +1,103 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "BOUNDED_AXIS_EVIDENCE_X_EASTING_Y_NORTHING_STRONGLY_PREFERRED_WGS84_STILL_BLOCKED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "declared_source_crs": "EPSG:5174",
+    "sample_policy": "FIRST_NONBLANK_COORDINATE_PAIRS_AFTER_HEADER",
+    "max_coordinate_pairs_per_source": 5000,
+    "coordinate_pairs_sampled_total": 15000,
+    "coordinate_axis_order_verified_nationwide": false,
+    "wgs84_generation_approved": false,
+    "row_level_coordinate_values_recorded": false,
+    "row_level_address_values_recorded": false
+  },
+  "software": {
+    "pyproj_version": "3.7.2",
+    "proj_version": "9.5.1"
+  },
+  "crs_reference": {
+    "authority": "EPSG:5174",
+    "name": "Korean 1985 / Modified Central Belt",
+    "formal_axis_1": {"name": "Northing", "abbrev": "X", "direction": "north", "unit": "metre"},
+    "formal_axis_2": {"name": "Easting", "abbrev": "Y", "direction": "east", "unit": "metre"},
+    "formal_area_of_use_wgs84": {"west": 126.0, "south": 33.96, "east": 128.0, "north": 38.33},
+    "important_distinction": "EPSG formal axis labels do not by themselves prove how the upstream CSV fields named coordinate X/Y are populated"
+  },
+  "probe_method": {
+    "candidate_a": "interpret source 좌표정보(X) as easting and 좌표정보(Y) as northing, then transform EPSG:5174 to EPSG:4326 with always_xy=true",
+    "candidate_b": "interpret source 좌표정보(X) as northing and 좌표정보(Y) as easting by swapping values before the same transform",
+    "broad_plausibility_envelope_wgs84": {"west": 124.0, "south": 32.0, "east": 132.0, "north": 40.0},
+    "macro_region_heuristic": "compare transformed coordinates with coarse WGS84 envelopes derived only from first-level Korean administrative address prefixes; no row-level addresses or coordinates are retained",
+    "strong_preference_rule": "at least 100 macro-region-eligible pairs, preferred match rate at least 90%, and margin over the other candidate at least 40 percentage points"
+  },
+  "results": [
+    {
+      "source_key": "general_restaurants",
+      "retrieval_id": "20260907T022234Z-0cfae3c716d5",
+      "artifact_sha256": "0cfae3c716d5bc61b63832308897d15ca1d7f25f3547bc7b146f933bff2d6fd8",
+      "coordinate_pairs_sampled": 5000,
+      "rows_read_until_sample_complete": 5591,
+      "rows_skipped_missing_pair": 591,
+      "broad_korea_candidate_a_inside": 5000,
+      "broad_korea_candidate_b_inside": 5000,
+      "macro_region_eligible_pairs": 5000,
+      "macro_region_candidate_a_match": 5000,
+      "macro_region_candidate_b_match": 0,
+      "macro_region_candidate_a_only_match": 5000,
+      "macro_region_candidate_b_only_match": 0,
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+    },
+    {
+      "source_key": "rest_cafes",
+      "retrieval_id": "20260907T021951Z-64b884979e15",
+      "artifact_sha256": "64b884979e1533d0672ed11060b9c0438c5124e0f8b66d804bd1bae54afa3082",
+      "coordinate_pairs_sampled": 5000,
+      "rows_read_until_sample_complete": 5400,
+      "rows_skipped_missing_pair": 400,
+      "broad_korea_candidate_a_inside": 5000,
+      "broad_korea_candidate_b_inside": 5000,
+      "macro_region_eligible_pairs": 5000,
+      "macro_region_candidate_a_match": 5000,
+      "macro_region_candidate_b_match": 0,
+      "macro_region_candidate_a_only_match": 5000,
+      "macro_region_candidate_b_only_match": 0,
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+    },
+    {
+      "source_key": "bakeries",
+      "retrieval_id": "20260907T021916Z-32e93fdc827b",
+      "artifact_sha256": "32e93fdc827bf8bb8066acbeaecc02e458d2b920957407dd00651c87243879c3",
+      "coordinate_pairs_sampled": 5000,
+      "rows_read_until_sample_complete": 5240,
+      "rows_skipped_missing_pair": 240,
+      "broad_korea_candidate_a_inside": 5000,
+      "broad_korea_candidate_b_inside": 5000,
+      "macro_region_eligible_pairs": 5000,
+      "macro_region_candidate_a_match": 5000,
+      "macro_region_candidate_b_match": 0,
+      "macro_region_candidate_a_only_match": 5000,
+      "macro_region_candidate_b_only_match": 0,
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+    }
+  ],
+  "aggregate": {
+    "coordinate_pairs_sampled": 15000,
+    "broad_korea_candidate_a_inside": 15000,
+    "broad_korea_candidate_b_inside": 15000,
+    "macro_region_eligible_pairs": 15000,
+    "macro_region_candidate_a_match": 15000,
+    "macro_region_candidate_b_match": 0,
+    "assessment_consistent_across_sources": true,
+    "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+  },
+  "limitations": [
+    "the first 5000 nonblank coordinate pairs per source are deterministic but not a nationwide stratified sample",
+    "both candidate axis interpretations fall inside a broad Korea envelope for all sampled pairs, so broad geographic plausibility alone cannot distinguish them",
+    "the decisive comparison uses coarse first-level-address macro-region envelopes and is a QA heuristic rather than authoritative geocoding",
+    "formal EPSG axis labels and upstream CSV X/Y field naming are distinct concepts",
+    "no WGS84 row-level columns are approved until a stronger full-spread or full-snapshot axis QA gate passes"
+  ],
+  "full_snapshot_plan": "provenance/geospatial_full_axis_plan.json",
+  "next_gate": "user executes the deterministic full-snapshot aggregate-only coordinate-axis validation before setting coordinate_axis_order_validated=true or generating WGS84 columns"
+}

@@ -2,6 +2,8 @@ from korea_business_lifecycle.provenance import (
     load_bounded_history_audit,
     load_expanded_history_audit,
     load_grain_decision,
+    load_geospatial_axis_probe,
+    load_geospatial_full_axis_plan,
     load_history_review,
     load_history_sample_plan,
     load_reverse_transition_probe_plan,
@@ -21,6 +23,8 @@ from korea_business_lifecycle.provenance import (
     validate_bounded_history_audit,
     validate_expanded_history_audit,
     validate_grain_decision,
+    validate_geospatial_axis_probe,
+    validate_geospatial_full_axis_plan,
     validate_license_review,
     validate_observed_snapshot_summary,
     validate_permit_parent_compatibility,
@@ -204,3 +208,23 @@ def test_permit_parent_materialization_plan_is_local_private_and_not_executed() 
     assert plan["scope"]["public_row_level_release_approved"] is False
     assert plan["writer_contract"]["library_version"] == "21.0.0"
     assert plan["writer_contract"]["compression"] == "ZSTD"
+
+
+def test_bounded_geospatial_axis_probe_prefers_source_x_easting_without_enabling_wgs84() -> None:
+    review = load_geospatial_axis_probe()
+    assert validate_geospatial_axis_probe(review) == []
+    assert review["aggregate"]["coordinate_pairs_sampled"] == 15_000
+    assert review["aggregate"]["macro_region_candidate_a_match"] == 15_000
+    assert review["aggregate"]["macro_region_candidate_b_match"] == 0
+    assert review["scope"]["coordinate_axis_order_verified_nationwide"] is False
+    assert review["scope"]["wgs84_generation_approved"] is False
+
+
+def test_full_geospatial_axis_plan_is_ready_but_keeps_wgs84_blocked() -> None:
+    plan = load_geospatial_full_axis_plan()
+    assert validate_geospatial_full_axis_plan(plan) == []
+    assert plan["scope"]["expected_rows_total"] == 3_010_802
+    assert plan["scope"]["expected_coordinate_pairs_total_from_prior_profile"] == 2_811_767
+    assert plan["scope"]["execution_status"] == "NOT_EXECUTED"
+    assert plan["scope"]["wgs84_columns_generated"] is False
+    assert plan["interpretation_policy"]["wgs84_generation_approved_before_execution"] is False

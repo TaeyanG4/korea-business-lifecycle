@@ -67,7 +67,13 @@
     "bounded_history_permit_date_changes": 0,
     "confirmed_03_to_01_reversals": 2,
     "reverse_transition_findings": "provenance/reverse_transition_findings.json",
-    "expanded_history_audit": "provenance/expanded_history_audit.json"
+    "expanded_history_audit": "provenance/expanded_history_audit.json",
+    "bounded_geospatial_axis_probe": "provenance/geospatial_axis_probe.json",
+    "bounded_geospatial_axis_assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+    "full_geospatial_axis_plan": "provenance/geospatial_full_axis_plan.json",
+    "full_geospatial_axis_status": "IMPLEMENTED_NOT_EXECUTED",
+    "coordinate_axis_order_verified_nationwide": false,
+    "wgs84_generation_approved": false
   },
   "hard_rules_for_next_phase": [
     "canonical schema must keep permit identity separate from establishment identity",

@@ -8,13 +8,13 @@
 ## Local verification
 
 ```bash
-python -m pip install -e ".[test,build]"
+python -m pip install -e ".[test,build,geo]"
 python -m compileall src scripts tests
 pytest -v
 python scripts/repo_check.py
 ```
 
-Network sockets are disabled during pytest. The `build` extra pins `pyarrow==21.0.0` for reproducible Parquet writer behavior. Real-data artifacts remain only under the Git-ignored runtime data root.
+Network sockets are disabled during pytest. The `build` extra pins `pyarrow==21.0.0` for reproducible Parquet writer behavior, and the `geo` extra pins `pyproj==3.7.2` across the supported Python 3.11/3.12 matrix. Real-data artifacts remain only under the Git-ignored runtime data root.
 
 ## Git milestone gate
 
