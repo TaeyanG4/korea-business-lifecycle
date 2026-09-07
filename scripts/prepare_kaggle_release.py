@@ -9,7 +9,10 @@ from korea_business_lifecycle.kaggle_release import KaggleReleaseError, prepare_
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Prepare the verified aggregate-only Kaggle release package under data/local/."
+        description=(
+            "Prepare the verified aggregate-only Kaggle package with CSV, Parquet, source summary, "
+            "schema, documentation, and hashes under data/local/."
+        )
     )
     parser.add_argument("--owner", default=os.environ.get("KAGGLE_USERNAME"))
     parser.add_argument("--data-root", default=None)

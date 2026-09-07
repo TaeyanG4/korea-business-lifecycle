@@ -11,9 +11,11 @@ A reproducible public-data project built from Korean Ministry of the Interior an
 **Kaggle aggregate: PUBLISHED** — [Korea Food-Service Permit Aggregate](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate)
 
 - Scope: general restaurants, rest cafes, and bakeries
-- Canonical `PERMIT`: **3,010,802 rows**, production materialized and independently verified
-- WGS84 sidecar: **3,010,802 rows**, 2,811,767 coordinates transformed and independently verified
+- Raw current CSV: **3,010,802 rows / 926,587,446 bytes (~926.6 MB)** retrieved and verified
+- Canonical `PERMIT`: **3,010,802 rows / 165,176,236 bytes (~165.2 MB)**, production materialized and independently verified
+- WGS84 sidecar: **3,010,802 rows / 50,805,782 bytes (~50.8 MB)**, 2,811,767 coordinates transformed and independently verified
 - Public aggregate: **67,267 cells**, k=10 suppression, independently verified
+- Kaggle formats: the same aggregate as **2,977,515-byte CSV + 108,019-byte Parquet**, plus schema/data dictionary/source summary
 - Nationwide history/episodes: **not required for v1 completion**; runner, schema, and verifier remain available as optional tooling
 
 All real and derived runtime data stays under Git-ignored `data/local/`.
@@ -31,6 +33,14 @@ The following remain private:
 
 The aggregate groups by source, authority code, raw status/detail-status code, permit year, and closure year, and suppresses cells below 10. **k=10 is a technical minimization threshold, not a legal privacy guarantee.**
 
+### Why the public files are much smaller than the source
+
+The 926.6 MB current source contains 3,010,802 row-level permits. The public product reduces that to 67,267 aggregate cells, suppresses 229,928 cells below k=10, and removes high-cardinality/linkable fields such as business names, exact addresses, management numbers, phone numbers, and precise coordinates. ZSTD compression is especially effective on the remaining low-cardinality aggregate columns, so the public Parquet is only 108,019 bytes. That does **not** mean only 108 KB was collected.
+
+Kaggle package v2 provides the same aggregate in two serializations: `korea_food_service_permit_aggregate.csv` is a UTF-8 accessibility/preview format, while `korea_food_service_permit_aggregate.parquet` is the typed compact analytics format. **They contain the same 67,267 cells and do not broaden the public row scope.** Raw bulk CSV and the private canonical Parquet remain unpublished.
+
+The package also includes `source_summary.csv`, `schema.json`, `DATA_DICTIONARY.md`, `README.md`, `SOURCES.md`, and `release-manifest.json`.
+
 ## Sources and permitted-use metadata
 
 As rechecked on 2026-09-08, all three official Public Data Portal API pages display `이용허락범위 제한 없음` (no restriction on the permitted-use scope). v1 uses that official metadata as the release basis and publishes only the attributed privacy-minimized aggregate. Separate written clarification remains optional additional assurance rather than a release prerequisite.
@@ -40,7 +50,7 @@ As rechecked on 2026-09-08, all three official Public Data Portal API pages disp
 - 15155252 — MOIS food/bakeries API
 
 The machine-readable final release decision is `provenance/v1_release_scope.json`.
-The verified Kaggle publication outcome is recorded in `provenance/kaggle_release.json`.
+The initial Kaggle publication is preserved in `provenance/kaggle_release.json`; the current package-v2 publication is recorded separately in `provenance/kaggle_release_v2.json`.
 
 ## Lifecycle caveats
 

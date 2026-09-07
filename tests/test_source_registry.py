@@ -9,6 +9,7 @@ from korea_business_lifecycle.provenance import (
     load_geospatial_full_axis_plan,
     load_history_observation_strategy,
     load_kaggle_release,
+    load_kaggle_release_v2,
     load_history_authority_partition_findings,
     load_history_authority_partition_full_probe,
     load_history_authority_partition_probe_plan,
@@ -48,6 +49,7 @@ from korea_business_lifecycle.provenance import (
     validate_geospatial_full_axis_plan,
     validate_history_observation_strategy,
     validate_kaggle_release,
+    validate_kaggle_release_v2,
     validate_history_authority_partition_findings,
     validate_history_authority_partition_full_probe,
     validate_history_authority_partition_probe_plan,
@@ -363,6 +365,9 @@ def test_v1_release_scope_closes_core_and_approves_aggregate_only() -> None:
     assert scope["public_release"]["row_level_permit_publication_approved"] is False
     assert scope["public_release"]["precise_wgs84_publication_approved"] is False
     assert scope["public_release"]["written_source_specific_confirmation_required_for_aggregate_publication"] is False
+    assert scope["public_release"]["public_package_version"] == 2
+    assert scope["public_release"]["aggregate_serializations"] == ["CSV", "PARQUET"]
+    assert scope["public_release"]["multiple_serializations_broaden_public_row_scope"] is False
 
 
 def test_kaggle_aggregate_release_is_public_ready_and_private_by_design() -> None:
@@ -374,6 +379,17 @@ def test_kaggle_aggregate_release_is_public_ready_and_private_by_design() -> Non
     assert release["artifact"]["bytes"] == 108_019
     assert release["privacy"]["row_level_permit_published"] is False
     assert release["privacy"]["precise_coordinates_published"] is False
+
+
+def test_kaggle_package_v2_is_dual_format_and_preserves_aggregate_only_scope() -> None:
+    release = load_kaggle_release_v2()
+    assert validate_kaggle_release_v2(release) == []
+    assert release["dataset"]["status"] == "READY"
+    assert release["package"]["version"] == 2
+    assert release["package"]["serializations"] == ["CSV", "PARQUET"]
+    assert release["package"]["published_file_count"] == 8
+    assert release["privacy"]["row_level_permit_published"] is False
+    assert release["privacy"]["multiple_serializations_broaden_public_row_scope"] is False
 
 
 def test_permit_parent_bounded_real_compatibility_is_aggregate_only() -> None:

@@ -11,9 +11,11 @@
 **Kaggle aggregate: PUBLISHED** — [Korea Food-Service Permit Aggregate](https://www.kaggle.com/datasets/taeyangg4/korea-food-service-permit-aggregate)
 
 - 대상: 일반음식점, 휴게음식점, 제과점영업
-- Canonical `PERMIT`: **3,010,802행**, production materialization 및 독립 검증 완료
-- WGS84 sidecar: **3,010,802행**, 2,811,767건 좌표 변환, 독립 검증 완료
-- 공개 후보 aggregate: **67,267 cells**, k=10 suppression 적용, 독립 검증 완료
+- 원본 current CSV: **3,010,802행 / 926,587,446 bytes (~926.6 MB)** 수집·검증 완료
+- Canonical `PERMIT`: **3,010,802행 / 165,176,236 bytes (~165.2 MB)**, production materialization 및 독립 검증 완료
+- WGS84 sidecar: **3,010,802행 / 50,805,782 bytes (~50.8 MB)**, 2,811,767건 좌표 변환, 독립 검증 완료
+- 공개 aggregate: **67,267 cells**, k=10 suppression 적용, 독립 검증 완료
+- Kaggle 공개 형식: 동일 aggregate의 **CSV 2,977,515 bytes + Parquet 108,019 bytes** 및 schema/data dictionary/source summary
 - 전국 history/episode: **v1 완료조건이 아님**. runner, schema, verifier는 optional 분석 도구로 유지
 
 실데이터와 derived runtime artifact는 모두 Git-ignored `data/local/` 아래에만 저장합니다.
@@ -31,6 +33,14 @@ Kaggle/public v1은 **privacy-minimized aggregate만** 공개 대상으로 합�
 
 공개 aggregate는 `source_key`, 자치단체 코드, 원천 상태코드/상세상태코드, 인허가연도, 폐업연도 단위로 집계하며 cell count가 10 미만인 셀을 제외합니다. **k=10은 기술적 최소화 기준일 뿐 법적 개인정보 안전을 보장하지 않습니다.**
 
+### 왜 공개 파일이 원본보다 작은가
+
+약 926.6 MB의 원본 current CSV 3,010,802행을 그대로 공개하는 것이 아니라, row-level 연결 가능성을 제거한 67,267개 집계 cell로 축약합니다. 229,928개 k<10 cell을 suppress하고 사업장명·정확주소·관리번호·전화번호·정밀좌표 같은 고카디널리티 필드를 제거한 뒤 Parquet/ZSTD로 저장하므로 공개 Parquet은 108,019 bytes까지 작아집니다. 이는 수집량이 108 KB였다는 뜻이 아닙니다.
+
+Kaggle package v2는 같은 aggregate를 두 형식으로 제공합니다. `korea_food_service_permit_aggregate.csv`는 미리보기·스프레드시트·범용 도구용 UTF-8 CSV이고, `korea_food_service_permit_aggregate.parquet`는 typed/compact 분석용입니다. **두 파일은 같은 67,267 cells의 직렬화일 뿐 공개 row 범위를 늘리지 않습니다.** 원천 bulk CSV와 private canonical Parquet은 계속 공개하지 않습니다.
+
+추가 파일은 `source_summary.csv`, `schema.json`, `DATA_DICTIONARY.md`, `README.md`, `SOURCES.md`, `release-manifest.json`입니다.
+
 ## 소스와 이용조건
 
 2026-09-08 재확인 기준 공공데이터포털의 세 공식 OpenAPI 상세페이지는 모두 `이용허락범위 제한 없음`을 표시합니다. v1은 이 공식 metadata를 공개 근거로 사용하고, 출처를 명시한 privacy-minimized aggregate만 Kaggle에 배포합니다. 별도 서면 문의는 추가 assurance를 위한 선택사항으로 남깁니다.
@@ -40,7 +50,7 @@ Kaggle/public v1은 **privacy-minimized aggregate만** 공개 대상으로 합�
 - 15155252 — 행정안전부_식품_제과점영업 조회서비스
 
 최종 기계 판독 release 결정은 `provenance/v1_release_scope.json`에 있습니다.
-실제 Kaggle 공개 결과는 `provenance/kaggle_release.json`에 기록합니다.
+최초 Kaggle 공개 결과는 `provenance/kaggle_release.json`, 현재 package v2 공개 결과는 `provenance/kaggle_release_v2.json`에 기록합니다.
 
 ## Lifecycle 사용 시 주의사항
 

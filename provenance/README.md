@@ -33,7 +33,8 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `history_episode_materialization_plan.json`: optional local episode writer/verifier contract; if used, all 7,320 history tasks must still be complete and unique and raw-page hashes are checked before reconstruction.
 - `redistribution_clarification_plan.json`: preserved conservative source-specific inquiry plan. Written confirmation is now optional additional assurance for the aggregate-only v1 release.
 - `v1_release_scope.json`: **current product-scope authority**: local current-snapshot core complete, history/episodes optional, verified aggregate approved for Kaggle, row-level and precise coordinates private.
-- `kaggle_release.json`: verified public Kaggle outcome for `taeyangg4/korea-food-service-permit-aggregate`; records only aggregate artifact/file metadata and explicitly excludes credentials and row-level values.
+- `kaggle_release.json`: preserved initial four-file Kaggle publication evidence for `taeyangg4/korea-food-service-permit-aggregate`; it is retained unchanged as historical publication evidence.
+- `kaggle_release_v2.json`: verified second Kaggle package version for the same dataset: dual CSV/Parquet serialization of the same 67,267-cell aggregate plus source summary, release schema, data dictionary, and expanded documentation. Row-level/private scope is unchanged.
 - `release_readiness.json`: current product-track summary derived from the evidence above; core v1 is complete, the aggregate is published/ready on Kaggle, and history remains optional.
 - `feasibility.json`: current project gate state.
 

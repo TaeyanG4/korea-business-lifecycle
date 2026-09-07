@@ -128,4 +128,8 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     )
     assert readiness["tracks"]["public_kaggle"]["dataset_visibility"] == "PUBLIC"
     assert readiness["tracks"]["public_kaggle"]["dataset_status"] == "READY"
+    assert readiness["tracks"]["public_kaggle"]["public_package_version"] == 2
+    assert readiness["tracks"]["public_kaggle"]["aggregate_serializations"] == ["CSV", "PARQUET"]
+    assert readiness["tracks"]["public_kaggle"]["published_file_count"] == 8
+    assert readiness["tracks"]["public_kaggle"]["published_csv_bytes"] == 2_977_515
     assert readiness["tracks"]["public_kaggle"]["published_parquet_bytes"] == 108_019

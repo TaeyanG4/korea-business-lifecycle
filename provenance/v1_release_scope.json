@@ -45,7 +45,20 @@
     "minimum_cell_count": 10,
     "minimum_cell_count_is_legal_privacy_guarantee": false,
     "kaggle_license_metadata": "other",
-    "project_requires_source_attribution": true
+    "project_requires_source_attribution": true,
+    "public_package_version": 2,
+    "aggregate_serializations": ["CSV", "PARQUET"],
+    "public_package_files": [
+      "korea_food_service_permit_aggregate.csv",
+      "korea_food_service_permit_aggregate.parquet",
+      "source_summary.csv",
+      "schema.json",
+      "DATA_DICTIONARY.md",
+      "README.md",
+      "SOURCES.md",
+      "release-manifest.json"
+    ],
+    "multiple_serializations_broaden_public_row_scope": false
   },
   "supersedes_for_core_v1_and_aggregate_publication_only": [
     "the prior requirement that nationwide history acquisition complete before v1 product completion",

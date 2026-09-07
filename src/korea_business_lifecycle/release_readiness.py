@@ -18,6 +18,7 @@ from .provenance import (
     load_history_nationwide_acquisition_plan,
     load_history_observation_strategy,
     load_kaggle_release,
+    load_kaggle_release_v2,
     load_license_review,
     load_permit_parent_full_dry_run,
     load_permit_parent_materialization,
@@ -58,6 +59,7 @@ def compute_release_readiness() -> dict[str, Any]:
     redistribution_clarification = load_redistribution_clarification_plan()
     release_scope = load_v1_release_scope()
     kaggle_release = load_kaggle_release()
+    kaggle_release_v2 = load_kaggle_release_v2()
 
     episode = grain["selected_grains"]["lifecycle_analysis_grain"]
     semantics = grain["episode_semantics"]
@@ -86,6 +88,8 @@ def compute_release_readiness() -> dict[str, Any]:
         and public_aggregate_result["verification"]["status"] == "PASS"
         and kaggle_release["dataset"]["status"] == "READY"
         and kaggle_release["dataset"]["visibility"] == "PUBLIC"
+        and kaggle_release_v2["dataset"]["status"] == "READY"
+        and kaggle_release_v2["dataset"]["visibility"] == "PUBLIC"
         else "BLOCKED"
     )
 
@@ -340,8 +344,31 @@ def compute_release_readiness() -> dict[str, Any]:
                 "dataset_url": kaggle_release["dataset"]["url"],
                 "dataset_visibility": kaggle_release["dataset"]["visibility"],
                 "dataset_status": kaggle_release["dataset"]["status"],
-                "published_parquet_bytes": kaggle_release["artifact"]["bytes"],
-                "published_parquet_sha256": kaggle_release["artifact"]["sha256"],
+                "initial_publication_provenance": "provenance/kaggle_release.json",
+                "latest_package_publication_provenance": "provenance/kaggle_release_v2.json",
+                "public_package_version": kaggle_release_v2["package"]["version"],
+                "aggregate_serializations": kaggle_release_v2["package"]["serializations"],
+                "published_file_count": kaggle_release_v2["package"]["published_file_count"],
+                "published_csv_bytes": next(
+                    item["published_bytes"]
+                    for item in kaggle_release_v2["published_files"]
+                    if item["name"] == "korea_food_service_permit_aggregate.csv"
+                ),
+                "published_csv_sha256": next(
+                    item["local_package_sha256"]
+                    for item in kaggle_release_v2["published_files"]
+                    if item["name"] == "korea_food_service_permit_aggregate.csv"
+                ),
+                "published_parquet_bytes": next(
+                    item["published_bytes"]
+                    for item in kaggle_release_v2["published_files"]
+                    if item["name"] == "korea_food_service_permit_aggregate.parquet"
+                ),
+                "published_parquet_sha256": next(
+                    item["local_package_sha256"]
+                    for item in kaggle_release_v2["published_files"]
+                    if item["name"] == "korea_food_service_permit_aggregate.parquet"
+                ),
             },
         },
         "next_long_local_actions": [],

@@ -79,7 +79,8 @@ verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/Z
 - suppressed cells: 229,928
 - source rows represented by released cells: 2,383,689
 - source rows represented by suppressed cells: 627,113
-- output: 108,019 bytes, independent verifier PASS
+- verified aggregate Parquet: 108,019 bytes, independent verifier PASS
+- deterministic aggregate CSV: 2,977,515 bytes / 동일 67,267 rows
 - technical minimization: VERIFIED
 - row-level public release: BLOCKED
 - aggregate publication: **APPROVED**
@@ -87,6 +88,20 @@ verifier는 parent build를 다시 검증하고 aggregate manifest/hash/schema/Z
 - Kaggle publication: **PUBLISHED / READY** — `taeyangg4/korea-food-service-permit-aggregate`
 - row-level/precise-coordinate publication: BLOCKED
 - release decision: `provenance/v1_release_scope.json`
-- publication result: `provenance/kaggle_release.json`
+- initial publication result: `provenance/kaggle_release.json`
+- package v2 publication result: `provenance/kaggle_release_v2.json` — **PUBLISHED / READY**, 8 files
 
 기존 build manifest/schema 안의 candidate-time publication flag는 immutable build 당시의 gate를 기록합니다. 2026-09-08 최종 release decision이 이 **동일 hash의 검증된 aggregate artifact** 공개를 별도로 승인하며, row-level 공개 승인을 의미하지 않습니다.
+
+## Kaggle package v2 규격
+
+Kaggle에는 row-level을 추가하지 않고 같은 검증 aggregate를 사용성 중심으로 여러 파일에 직렬화합니다.
+
+- `korea_food_service_permit_aggregate.csv` — UTF-8, LF, null은 empty field, Parquet row order 유지
+- `korea_food_service_permit_aggregate.parquet` — 기존 검증 artifact를 byte-for-byte 복사; SHA-256 `112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb`
+- `source_summary.csv` — source별 원본 row/bytes, private canonical/sidecar bytes, 공개 aggregate 규모만 제공
+- `schema.json` — release-oriented 7-column/type/semantic contract. frozen candidate schema의 과거 pre-release gate를 최신 gate처럼 노출하지 않음
+- `DATA_DICTIONARY.md` — 컬럼 정의와 lifecycle/privacy 해석 제한
+- `README.md`, `SOURCES.md`, `release-manifest.json`
+
+원본 current CSV 총량은 **926,587,446 bytes (~926.6 MB)**, private canonical `PERMIT` Parquet은 **165,176,236 bytes**, private WGS84 sidecar는 **50,805,782 bytes**입니다. 공개 Parquet 108,019 bytes는 수집량이 작은 것이 아니라 3,010,802 row-level records를 67,267 aggregate cells로 축약하고 고카디널리티 필드를 제거한 뒤 ZSTD 압축한 결과입니다. 용량을 키우기 위해 row를 반복하지 않습니다.

@@ -150,6 +150,10 @@ def load_kaggle_release() -> dict[str, Any]:
     return load_json("provenance/kaggle_release.json")
 
 
+def load_kaggle_release_v2() -> dict[str, Any]:
+    return load_json("provenance/kaggle_release_v2.json")
+
+
 def validate_kaggle_release(release: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if release.get("decision") != "KAGGLE_AGGREGATE_PUBLICATION_COMPLETED_VERIFIED":
@@ -198,6 +202,122 @@ def validate_kaggle_release(release: dict[str, Any]) -> list[str]:
             errors.append(f"Kaggle release verification must keep {key}=true")
     if verification.get("kaggle_status_command") != "READY":
         errors.append("Kaggle release status verification changed")
+    return errors
+
+
+def validate_kaggle_release_v2(release: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if release.get("decision") != "KAGGLE_AGGREGATE_PACKAGE_V2_PUBLICATION_COMPLETED_VERIFIED":
+        errors.append("Kaggle package-v2 release decision changed")
+    if release.get("preserves_initial_publication_evidence") is not True:
+        errors.append("Kaggle package-v2 must preserve initial publication evidence")
+    dataset = release.get("dataset", {})
+    if dataset.get("dataset_id") != "taeyangg4/korea-food-service-permit-aggregate":
+        errors.append("Kaggle package-v2 dataset id changed")
+    if dataset.get("visibility") != "PUBLIC" or dataset.get("status") != "READY":
+        errors.append("Kaggle package-v2 dataset must remain public and ready")
+    if dataset.get("license_metadata") != "other":
+        errors.append("Kaggle package-v2 license metadata changed")
+
+    package = release.get("package", {})
+    expected_package = {
+        "version": 2,
+        "aggregate_build_id": "permit-public-agg-v1-bedd874de6619bee",
+        "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+        "aggregate_cells": 67_267,
+        "minimum_cell_count": 10,
+        "serializations": ["CSV", "PARQUET"],
+        "published_file_count": 8,
+        "source_rows_scanned": 3_010_802,
+        "released_source_rows": 2_383_689,
+        "suppressed_source_rows": 627_113,
+    }
+    if package != expected_package:
+        errors.append("Kaggle package-v2 aggregate/package contract changed")
+
+    scale = release.get("source_scale", {})
+    if scale != {
+        "raw_current_csv_bytes": 926_587_446,
+        "canonical_permit_parquet_bytes": 165_176_236,
+        "wgs84_sidecar_parquet_bytes": 50_805_782,
+    }:
+        errors.append("Kaggle package-v2 source scale changed")
+
+    files = release.get("published_files", [])
+    expected_files = {
+        "DATA_DICTIONARY.md": (1_764, "c951a266a061772b43c1625f205eb8189e984def881c9d963da13597a5bae3d8"),
+        "README.md": (3_396, "ac592d47199a38193ba6e763f27f931cd92a7bdb834756d48fddf6ae167efad5"),
+        "SOURCES.md": (871, "57b0ca89b1d4b56f846171a82350fae13ff3b9248ca0aa58544cd5ca9de870f6"),
+        "korea_food_service_permit_aggregate.csv": (
+            2_977_515,
+            "904ba2113da42c4e0b3725f24e2d1a65044e944701b33d1c038dc7fa3bb5106d",
+        ),
+        "korea_food_service_permit_aggregate.parquet": (
+            108_019,
+            "112fbec3187b2d77df2744edb878fa0f3ecb850cf675496cd4383404092911fb",
+        ),
+        "release-manifest.json": (
+            2_812,
+            "7828d521dea74bc116e6b88c56bd94077f85f458adbc986b19d3d44ce5c000ef",
+        ),
+        "schema.json": (2_348, "c7fe003dbcfee4a6f3a4a33b2dcb2754a4b1090256725fdcf8e53b023311d83b"),
+        "source_summary.csv": (
+            358,
+            "20dfa7983d61b6f4def0317f2ed34f83262ebbacda9233b4f05d179a05d9a621",
+        ),
+    }
+    if len(files) != len(expected_files) or {item.get("name") for item in files} != set(expected_files):
+        errors.append("Kaggle package-v2 published file set changed")
+    for item in files:
+        name = item.get("name")
+        expected = expected_files.get(name)
+        if expected is None:
+            continue
+        if item.get("published_bytes") != expected[0] or item.get("local_package_bytes") != expected[0]:
+            errors.append(f"Kaggle package-v2 {name} byte size changed")
+        if item.get("local_package_sha256") != expected[1]:
+            errors.append(f"Kaggle package-v2 {name} local hash changed")
+        if item.get("published_byte_size_matches_local") is not True:
+            errors.append(f"Kaggle package-v2 {name} published/local size verification changed")
+
+    privacy = release.get("privacy", {})
+    for key in (
+        "row_level_permit_published",
+        "precise_coordinates_published",
+        "business_names_published",
+        "exact_addresses_published",
+        "management_numbers_published",
+        "partial_history_published",
+        "multiple_serializations_broaden_public_row_scope",
+        "minimum_cell_count_is_legal_privacy_guarantee",
+    ):
+        if privacy.get(key) is not False:
+            errors.append(f"Kaggle package-v2 must keep {key}=false")
+
+    auth = release.get("authentication", {})
+    if auth.get("method") != "KAGGLE_OAUTH":
+        errors.append("Kaggle package-v2 authentication method changed")
+    if auth.get("credential_value_recorded") is not False or auth.get("credential_committed_to_git") is not False:
+        errors.append("Kaggle package-v2 credentials must never be recorded or committed")
+
+    verification = release.get("verification", {})
+    for key in (
+        "public_listing_found",
+        "published_file_names_match_package_contract",
+        "published_file_sizes_match_local_package",
+        "published_parquet_byte_size_matches_verified_artifact",
+        "local_parquet_sha256_matches_verified_aggregate",
+        "csv_row_count_matches_parquet",
+        "csv_column_order_matches_parquet",
+        "csv_represented_source_rows_match_verified_aggregate",
+    ):
+        if verification.get(key) is not True:
+            errors.append(f"Kaggle package-v2 verification must keep {key}=true")
+    for key in ("row_level_values_emitted_by_packager", "precise_coordinates_emitted_by_packager"):
+        if verification.get(key) is not False:
+            errors.append(f"Kaggle package-v2 verification must keep {key}=false")
+    if verification.get("kaggle_status_command") != "READY":
+        errors.append("Kaggle package-v2 status verification changed")
     return errors
 
 
@@ -266,6 +386,23 @@ def validate_v1_release_scope(scope: dict[str, Any]) -> list[str]:
         errors.append("Kaggle license metadata must remain 'other' unless source terms are remapped explicitly")
     if public.get("project_requires_source_attribution") is not True:
         errors.append("Kaggle release must retain source attribution")
+    if public.get("public_package_version") != 2:
+        errors.append("Kaggle public package version changed")
+    if public.get("aggregate_serializations") != ["CSV", "PARQUET"]:
+        errors.append("Kaggle aggregate serializations must remain CSV + PARQUET")
+    if public.get("public_package_files") != [
+        "korea_food_service_permit_aggregate.csv",
+        "korea_food_service_permit_aggregate.parquet",
+        "source_summary.csv",
+        "schema.json",
+        "DATA_DICTIONARY.md",
+        "README.md",
+        "SOURCES.md",
+        "release-manifest.json",
+    ]:
+        errors.append("Kaggle public package file contract changed")
+    if public.get("multiple_serializations_broaden_public_row_scope") is not False:
+        errors.append("dual serialization must not broaden the aggregate-only public scope")
     return errors
 
 

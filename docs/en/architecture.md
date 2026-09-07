@@ -35,6 +35,8 @@ official source evidence
       ↳ independent verifier: passed
       ↳ candidate cells: 67,267 released / 229,928 suppressed
       ↳ Kaggle aggregate publication: approved by final v1 release scope
+      ↳ public serialization: same 67,267 cells as UTF-8 CSV + verified Parquet
+      ↳ package metadata: source summary + release schema + data dictionary + manifest
   → bounded PERMIT_STATUS_EPISODE tooling
       ↳ sparse explicit observations only
       ↳ max 100,000 observations/call, in memory
@@ -63,7 +65,7 @@ official source evidence
       ↳ written source-specific clarification: optional additional assurance
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. The 10-date/7,320-task monthly plan and episode completeness gate apply only when an analyst chooses that workflow. Kaggle publication is limited to the already verified k=10 privacy-minimized aggregate; row-level and precise-coordinate artifacts remain private. `provenance/v1_release_scope.json` is the current scope authority.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. **As of 2026-09-08, core v1 is complete around this current-snapshot product** and nationwide history/episode reconstruction is optional advanced analysis. The 10-date/7,320-task monthly plan and episode completeness gate apply only when an analyst chooses that workflow. Kaggle publication is limited to the already verified k=10 privacy-minimized aggregate; row-level and precise-coordinate artifacts remain private. The public package serializes that same aggregate as CSV and Parquet and adds source-summary/schema/data-dictionary/manifest files without broadening the public row scope. `provenance/v1_release_scope.json` is the current scope authority.
 
 ## Data storage rule
 
