@@ -97,7 +97,42 @@ plt.tight_layout()
 plt.show()
 """
         ),
-        markdown("## 3. Raw source status distribution"),
+        markdown("## 3. Regional market-size proxy from address text"),
+        code(
+            """address_table = pq.read_table(PARQUET, columns=['road_address', 'lot_address'])
+address = pc.coalesce(address_table['road_address'], address_table['lot_address'])
+region = pc.list_element(pc.split_pattern(address, pattern=' '), 0)
+region_table = pa.table({'region_proxy': region})
+region_counts = (
+    region_table
+    .group_by('region_proxy')
+    .aggregate([('region_proxy', 'count')])
+    .to_pandas()
+    .rename(columns={'region_proxy_count': 'records'})
+    .dropna()
+    .query("region_proxy != ''")
+    .sort_values('records', ascending=False)
+)
+region_counts.head(20)
+"""
+        ),
+        code(
+            """top_regions = region_counts.head(17).sort_values('records')
+ax = top_regions.plot(
+    x='region_proxy', y='records', kind='barh', figsize=(9, 6),
+    title='Current permit records by address-derived region proxy'
+)
+ax.set_xlabel('records in current snapshot')
+ax.set_ylabel('address first token')
+plt.tight_layout()
+plt.show()
+"""
+        ),
+        markdown(
+            """The regional label above is a **display-oriented proxy derived from the first token of `road_address`, falling back to `lot_address`**. It is useful for quick nationwide comparisons, but it is not presented as an authoritative administrative-region code. Use `authority_code` or an external official boundary/reference table when exact administrative joins matter.
+"""
+        ),
+        markdown("## 4. Raw source status distribution"),
         code(
             """status_table = pq.read_table(PARQUET, columns=['source_key', 'source_status_code', 'source_status_name'])
 status_counts = (
@@ -115,7 +150,7 @@ status_counts.head(20)
             """**Interpretation caution:** source status codes/names are preserved as reported. This project does not force them into a canonical active/closed/terminal label. In observed evidence, status `03` is not irreversible, and status `05` remains semantically unresolved.
 """
         ),
-        markdown("## 4. Permit-year coverage"),
+        markdown("## 5. Permit-year coverage"),
         code(
             """permit_dates = pq.read_table(PARQUET, columns=['permit_date'])['permit_date']
 years = pc.year(permit_dates)
@@ -148,7 +183,7 @@ plt.show()
             """`permit_date` is an administrative permit date. It should **not** automatically be interpreted as the physical opening date of a business.
 """
         ),
-        markdown("## 5. Business-type mix"),
+        markdown("## 6. Business-type mix"),
         code(
             """type_table = pq.read_table(PARQUET, columns=['source_key', 'business_type_name'])
 type_counts = (
@@ -162,7 +197,7 @@ type_counts = (
 type_counts.head(20)
 """
         ),
-        markdown("## 6. Data-quality quick check"),
+        markdown("## 7. Data-quality quick check"),
         code(
             """quality_columns = [
     'business_name', 'lot_address', 'road_address',
@@ -187,7 +222,21 @@ quality_summary
             """`closure_date` completeness is **not** a generic quality target: null can be expected for records without a source-reported closure date. The table is meant to show field availability, not to imply that every field should be populated.
 """
         ),
-        markdown("## 7. Human-readable sample"),
+        markdown(
+            """## 8. Practical analysis ideas
+
+This snapshot is especially useful for questions that do **not** require a reconstructed event history:
+
+- compare the current permit-record footprint of restaurants, cafes, and bakeries across address-derived regions;
+- identify regions or business types with unusually high concentrations of source-reported statuses;
+- compare permit-year composition across categories without treating permit date as a physical opening date;
+- quantify address and coordinate coverage before geocoding or mapping;
+- create market-screening features by combining this snapshot with official population, tourism, rent, or commercial-area datasets.
+
+For reproducible downstream work, keep the raw source status fields and documented semantic cautions rather than collapsing them into an invented active/closed binary.
+"""
+        ),
+        markdown("## 9. Human-readable sample"),
         code(
             """sample_columns = [
     'source_key', 'authority_code', 'management_number', 'permit_date',
@@ -200,7 +249,7 @@ sample
 """
         ),
         markdown(
-            """## 8. CSV users
+            """## 10. CSV users
 
 The CSV contains the **same 3,010,802 rows and 26 columns** as the Parquet file. It is about 1.4 GB, so for exploratory work you may want to read only selected columns or use chunked loading.
 """
@@ -212,7 +261,7 @@ csv_preview
 """
         ),
         markdown(
-            """## 9. Important semantic and geospatial notes
+            """## 11. Important semantic and geospatial notes
 
 - `management_number` is retained as a **bounded continuity candidate**, not asserted as an official primary key.
 - `permit_date` is not necessarily the physical opening date.

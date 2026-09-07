@@ -442,10 +442,21 @@ def compute_release_readiness() -> dict[str, Any]:
                 "quickstart_notebook_status": kaggle_maintenance_v2["notebook"]["status"],
                 "quickstart_notebook_ref": kaggle_maintenance_v2["notebook"]["ref"],
                 "quickstart_notebook_version": kaggle_maintenance_v2["notebook"]["successful_version"],
+                "regional_market_notebook_status": kaggle_maintenance_v2["regional_market_notebook"]["status"],
+                "regional_market_notebook_ref": kaggle_maintenance_v2["regional_market_notebook"]["ref"],
+                "regional_market_notebook_version": kaggle_maintenance_v2["regional_market_notebook"][
+                    "successful_version"
+                ],
+                "regional_market_notebook_local_full_row_execution_verified": kaggle_maintenance_v2[
+                    "regional_market_notebook"
+                ]["local_full_row_execution_verified"],
+                "monthly_maintenance_cadence": kaggle_maintenance_v2["monthly_operations"]["cadence"],
+                "monthly_version_notes_required": "RECORD_VERSION_NOTES"
+                in kaggle_maintenance_v2["monthly_operations"]["required_checks"],
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "sync the remaining Kaggle Data Explorer file/column descriptions for Version 2 and recheck Usability/Pending Actions; then maintain the single 3,010,802-row canonical current-snapshot dataset, its public notebook, and monthly update cadence; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
+        "next_product_action": "sync the remaining Kaggle Data Explorer file/column descriptions for Version 2 through an authenticated Kaggle web session and recheck Usability/Pending Actions; then maintain the single 3,010,802-row canonical current-snapshot dataset, both public notebooks, and monthly update cadence; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
         "hard_blocks": [
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
             "if optional production lifecycle episodes are materialized, require all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",

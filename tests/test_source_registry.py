@@ -420,8 +420,19 @@ def test_kaggle_current_snapshot_maintenance_v2_tracks_remaining_pending_actions
     assert review["data_explorer_sync"]["write_executed"] is False
     assert review["data_explorer_sync"]["write_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
     assert review["data_explorer_sync"]["last_write_attempt_http_status"] == 401
+    assert review["data_explorer_sync"]["official_dataset_metadata_update"]["request_completed"] is True
+    assert review["data_explorer_sync"]["official_dataset_metadata_update"]["data_explorer_file_descriptions_after"] == 0
+    assert review["data_explorer_sync"]["official_dataset_metadata_update"]["data_explorer_column_descriptions_after"] == 0
     assert review["notebook"]["status"] == "COMPLETE"
-    assert review["notebook"]["successful_version"] == 5
+    assert review["notebook"]["successful_version"] == 6
+    assert review["regional_market_notebook"]["status"] == "COMPLETE"
+    assert review["regional_market_notebook"]["successful_version"] == 1
+    assert review["regional_market_notebook"]["local_full_row_execution_verified"] is True
+    assert review["monthly_operations"]["cadence"] == "MONTHLY"
+    assert "RECORD_VERSION_NOTES" in review["monthly_operations"]["required_checks"]
+    assert review["monthly_operations"]["dataset_payload_rule"] == (
+        "PRESERVE_CANONICAL_SNAPSHOT_GRAIN_NO_DUPLICATION_OR_ARTIFICIAL_SHRINK"
+    )
 
 
 def test_historical_kaggle_aggregate_publication_evidence_is_preserved() -> None:

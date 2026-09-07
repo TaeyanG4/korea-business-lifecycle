@@ -12,12 +12,14 @@
 
 **Quickstart Notebook** — [Korea Food-Service Permits: 3M-Row Quickstart](https://www.kaggle.com/code/taeyangg4/korea-food-service-permits-3m-row-quickstart)
 
+**Regional Market Notebook** — [South Korea Food-Service Market Map](https://www.kaggle.com/code/taeyangg4/south-korea-food-service-market-map)
+
 - 대상: 일반음식점, 휴게음식점, 제과점영업
 - 원본 current CSV: **3,010,802행 / 926,587,446 bytes (~926.6 MB)** 수집·검증 완료
 - Canonical `PERMIT`: **3,010,802행 / 165,176,236 bytes (~165.2 MB)**, production materialization 및 독립 검증 완료
 - WGS84 sidecar: **3,010,802행 / 50,805,782 bytes (~50.8 MB)**, 2,811,767건 좌표 변환, 독립 검증 완료
 - Kaggle 본체: canonical `PERMIT` **3,010,802행 × 26컬럼**, **CSV 1,398,626,208 bytes + Parquet 165,170,021 bytes**, `PUBLIC / READY`
-- Kaggle usability 관리: 구조화 Overview, cover, tags, 공식 source provenance, 월간 update cadence, 공개 Quickstart Notebook은 완료. 파일 8개와 Data Explorer 컬럼 56개(26+26+4) 설명도 작성했지만 현재 live Usability는 **8.24/10**이며 `EDIT_FILE_INFO` / `EDIT_COLUMN_DESCRIPTION` 저장이 남아 있음
+- Kaggle usability 관리: 구조화 Overview, cover, tags, 공식 source provenance, 월간 update cadence, Quickstart v6와 Regional Market Map v1 공개는 완료. 파일 8개와 Data Explorer 컬럼 56개(26+26+4) 설명도 작성했지만 현재 live Usability는 **8.24/10**이며 `EDIT_FILE_INFO` / `EDIT_COLUMN_DESCRIPTION` 저장이 남아 있음
 - 과거 공개 aggregate: **67,267 cells**, k=10 suppression 적용. Row-level 공개 후 중복 Kaggle 제품을 줄이기 위해 별도 dataset은 삭제했으며 로컬 파생물과 과거 provenance만 보존
 - 전국 history/episode: **v1 완료조건이 아님**. runner, schema, verifier는 optional 분석 도구로 유지
 

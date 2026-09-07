@@ -21,6 +21,14 @@
     "dry_run_passed": true,
     "last_write_attempt_http_status": 401,
     "last_write_attempt_result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION",
+    "official_dataset_metadata_update": {
+      "attempted": true,
+      "request_completed": true,
+      "data_explorer_column_descriptions_after": 0,
+      "data_explorer_file_descriptions_after": 0,
+      "data_explorer_persistence_observed": false,
+      "usability_score_after": 0.8235294
+    },
     "script": "scripts/maintain_kaggle_dataset_metadata.py",
     "target_column_descriptions": 56,
     "target_file_descriptions": 8,
@@ -81,11 +89,40 @@
     "update_frequency_present": true,
     "user_specified_sources_present": true
   },
+  "monthly_operations": {
+    "cadence": "MONTHLY",
+    "dataset_payload_rule": "PRESERVE_CANONICAL_SNAPSHOT_GRAIN_NO_DUPLICATION_OR_ARTIFICIAL_SHRINK",
+    "required_checks": [
+      "VERIFY_UPSTREAM_SOURCE_REFRESH",
+      "VERIFY_CANONICAL_ROW_AND_COLUMN_COUNTS",
+      "VERIFY_PACKAGE_HASHES_AND_FILE_SET",
+      "RECHECK_KAGGLE_USABILITY_AND_PENDING_ACTIONS",
+      "RECHECK_PUBLIC_NOTEBOOK_EXECUTION",
+      "RECORD_VERSION_NOTES"
+    ],
+    "version_notes_required_fields": [
+      "snapshot_or_review_date",
+      "row_count_and_delta",
+      "schema_change_or_none",
+      "source_freshness_or_provenance_change",
+      "semantic_or_quality_change",
+      "usability_and_pending_actions",
+      "public_notebook_status"
+    ],
+    "version_notes_template": "Snapshot/review: {date}; rows: {rows} ({delta}); schema: {schema}; sources: {sources}; semantics/quality: {quality}; Kaggle usability: {usability}; notebooks: {notebooks}."
+  },
   "notebook": {
     "public": true,
     "ref": "taeyangg4/korea-food-service-permits-3m-row-quickstart",
     "status": "COMPLETE",
-    "successful_version": 5
+    "successful_version": 6
+  },
+  "regional_market_notebook": {
+    "local_full_row_execution_verified": true,
+    "public": true,
+    "ref": "taeyangg4/south-korea-food-service-market-map",
+    "status": "COMPLETE",
+    "successful_version": 1
   },
   "preserves_initial_row_publication_evidence": true,
   "published_files": [
@@ -150,6 +187,7 @@
     "public_visibility_verified": true,
     "published_file_names_match_package_contract": true,
     "published_file_sizes_match_verified_package": true,
-    "quickstart_notebook_completed": true
+    "quickstart_notebook_completed": true,
+    "regional_market_notebook_completed": true
   }
 }

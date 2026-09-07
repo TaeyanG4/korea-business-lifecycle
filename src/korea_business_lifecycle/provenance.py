@@ -493,6 +493,35 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
     if metadata.get("pending_actions") != ["EDIT_FILE_INFO", "EDIT_COLUMN_DESCRIPTION"]:
         errors.append("Kaggle maintenance pending action set changed")
 
+    monthly_operations = review.get("monthly_operations", {})
+    expected_monthly_operations = {
+        "cadence": "MONTHLY",
+        "dataset_payload_rule": "PRESERVE_CANONICAL_SNAPSHOT_GRAIN_NO_DUPLICATION_OR_ARTIFICIAL_SHRINK",
+        "required_checks": [
+            "VERIFY_UPSTREAM_SOURCE_REFRESH",
+            "VERIFY_CANONICAL_ROW_AND_COLUMN_COUNTS",
+            "VERIFY_PACKAGE_HASHES_AND_FILE_SET",
+            "RECHECK_KAGGLE_USABILITY_AND_PENDING_ACTIONS",
+            "RECHECK_PUBLIC_NOTEBOOK_EXECUTION",
+            "RECORD_VERSION_NOTES",
+        ],
+        "version_notes_required_fields": [
+            "snapshot_or_review_date",
+            "row_count_and_delta",
+            "schema_change_or_none",
+            "source_freshness_or_provenance_change",
+            "semantic_or_quality_change",
+            "usability_and_pending_actions",
+            "public_notebook_status",
+        ],
+        "version_notes_template": (
+            "Snapshot/review: {date}; rows: {rows} ({delta}); schema: {schema}; sources: {sources}; "
+            "semantics/quality: {quality}; Kaggle usability: {usability}; notebooks: {notebooks}."
+        ),
+    }
+    if monthly_operations != expected_monthly_operations:
+        errors.append("Kaggle monthly maintenance policy changed")
+
     data_explorer_sync = review.get("data_explorer_sync", {})
     expected_sync = {
         "script": "scripts/maintain_kaggle_dataset_metadata.py",
@@ -505,6 +534,14 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "write_status": "PENDING_AUTHENTICATED_WEB_SESSION",
         "last_write_attempt_http_status": 401,
         "last_write_attempt_result": "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION",
+        "official_dataset_metadata_update": {
+            "attempted": True,
+            "request_completed": True,
+            "data_explorer_file_descriptions_after": 0,
+            "data_explorer_column_descriptions_after": 0,
+            "data_explorer_persistence_observed": False,
+            "usability_score_after": 0.8235294,
+        },
     }
     if data_explorer_sync != expected_sync:
         errors.append("Kaggle Data Explorer sync evidence changed")
@@ -514,11 +551,23 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "ref": "taeyangg4/korea-food-service-permits-3m-row-quickstart",
         "public": True,
         "status": "COMPLETE",
-        "successful_version": 5,
+        "successful_version": 6,
     }
     for key, expected in expected_notebook.items():
         if notebook.get(key) != expected:
             errors.append(f"Kaggle quickstart notebook field changed: {key}")
+
+    regional_notebook = review.get("regional_market_notebook", {})
+    expected_regional_notebook = {
+        "ref": "taeyangg4/south-korea-food-service-market-map",
+        "public": True,
+        "status": "COMPLETE",
+        "successful_version": 1,
+        "local_full_row_execution_verified": True,
+    }
+    for key, expected in expected_regional_notebook.items():
+        if regional_notebook.get(key) != expected:
+            errors.append(f"Kaggle regional market notebook field changed: {key}")
 
     historical = review.get("historical_aggregate", {})
     if historical != {
@@ -564,6 +613,7 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "csv_and_parquet_column_order_match_locally",
         "payload_hashes_verified_locally",
         "quickstart_notebook_completed",
+        "regional_market_notebook_completed",
     ):
         if verification.get(key) is not True:
             errors.append(f"Kaggle maintenance verification must keep {key}=true")
