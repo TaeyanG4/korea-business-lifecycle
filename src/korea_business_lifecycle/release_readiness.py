@@ -441,6 +441,7 @@ def compute_release_readiness() -> dict[str, Any]:
                 ],
                 "quickstart_notebook_status": kaggle_maintenance_v2["notebook"]["status"],
                 "quickstart_notebook_ref": kaggle_maintenance_v2["notebook"]["ref"],
+                "quickstart_notebook_version": kaggle_maintenance_v2["notebook"]["successful_version"],
             },
         },
         "next_long_local_actions": [],

@@ -514,7 +514,7 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "ref": "taeyangg4/korea-food-service-permits-3m-row-quickstart",
         "public": True,
         "status": "COMPLETE",
-        "successful_version": 4,
+        "successful_version": 5,
     }
     for key, expected in expected_notebook.items():
         if notebook.get(key) != expected:

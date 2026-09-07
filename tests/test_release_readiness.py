@@ -166,6 +166,7 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["metadata_sync_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
     assert readiness["tracks"]["public_kaggle"]["metadata_sync_write_attempted"] is True
     assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_http_status"] == 401
+    assert readiness["tracks"]["public_kaggle"]["quickstart_notebook_version"] == 5
     assert readiness["tracks"]["public_kaggle"]["metadata_sync_last_result"] == (
         "KAGGLE_INTERNAL_API_REQUIRES_AUTHENTICATED_WEB_SESSION"
     )

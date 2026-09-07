@@ -421,6 +421,7 @@ def test_kaggle_current_snapshot_maintenance_v2_tracks_remaining_pending_actions
     assert review["data_explorer_sync"]["write_status"] == "PENDING_AUTHENTICATED_WEB_SESSION"
     assert review["data_explorer_sync"]["last_write_attempt_http_status"] == 401
     assert review["notebook"]["status"] == "COMPLETE"
+    assert review["notebook"]["successful_version"] == 5
 
 
 def test_historical_kaggle_aggregate_publication_evidence_is_preserved() -> None:
