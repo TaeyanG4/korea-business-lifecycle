@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "PRODUCTION_EPISODE_MATERIALIZATION_PREPARED_WAITING_FOR_COMPLETE_HISTORY",
+  "execution": {
+    "execution_performed": false,
+    "long_running_action_requires_visible_user_command": true,
+    "preflight_available": true
+  },
+  "gates": {
+    "complete_history_snapshot_tasks_required": true,
+    "history_is_lossless_event_log": false,
+    "management_number_primary_key_claim": false,
+    "multiple_snapshots_for_one_task_allowed": false,
+    "public_row_level_release_approved": false,
+    "raw_history_page_sha256_verified_before_use": true,
+    "same_source_management_number_date_duplicate_allowed": false
+  },
+  "implementation": {
+    "bucket_count": 256,
+    "bucket_hash": "SHA256_FIRST_BYTE_OF_MANAGEMENT_NUMBER_UTF8",
+    "compression": "ZSTD",
+    "module": "src/korea_business_lifecycle/episode_materialization.py",
+    "network_required": false,
+    "pyarrow_version": "21.0.0",
+    "script": "scripts/materialize_history_episodes.py",
+    "verifier_script": "scripts/verify_history_episode_build.py"
+  },
+  "next_gate": "complete and verify all nationwide monthly history snapshots before episode materialization",
+  "scope": {
+    "authority_policy": "provenance/history_authority_policy.json",
+    "grain": "PERMIT_STATUS_EPISODE",
+    "history_acquisition_plan": "provenance/history_nationwide_acquisition_plan.json",
+    "required_history_snapshot_tasks": 7320,
+    "schema": "schemas/permit_status_episode.v1.json",
+    "schema_columns": 23,
+    "window_end": "2026-09-06",
+    "window_start": "2026-01-01"
+  }
+}

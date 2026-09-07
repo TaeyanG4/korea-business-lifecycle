@@ -26,7 +26,7 @@
       "schema": "schemas/permit_status_episode.v1.json",
       "schema_status": "FROZEN",
       "production_reconstruction_enabled": false,
-      "reason_reconstruction_deferred": "nationwide daily history is not acquired and status code 05 semantics remain unresolved"
+      "reason_reconstruction_deferred": "approved monthly nationwide history acquisition has not completed; status code 05 semantics also remain unresolved"
     }
   },
   "rejected_grains": [
@@ -87,7 +87,7 @@
     "episode boundaries must preserve interval censoring unless directly bracketed by dated observations",
     "active observations must remain right-censored",
     "status code 05 must remain unmapped until its semantics are verified",
-    "production episode reconstruction remains disabled until an explicit bounded history-observation strategy is approved"
+    "production episode reconstruction remains disabled until all 7320 approved monthly history snapshot tasks complete uniquely and pass preflight"
   ],
   "next_gate": {
     "phase": "Phase 7 Publication Safety Review",
@@ -120,17 +120,23 @@
     "bounded_episode_reconstruction": "provenance/bounded_episode_reconstruction.json",
     "bounded_episode_reconstruction_status": "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED",
     "history_observation_strategy": "provenance/history_observation_strategy.json",
-    "history_observation_strategy_status": "PRE_REFORM_AUTHORITY_DOMAIN_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
+    "history_observation_strategy_status": "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING",
     "authority_domain_reference": "provenance/authority_domain_reference.json",
-    "authority_domain_reference_status": "CURRENT_244_AND_DELETED_32_INGESTED_LEGACY_PARTITION_SEMANTICS_BOUNDED",
+    "authority_domain_reference_status": "DATE_EFFECTIVE_PRE_244_POST_244_APPROVED",
     "history_authority_partition_findings": "provenance/history_authority_partition_findings.json",
     "history_authority_partition_findings_status": "BOUNDED_FREEZE_PATTERN_CONFIRMED",
     "history_authority_partition_probe_plan": "provenance/history_authority_partition_probe_plan.json",
     "history_authority_partition_probe_status": "FULL_32_COUNT_PROBE_COMPLETED_VERIFIED",
     "history_authority_partition_full_probe": "provenance/history_authority_partition_full_probe.json",
     "history_authority_partition_full_probe_status": "POST_REFORM_COUNT_FREEZE_96_OF_96_CONFIRMED",
+    "history_authority_policy": "provenance/history_authority_policy.json",
+    "history_authority_policy_status": "DATE_EFFECTIVE_CURRENT_STATE_AUTHORITY_POLICY_APPROVED",
+    "history_nationwide_acquisition_plan": "provenance/history_nationwide_acquisition_plan.json",
+    "history_nationwide_acquisition_status": "MONTHLY_APPROVED_NOT_EXECUTED",
+    "history_episode_materialization_plan": "provenance/history_episode_materialization_plan.json",
+    "history_episode_materialization_status": "PREPARED_WAITING_FOR_COMPLETE_HISTORY",
     "redistribution_clarification_plan": "provenance/redistribution_clarification_plan.json",
     "redistribution_clarification_status": "PREPARED_WRITTEN_RESPONSE_PENDING",
-    "goal": "keep verified local artifacts private; resolve pre-reform old/new authority partition completeness and overlap semantics, obtain written source-specific redistribution clarification, and make an explicit observation-cadence decision before nationwide production reconstruction"
+    "goal": "keep verified local artifacts private; execute and verify the approved monthly nationwide history acquisition, then materialize and verify production status episodes; obtain written source-specific redistribution clarification separately before public release"
   }
 }

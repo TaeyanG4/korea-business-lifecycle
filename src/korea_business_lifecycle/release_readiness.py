@@ -13,6 +13,9 @@ from .provenance import (
     load_history_authority_partition_findings,
     load_history_authority_partition_full_probe,
     load_history_authority_partition_probe_plan,
+    load_history_authority_policy,
+    load_history_episode_materialization_plan,
+    load_history_nationwide_acquisition_plan,
     load_history_observation_strategy,
     load_license_review,
     load_permit_parent_full_dry_run,
@@ -44,6 +47,9 @@ def compute_release_readiness() -> dict[str, Any]:
     authority_partition_findings = load_history_authority_partition_findings()
     authority_partition_full_probe = load_history_authority_partition_full_probe()
     authority_partition_probe_plan = load_history_authority_partition_probe_plan()
+    authority_policy = load_history_authority_policy()
+    nationwide_plan = load_history_nationwide_acquisition_plan()
+    episode_materialization_plan = load_history_episode_materialization_plan()
     grain = load_grain_decision()
     privacy = load_privacy_review()
     license_review = load_license_review()
@@ -82,7 +88,7 @@ def compute_release_readiness() -> dict[str, Any]:
 
     return {
         "checked_at": "2026-09-07",
-        "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_PUBLICATION_SAFETY_REVIEW_NEXT",
+        "decision": "LOCAL_CANONICAL_AND_WGS84_VERIFIED_MONTHLY_HISTORY_ACQUISITION_APPROVED_PUBLICATION_STILL_BLOCKED",
         "tracks": {
             "local_permit_parent": {
                 "status": local_status,
@@ -119,7 +125,7 @@ def compute_release_readiness() -> dict[str, Any]:
                 "parent_permit_build_id": geospatial_materialization_result["scope"]["parent_permit_build_id"],
             },
             "lifecycle_episode": {
-                "status": "BLOCKED_PRODUCTION_RECONSTRUCTION",
+                "status": "READY_FOR_APPROVED_HISTORY_ACQUISITION",
                 "schema": episode["schema_status"],
                 "bounded_reconstructor": "IMPLEMENTED_SYNTHETIC_VALIDATED",
                 "bounded_reconstructor_module": bounded_episode["implementation"]["module"],
@@ -127,7 +133,28 @@ def compute_release_readiness() -> dict[str, Any]:
                     "maximum_observations_per_call"
                 ],
                 "bounded_reconstructor_in_memory_only": bounded_episode["scope"]["bounded_in_memory_only"],
-                "history_observation_strategy": "PRE_REFORM_AUTHORITY_DOMAIN_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
+                "history_observation_strategy": "MONTHLY_CADENCE_APPROVED_ACQUISITION_PENDING",
+                "history_selected_cadence": history_strategy["selected_cadence"]["name"],
+                "history_selected_observation_dates": history_strategy["selected_cadence"]["observation_dates"],
+                "history_selected_maximum_gap_days": history_strategy["selected_cadence"]["maximum_gap_days"],
+                "history_selected_current_scale_request_lower_bound": history_strategy["selected_cadence"][
+                    "current_scale_request_lower_bound"
+                ],
+                "history_selected_current_scale_request_upper_bound": history_strategy["selected_cadence"][
+                    "current_scale_request_upper_bound"
+                ],
+                "history_acquisition_hard_network_request_cap_per_run": nationwide_plan["execution"][
+                    "hard_network_request_cap_per_run"
+                ],
+                "history_acquisition_request_delay_seconds": nationwide_plan["execution"][
+                    "minimum_request_delay_seconds"
+                ],
+                "history_nationwide_snapshot_tasks_planned": nationwide_plan["scope"]["planned_snapshot_tasks"],
+                "history_nationwide_acquisition_status": "APPROVED_NOT_EXECUTED",
+                "history_episode_materialization_status": "PREPARED_WAITING_FOR_COMPLETE_HISTORY",
+                "history_episode_materialization_bucket_count": episode_materialization_plan["implementation"][
+                    "bucket_count"
+                ],
                 "history_authenticated_execution_available": authority_partition_findings[
                     "authentication_refresh"
                 ]["authenticated_history_probe_now_succeeds"],
@@ -153,12 +180,14 @@ def compute_release_readiness() -> dict[str, Any]:
                 "history_post_reform_current_state_enumeration_policy": authority_partition_full_probe[
                     "legacy_partition_policy"
                 ]["post_reform_current_state_enumeration"],
-                "history_pre_reform_current_plus_deleted_union_policy": authority_partition_full_probe[
-                    "legacy_partition_policy"
-                ]["pre_reform_current_plus_deleted_union"],
-                "history_pre_reform_authority_domain_resolved": authority_partition_full_probe[
-                    "legacy_partition_policy"
-                ]["pre_reform_policy_approved"],
+                "history_pre_reform_current_state_enumeration_policy": authority_policy["pre_reform"]["policy"],
+                "history_post_reform_date_effective_current_state_enumeration_policy": authority_policy[
+                    "post_reform"
+                ]["policy"],
+                "history_pre_reform_authority_domain_resolved": True,
+                "history_same_date_old_new_union_used": authority_policy["overlap_semantics"][
+                    "same_date_old_new_union_used"
+                ],
                 "history_manual_reference_authority_count": authority_reference[
                     "official_reference"
                 ]["manual_claim_count"],
@@ -189,6 +218,9 @@ def compute_release_readiness() -> dict[str, Any]:
                 "history_exact_deleted_numeric_codes_ingested": authority_reference[
                     "ingestion_gate"
                 ]["exact_deleted_numeric_code_values_ingested"],
+                "history_exact_new_numeric_codes_ingested": authority_reference[
+                    "ingestion_gate"
+                ]["exact_new_numeric_code_values_ingested"],
                 "history_current_reference_numeric_enumeration_ready": authority_reference[
                     "ingestion_gate"
                 ]["current_reference_numeric_enumeration_ready"],
@@ -225,6 +257,16 @@ def compute_release_readiness() -> dict[str, Any]:
                     item["request_upper_bound"]
                     for item in history_strategy["scenarios"]
                     if item["name"] == "DAILY"
+                ),
+                "monthly_window_request_lower_bound": next(
+                    item["request_lower_bound"]
+                    for item in history_strategy["scenarios"]
+                    if item["name"] == "MONTHLY_ANCHOR_PLUS_END"
+                ),
+                "monthly_window_request_upper_bound": next(
+                    item["request_upper_bound"]
+                    for item in history_strategy["scenarios"]
+                    if item["name"] == "MONTHLY_ANCHOR_PLUS_END"
                 ),
                 "production_reconstruction_enabled": episode["production_reconstruction_enabled"],
                 "status_code_05_semantics_resolved": semantics["status_code_05_semantics_resolved"],
@@ -272,14 +314,23 @@ def compute_release_readiness() -> dict[str, Any]:
                 "local_materialization_completion_does_not_change_publication_status": True,
             },
         },
-        "next_long_local_actions": [],
-        "next_product_action": "resolve pre-reform old/new authority partition completeness and overlap semantics, obtain source-specific written redistribution clarification, and then make an explicit history cadence/request-budget decision",
+        "next_long_local_actions": [
+            {
+                "name": "nationwide_monthly_history_acquisition",
+                "command": "py -3.12 scripts/acquire_nationwide_history.py --execute --max-network-requests 400000 --request-delay-seconds 0.2",
+                "planned_snapshot_tasks": nationwide_plan["scope"]["planned_snapshot_tasks"],
+                "maximum_network_requests": nationwide_plan["execution"]["hard_network_request_cap_per_run"],
+                "default_mode_without_execute": nationwide_plan["execution"]["default_mode"],
+                "resumable": nationwide_plan["execution"]["resumable_complete_snapshots_are_skipped"],
+            }
+        ],
+        "next_product_action": "execute and verify the approved resumable monthly nationwide history acquisition; after all 7320 snapshot tasks are complete and unique, materialize and independently verify production lifecycle episodes; obtain source-specific written redistribution clarification separately before public release",
         "hard_blocks": [
             "do not publish row-level data until privacy allowlist and redistribution review pass",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
-            "do not reconstruct production lifecycle episodes until the explicit history-observation strategy is approved; status 05 remains unmapped",
+            "do not reconstruct production lifecycle episodes until all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",
             "do not treat frozen deleted-authority history partitions as semantically equivalent to current-state partitions after the 2026-07-01 reform",
-            "do not auto-union current and deleted authority partitions for pre-reform dates until old/new partition completeness and overlap semantics are resolved",
+            "do not use API queryability as date-effective authority membership; apply current-minus-new-plus-deleted before 2026-07-01 and current-only on/after 2026-07-01",
             "do not declare MNG_NO an official source primary key",
         ],
     }

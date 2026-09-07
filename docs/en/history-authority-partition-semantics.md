@@ -44,7 +44,7 @@ This shows that the bounded old/new partitions are not a simple duplicate projec
 
 ## Current interpretation
 
-The history authority filter must not be modeled as a simple **date-effective active-code domain**. In the bounded evidence, deleted partitions evolve until the reform boundary and then remain queryable as frozen legacy state, while current partitions can continue evolving. The 244-current + 32-deleted = 276-code candidate union is useful for cost planning, but it is not represented as semantically equivalent to a current-state snapshot for a given date.
+History API queryability must not be modeled as a simple **date-effective active-code domain**. Deleted partitions remain queryable as frozen legacy state after the reform, and new/current partitions can answer pre-reform `BASE_DATE` values. The project therefore separates “the API answers this code” from date-effective current-state authority membership.
 
 ## Completed full 32-code count-only probe
 
@@ -71,13 +71,15 @@ py -3.12 scripts/verify_deleted_authority_semantics.py \
 ## Legacy partition inclusion policy
 
 - **On/after 2026-07-01:** enumerate the official current **244 numeric codes only** and exclude the 32 deleted codes from current-state enumeration.
-- **Before 2026-07-01:** do not auto-union current 244 and deleted 32, because current/new codes are already queryable for pre-reform dates.
-- Do not approve a nationwide Jan-Sep enumeration domain until pre-reform old/new partition completeness and overlap are resolved.
-- The 276-code union remains a conservative pre-reform cost-planning candidate, not an authoritative snapshot domain.
+- **Before 2026-07-01:** use the official change reference to take current 244 minus the 32 numeric rows marked `new`, then add the 32 numeric rows marked `deleted`, yielding an exact **244-code** domain.
+- The production policy never unions old and new codes on the same date, so same-date old/new deduplication is not required by the enumeration policy.
+- A pre-reform response from a new code, or a post-reform response from a deleted code, does not by itself alter date-effective membership.
+- MNG_NO remains only a cross-reform observation-linkage candidate, not a source primary key or establishment identity.
+- The 276-code current-plus-deleted union is no longer used as the production cost domain.
 
 ## Next gate
 
-The next core gate is pre-reform old/new authority-partition completeness and overlap semantics. Only after that can an observation cadence and request budget be approved. The completed network command is retained below only for reproducibility; it does not need to be rerun.
+The date-effective authority policy is approved in `provenance/history_authority_policy.json`. The next gate is the approved **MONTHLY_ANCHOR_PLUS_END** nationwide history acquisition. The completed deleted-code probe command is retained below only for reproducibility; it does not need to be rerun.
 
 ```bash
 mkdir -p data/local/logs

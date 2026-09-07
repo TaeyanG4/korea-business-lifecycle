@@ -2,7 +2,7 @@
 
 확인일: **2026-09-07**
 
-production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of history API의 authority enumeration 의미와 observation cadence를 모두 확정해야 합니다. 이 문서는 **cadence를 승인하지 않고 비용과 불완전성만 계산**합니다.
+production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 위한 authority enumeration과 observation cadence를 확정했습니다. 이 문서는 승인된 **MONTHLY_ANCHOR_PLUS_END** cadence와 그 비용/불완전성 한계를 기록합니다.
 
 ## 계산 근거
 
@@ -12,6 +12,7 @@ production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of
 - 2026-07-02 최신 공식 첨부의 current numeric authority: 244개
 - current `_ALL` aggregate token: 16개 — row enumeration에서 제외
 - 2026-07-01 개편으로 삭제 표시된 exact numeric authority: 32개
+- 2026-07-01 개편으로 신규 표시된 exact numeric authority: 32개
 - current + deleted candidate union: 276개
 - current snapshot에서 candidate union 중 관찰되지 않은 code: source당 46개
 - history API 최대 page size: 100
@@ -21,16 +22,17 @@ production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of
 - sampled current partition은 post-reform에도 변화 가능
 - 32개 전체 deleted-code count probe: **384/384 완료**, 96개 source/authority pair 모두 post-reform count freeze 확인
 - post-reform current-state enumeration policy: current 244 only, deleted 32 제외
-- pre-reform old/new partition domain: 미확정, current+deleted 자동 union 금지
+- pre-reform current-state enumeration policy: current 244 - new 32 + deleted 32 = exact 244
+- same-date old/new union: 사용하지 않음
 
-비용 계획은 2026-07-01을 경계로 분리합니다. pre-reform은 보수적으로 276 candidate union의 나머지 46개를 source별 1-request probe로 더하고, post-reform은 current 244만 사용하므로 current 공식 domain에서 관찰되지 않은 14개만 source별 probe합니다.
+비용 계획은 2026-07-01을 경계로 date-effective 244-code domain을 사용합니다. pre-reform은 `current-new+deleted` 244 전체의 current-row-scale paging bound를 계산하고, post-reform은 current 244 중 현재 snapshot에서 관찰되지 않은 14개를 source별 1회 probe하는 current-scale bound를 사용합니다.
 
-| Source | 230 non-empty paging | Pre-reform probes/range | Post-reform probes/range |
+| Source | 230 current non-empty paging | Pre-reform exact-244 range | Post-reform probes/range |
 |---|---:|---:|---:|
-| 일반음식점 | 22,954–23,183 | 46 / 23,000–23,229 | 14 / 22,968–23,197 |
-| 휴게음식점 | 6,460–6,689 | 46 / 6,506–6,735 | 14 / 6,474–6,703 |
-| 제과점영업 | 695–924 | 46 / 741–970 | 14 / 709–938 |
-| **합계** | **30,109–30,796** | **138 / 30,247–30,934** | **42 / 30,151–30,838** |
+| 일반음식점 | 22,954–23,183 | 22,954–23,197 | 14 / 22,968–23,197 |
+| 휴게음식점 | 6,460–6,689 | 6,460–6,703 | 14 / 6,474–6,703 |
+| 제과점영업 | 695–924 | 695–938 | 14 / 709–938 |
+| **합계** | **30,109–30,796** | **30,109–30,838** | **42 / 30,151–30,838** |
 
 이 범위는 historical row volume의 upper/lower bound가 아닙니다. bounded 실행에서는 삭제 code가 개편 후에도 non-empty인 frozen legacy partition으로 계속 query됐으므로, candidate union을 특정 날짜의 current-state와 동일하게 해석하지 않습니다.
 
@@ -40,10 +42,10 @@ production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of
 
 | Scenario | Dates (pre/post) | 최대 gap | Request lower | Request upper | 승인 |
 |---|---:|---:|---:|---:|---|
-| endpoints only | 2 (1/1) | 248일 | 60,398 | 61,772 | 아니오 |
-| monthly anchor + end | 10 (6/4) | 31일 | 302,086 | 308,956 | 아니오 |
-| weekly 7-day + end | 37 (26/11) | 7일 | 1,118,083 | 1,143,502 | 아니오 |
-| daily | 249 (181/68) | 1일 | 7,524,975 | 7,696,038 | 아니오 |
+| endpoints only | 2 (1/1) | 248일 | 60,260 | 61,676 | 아니오 |
+| **monthly anchor + end** | **10 (6/4)** | **31일** | **301,258** | **308,380** | **예** |
+| weekly 7-day + end | 37 (26/11) | 7일 | 1,114,495 | 1,141,006 | 아니오 |
+| daily | 249 (181/68) | 1일 | 7,499,997 | 7,678,662 | 아니오 |
 
 ## 왜 daily도 lossless event log가 아닌가
 
@@ -59,15 +61,16 @@ daily cadence는 interval-censoring width를 줄일 뿐 event-log semantics를 �
 
 ## 현재 결정
 
-`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_PRE_REFORM_AUTHORITY_DOMAIN_AND_COST_REVIEW_REQUIRED`
+`MONTHLY_HISTORY_OBSERVATION_CADENCE_APPROVED_ACQUISITION_NOT_YET_EXECUTED`
 
-production reconstruction 전에는 최소한 다음이 필요합니다.
+production reconstruction 전에는 다음 실행 gate가 남습니다.
 
-1. pre-reform old/new authority partition completeness와 overlap semantics 확인
-2. 허용 가능한 request budget 결정
-3. 분석 목적에 필요한 최대 censoring gap 결정
-4. snapshot retention/중간 변화 손실 한계 수용 여부 결정
-5. status `05` 및 reopening-vs-correction unresolved 상태 유지
+1. 10개 observation date × 3 source × 244 authority = **7,320 snapshot task**의 resumable nationwide acquisition 실행
+2. 실행당 actual network attempt **400,000 hard cap**, 최소 request delay 0.2초 유지
+3. 7,320 task가 모두 complete이고 task당 snapshot이 정확히 1개인지 preflight 확인
+4. raw history page SHA-256을 검증하면서 production episode materialization
+5. independent episode verifier PASS 확인
+6. status `05`, reopening-vs-correction, event-log 한계는 그대로 유지
 
 bounded 실행 결과는 [History Authority Partition Semantics](history-authority-partition-semantics.md)에 기록합니다.
 
@@ -75,4 +78,25 @@ bounded 실행 결과는 [History Authority Partition Semantics](history-authori
 
 ```bash
 python scripts/history_observation_strategy.py
+```
+
+실제 전국 수집은 장시간 실행이므로 자동 시작하지 않으며 `scripts/acquire_nationwide_history.py`는 기본 DRY_RUN입니다.
+
+```bash
+# network-free plan/current local completion state
+py -3.12 scripts/acquire_nationwide_history.py
+
+# long-running production acquisition; completed snapshots are skipped on rerun
+py -3.12 scripts/acquire_nationwide_history.py --execute \
+  --max-network-requests 400000 \
+  --request-delay-seconds 0.2
+
+# must report 7320 complete, 0 missing, 0 multiple before materialization
+py -3.12 scripts/materialize_history_episodes.py --preflight
+
+# local-only production episode build
+py -3.12 scripts/materialize_history_episodes.py
+
+# independent verifier; --build-id is optional when exactly one episode build exists
+py -3.12 scripts/verify_history_episode_build.py
 ```

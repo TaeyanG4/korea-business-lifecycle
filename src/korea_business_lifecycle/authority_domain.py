@@ -25,6 +25,7 @@ REFERENCE_NOTICE_URL = (
 )
 REFERENCE_NOTICE_DATE = "2026-07-03"
 REFERENCE_CHANGE_EFFECTIVE_DATE = "2026-07-01"
+REFERENCE_CHANGE_EFFECTIVE_DATE_BASIC = "20260701"
 MANUAL_URL = "https://www.localdata.go.kr/images/egovframework/portal/manual_260106.pdf"
 MANUAL_REFERENCE_COUNT = 245
 V1_DETAIL_REFERENCE_FILENAME = "개방자치단체코드_영업상태코드.xlsx"
@@ -90,6 +91,22 @@ def _normalize_code(value: object) -> str:
     return code
 
 
+def _normalize_change_date(value: object) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        raise AuthorityDomainError("authority reference change date cannot be boolean")
+    if isinstance(value, int):
+        raw = str(value)
+    elif isinstance(value, float) and value.is_integer():
+        raw = str(int(value))
+    else:
+        raw = str(value).strip().replace("-", "")
+    if not re.fullmatch(r"[0-9]{8}", raw):
+        raise AuthorityDomainError("authority reference change date must be YYYYMMDD or blank")
+    return raw
+
+
 def _authority_list_hash(authorities: Iterable[dict[str, str]]) -> str:
     lines = [f"{item['code']}\t{item['name']}\n" for item in authorities]
     return hashlib.sha256("".join(lines).encode("utf-8")).hexdigest()
@@ -128,20 +145,32 @@ def parse_authority_reference_workbook(path: str | Path) -> dict[str, Any]:
             name = _normalize_text(values[1], field="name") or ""
             code = _normalize_code(values[2])
             change = _normalize_text(values[3], field="change", allow_blank=True)
+            change_date = _normalize_change_date(values[4])
 
             row = {
                 "number": number,
                 "name": name,
                 "code": code,
                 "change": change,
+                "change_date": change_date,
             }
             if number is not None:
                 if change not in {None, "신규"}:
                     raise AuthorityDomainError("numbered authority row has an invalid change marker")
+                if change is None and change_date is not None:
+                    raise AuthorityDomainError("unchanged authority row unexpectedly has a change date")
+                if change == "신규" and _NUMERIC_CODE.fullmatch(code):
+                    if change_date != REFERENCE_CHANGE_EFFECTIVE_DATE_BASIC:
+                        raise AuthorityDomainError("new numeric authority row effective date changed")
+                if change == "신규" and _AGGREGATE_CODE.fullmatch(code):
+                    if change_date is not None:
+                        raise AuthorityDomainError("new aggregate authority token unexpectedly has a change date")
                 active_rows.append(row)
             else:
                 if change != "삭제":
                     raise AuthorityDomainError("unnumbered authority row is not an explicit deletion")
+                if change_date != REFERENCE_CHANGE_EFFECTIVE_DATE_BASIC:
+                    raise AuthorityDomainError("deleted authority row effective date changed")
                 deleted_rows.append(row)
     finally:
         workbook.close()
@@ -170,6 +199,14 @@ def parse_authority_reference_workbook(path: str | Path) -> dict[str, Any]:
             {"code": str(item["code"]), "name": str(item["name"])}
             for item in deleted_rows
             if _NUMERIC_CODE.fullmatch(str(item["code"]))
+        ),
+        key=lambda item: item["code"],
+    )
+    new_numeric = sorted(
+        (
+            {"code": str(item["code"]), "name": str(item["name"])}
+            for item in active_rows
+            if item["change"] == "신규" and _NUMERIC_CODE.fullmatch(str(item["code"]))
         ),
         key=lambda item: item["code"],
     )
@@ -219,6 +256,8 @@ def parse_authority_reference_workbook(path: str | Path) -> dict[str, Any]:
         "active_numeric_authority_list_sha256": _authority_list_hash(active_numeric),
         "deleted_numeric_authorities": deleted_numeric,
         "deleted_numeric_authority_list_sha256": _authority_list_hash(deleted_numeric),
+        "new_numeric_authorities": new_numeric,
+        "new_numeric_authority_list_sha256": _authority_list_hash(new_numeric),
         "active_aggregate_tokens": active_aggregate,
         "new_numeric_codes": sorted(new_numeric_codes),
         "deleted_numeric_codes": sorted(deleted_numeric_codes),
@@ -294,10 +333,25 @@ def build_authority_domain_reference(
         str(item["code"]): str(item["name"])
         for item in workbook["deleted_numeric_authorities"]
     }
+    new_map = {
+        str(item["code"]): str(item["name"])
+        for item in workbook["new_numeric_authorities"]
+    }
     official = set(current_map)
     deleted = set(deleted_map)
+    new = set(new_map)
     if official & deleted:
         raise AuthorityDomainError("current and deleted authority-code domains overlap")
+    if not new <= official:
+        raise AuthorityDomainError("new authority codes must be a subset of the current official domain")
+    if new & deleted:
+        raise AuthorityDomainError("new and deleted authority-code domains overlap")
+    if len(new) != len(deleted):
+        raise AuthorityDomainError("numeric new/deleted authority counts must balance at the reform boundary")
+    unchanged = official - new
+    pre_reform = unchanged | deleted
+    if len(pre_reform) != len(official):
+        raise AuthorityDomainError("derived pre-reform numeric authority count changed")
     history_window_candidate = official | deleted
     observed_not_official = sorted(observed - official)
     if observed_not_official:
@@ -307,7 +361,7 @@ def build_authority_domain_reference(
 
     return {
         "checked_at": "2026-09-07",
-        "decision": "CURRENT_244_AND_DELETED_32_AUTHORITY_CODES_INGESTED_HISTORY_WINDOW_SEMANTICS_PENDING",
+        "decision": "DATE_EFFECTIVE_CURRENT_STATE_AUTHORITY_DOMAINS_APPROVED_PRE_244_POST_244",
         "field": "OPN_ATMY_GRP_CD",
         "official_reference": {
             "manual_url": MANUAL_URL,
@@ -337,6 +391,9 @@ def build_authority_domain_reference(
             "deleted_numeric_authority_list_sha256": workbook[
                 "deleted_numeric_authority_list_sha256"
             ],
+            "new_numeric_authority_list_sha256": workbook[
+                "new_numeric_authority_list_sha256"
+            ],
             "manual_count_differs_from_current_numeric_reference": (
                 MANUAL_REFERENCE_COUNT != workbook["active_numeric_code_count"]
             ),
@@ -347,6 +404,23 @@ def build_authority_domain_reference(
             "change_effective_date": REFERENCE_CHANGE_EFFECTIVE_DATE,
             "exact_deleted_numeric_authority_codes_ingested": True,
             "deleted_numeric_authority_count": len(deleted),
+            "exact_new_numeric_authority_codes_ingested": True,
+            "new_numeric_authority_count": len(new),
+            "unchanged_numeric_authority_count": len(unchanged),
+            "pre_reform_numeric_authority_count": len(pre_reform),
+            "pre_reform_numeric_authority_list_sha256": _authority_list_hash(
+                sorted(
+                    (
+                        {"code": code, "name": (current_map | deleted_map)[code]}
+                        for code in pre_reform
+                    ),
+                    key=lambda item: item["code"],
+                )
+            ),
+            "pre_reform_current_state_enumeration_policy": "CURRENT_MINUS_NEW_PLUS_DELETED",
+            "post_reform_current_state_enumeration_policy": "CURRENT_ONLY_EXCLUDE_DELETED",
+            "authority_domain_switch_uses_official_change_effective_date": True,
+            "api_queryability_does_not_define_date_effective_membership": True,
             "current_plus_deleted_candidate_union_count": len(history_window_candidate),
             "current_plus_deleted_candidate_union_sha256": _authority_list_hash(
                 sorted(
@@ -358,7 +432,8 @@ def build_authority_domain_reference(
                 )
             ),
             "date_effective_history_authority_filter_semantics_verified": False,
-            "deleted_codes_confirmed_queryable_for_prechange_base_dates": False,
+            "date_effective_current_state_enumeration_policy_approved": True,
+            "deleted_codes_confirmed_queryable_for_prechange_base_dates": True,
             "manual_245_count_reconciled_to_exact_window_domain": False,
         },
         "observed_current_snapshots": {
@@ -381,7 +456,8 @@ def build_authority_domain_reference(
             "current_official_numeric_domain_authoritatively_complete_for_reference_date": True,
             "current_reference_numeric_enumeration_ready": True,
             "exact_deleted_numeric_code_values_ingested": True,
-            "history_window_date_effective_numeric_enumeration_ready": False,
+            "exact_new_numeric_code_values_ingested": True,
+            "history_window_date_effective_numeric_enumeration_ready": True,
             "aggregate_all_tokens_used_for_row_enumeration": False,
             "future_reference_refresh_required": True,
         },
@@ -390,12 +466,15 @@ def build_authority_domain_reference(
             "current_official_numeric_authority_count": len(official),
             "current_unobserved_official_authority_probe_count_per_source": len(missing),
             "deleted_numeric_authority_count": len(deleted),
+            "new_numeric_authority_count": len(new),
+            "pre_reform_numeric_authority_count": len(pre_reform),
             "history_window_candidate_numeric_union_count": len(history_window_candidate),
             "current_scale_candidate_union_absent_authority_count_per_source": (
                 len(history_window_candidate) - len(observed)
             ),
-            "current_plus_deleted_candidate_union_may_be_used_for_cost_planning": True,
+            "current_plus_deleted_candidate_union_may_be_used_for_cost_planning": False,
             "candidate_union_is_proven_date_effective_query_domain": False,
+            "date_effective_current_state_authority_count_per_date": len(official),
             "current_unobserved_authorities_may_be_assumed_historically_empty": False,
             "deleted_authorities_may_be_assumed_unqueryable_for_prechange_dates": False,
             "manual_245_count_may_be_used_as_exact_current_query_domain": False,
@@ -410,10 +489,18 @@ def build_authority_domain_reference(
             "row_level_business_values_emitted": False,
         },
         "official_current_numeric_authorities": workbook["active_numeric_authorities"],
+        "official_new_numeric_authorities": workbook["new_numeric_authorities"],
         "official_deleted_numeric_authorities": workbook["deleted_numeric_authorities"],
+        "official_pre_reform_numeric_authorities": sorted(
+            (
+                {"code": code, "name": (current_map | deleted_map)[code]}
+                for code in pre_reform
+            ),
+            key=lambda item: item["code"],
+        ),
         "next_gate": (
-            "verify date-effective history filtering for deleted authority codes, then make an "
-            "explicit history cadence/request-budget decision; current-reference enumeration "
-            "itself is ready"
+            "use the approved date-effective current-state authority policy to choose one "
+            "history cadence/request budget; API queryability of legacy/new partitions remains "
+            "separate from date-effective membership"
         ),
     }

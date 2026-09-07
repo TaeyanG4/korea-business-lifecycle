@@ -44,7 +44,7 @@ row-level 값은 Git에 남기지 않고 Git-ignored local history snapshot에�
 
 ## 현재 해석
 
-history authority filter는 단순한 **date-effective active-code domain**으로 모델링하면 안 됩니다. bounded evidence에서는 삭제 partition이 개편 전까지 진화하다가 이후 frozen legacy state로 계속 queryable하고, current partition은 이후에도 변화할 수 있습니다. 따라서 current 244 + deleted 32 = 276 후보 union은 비용 계획에는 사용할 수 있지만, 특정 날짜의 current-state snapshot과 의미적으로 동일하다고 주장하지 않습니다.
+history API의 queryability는 단순한 **date-effective active-code domain**이 아닙니다. 삭제 partition은 개편 후에도 frozen legacy state로 queryable하고, 신규/current partition도 개편 전 `BASE_DATE`에 응답할 수 있습니다. 따라서 어떤 code가 응답하는지와 특정 날짜의 current-state authority membership을 분리합니다.
 
 ## Full 32-code count-only probe 완료
 
@@ -71,13 +71,15 @@ py -3.12 scripts/verify_deleted_authority_semantics.py \
 ## Legacy partition inclusion policy
 
 - **2026-07-01 이후:** current-state enumeration은 공식 current numeric **244개만 사용**하고 deleted 32는 제외합니다.
-- **2026-07-01 이전:** current/new code도 이미 query 가능하므로 current 244와 deleted 32를 자동 union하지 않습니다.
-- pre-reform old/new partition completeness/overlap가 해결되기 전에는 Jan–Sep 전국 enumeration domain을 승인하지 않습니다.
-- 276-code union은 pre-reform 비용 계획용 candidate일 뿐 authoritative snapshot domain이 아닙니다.
+- **2026-07-01 이전:** 공식 변경표의 current 244에서 `신규` numeric 32를 빼고 `삭제` numeric 32를 더한 **244개**를 사용합니다. 즉 `current - new + deleted`입니다.
+- 같은 날짜에 old/new code를 함께 union하지 않으므로 same-date old/new deduplication을 production 정책으로 요구하지 않습니다.
+- API에서 신규 code가 pre-reform 날짜에 응답하거나 삭제 code가 post-reform 날짜에 응답하더라도, 그것만으로 date-effective membership을 바꾸지 않습니다.
+- MNG_NO는 개편 경계를 넘는 observation 연결 candidate로만 사용하며 source PK/establishment identity로 승격하지 않습니다.
+- 276-code current+deleted union은 더 이상 production cost domain으로 사용하지 않습니다.
 
 ## 다음 gate
 
-다음 핵심 gate는 pre-reform old/new authority partition completeness/overlap semantics입니다. 이것이 해결된 뒤에만 observation cadence와 request budget을 최종 결정할 수 있습니다. 이미 완료한 full probe는 재실행할 필요가 없으며, 원 실행 명령은 재현성 목적으로만 아래에 보존합니다.
+date-effective authority policy는 `provenance/history_authority_policy.json`에 승인됐고, 다음 gate는 승인된 **MONTHLY_ANCHOR_PLUS_END** cadence로 nationwide history를 수집하는 것입니다. 이미 완료한 full deleted-code probe는 재실행할 필요가 없으며, 원 실행 명령은 재현성 목적으로만 아래에 보존합니다.
 
 ```bash
 mkdir -p data/local/logs

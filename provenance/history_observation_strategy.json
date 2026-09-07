@@ -4,28 +4,31 @@
     "authenticated_execution_available": true,
     "bounded_current_partition_post_reform_evolution_confirmed": true,
     "bounded_deleted_partition_post_reform_freeze_confirmed": true,
+    "cross_reform_permit_continuity_still_uses_mng_no_only_as_linkage_candidate": true,
     "current_plus_deleted_union_semantically_equivalent_to_current_snapshot": false,
+    "date_effective_current_state_policy": "provenance/history_authority_policy.json",
     "findings": "provenance/history_authority_partition_findings.json",
     "full_32_deleted_count_probe_executed": true,
     "full_32_deleted_count_probe_request_cap": 384,
     "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
     "full_deleted_count_probe_result": "provenance/history_authority_partition_full_probe.json",
+    "old_new_overlap_requires_same_date_deduplication": false,
     "post_reform_count_frozen_source_authority_pairs": 96,
     "post_reform_current_state_enumeration_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
-    "pre_reform_authority_domain_resolved": false,
-    "pre_reform_current_plus_deleted_union_policy": "UNRESOLVED_DO_NOT_AUTO_UNION"
+    "pre_reform_authority_domain_resolved": true,
+    "pre_reform_current_state_enumeration_policy": "CURRENT_MINUS_NEW_PLUS_DELETED"
   },
   "checked_at": "2026-09-07",
-  "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_PRE_REFORM_AUTHORITY_DOMAIN_AND_COST_REVIEW_REQUIRED",
+  "decision": "MONTHLY_HISTORY_OBSERVATION_CADENCE_APPROVED_ACQUISITION_NOT_YET_EXECUTED",
   "implementation": {
     "module": "src/korea_business_lifecycle/history_observation_strategy.py",
     "network_required": false,
     "script": "scripts/history_observation_strategy.py",
     "test_module": "tests/test_history_observation_strategy.py"
   },
-  "next_gate": "resolve pre-reform old/new authority partition completeness and overlap semantics, then make a cadence/request-budget decision before any nationwide acquisition or production episode reconstruction",
+  "next_gate": "execute the approved monthly nationwide history acquisition under the 400000-request fail-closed cap, verify the local snapshot set, then materialize production lifecycle episodes",
   "paging_basis": {
-    "cost_basis": "CURRENT_ROW_SCALE_SPLIT_BY_20260701_POLICY_PRE_REFORM_276_CANDIDATE_UNION_WITH_46_PROBES_PER_SOURCE_POST_REFORM_CURRENT_244_ONLY_WITH_14_PROBES_PER_SOURCE_NOT_HISTORICAL_ROW_COUNT_FORECAST",
+    "cost_basis": "CURRENT_ROW_SCALE_DATE_EFFECTIVE_244_CODE_DOMAINS_PRE_REFORM_CURRENT_MINUS_NEW_PLUS_DELETED_POST_REFORM_CURRENT_ONLY_POST_REFORM_230_OBSERVED_PLUS_14_ZERO_PROBES_NOT_HISTORICAL_ROW_COUNT_FORECAST",
     "current_official_aggregate_token_count": 16,
     "current_official_numeric_authority_count": 244,
     "current_official_numeric_domain_authoritatively_complete_for_reference_date": true,
@@ -35,7 +38,7 @@
     "exact_deleted_numeric_authority_codes_ingested": true,
     "future_authority_reference_refresh_required": true,
     "history_window_candidate_numeric_authority_union_count": 276,
-    "history_window_date_effective_numeric_enumeration_ready": false,
+    "history_window_date_effective_numeric_enumeration_ready": true,
     "manual_reference_authority_count": 245,
     "observed_authority_count": 230,
     "observed_authority_domain_authoritatively_complete": false,
@@ -46,38 +49,38 @@
     "per_source": [
       {
         "current_rows": 2295369,
-        "observed_nonempty_request_lower_bound_per_asof_date": 22954,
-        "observed_nonempty_request_upper_bound_per_asof_date": 23183,
+        "observed_current_nonempty_request_lower_bound_per_asof_date": 22954,
+        "observed_current_nonempty_request_upper_bound_per_asof_date": 23183,
         "post_reform_current_domain_probe_requests_per_asof_date": 14,
         "post_reform_request_lower_bound_per_asof_date": 22968,
         "post_reform_request_upper_bound_per_asof_date": 23197,
-        "pre_reform_candidate_union_probe_requests_per_asof_date": 46,
-        "pre_reform_request_lower_bound_per_asof_date": 23000,
-        "pre_reform_request_upper_bound_per_asof_date": 23229,
+        "pre_reform_exact_authority_count": 244,
+        "pre_reform_request_lower_bound_per_asof_date": 22954,
+        "pre_reform_request_upper_bound_per_asof_date": 23197,
         "source_key": "general_restaurants"
       },
       {
         "current_rows": 645952,
-        "observed_nonempty_request_lower_bound_per_asof_date": 6460,
-        "observed_nonempty_request_upper_bound_per_asof_date": 6689,
+        "observed_current_nonempty_request_lower_bound_per_asof_date": 6460,
+        "observed_current_nonempty_request_upper_bound_per_asof_date": 6689,
         "post_reform_current_domain_probe_requests_per_asof_date": 14,
         "post_reform_request_lower_bound_per_asof_date": 6474,
         "post_reform_request_upper_bound_per_asof_date": 6703,
-        "pre_reform_candidate_union_probe_requests_per_asof_date": 46,
-        "pre_reform_request_lower_bound_per_asof_date": 6506,
-        "pre_reform_request_upper_bound_per_asof_date": 6735,
+        "pre_reform_exact_authority_count": 244,
+        "pre_reform_request_lower_bound_per_asof_date": 6460,
+        "pre_reform_request_upper_bound_per_asof_date": 6703,
         "source_key": "rest_cafes"
       },
       {
         "current_rows": 69481,
-        "observed_nonempty_request_lower_bound_per_asof_date": 695,
-        "observed_nonempty_request_upper_bound_per_asof_date": 924,
+        "observed_current_nonempty_request_lower_bound_per_asof_date": 695,
+        "observed_current_nonempty_request_upper_bound_per_asof_date": 924,
         "post_reform_current_domain_probe_requests_per_asof_date": 14,
         "post_reform_request_lower_bound_per_asof_date": 709,
         "post_reform_request_upper_bound_per_asof_date": 938,
-        "pre_reform_candidate_union_probe_requests_per_asof_date": 46,
-        "pre_reform_request_lower_bound_per_asof_date": 741,
-        "pre_reform_request_upper_bound_per_asof_date": 970,
+        "pre_reform_exact_authority_count": 244,
+        "pre_reform_request_lower_bound_per_asof_date": 695,
+        "pre_reform_request_upper_bound_per_asof_date": 938,
         "source_key": "bakeries"
       }
     ],
@@ -85,10 +88,9 @@
     "post_reform_current_domain_probe_requests_total_per_asof_date": 42,
     "post_reform_request_lower_bound_per_asof_date": 30151,
     "post_reform_request_upper_bound_per_asof_date": 30838,
-    "pre_reform_candidate_union_probe_requests_per_source_per_asof_date": 46,
-    "pre_reform_candidate_union_probe_requests_total_per_asof_date": 138,
-    "pre_reform_request_lower_bound_per_asof_date": 30247,
-    "pre_reform_request_upper_bound_per_asof_date": 30934
+    "pre_reform_exact_numeric_authority_count": 244,
+    "pre_reform_request_lower_bound_per_asof_date": 30109,
+    "pre_reform_request_upper_bound_per_asof_date": 30838
   },
   "scenarios": [
     {
@@ -98,18 +100,18 @@
       "observation_dates": 2,
       "post_reform_observation_dates": 1,
       "pre_reform_observation_dates": 1,
-      "request_lower_bound": 60398,
-      "request_upper_bound": 61772
+      "request_lower_bound": 60260,
+      "request_upper_bound": 61676
     },
     {
-      "approved_for_production": false,
+      "approved_for_production": true,
       "maximum_gap_days": 31,
       "name": "MONTHLY_ANCHOR_PLUS_END",
       "observation_dates": 10,
       "post_reform_observation_dates": 4,
       "pre_reform_observation_dates": 6,
-      "request_lower_bound": 302086,
-      "request_upper_bound": 308956
+      "request_lower_bound": 301258,
+      "request_upper_bound": 308380
     },
     {
       "approved_for_production": false,
@@ -118,8 +120,8 @@
       "observation_dates": 37,
       "post_reform_observation_dates": 11,
       "pre_reform_observation_dates": 26,
-      "request_lower_bound": 1118083,
-      "request_upper_bound": 1143502
+      "request_lower_bound": 1114495,
+      "request_upper_bound": 1141006
     },
     {
       "approved_for_production": false,
@@ -128,14 +130,15 @@
       "observation_dates": 249,
       "post_reform_observation_dates": 68,
       "pre_reform_observation_dates": 181,
-      "request_lower_bound": 7524975,
-      "request_upper_bound": 7696038
+      "request_lower_bound": 7499997,
+      "request_upper_bound": 7678662
     }
   ],
   "scope": {
     "calendar_days_inclusive": 249,
     "network_access_performed": false,
     "production_episode_reconstruction_enabled": false,
+    "production_history_acquisition_approved": true,
     "sources": [
       "general_restaurants",
       "rest_cafes",
@@ -143,6 +146,18 @@
     ],
     "window_end": "2026-09-06",
     "window_start": "2026-01-01"
+  },
+  "selected_cadence": {
+    "approval_does_not_make_history_lossless_event_log": true,
+    "approved_for_production_history_acquisition": true,
+    "current_scale_cost_is_not_historical_row_volume_guarantee": true,
+    "current_scale_request_lower_bound": 301258,
+    "current_scale_request_upper_bound": 308380,
+    "hard_network_request_cap_per_run": 400000,
+    "maximum_gap_days": 31,
+    "name": "MONTHLY_ANCHOR_PLUS_END",
+    "observation_dates": 10,
+    "request_delay_seconds": 0.2
   },
   "semantic_limits": {
     "as_of_snapshots_are_lossless_event_log": false,

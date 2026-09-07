@@ -38,30 +38,28 @@ All three v1 current snapshots contain the same **230** authority codes, and all
 
 The exact current 244 code/name list is now ingested, hashed, and validated in tracked provenance for the current reference date.
 
-## Additional Jan–Sep history-window gate
+## Jan–Sep date-effective history domain
 
-The exact **32 deleted numeric codes** from the 2026-07-01 change are also ingested. They are disjoint from the current 244 codes, giving a conservative **276-code current-plus-deleted candidate union** for cost planning.
+The official 2026-07-01 change reference marks **32 new numeric codes** and **32 deleted numeric codes** at the same effective date. The deleted set is disjoint from current 244, and the new set is a subset of current 244.
 
-That 276-code union is not represented as a proven date-effective history query domain. Official documentation reviewed so far does not establish:
-
-- whether deleted codes remain queryable for pre-reform `BASE_DATE` values;
-- whether historical snapshots retain old codes or are remapped to new codes; or
-- how the manual's 245 count reconciles to the exact date-effective domain.
+History API queryability itself is not date-effective membership: deleted codes remain answerable after the reform, and new/current codes can answer pre-reform dates. Current-state enumeration therefore follows the official change effective date instead of API queryability.
 
 Current gate state:
 
 - exact current 244 numeric list: **complete**;
+- exact new 32 numeric list: **complete**;
 - exact deleted 32 numeric list: **complete**;
 - current-reference numeric enumeration: **ready**;
-- Jan–Sep date-effective history enumeration: **not ready**; and
+- pre-reform numeric enumeration: **244 = current - new + deleted, ready**;
+- post-reform numeric enumeration: **current 244, ready**; and
 - future source snapshots require a reference refresh.
 
 ## Relationship to the cost model
 
-For planning, the project conservatively probes the full **276-code current-plus-deleted candidate union**. At current row scale, 230 partitions are currently non-empty and 46 additional candidates require one probe per source, producing **30,247–30,934 requests per as-of date**.
+Production planning now uses the date-effective **244-code domain**, not the 276 union. At current row scale the pre-reform range is **30,109–30,838 requests per as-of date**, and post-reform is **30,151–30,838**.
 
 Those values are not historical row-count bounds. Deleted codes can be non-empty for earlier dates, so actual historical paging can differ.
 
 ## Next gate
 
-Before production nationwide acquisition, verify date-effective history-filter semantics for the exact 32 deleted codes through official documentation or a bounded authenticated probe, then explicitly approve a cadence/request budget.
+The authority code-set gate is passed. The next action is the approved resumable nationwide acquisition under the monthly cadence and 400,000-request hard cap.

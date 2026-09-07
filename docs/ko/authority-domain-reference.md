@@ -38,30 +38,28 @@
 
 현재 reference date에 대한 244개 exact code/name list는 tracked provenance에 ingestion·hash·validation 완료했습니다.
 
-## Jan–Sep history window의 추가 gate
+## Jan–Sep date-effective history domain
 
-2026-07-01 개편에서 삭제된 **32개 숫자 코드**도 exact change reference로 ingestion했습니다. 현재 244개와 삭제 32개는 서로 겹치지 않으므로 보수적인 history-window candidate union은 **276개**입니다.
+2026-07-01 개편에서 공식 첨부는 숫자 code 기준으로 **신규 32개**와 **삭제 32개**를 같은 effective date에 표시합니다. current 244와 삭제 32는 disjoint이고 신규 32는 current 244의 subset입니다.
 
-그러나 이 276개를 단순히 “정답 query domain”이라고 부르지는 않습니다. 공식 문서에서 다음이 확인되지 않았기 때문입니다.
-
-- 삭제된 code가 개편 전 `BASE_DATE`에서 계속 query 가능한지
-- source가 과거 snapshot을 old code로 유지하는지 또는 new code로 재매핑하는지
-- 1월 매뉴얼의 245 count와 exact date-effective domain의 차이를 어떻게 해석해야 하는지
+history API queryability 자체는 date-effective membership이 아닙니다. 실행 증거상 삭제 code는 개편 후에도 응답하고 신규/current code도 개편 전 날짜에 응답할 수 있기 때문입니다. current-state enumeration은 공식 변경표의 effective date를 사용합니다.
 
 따라서 현재 상태는 다음과 같습니다.
 
 - exact current 244 numeric list: **완료**
+- exact new 32 numeric list: **완료**
 - exact deleted 32 numeric list: **완료**
 - current-reference numeric enumeration: **ready**
-- Jan–Sep date-effective history enumeration: **not ready**
+- pre-reform numeric enumeration: **244 = current - new + deleted, ready**
+- post-reform numeric enumeration: **current 244, ready**
 - future source snapshot: reference 재검증 필요
 
 ## Cost model과의 관계
 
-비용 계획에서는 보수적으로 current+deleted **276개 candidate union**을 모두 probe한다고 가정합니다. current snapshot에서 non-empty인 230개 외에 46개 candidate를 source별 1회씩 확인하는 current-scale planning range는 **30,247–30,934 requests/as-of-date**입니다.
+production 비용 계획은 276 union이 아니라 date-effective **244-code domain**을 사용합니다. current row scale 기준 pre-reform은 **30,109–30,838 requests/as-of-date**, post-reform은 **30,151–30,838**입니다.
 
 이 숫자는 historical row-count upper/lower bound가 아닙니다. 삭제 code가 과거 날짜에 non-empty일 수 있으므로 실제 historical paging은 달라질 수 있습니다.
 
 ## 다음 gate
 
-production nationwide history acquisition 전에는 삭제된 32개 코드의 date-effective history filter semantics를 공식 문서 또는 bounded authenticated probe로 확인하고, 그 다음 cadence/request budget을 명시적으로 승인해야 합니다.
+authority code-set gate는 통과했습니다. 다음 단계는 승인된 monthly cadence와 400,000-request hard cap 아래에서 resumable nationwide acquisition을 실행하는 것입니다.

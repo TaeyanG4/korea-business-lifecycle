@@ -10,6 +10,7 @@ from .provenance import (
     load_history_authority_partition_findings,
     load_history_authority_partition_full_probe,
     load_history_authority_partition_probe_plan,
+    load_history_authority_policy,
     load_history_review,
     load_observed_snapshot_summary,
 )
@@ -91,6 +92,7 @@ def history_observation_strategy_plan(
     authority_partition_findings = load_history_authority_partition_findings()
     authority_partition_full_probe = load_history_authority_partition_full_probe()
     authority_partition_probe_plan = load_history_authority_partition_probe_plan()
+    authority_policy = load_history_authority_policy()
     common = review["common_contract"]
     authority_domain = common["observed_current_authority_code_domain"]
     authority_count = int(authority_domain["distinct_count"])
@@ -131,8 +133,8 @@ def history_observation_strategy_plan(
         raise HistoryObservationStrategyError("exact current official authority domain is not ingested")
     if gate["exact_deleted_numeric_code_values_ingested"] is not True:
         raise HistoryObservationStrategyError("deleted authority-code change reference is not ingested")
-    if gate["history_window_date_effective_numeric_enumeration_ready"] is not False:
-        raise HistoryObservationStrategyError("history-window enumeration must remain unapproved")
+    if gate["history_window_date_effective_numeric_enumeration_ready"] is not True:
+        raise HistoryObservationStrategyError("history-window date-effective enumeration is not approved")
     if cost_policy["current_unobserved_authorities_may_be_assumed_historically_empty"] is not False:
         raise HistoryObservationStrategyError("historical-empty authority assumption must remain disabled")
     if authority_partition_findings["interpretation"][
@@ -154,8 +156,15 @@ def history_observation_strategy_plan(
         raise HistoryObservationStrategyError("post-reform legacy-partition policy changed")
     if legacy_policy["post_reform_policy_approved"] is not True:
         raise HistoryObservationStrategyError("post-reform legacy-partition policy must remain approved")
-    if legacy_policy["pre_reform_policy_approved"] is not False:
-        raise HistoryObservationStrategyError("pre-reform authority domain must remain unresolved")
+    window_policy = authority_reference["history_window_change_reference"]
+    if window_policy["date_effective_current_state_enumeration_policy_approved"] is not True:
+        raise HistoryObservationStrategyError("date-effective current-state authority policy is not approved")
+    if window_policy["pre_reform_current_state_enumeration_policy"] != "CURRENT_MINUS_NEW_PLUS_DELETED":
+        raise HistoryObservationStrategyError("pre-reform authority policy changed")
+    if window_policy["post_reform_current_state_enumeration_policy"] != "CURRENT_ONLY_EXCLUDE_DELETED":
+        raise HistoryObservationStrategyError("post-reform authority policy changed")
+    if authority_policy.get("decision") != "DATE_EFFECTIVE_CURRENT_STATE_AUTHORITY_POLICY_APPROVED":
+        raise HistoryObservationStrategyError("tracked date-effective authority policy changed")
 
     per_source: list[dict[str, Any]] = []
     pre_reform_lower_per_date = 0
@@ -164,15 +173,18 @@ def history_observation_strategy_plan(
     post_reform_upper_per_date = 0
     for item in summary["categories"]:
         rows = int(item["rows"])
-        lower, upper = _page_bounds(
+        current_observed_lower, current_observed_upper = _page_bounds(
             rows,
             authority_count=authority_count,
             page_size=page_size,
         )
-        pre_reform_lower = lower + current_absent_candidate_count
-        pre_reform_upper = upper + current_absent_candidate_count
-        post_reform_lower = lower + current_official_unobserved_count
-        post_reform_upper = upper + current_official_unobserved_count
+        pre_reform_lower, pre_reform_upper = _page_bounds(
+            rows,
+            authority_count=official_authority_count,
+            page_size=page_size,
+        )
+        post_reform_lower = current_observed_lower + current_official_unobserved_count
+        post_reform_upper = current_observed_upper + current_official_unobserved_count
         pre_reform_lower_per_date += pre_reform_lower
         pre_reform_upper_per_date += pre_reform_upper
         post_reform_lower_per_date += post_reform_lower
@@ -181,9 +193,9 @@ def history_observation_strategy_plan(
             {
                 "source_key": str(item["source_key"]),
                 "current_rows": rows,
-                "observed_nonempty_request_lower_bound_per_asof_date": lower,
-                "observed_nonempty_request_upper_bound_per_asof_date": upper,
-                "pre_reform_candidate_union_probe_requests_per_asof_date": current_absent_candidate_count,
+                "observed_current_nonempty_request_lower_bound_per_asof_date": current_observed_lower,
+                "observed_current_nonempty_request_upper_bound_per_asof_date": current_observed_upper,
+                "pre_reform_exact_authority_count": official_authority_count,
                 "pre_reform_request_lower_bound_per_asof_date": pre_reform_lower,
                 "pre_reform_request_upper_bound_per_asof_date": pre_reform_upper,
                 "post_reform_current_domain_probe_requests_per_asof_date": current_official_unobserved_count,
@@ -218,9 +230,11 @@ def history_observation_strategy_plan(
                     pre_reform_upper_per_date * pre_reform_dates
                     + post_reform_upper_per_date * post_reform_dates
                 ),
-                "approved_for_production": False,
+                "approved_for_production": name == "MONTHLY_ANCHOR_PLUS_END",
             }
         )
+
+    selected = next(item for item in scenario_rows if item["name"] == "MONTHLY_ANCHOR_PLUS_END")
 
     return {
         "checked_at": "2026-09-07",
@@ -230,6 +244,7 @@ def history_observation_strategy_plan(
             "window_end": end.isoformat(),
             "calendar_days_inclusive": (end - start).days + 1,
             "network_access_performed": False,
+            "production_history_acquisition_approved": True,
             "production_episode_reconstruction_enabled": False,
         },
         "paging_basis": {
@@ -266,10 +281,7 @@ def history_observation_strategy_plan(
                 gate["future_reference_refresh_required"]
             ),
             "page_size": page_size,
-            "pre_reform_candidate_union_probe_requests_per_source_per_asof_date": current_absent_candidate_count,
-            "pre_reform_candidate_union_probe_requests_total_per_asof_date": (
-                current_absent_candidate_count * len(summary["categories"])
-            ),
+            "pre_reform_exact_numeric_authority_count": official_authority_count,
             "pre_reform_request_lower_bound_per_asof_date": pre_reform_lower_per_date,
             "pre_reform_request_upper_bound_per_asof_date": pre_reform_upper_per_date,
             "post_reform_current_domain_probe_requests_per_source_per_asof_date": current_official_unobserved_count,
@@ -279,9 +291,21 @@ def history_observation_strategy_plan(
             "post_reform_request_lower_bound_per_asof_date": post_reform_lower_per_date,
             "post_reform_request_upper_bound_per_asof_date": post_reform_upper_per_date,
             "per_source": per_source,
-            "cost_basis": "CURRENT_ROW_SCALE_SPLIT_BY_20260701_POLICY_PRE_REFORM_276_CANDIDATE_UNION_WITH_46_PROBES_PER_SOURCE_POST_REFORM_CURRENT_244_ONLY_WITH_14_PROBES_PER_SOURCE_NOT_HISTORICAL_ROW_COUNT_FORECAST",
+            "cost_basis": "CURRENT_ROW_SCALE_DATE_EFFECTIVE_244_CODE_DOMAINS_PRE_REFORM_CURRENT_MINUS_NEW_PLUS_DELETED_POST_REFORM_CURRENT_ONLY_POST_REFORM_230_OBSERVED_PLUS_14_ZERO_PROBES_NOT_HISTORICAL_ROW_COUNT_FORECAST",
         },
         "scenarios": scenario_rows,
+        "selected_cadence": {
+            "name": "MONTHLY_ANCHOR_PLUS_END",
+            "observation_dates": selected["observation_dates"],
+            "maximum_gap_days": selected["maximum_gap_days"],
+            "current_scale_request_lower_bound": selected["request_lower_bound"],
+            "current_scale_request_upper_bound": selected["request_upper_bound"],
+            "hard_network_request_cap_per_run": 400_000,
+            "request_delay_seconds": 0.2,
+            "approved_for_production_history_acquisition": True,
+            "approval_does_not_make_history_lossless_event_log": True,
+            "current_scale_cost_is_not_historical_row_volume_guarantee": True,
+        },
         "semantic_limits": {
             "as_of_snapshots_are_lossless_event_log": False,
             "daily_sampling_proves_no_multiple_intraday_transitions": False,
@@ -293,6 +317,7 @@ def history_observation_strategy_plan(
             "findings": "provenance/history_authority_partition_findings.json",
             "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
             "full_deleted_count_probe_result": "provenance/history_authority_partition_full_probe.json",
+            "date_effective_current_state_policy": "provenance/history_authority_policy.json",
             "authenticated_execution_available": True,
             "bounded_deleted_partition_post_reform_freeze_confirmed": True,
             "bounded_current_partition_post_reform_evolution_confirmed": True,
@@ -301,8 +326,10 @@ def history_observation_strategy_plan(
             "full_32_deleted_count_probe_request_cap": 384,
             "post_reform_count_frozen_source_authority_pairs": 96,
             "post_reform_current_state_enumeration_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
-            "pre_reform_current_plus_deleted_union_policy": "UNRESOLVED_DO_NOT_AUTO_UNION",
-            "pre_reform_authority_domain_resolved": False,
+            "pre_reform_current_state_enumeration_policy": "CURRENT_MINUS_NEW_PLUS_DELETED",
+            "pre_reform_authority_domain_resolved": True,
+            "old_new_overlap_requires_same_date_deduplication": False,
+            "cross_reform_permit_continuity_still_uses_mng_no_only_as_linkage_candidate": True,
         },
         "implementation": {
             "module": "src/korea_business_lifecycle/history_observation_strategy.py",
@@ -311,9 +338,9 @@ def history_observation_strategy_plan(
             "network_required": False,
         },
         "authority_domain_reference": "provenance/authority_domain_reference.json",
-        "decision": "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_PRE_REFORM_AUTHORITY_DOMAIN_AND_COST_REVIEW_REQUIRED",
+        "decision": "MONTHLY_HISTORY_OBSERVATION_CADENCE_APPROVED_ACQUISITION_NOT_YET_EXECUTED",
         "next_gate": (
-            "resolve pre-reform old/new authority partition completeness and overlap semantics, then make a "
-            "cadence/request-budget decision before any nationwide acquisition or production episode reconstruction"
+            "execute the approved monthly nationwide history acquisition under the 400000-request fail-closed "
+            "cap, verify the local snapshot set, then materialize production lifecycle episodes"
         ),
     }

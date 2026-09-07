@@ -1,0 +1,68 @@
+{
+  "authority_policy": {
+    "api_queryability_defines_date_effective_membership": false,
+    "post_reform": "CURRENT_ONLY_EXCLUDE_DELETED",
+    "pre_reform": "CURRENT_MINUS_NEW_PLUS_DELETED",
+    "provenance": "provenance/history_authority_policy.json"
+  },
+  "cadence": {
+    "current_scale_cost_is_not_historical_row_volume_guarantee": true,
+    "current_scale_request_lower_bound": 301258,
+    "current_scale_request_upper_bound": 308380,
+    "maximum_gap_days": 31,
+    "name": "MONTHLY_ANCHOR_PLUS_END"
+  },
+  "checked_at": "2026-09-07",
+  "decision": "MONTHLY_NATIONWIDE_HISTORY_ACQUISITION_APPROVED_NOT_EXECUTED",
+  "execution": {
+    "default_mode": "DRY_RUN",
+    "execute_flag": "--execute",
+    "execution_performed": false,
+    "hard_network_request_cap_per_run": 400000,
+    "long_running_action_requires_visible_user_command": true,
+    "maximum_pages_per_snapshot": 5000,
+    "minimum_request_delay_seconds": 0.2,
+    "multiple_existing_snapshots_for_one_task_fail_closed": true,
+    "resumable_complete_snapshots_are_skipped": true,
+    "script": "scripts/acquire_nationwide_history.py"
+  },
+  "next_gate": "execute the resumable nationwide monthly acquisition, require all 7320 snapshot tasks complete with no multiple-snapshot task, then materialize and independently verify lifecycle episodes",
+  "scope": {
+    "numeric_authority_codes_per_date": 244,
+    "observation_date_count": 10,
+    "observation_dates": [
+      "20260101",
+      "20260201",
+      "20260301",
+      "20260401",
+      "20260501",
+      "20260601",
+      "20260701",
+      "20260801",
+      "20260901",
+      "20260906"
+    ],
+    "planned_snapshot_tasks": 7320,
+    "same_date_old_new_union_used": false,
+    "sources": [
+      "general_restaurants",
+      "rest_cafes",
+      "bakeries"
+    ],
+    "window_end": "2026-09-06",
+    "window_start": "2026-01-01"
+  },
+  "semantic_limits": {
+    "history_is_lossless_event_log": false,
+    "management_number_source_primary_key_claim": false,
+    "monthly_sampling_claims_exact_transition_timestamp": false,
+    "reopening_vs_correction_resolved": false,
+    "status_code_05_semantics_resolved": false
+  },
+  "storage": {
+    "history_rows_git_tracked": false,
+    "history_rows_under_git_ignored_data_root": true,
+    "row_level_values_emitted_by_runner_summary": false,
+    "service_key_written_to_manifest": false
+  }
+}

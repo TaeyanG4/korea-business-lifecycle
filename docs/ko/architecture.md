@@ -39,26 +39,30 @@
       ↳ sparse explicit observations only
       ↳ max 100,000 observations/call, in-memory
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
-      ↳ production nationwide reconstruction: disabled
+      ↳ production nationwide reconstruction: acquisition 완료 전 disabled
   → nationwide history observation cost gate
-      ↳ pre-reform current-scale conservative planning: 30,247..30,934 requests/as-of date
+      ↳ pre-reform exact-244 current-scale planning: 30,109..30,838 requests/as-of date
       ↳ post-reform current-244-only planning: 30,151..30,838 requests/as-of date
-      ↳ daily mixed-policy 249-date scenario: 7,524,975..7,696,038 requests
+      ↳ approved monthly 10-date scenario: 301,258..308,380 requests
+      ↳ daily comparison scenario: 7,499,997..7,678,662 requests
       ↳ latest current numeric authority domain: exact 244 ingested/validated
       ↳ exact deleted numeric change-reference codes: 32; current+deleted candidate union: 276
       ↳ current observed authority count: 230; all are a subset of current 244
       ↳ bounded semantics: deleted partition freezes after reform; current partition can keep evolving
       ↳ full 32-code count-only probe: completed, 384/384 requests; post-reform count freeze 96/96 pairs
       ↳ post-reform policy: current 244 only, exclude deleted 32
-      ↳ pre-reform old/new partition domain: unresolved; do not auto-union
-      ↳ approved cadence: none
+      ↳ pre-reform policy: current 244 - new 32 + deleted 32 = exact 244
+      ↳ same-date old/new union: 사용하지 않음
+      ↳ approved cadence: MONTHLY_ANCHOR_PLUS_END, 10 dates, max gap 31 days
+      ↳ acquisition: 7,320 snapshot tasks, resumable, hard cap 400,000 requests/run, not executed
+      ↳ episode materializer/verifier: prepared; all 7,320 snapshots complete/unique 전까지 blocked
   → redistribution clarification gate
       ↳ source-use metadata: PASS
       ↳ written source-specific questions/contact routes: prepared
       ↳ raw/aggregate external redistribution: unresolved
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety local aggregate 후보도 전수 스캔과 독립 검증까지 완료됐습니다. authority domain은 현재 244개 숫자 코드와 삭제 32개 숫자 코드를 exact ingestion/hash/validation했고 authenticated bounded 실행도 가능해졌습니다. 전체 384-request count-only probe에서 96개 deleted-code source pair 모두 개편 경계 이후 count freeze를 보였습니다. 따라서 2026-07-01 이후 current-state enumeration은 current 244만 사용하고 deleted 32를 제외합니다. 반면 pre-reform에는 current/new partition도 이미 query되므로 current+deleted 276을 자동 union하지 않습니다. pre-reform old/new partition completeness/overlap와 cadence 승인이 남아 전국 production enumeration은 계속 차단합니다. redistribution도 source-use metadata는 PASS이나 source-specific 서면 확인 전에는 외부 공개를 계속 차단합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. authority code-set은 공식 변경표를 기준으로 개편 전 `current-new+deleted` 244, 개편 후 current 244로 승인했습니다. 이는 API가 어느 code에 과거 `BASE_DATE` 응답을 반환하는지와 분리된 current-state membership 정책입니다. monthly 10-date cadence와 400,000-request fail-closed budget도 승인했지만 전국 acquisition 자체는 아직 실행하지 않았습니다. 수집 runner는 기존 complete snapshot을 재사용하며, 7,320 task가 모두 complete/unique일 때만 production episode materializer가 열립니다. redistribution은 source-use metadata PASS와 별개로 source-specific 서면 확인 전까지 외부 공개를 계속 차단합니다.
 
 ## 데이터 저장 원칙
 

@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-07",
-  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_AUTHENTICATED_EXECUTION_AVAILABLE_LEGACY_AUTHORITY_PARTITION_SEMANTICS_REVIEW_REQUIRED",
+  "decision": "FINITE_AS_OF_DATE_QUERY_CONFIRMED_AUTHENTICATED_EXECUTION_AVAILABLE_DATE_EFFECTIVE_AUTHORITY_POLICY_APPROVED",
   "common_contract": {
     "lower_base_date": "2026-01-01",
     "upper_base_date_rule": "query date minus one day",
@@ -51,15 +51,19 @@
       "current_window_candidate_unobserved_count": 46,
       "exact_current_official_numeric_code_values_ingested": true,
       "exact_deleted_numeric_code_values_ingested": true,
+      "exact_new_numeric_code_values_ingested": true,
+      "pre_reform_numeric_authority_count": 244,
       "current_official_numeric_domain_authoritatively_complete_for_reference_date": true,
       "date_effective_history_authority_filter_semantics_verified": false,
-      "history_window_date_effective_numeric_enumeration_ready": false,
+      "date_effective_current_state_enumeration_policy_approved": true,
+      "history_window_date_effective_numeric_enumeration_ready": true,
       "future_reference_refresh_required": true
     },
     "authority_partition_semantics": {
       "findings": "provenance/history_authority_partition_findings.json",
       "full_deleted_count_probe_plan": "provenance/history_authority_partition_probe_plan.json",
       "full_deleted_count_probe_result": "provenance/history_authority_partition_full_probe.json",
+      "date_effective_current_state_policy": "provenance/history_authority_policy.json",
       "authenticated_execution_available": true,
       "bounded_deleted_partition_post_reform_freeze_confirmed": true,
       "bounded_current_partition_post_reform_evolution_confirmed": true,
@@ -67,9 +71,11 @@
       "full_32_deleted_count_probe_executed": true,
       "all_96_deleted_source_authority_pairs_post_reform_count_frozen": true,
       "post_reform_deleted_partition_policy": "CURRENT_244_ONLY_EXCLUDE_DELETED_32",
-      "pre_reform_old_new_partition_domain_resolved": false
+      "pre_reform_old_new_partition_domain_resolved": true,
+      "pre_reform_current_state_enumeration_policy": "CURRENT_MINUS_NEW_PLUS_DELETED",
+      "same_date_old_new_union_used": false
     },
-    "nationwide_completeness_blocker": "the full 384-request count probe confirms post-reform count freeze across all 96 deleted-code source pairs, so deleted codes are excluded from post-reform current-state enumeration; however current/new codes are also queryable for pre-reform dates, so pre-reform old/new partition completeness and overlap semantics remain unresolved and no nationwide cadence/request budget is approved"
+    "nationwide_acquisition_state": "date-effective authority code-set policy and monthly observation cadence are approved; nationwide acquisition has not yet been executed and production episodes remain gated on all 7320 snapshot tasks completing uniquely"
   },
   "categories": [
     {

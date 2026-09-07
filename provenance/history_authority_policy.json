@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "DATE_EFFECTIVE_CURRENT_STATE_AUTHORITY_POLICY_APPROVED",
+  "evidence": {
+    "api_deleted_partition_post_reform_count_freeze_pairs": 96,
+    "authority_reference": "provenance/authority_domain_reference.json",
+    "deleted_partition_full_probe": "provenance/history_authority_partition_full_probe.json",
+    "official_change_effective_date": "2026-07-01",
+    "official_reference_attachment_sha256": "d032ff4bd63148238a8066afb7b62f96770d8a063bd6c632d4f7617e9cc407f8"
+  },
+  "implementation": {
+    "module": "src/korea_business_lifecycle/history_authority_policy.py",
+    "network_required": false,
+    "script": "scripts/history_authority_policy.py"
+  },
+  "next_gate": "select one production observation cadence and enforce a bounded resumable nationwide acquisition budget",
+  "overlap_semantics": {
+    "api_queryability_defines_date_effective_membership": false,
+    "cross_reform_management_number_may_link_observations": true,
+    "duplicate_management_number_within_one_source_date_fails_closed": true,
+    "management_number_is_source_primary_key": false,
+    "same_date_old_new_deduplication_required_by_policy": false,
+    "same_date_old_new_union_used": false
+  },
+  "post_reform": {
+    "date_rule": "BASE_DATE >= 2026-07-01",
+    "deleted_numeric_codes_excluded": 32,
+    "new_numeric_codes_included": 32,
+    "numeric_authority_count": 244,
+    "numeric_authority_list_sha256": "a666c5cb432c439f687064e3046ec2e9a84d2de708dfbe80817330e60b76ddad",
+    "policy": "CURRENT_ONLY_EXCLUDE_DELETED"
+  },
+  "pre_reform": {
+    "date_rule": "BASE_DATE < 2026-07-01",
+    "deleted_numeric_codes_included": 32,
+    "new_numeric_codes_excluded": 32,
+    "numeric_authority_count": 244,
+    "numeric_authority_list_sha256": "c4f1810ef53d3633b2422868f4628af024c2e26944d4d79a130c38aaa8246148",
+    "policy": "CURRENT_MINUS_NEW_PLUS_DELETED"
+  },
+  "scope_limits": {
+    "aggregate_all_tokens_used_for_row_enumeration": false,
+    "authority_code_domain_completeness_claimed_from_official_change_reference": true,
+    "history_is_lossless_event_log": false,
+    "row_level_api_completeness_guaranteed": false
+  }
+}
