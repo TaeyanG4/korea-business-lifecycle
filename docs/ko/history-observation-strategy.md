@@ -2,48 +2,52 @@
 
 확인일: **2026-09-07**
 
-production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에, as-of history API를 어떤 cadence로 관찰할지 결정해야 합니다. 이 문서는 **cadence를 승인하지 않고 비용과 완전성 한계만 계산**합니다.
+production `PERMIT_STATUS_EPISODE`를 전국 범위로 확장하기 전에 as-of history API의 authority enumeration 의미와 observation cadence를 모두 확정해야 합니다. 이 문서는 **cadence를 승인하지 않고 비용과 불완전성만 계산**합니다.
 
 ## 계산 근거
 
 - v1 source: 일반음식점 / 휴게음식점 / 제과점영업
 - current rows: 3,010,802
-- current snapshot에서 세 source 모두 동일하게 관찰된 authority code: 230개
+- current snapshot에서 세 source 모두 동일하게 non-empty로 관찰된 numeric authority: 230개
+- 2026-07-02 최신 공식 첨부의 current numeric authority: 244개
+- current `_ALL` aggregate token: 16개 — row enumeration에서 제외
+- 2026-07-01 개편으로 삭제 표시된 exact numeric authority: 32개
+- current + deleted candidate union: 276개
+- current snapshot에서 candidate union 중 관찰되지 않은 code: source당 46개
 - history API 최대 page size: 100
-- observed authority domain의 authoritative completeness: 미확인
-- 비용 기준: current row scale의 수학적 paging bounds
-- 실제 history row count forecast가 아님
+- exact current 244와 deleted 32 list ingestion/hash/validation: 완료
+- deleted code의 pre-change `BASE_DATE` query semantics: 미확인
 - network access: 없음
 
-authority별 query가 필요하므로 current row scale에서 전국 as-of 날짜 **1개**의 요청 수는 다음 범위입니다.
+비용 계획은 current snapshot의 230개 non-empty partition에 대한 paging 수학적 범위에 candidate union의 나머지 46개를 source별 1-request probe로 더합니다.
 
-| Source | Current rows | Lower bound/date | Upper bound/date |
-|---|---:|---:|---:|
-| 일반음식점 | 2,295,369 | 22,954 | 23,183 |
-| 휴게음식점 | 645,952 | 6,460 | 6,689 |
-| 제과점영업 | 69,481 | 695 | 924 |
-| **합계** | **3,010,802** | **30,109** | **30,796** |
+| Source | Current rows | 230 non-empty paging | Candidate probes | Planning range/date |
+|---|---:|---:|---:|---:|
+| 일반음식점 | 2,295,369 | 22,954–23,183 | 46 | 23,000–23,229 |
+| 휴게음식점 | 645,952 | 6,460–6,689 | 46 | 6,506–6,735 |
+| 제과점영업 | 69,481 | 695–924 | 46 | 741–970 |
+| **합계** | **3,010,802** | **30,109–30,796** | **138** | **30,247–30,934** |
 
-## 2026-01-01 ~ 2026-09-06 비용 시나리오
+이 범위는 historical row volume의 upper/lower bound가 아닙니다. 특히 삭제 code가 과거 날짜에는 non-empty일 수 있습니다.
 
-249 calendar-day window를 대상으로 cadence별 비용만 비교합니다.
+## 2026-01-01 ~ 2026-09-06 planning scenarios
 
-| 시나리오 | Observation dates | 최대 observation gap | Request lower | Request upper | 승인 |
+249 calendar-day window를 동일한 current-scale planning range로 비교합니다.
+
+| Scenario | Observation dates | 최대 observation gap | Request lower | Request upper | 승인 |
 |---|---:|---:|---:|---:|---|
-| endpoints only | 2 | 248일 | 60,218 | 61,592 | 아니오 |
-| monthly anchor + end | 10 | 31일 | 301,090 | 307,960 | 아니오 |
-| weekly 7-day + end | 37 | 7일 | 1,114,033 | 1,139,452 | 아니오 |
-| daily | 249 | 1일 | 7,497,141 | 7,668,204 | 아니오 |
-
-위 숫자는 실제 historical row volume의 보장이 아니라 **현재 row scale에서의 paging cost bound**입니다.
+| endpoints only | 2 | 248일 | 60,494 | 61,868 | 아니오 |
+| monthly anchor + end | 10 | 31일 | 302,470 | 309,340 | 아니오 |
+| weekly 7-day + end | 37 | 7일 | 1,119,139 | 1,144,558 | 아니오 |
+| daily | 249 | 1일 | 7,531,503 | 7,702,566 | 아니오 |
 
 ## 왜 daily도 lossless event log가 아닌가
 
-history endpoint는 as-of snapshot입니다. daily 관찰을 하더라도 다음을 증명하지 못합니다.
+history endpoint는 as-of snapshot입니다. daily 관찰도 다음을 증명하지 못합니다.
 
-- 하루 안에 여러 번 상태가 바뀌지 않았다는 것
-- snapshot 사이의 exact transition timestamp
-- source가 모든 intermediate change를 event log로 보존한다는 것
+- 하루 안의 multiple state changes 부재
+- snapshot 사이 exact transition timestamp
+- 모든 intermediate change가 event log로 보존된다는 것
 - `03→01`이 실제 재개업인지 행정 정정인지
 - status `05`의 canonical 의미
 
@@ -51,17 +55,17 @@ daily cadence는 interval-censoring width를 줄일 뿐 event-log semantics를 �
 
 ## 현재 결정
 
-`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_COST_AND_COMPLETENESS_REVIEW_REQUIRED`
+`NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED`
 
-production reconstruction을 시작하기 전에 최소한 다음이 필요합니다.
+production reconstruction 전에는 최소한 다음이 필요합니다.
 
-1. authoritative nationwide `OPN_ATMY_GRP_CD` domain 검증
+1. 삭제된 exact 32개 authority code의 pre/post-reform `BASE_DATE` filter semantics 확인
 2. 허용 가능한 request budget 결정
 3. 분석 목적에 필요한 최대 censoring gap 결정
 4. snapshot retention/중간 변화 손실 한계 수용 여부 결정
-5. status `05` 및 reopening-vs-correction unresolved 상태를 어떻게 보존할지 유지
+5. status `05` 및 reopening-vs-correction unresolved 상태 유지
 
-비용 모델은 network-free 명령으로 재현할 수 있습니다.
+비용 모델은 network-free로 재현할 수 있습니다.
 
 ```bash
 python scripts/history_observation_strategy.py

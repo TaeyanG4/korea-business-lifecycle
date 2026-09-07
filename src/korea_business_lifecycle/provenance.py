@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from typing import Any
 
 from .config import load_json
@@ -109,6 +110,14 @@ def load_history_observation_strategy() -> dict[str, Any]:
     return load_json("provenance/history_observation_strategy.json")
 
 
+def load_authority_domain_reference() -> dict[str, Any]:
+    return load_json("provenance/authority_domain_reference.json")
+
+
+def load_redistribution_clarification_plan() -> dict[str, Any]:
+    return load_json("provenance/redistribution_clarification_plan.json")
+
+
 def validate_source_registry(registry: dict[str, Any]) -> list[str]:
     """Return invariant violations without inventing source semantics."""
     errors: list[str] = []
@@ -152,6 +161,12 @@ def validate_license_review(review: dict[str, Any]) -> list[str]:
         errors.append("aggregate redistribution gate must remain unresolved")
     if refresh.get("absence_of_source_specific_third_party_statement_is_proof_of_no_third_party_rights") is not False:
         errors.append("absence of a third-party statement must not be promoted to proof")
+    if refresh.get("written_clarification_plan") != "provenance/redistribution_clarification_plan.json":
+        errors.append("license review written clarification plan reference changed")
+    if refresh.get("written_source_specific_clarification_received") is not False:
+        errors.append("license review must not claim written source-specific clearance")
+    if review.get("next_gate") != "provenance/redistribution_clarification_plan.json":
+        errors.append("license review next gate changed")
     categories = review.get("categories", [])
     keys = {item.get("source_key") for item in categories}
     if keys != V1_SOURCE_KEYS:
@@ -207,8 +222,305 @@ def validate_history_review(review: dict[str, Any]) -> list[str]:
         errors.append("history must not be represented as a lossless event log")
     if review.get("common_contract", {}).get("authentication") != "data.go.kr serviceKey required":
         errors.append("history authentication requirement must remain explicit")
+    common = review.get("common_contract", {})
+    observed_domain = common.get("observed_current_authority_code_domain", {})
+    if observed_domain.get("distinct_count") != 230 or observed_domain.get("authoritative_completeness") is not False:
+        errors.append("history observed-current authority-domain state changed")
+    official_domain = common.get("official_authority_reference", {})
+    expected_official_domain = {
+        "evidence": "provenance/authority_domain_reference.json",
+        "manual_reference_count": 245,
+        "current_official_numeric_count": 244,
+        "current_official_aggregate_token_count": 16,
+        "official_deleted_numeric_count": 32,
+        "history_window_candidate_numeric_union_count": 276,
+        "current_observed_count": 230,
+        "current_official_unobserved_count": 14,
+        "current_window_candidate_unobserved_count": 46,
+        "exact_current_official_numeric_code_values_ingested": True,
+        "exact_deleted_numeric_code_values_ingested": True,
+        "current_official_numeric_domain_authoritatively_complete_for_reference_date": True,
+        "date_effective_history_authority_filter_semantics_verified": False,
+        "history_window_date_effective_numeric_enumeration_ready": False,
+        "future_reference_refresh_required": True,
+    }
+    if official_domain != expected_official_domain:
+        errors.append("history official authority reference state changed")
     if {item.get("source_key") for item in review.get("categories", [])} != V1_SOURCE_KEYS:
         errors.append("history-review scope must exactly match v1 sources")
+    return errors
+
+
+def validate_authority_domain_reference(review: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if review.get("decision") != (
+        "CURRENT_244_AND_DELETED_32_AUTHORITY_CODES_INGESTED_HISTORY_WINDOW_SEMANTICS_PENDING"
+    ):
+        errors.append("authority-domain reference decision changed")
+    if review.get("field") != "OPN_ATMY_GRP_CD":
+        errors.append("authority-domain reference field changed")
+
+    official = review.get("official_reference", {})
+    if official.get("manual_url") != (
+        "https://www.localdata.go.kr/images/egovframework/portal/manual_260106.pdf"
+    ):
+        errors.append("authority-domain official manual URL changed")
+    if official.get("manual_reference_filename") != "개방자치단체코드.xlsx":
+        errors.append("authority-domain manual reference filename changed")
+    if official.get("manual_claim_count") != 245:
+        errors.append("authority-domain manual reference count changed")
+    if official.get("manual_claim_is_current_enumeration_count") is not False:
+        errors.append("manual 245 count must not be promoted to the current enumeration domain")
+    if official.get("v1_detail_reference_filename") != "개방자치단체코드_영업상태코드.xlsx":
+        errors.append("authority-domain v1 reference filename changed")
+    expected_pages = {
+        "https://www.data.go.kr/data/15154916/openapi.do",
+        "https://www.data.go.kr/data/15154921/openapi.do",
+        "https://www.data.go.kr/data/15155252/openapi.do",
+    }
+    if set(official.get("v1_detail_pages", [])) != expected_pages:
+        errors.append("authority-domain v1 detail-page evidence changed")
+    expected_official = {
+        "notice_url": "https://www.data.go.kr/bbs/ntc/selectNotice.do?originId=NOTICE_0000000004824",
+        "notice_date": "2026-07-03",
+        "change_effective_date": "2026-07-01",
+        "attachment_filename": "개방자치단체코드_영업상태코드_행정체제개편반영_20260702.xlsx",
+        "attachment_sha256": "d032ff4bd63148238a8066afb7b62f96770d8a063bd6c632d4f7617e9cc407f8",
+        "sheet_name": "1. 개방자치단체코드",
+        "active_row_count": 260,
+        "active_numeric_code_count": 244,
+        "active_aggregate_token_count": 16,
+        "deleted_row_count": 34,
+        "deleted_numeric_code_count": 32,
+        "deleted_aggregate_token_count": 2,
+        "new_row_count": 33,
+        "new_numeric_code_count": 32,
+        "new_aggregate_token_count": 1,
+        "current_numeric_authority_list_sha256": "a666c5cb432c439f687064e3046ec2e9a84d2de708dfbe80817330e60b76ddad",
+        "manual_count_differs_from_current_numeric_reference": True,
+    }
+    for key, expected in expected_official.items():
+        if official.get(key) != expected:
+            errors.append(f"authority-domain official reference {key} changed")
+
+    current_authorities = review.get("official_current_numeric_authorities", [])
+    if len(current_authorities) != 244:
+        errors.append("authority-domain exact current numeric list must contain 244 rows")
+    codes = [str(item.get("code", "")) for item in current_authorities]
+    names = [str(item.get("name", "")).strip() for item in current_authorities]
+    if len(set(codes)) != 244 or codes != sorted(codes):
+        errors.append("authority-domain exact current numeric codes must be unique and sorted")
+    if any(len(code) != 7 or not code.isdigit() for code in codes):
+        errors.append("authority-domain exact current numeric code format changed")
+    if any(not name for name in names):
+        errors.append("authority-domain exact current authority names must be nonblank")
+    list_payload = "".join(
+        f"{item.get('code')}\t{item.get('name')}\n" for item in current_authorities
+    ).encode("utf-8")
+    if hashlib.sha256(list_payload).hexdigest() != official.get("current_numeric_authority_list_sha256"):
+        errors.append("authority-domain exact current numeric list hash changed")
+
+    deleted_authorities = review.get("official_deleted_numeric_authorities", [])
+    if len(deleted_authorities) != 32:
+        errors.append("authority-domain exact deleted numeric list must contain 32 rows")
+    deleted_codes = [str(item.get("code", "")) for item in deleted_authorities]
+    deleted_names = [str(item.get("name", "")).strip() for item in deleted_authorities]
+    if len(set(deleted_codes)) != 32 or deleted_codes != sorted(deleted_codes):
+        errors.append("authority-domain exact deleted numeric codes must be unique and sorted")
+    if any(len(code) != 7 or not code.isdigit() for code in deleted_codes):
+        errors.append("authority-domain exact deleted numeric code format changed")
+    if any(not name for name in deleted_names):
+        errors.append("authority-domain exact deleted authority names must be nonblank")
+    if set(codes) & set(deleted_codes):
+        errors.append("authority-domain current and deleted numeric codes must be disjoint")
+    deleted_payload = "".join(
+        f"{item.get('code')}\t{item.get('name')}\n" for item in deleted_authorities
+    ).encode("utf-8")
+    if hashlib.sha256(deleted_payload).hexdigest() != official.get(
+        "deleted_numeric_authority_list_sha256"
+    ):
+        errors.append("authority-domain exact deleted numeric list hash changed")
+
+    history_change = review.get("history_window_change_reference", {})
+    expected_history_change = {
+        "window_start": "2026-01-01",
+        "window_end": "2026-09-06",
+        "change_effective_date": "2026-07-01",
+        "exact_deleted_numeric_authority_codes_ingested": True,
+        "deleted_numeric_authority_count": 32,
+        "current_plus_deleted_candidate_union_count": 276,
+        "date_effective_history_authority_filter_semantics_verified": False,
+        "deleted_codes_confirmed_queryable_for_prechange_base_dates": False,
+        "manual_245_count_reconciled_to_exact_window_domain": False,
+    }
+    for key, expected in expected_history_change.items():
+        if history_change.get(key) != expected:
+            errors.append(f"authority-domain history-window change reference {key} changed")
+    union_map = {
+        **{item.get("code"): item.get("name") for item in deleted_authorities},
+        **{item.get("code"): item.get("name") for item in current_authorities},
+    }
+    union_payload = "".join(
+        f"{code}\t{union_map[code]}\n" for code in sorted(union_map)
+    ).encode("utf-8")
+    if hashlib.sha256(union_payload).hexdigest() != history_change.get(
+        "current_plus_deleted_candidate_union_sha256"
+    ):
+        errors.append("authority-domain history-window candidate union hash changed")
+
+    observed = review.get("observed_current_snapshots", {})
+    if observed.get("distinct_authority_count") != 230:
+        errors.append("authority-domain observed current count changed")
+    expected_observed_scalars = {
+        "permit_build_id": "permit-v1-9908225df465e2ff",
+        "identical_across_three_v1_sources": True,
+        "format": "7-digit numeric strings",
+        "observed_is_subset_of_current_official_numeric_domain": True,
+        "observed_not_in_current_official_numeric_domain_count": 0,
+        "current_official_numeric_not_observed_count": 14,
+        "observed_new_numeric_code_count": 31,
+    }
+    for key, expected in expected_observed_scalars.items():
+        if observed.get(key) != expected:
+            errors.append(f"authority-domain observed current {key} changed")
+    missing = observed.get("current_official_numeric_not_observed", [])
+    if len(missing) != 14 or len({item.get("code") for item in missing}) != 14:
+        errors.append("authority-domain current official unobserved list must contain 14 unique codes")
+    current_map = {item.get("code"): item.get("name") for item in current_authorities}
+    if any(current_map.get(item.get("code")) != item.get("name") for item in missing):
+        errors.append("authority-domain unobserved authorities must be drawn from the official list")
+
+    gate = review.get("ingestion_gate", {})
+    for key in (
+        "exact_current_official_numeric_code_values_ingested",
+        "exact_current_official_numeric_code_list_hash_recorded",
+        "exact_current_official_numeric_code_list_validated",
+        "current_official_numeric_domain_authoritatively_complete_for_reference_date",
+        "current_reference_numeric_enumeration_ready",
+        "exact_deleted_numeric_code_values_ingested",
+        "future_reference_refresh_required",
+    ):
+        if gate.get(key) is not True:
+            errors.append(f"authority-domain ingestion gate must keep {key}=true")
+    if gate.get("history_window_date_effective_numeric_enumeration_ready") is not False:
+        errors.append("authority-domain history-window date-effective enumeration must remain unapproved")
+    if gate.get("aggregate_all_tokens_used_for_row_enumeration") is not False:
+        errors.append("authority-domain aggregate _ALL tokens must not be used for row enumeration")
+
+    cost = review.get("cost_model_policy", {})
+    expected_cost = {
+        "observed_nonempty_authority_count": 230,
+        "current_official_numeric_authority_count": 244,
+        "current_unobserved_official_authority_probe_count_per_source": 14,
+        "deleted_numeric_authority_count": 32,
+        "history_window_candidate_numeric_union_count": 276,
+        "current_scale_candidate_union_absent_authority_count_per_source": 46,
+        "current_plus_deleted_candidate_union_may_be_used_for_cost_planning": True,
+        "candidate_union_is_proven_date_effective_query_domain": False,
+        "current_unobserved_authorities_may_be_assumed_historically_empty": False,
+        "deleted_authorities_may_be_assumed_unqueryable_for_prechange_dates": False,
+        "manual_245_count_may_be_used_as_exact_current_query_domain": False,
+    }
+    if cost != expected_cost:
+        errors.append("authority-domain cost-model policy changed")
+    implementation = review.get("implementation", {})
+    expected_implementation = {
+        "module": "src/korea_business_lifecycle/authority_domain.py",
+        "script": "scripts/authority_domain_reference.py",
+        "reference_parser_dependency": "openpyxl==3.1.5",
+        "current_snapshot_comparison_dependency": "pyarrow==21.0.0",
+        "network_required_after_reference_download": False,
+        "reference_workbook_git_tracked": False,
+        "row_level_business_values_emitted": False,
+    }
+    if implementation != expected_implementation:
+        errors.append("authority-domain implementation contract changed")
+    return errors
+
+
+def validate_redistribution_clarification_plan(plan: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if plan.get("decision") != "WRITTEN_SOURCE_SPECIFIC_REDISTRIBUTION_CLARIFICATION_REQUIRED":
+        errors.append("redistribution clarification decision changed")
+    scope = plan.get("scope", {})
+    if set(scope.get("sources", [])) != V1_SOURCE_KEYS:
+        errors.append("redistribution clarification scope must exactly match v1 sources")
+    expected_pages = {
+        "https://www.data.go.kr/data/15154916/openapi.do",
+        "https://www.data.go.kr/data/15154921/openapi.do",
+        "https://www.data.go.kr/data/15155252/openapi.do",
+    }
+    if set(scope.get("official_detail_pages", [])) != expected_pages:
+        errors.append("redistribution clarification source pages changed")
+    if scope.get("portal_policy") != "https://www.data.go.kr/ugs/selectPortalPolicyView.do":
+        errors.append("redistribution clarification portal policy changed")
+
+    evidence = plan.get("confirmed_evidence", {})
+    for key in (
+        "all_three_official_pages_show_no_restriction_on_permitted_use",
+        "portal_policy_requires_permission_if_third_party_rights_are_included",
+    ):
+        if evidence.get(key) is not True:
+            errors.append(f"redistribution clarification evidence must keep {key}=true")
+    if evidence.get("source_use_metadata_gate") != "PASS_METADATA_CONFIRMED":
+        errors.append("redistribution clarification source-use gate changed")
+    for key in (
+        "source_specific_third_party_rights_absence_confirmed",
+        "raw_external_mirror_permission_confirmed",
+        "privacy_minimized_aggregate_external_redistribution_confirmed",
+    ):
+        if evidence.get(key) is not False:
+            errors.append(f"redistribution clarification evidence must keep {key}=false")
+
+    questions = plan.get("questions_for_written_clarification", [])
+    if len(questions) != 4:
+        errors.append("redistribution clarification must retain four written questions")
+    prepared = plan.get("prepared_inquiry", {})
+    if prepared.get("status") != "READY_NOT_SENT" or prepared.get("language") != "ko":
+        errors.append("redistribution clarification prepared inquiry state changed")
+    if prepared.get("subject_ko") != "행정안전부 지방행정 인허가정보 3종 외부 재배포 가능 여부 서면 확인 요청":
+        errors.append("redistribution clarification prepared inquiry subject changed")
+    if prepared.get("source_identifiers") != [
+        "15154916 일반음식점",
+        "15154921 휴게음식점",
+        "15155252 제과점영업",
+    ]:
+        errors.append("redistribution clarification prepared inquiry source identifiers changed")
+    inquiry_body = prepared.get("body_ko", "")
+    for required in ("15154916", "15154921", "15155252", "Kaggle", "k=10", "제3자 권리"):
+        if required not in inquiry_body:
+            errors.append(f"redistribution clarification prepared inquiry lost required token {required}")
+    if prepared.get("requested_response_form") != "WRITTEN_SOURCE_SPECIFIC":
+        errors.append("redistribution clarification requested response form changed")
+    if prepared.get("technical_minimization_is_not_claimed_as_legal_privacy_guarantee") is not True:
+        errors.append("redistribution clarification must keep k-threshold legal disclaimer")
+    execution = plan.get("execution", {})
+    for key in (
+        "outreach_performed",
+        "written_response_received",
+        "publication_status_changed",
+        "automatic_email_or_message_sending_enabled",
+    ):
+        if execution.get(key) is not False:
+            errors.append(f"redistribution clarification execution must keep {key}=false")
+    contacts = plan.get("contact_routes", {})
+    expected_contacts = {
+        "data_go_kr_inquiry_page": "https://www.data.go.kr/bbs/faq/selectFaqList.do",
+        "portal_support_email": "opendata_help@nia.or.kr",
+        "portal_support_phone": "1566-0025",
+        "provider": "행정안전부",
+        "management_department": "지역디지털협력과",
+        "note": "The portal support route can direct the question; source-specific written clarification should be archived before any gate changes.",
+    }
+    if contacts != expected_contacts:
+        errors.append("redistribution clarification contact routes changed")
+    gates = plan.get("gates", {})
+    if gates.get("raw_external_mirror") != "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION":
+        errors.append("redistribution clarification raw mirror gate changed")
+    if gates.get("privacy_minimized_aggregate_redistribution") != "UNRESOLVED":
+        errors.append("redistribution clarification aggregate gate changed")
+    if gates.get("row_level_public_release") != "BLOCKED" or gates.get("aggregate_publication") != "BLOCKED":
+        errors.append("redistribution clarification publication gates must remain blocked")
     return errors
 
 
@@ -550,8 +862,20 @@ def validate_grain_decision(decision: dict[str, Any]) -> list[str]:
         errors.append("bounded episode reconstruction status changed")
     if next_gate.get("history_observation_strategy") != "provenance/history_observation_strategy.json":
         errors.append("history observation strategy evidence reference changed")
-    if next_gate.get("history_observation_strategy_status") != "COST_BOUNDED_NO_CADENCE_APPROVED":
+    if next_gate.get("history_observation_strategy_status") != (
+        "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
+    ):
         errors.append("history observation strategy status changed")
+    if next_gate.get("authority_domain_reference") != "provenance/authority_domain_reference.json":
+        errors.append("authority-domain reference evidence changed")
+    if next_gate.get("authority_domain_reference_status") != (
+        "CURRENT_244_AND_DELETED_32_INGESTED_DATE_EFFECTIVE_HISTORY_SEMANTICS_PENDING"
+    ):
+        errors.append("authority-domain reference status changed")
+    if next_gate.get("redistribution_clarification_plan") != "provenance/redistribution_clarification_plan.json":
+        errors.append("redistribution clarification plan reference changed")
+    if next_gate.get("redistribution_clarification_status") != "PREPARED_WRITTEN_RESPONSE_PENDING":
+        errors.append("redistribution clarification status changed")
     return errors
 
 
@@ -639,7 +963,7 @@ def validate_bounded_episode_reconstruction(review: dict[str, Any]) -> list[str]
 def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if review.get("decision") != (
-        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_COST_AND_COMPLETENESS_REVIEW_REQUIRED"
+        "NO_NATIONWIDE_OBSERVATION_CADENCE_APPROVED_DATE_EFFECTIVE_AUTHORITY_FILTER_SEMANTICS_AND_COST_REVIEW_REQUIRED"
     ):
         errors.append("history observation strategy decision changed")
     scope = review.get("scope", {})
@@ -657,20 +981,35 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
     expected_paging = {
         "current_rows_total": 3_010_802,
         "observed_authority_count": 230,
-        "authority_domain_authoritatively_complete": False,
+        "manual_reference_authority_count": 245,
+        "current_official_numeric_authority_count": 244,
+        "current_official_aggregate_token_count": 16,
+        "official_deleted_numeric_authority_count": 32,
+        "history_window_candidate_numeric_authority_union_count": 276,
+        "observed_count_gap_vs_current_official_numeric": 14,
+        "observed_count_gap_vs_history_window_candidate_union": 46,
+        "observed_authority_domain_authoritatively_complete": False,
+        "current_official_numeric_domain_authoritatively_complete_for_reference_date": True,
+        "exact_current_official_numeric_authority_codes_ingested": True,
+        "exact_deleted_numeric_authority_codes_ingested": True,
+        "history_window_date_effective_numeric_enumeration_ready": False,
+        "date_effective_history_authority_filter_semantics_verified": False,
+        "future_authority_reference_refresh_required": True,
         "page_size": 100,
-        "request_lower_bound_per_asof_date": 30_109,
-        "request_upper_bound_per_asof_date": 30_796,
-        "cost_basis": "CURRENT_ROW_SCALE_MATHEMATICAL_PAGE_BOUNDS_NOT_HISTORICAL_ROW_COUNT_FORECAST",
+        "current_scale_candidate_union_probe_requests_per_source_per_asof_date": 46,
+        "current_scale_candidate_union_probe_requests_total_per_asof_date": 138,
+        "request_lower_bound_per_asof_date": 30_247,
+        "request_upper_bound_per_asof_date": 30_934,
+        "cost_basis": "CURRENT_ROW_SCALE_WITH_276_CURRENT_PLUS_DELETED_NUMERIC_CANDIDATE_UNION_230_CURRENTLY_NONEMPTY_PLUS_46_ONE_REQUEST_PROBES_PER_SOURCE_DATE_EFFECTIVE_HISTORY_SEMANTICS_UNVERIFIED_NOT_HISTORICAL_ROW_COUNT_FORECAST",
     }
     for key, expected in expected_paging.items():
         if paging.get(key) != expected:
             errors.append(f"history observation paging basis {key} changed")
     per_source = paging.get("per_source", [])
     expected_sources = {
-        "general_restaurants": (2_295_369, 22_954, 23_183),
-        "rest_cafes": (645_952, 6_460, 6_689),
-        "bakeries": (69_481, 695, 924),
+        "general_restaurants": (2_295_369, 22_954, 23_183, 46, 23_000, 23_229),
+        "rest_cafes": (645_952, 6_460, 6_689, 46, 6_506, 6_735),
+        "bakeries": (69_481, 695, 924, 46, 741, 970),
     }
     if {item.get("source_key") for item in per_source} != V1_SOURCE_KEYS or len(per_source) != 3:
         errors.append("history observation per-source paging scope changed")
@@ -679,6 +1018,9 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
         expected = expected_sources.get(source_key)
         observed = (
             item.get("current_rows"),
+            item.get("observed_nonempty_request_lower_bound_per_asof_date"),
+            item.get("observed_nonempty_request_upper_bound_per_asof_date"),
+            item.get("current_scale_candidate_union_probe_requests_per_asof_date"),
             item.get("request_lower_bound_per_asof_date"),
             item.get("request_upper_bound_per_asof_date"),
         )
@@ -687,10 +1029,10 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
 
     scenarios = {item.get("name"): item for item in review.get("scenarios", [])}
     expected_scenarios = {
-        "ENDPOINTS_ONLY": (2, 248, 60_218, 61_592),
-        "MONTHLY_ANCHOR_PLUS_END": (10, 31, 301_090, 307_960),
-        "WEEKLY_7D_PLUS_END": (37, 7, 1_114_033, 1_139_452),
-        "DAILY": (249, 1, 7_497_141, 7_668_204),
+        "ENDPOINTS_ONLY": (2, 248, 60_494, 61_868),
+        "MONTHLY_ANCHOR_PLUS_END": (10, 31, 302_470, 309_340),
+        "WEEKLY_7D_PLUS_END": (37, 7, 1_119_139, 1_144_558),
+        "DAILY": (249, 1, 7_531_503, 7_702_566),
     }
     if set(scenarios) != set(expected_scenarios):
         errors.append("history observation scenario set changed")
@@ -724,6 +1066,8 @@ def validate_history_observation_strategy(review: dict[str, Any]) -> list[str]:
         errors.append("history observation strategy script reference changed")
     if implementation.get("network_required") is not False:
         errors.append("history observation strategy must remain network-free")
+    if review.get("authority_domain_reference") != "provenance/authority_domain_reference.json":
+        errors.append("history observation strategy authority-domain reference changed")
     return errors
 
 

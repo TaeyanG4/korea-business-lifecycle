@@ -41,13 +41,20 @@
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
       ↳ production nationwide reconstruction: disabled
   → nationwide history observation cost gate
-      ↳ current-scale requests/as-of date: 30,109..30,796
-      ↳ daily 249-date scenario: 7,497,141..7,668,204 requests
-      ↳ authoritative authority domain: unresolved
+      ↳ current-scale 276-code candidate-union planning: 30,247..30,934 requests/as-of date
+      ↳ daily 249-date scenario: 7,531,503..7,702,566 requests
+      ↳ latest current numeric authority domain: exact 244 ingested/validated
+      ↳ exact deleted numeric change-reference codes: 32; current+deleted candidate union: 276
+      ↳ current observed authority count: 230; all are a subset of current 244
+      ↳ deleted-code date-effective history filter semantics: unresolved
       ↳ approved cadence: none
+  → redistribution clarification gate
+      ↳ source-use metadata: PASS
+      ↳ written source-specific questions/contact routes: prepared
+      ↳ raw/aggregate external redistribution: unresolved
 ```
 
-v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. 추가로 bounded sparse-observation episode reconstructor와 network-free nationwide history cost model을 구현했습니다. current scale만으로도 as-of 한 날짜에 30천 건 이상, 249일 daily scenario에는 약 750만~767만 requests가 필요합니다. authoritative authority domain과 cadence가 승인되지 않았으므로 production reconstruction과 public release는 계속 차단합니다.
+v1 parent와 WGS84 sidecar는 각각 3,010,802행 기준으로 production materialization과 독립 검증까지 완료했습니다. publication-safety 단계의 local aggregate 후보도 3,010,802행 전수 스캔과 독립 검증까지 완료됐습니다. 추가로 bounded sparse-observation episode reconstructor와 network-free nationwide history cost model을 구현했습니다. authority domain은 최신 7월 공식 첨부에서 현재 244개 숫자 코드와 삭제 32개 숫자 코드를 exact ingestion/hash/validation했습니다. 다만 Jan–Sep history에서 삭제 코드가 pre-change `BASE_DATE`에 어떤 filter 의미를 갖는지는 공식 문서/실행으로 아직 확인되지 않아 production enumeration은 계속 차단합니다. redistribution도 source-use metadata는 PASS이나 source-specific 서면 확인 전에는 외부 공개를 계속 차단합니다.
 
 ## 데이터 저장 원칙
 

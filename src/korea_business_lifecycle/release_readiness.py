@@ -4,6 +4,7 @@ from typing import Any
 
 from .canonical_materialization_verify import expected_permit_build_id
 from .provenance import (
+    load_authority_domain_reference,
     load_bounded_episode_reconstruction,
     load_geospatial_axis_probe,
     load_geospatial_full_axis,
@@ -19,6 +20,7 @@ from .provenance import (
     load_privacy_review,
     load_public_permit_aggregate,
     load_public_permit_aggregate_plan,
+    load_redistribution_clarification_plan,
 )
 
 
@@ -35,9 +37,11 @@ def compute_release_readiness() -> dict[str, Any]:
     public_aggregate_result = load_public_permit_aggregate()
     bounded_episode = load_bounded_episode_reconstruction()
     history_strategy = load_history_observation_strategy()
+    authority_reference = load_authority_domain_reference()
     grain = load_grain_decision()
     privacy = load_privacy_review()
     license_review = load_license_review()
+    redistribution_clarification = load_redistribution_clarification_plan()
 
     episode = grain["selected_grains"]["lifecycle_analysis_grain"]
     semantics = grain["episode_semantics"]
@@ -117,9 +121,51 @@ def compute_release_readiness() -> dict[str, Any]:
                     "maximum_observations_per_call"
                 ],
                 "bounded_reconstructor_in_memory_only": bounded_episode["scope"]["bounded_in_memory_only"],
-                "history_observation_strategy": "COST_BOUNDED_NO_CADENCE_APPROVED",
-                "history_authority_domain_authoritatively_complete": history_strategy["paging_basis"][
-                    "authority_domain_authoritatively_complete"
+                "history_observation_strategy": "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
+                "history_manual_reference_authority_count": authority_reference[
+                    "official_reference"
+                ]["manual_claim_count"],
+                "history_current_official_numeric_authority_count": authority_reference[
+                    "official_reference"
+                ]["active_numeric_code_count"],
+                "history_current_official_aggregate_token_count": authority_reference[
+                    "official_reference"
+                ]["active_aggregate_token_count"],
+                "history_official_deleted_numeric_authority_count": authority_reference[
+                    "history_window_change_reference"
+                ]["deleted_numeric_authority_count"],
+                "history_window_candidate_numeric_authority_union_count": authority_reference[
+                    "history_window_change_reference"
+                ]["current_plus_deleted_candidate_union_count"],
+                "history_observed_current_authority_count": authority_reference[
+                    "observed_current_snapshots"
+                ]["distinct_authority_count"],
+                "history_current_official_unobserved_count": authority_reference[
+                    "observed_current_snapshots"
+                ]["current_official_numeric_not_observed_count"],
+                "history_window_candidate_unobserved_count": history_strategy["paging_basis"][
+                    "observed_count_gap_vs_history_window_candidate_union"
+                ],
+                "history_exact_current_official_numeric_codes_ingested": authority_reference[
+                    "ingestion_gate"
+                ]["exact_current_official_numeric_code_values_ingested"],
+                "history_exact_deleted_numeric_codes_ingested": authority_reference[
+                    "ingestion_gate"
+                ]["exact_deleted_numeric_code_values_ingested"],
+                "history_current_reference_numeric_enumeration_ready": authority_reference[
+                    "ingestion_gate"
+                ]["current_reference_numeric_enumeration_ready"],
+                "history_date_effective_authority_filter_semantics_verified": authority_reference[
+                    "history_window_change_reference"
+                ]["date_effective_history_authority_filter_semantics_verified"],
+                "history_window_date_effective_numeric_enumeration_ready": authority_reference[
+                    "ingestion_gate"
+                ]["history_window_date_effective_numeric_enumeration_ready"],
+                "history_current_official_numeric_domain_authoritatively_complete": history_strategy[
+                    "paging_basis"
+                ]["current_official_numeric_domain_authoritatively_complete_for_reference_date"],
+                "history_future_authority_reference_refresh_required": history_strategy["paging_basis"][
+                    "future_authority_reference_refresh_required"
                 ],
                 "history_requests_per_asof_date_lower_bound": history_strategy["paging_basis"][
                     "request_lower_bound_per_asof_date"
@@ -167,11 +213,24 @@ def compute_release_readiness() -> dict[str, Any]:
                     "technical_minimization_verified"
                 ],
                 "aggregate_publication_approved": public_aggregate_result["scope"]["aggregate_publication_approved"],
+                "redistribution_clarification_plan": "PREPARED_WRITTEN_RESPONSE_PENDING",
+                "redistribution_prepared_inquiry_status": redistribution_clarification[
+                    "prepared_inquiry"
+                ]["status"],
+                "redistribution_prepared_inquiry_source_count": len(
+                    redistribution_clarification["prepared_inquiry"]["source_identifiers"]
+                ),
+                "redistribution_clarification_outreach_performed": redistribution_clarification[
+                    "execution"
+                ]["outreach_performed"],
+                "redistribution_written_response_received": redistribution_clarification[
+                    "execution"
+                ]["written_response_received"],
                 "local_materialization_completion_does_not_change_publication_status": True,
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "resolve redistribution clearance and define the nationwide history-observation strategy required before production episode reconstruction can be considered",
+        "next_product_action": "verify date-effective history filtering for the exact deleted authority codes, obtain source-specific written redistribution clarification, and then make an explicit history cadence/request-budget decision",
         "hard_blocks": [
             "do not publish row-level data until privacy allowlist and redistribution review pass",
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",

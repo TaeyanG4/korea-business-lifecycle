@@ -17,6 +17,9 @@ build = [
 geo = [
   "pyproj==3.7.2",
 ]
+reference = [
+  "openpyxl==3.1.5",
+]
 test = [
   "pytest>=8,<9",
   "pytest-socket>=0.7,<1",

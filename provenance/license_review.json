@@ -19,7 +19,9 @@
     "source_use_license_gate": "PASS_METADATA_CONFIRMED",
     "raw_external_mirror_gate": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
     "privacy_minimized_aggregate_redistribution_gate": "UNRESOLVED",
-    "absence_of_source_specific_third_party_statement_is_proof_of_no_third_party_rights": false
+    "absence_of_source_specific_third_party_statement_is_proof_of_no_third_party_rights": false,
+    "written_clarification_plan": "provenance/redistribution_clarification_plan.json",
+    "written_source_specific_clarification_received": false
   },
   "categories": [
     {
@@ -56,5 +58,6 @@
       "privacy_review": "REVIEW_REQUIRED"
     }
   ],
-  "publication_rule": "Source-use labels are confirmed, but do not publish raw/row-level or aggregate artifacts externally until the applicable redistribution gate and privacy/release policy are explicitly cleared."
+  "publication_rule": "Source-use labels are confirmed, but do not publish raw/row-level or aggregate artifacts externally until the applicable redistribution gate and privacy/release policy are explicitly cleared.",
+  "next_gate": "provenance/redistribution_clarification_plan.json"
 }

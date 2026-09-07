@@ -30,7 +30,24 @@
       "identical_across_three_current_snapshots": true,
       "authoritative_completeness": false
     },
-    "nationwide_completeness_blocker": "complete authoritative OPN_ATMY_GRP_CD domain must be verified before nationwide enumeration"
+    "official_authority_reference": {
+      "evidence": "provenance/authority_domain_reference.json",
+      "manual_reference_count": 245,
+      "current_official_numeric_count": 244,
+      "current_official_aggregate_token_count": 16,
+      "official_deleted_numeric_count": 32,
+      "history_window_candidate_numeric_union_count": 276,
+      "current_observed_count": 230,
+      "current_official_unobserved_count": 14,
+      "current_window_candidate_unobserved_count": 46,
+      "exact_current_official_numeric_code_values_ingested": true,
+      "exact_deleted_numeric_code_values_ingested": true,
+      "current_official_numeric_domain_authoritatively_complete_for_reference_date": true,
+      "date_effective_history_authority_filter_semantics_verified": false,
+      "history_window_date_effective_numeric_enumeration_ready": false,
+      "future_reference_refresh_required": true
+    },
+    "nationwide_completeness_blocker": "the latest official current 244 numeric codes and 32 deleted numeric codes are ingested exactly, but the history API's date-effective filter behavior for deleted pre-reform authority codes is not documented or verified; no nationwide cadence/request budget is approved"
   },
   "categories": [
     {

@@ -54,6 +54,13 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
         "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION"
     )
     assert readiness["tracks"]["public_kaggle"]["aggregate_redistribution_gate"] == "UNRESOLVED"
+    assert readiness["tracks"]["public_kaggle"]["redistribution_clarification_plan"] == (
+        "PREPARED_WRITTEN_RESPONSE_PENDING"
+    )
+    assert readiness["tracks"]["public_kaggle"]["redistribution_prepared_inquiry_status"] == "READY_NOT_SENT"
+    assert readiness["tracks"]["public_kaggle"]["redistribution_prepared_inquiry_source_count"] == 3
+    assert readiness["tracks"]["public_kaggle"]["redistribution_clarification_outreach_performed"] is False
+    assert readiness["tracks"]["public_kaggle"]["redistribution_written_response_received"] is False
     assert readiness["next_long_local_actions"] == []
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor"] == (
         "IMPLEMENTED_SYNTHETIC_VALIDATED"
@@ -61,13 +68,27 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_max_observations"] == 100_000
     assert readiness["tracks"]["lifecycle_episode"]["bounded_reconstructor_in_memory_only"] is True
     assert readiness["tracks"]["lifecycle_episode"]["history_observation_strategy"] == (
-        "COST_BOUNDED_NO_CADENCE_APPROVED"
+        "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED"
     )
-    assert readiness["tracks"]["lifecycle_episode"]["history_authority_domain_authoritatively_complete"] is False
-    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_lower_bound"] == 30_109
-    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_upper_bound"] == 30_796
-    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_lower_bound"] == 7_497_141
-    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_upper_bound"] == 7_668_204
+    assert readiness["tracks"]["lifecycle_episode"]["history_manual_reference_authority_count"] == 245
+    assert readiness["tracks"]["lifecycle_episode"]["history_current_official_numeric_authority_count"] == 244
+    assert readiness["tracks"]["lifecycle_episode"]["history_current_official_aggregate_token_count"] == 16
+    assert readiness["tracks"]["lifecycle_episode"]["history_official_deleted_numeric_authority_count"] == 32
+    assert readiness["tracks"]["lifecycle_episode"]["history_window_candidate_numeric_authority_union_count"] == 276
+    assert readiness["tracks"]["lifecycle_episode"]["history_observed_current_authority_count"] == 230
+    assert readiness["tracks"]["lifecycle_episode"]["history_current_official_unobserved_count"] == 14
+    assert readiness["tracks"]["lifecycle_episode"]["history_window_candidate_unobserved_count"] == 46
+    assert readiness["tracks"]["lifecycle_episode"]["history_exact_current_official_numeric_codes_ingested"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_exact_deleted_numeric_codes_ingested"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_current_reference_numeric_enumeration_ready"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_date_effective_authority_filter_semantics_verified"] is False
+    assert readiness["tracks"]["lifecycle_episode"]["history_window_date_effective_numeric_enumeration_ready"] is False
+    assert readiness["tracks"]["lifecycle_episode"]["history_current_official_numeric_domain_authoritatively_complete"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_future_authority_reference_refresh_required"] is True
+    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_lower_bound"] == 30_247
+    assert readiness["tracks"]["lifecycle_episode"]["history_requests_per_asof_date_upper_bound"] == 30_934
+    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_lower_bound"] == 7_531_503
+    assert readiness["tracks"]["lifecycle_episode"]["daily_window_request_upper_bound"] == 7_702_566
     assert readiness["tracks"]["lifecycle_episode"]["production_reconstruction_enabled"] is False
     assert readiness["tracks"]["public_kaggle"]["status"] == "BLOCKED"
     assert readiness["tracks"]["public_kaggle"]["row_level_public_build_allowed"] is False

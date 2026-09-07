@@ -1,4 +1,5 @@
 from korea_business_lifecycle.provenance import (
+    load_authority_domain_reference,
     load_bounded_episode_reconstruction,
     load_bounded_history_audit,
     load_expanded_history_audit,
@@ -22,6 +23,7 @@ from korea_business_lifecycle.provenance import (
     load_permit_geospatial_materialization,
     load_public_permit_aggregate,
     load_public_permit_aggregate_plan,
+    load_redistribution_clarification_plan,
     load_privacy_review,
     load_source_registry,
     validate_history_review,
@@ -29,6 +31,7 @@ from korea_business_lifecycle.provenance import (
     validate_reverse_transition_probe_plan,
     validate_reverse_transition_findings,
     validate_bounded_history_audit,
+    validate_authority_domain_reference,
     validate_bounded_episode_reconstruction,
     validate_expanded_history_audit,
     validate_grain_decision,
@@ -47,6 +50,7 @@ from korea_business_lifecycle.provenance import (
     validate_permit_geospatial_materialization,
     validate_public_permit_aggregate,
     validate_public_permit_aggregate_plan,
+    validate_redistribution_clarification_plan,
     validate_privacy_review,
     validate_source_registry,
 )
@@ -109,6 +113,43 @@ def test_history_review_is_finite_but_not_an_event_log() -> None:
     assert review["common_contract"]["lower_base_date"] == "2026-01-01"
     assert review["common_contract"]["max_num_of_rows"] == 100
     assert review["common_contract"]["event_log_claim"] is False
+    assert review["common_contract"]["official_authority_reference"]["manual_reference_count"] == 245
+    assert review["common_contract"]["official_authority_reference"]["current_official_numeric_count"] == 244
+    assert review["common_contract"]["official_authority_reference"]["official_deleted_numeric_count"] == 32
+    assert review["common_contract"]["official_authority_reference"]["history_window_candidate_numeric_union_count"] == 276
+    assert review["common_contract"]["official_authority_reference"]["current_observed_count"] == 230
+    assert review["common_contract"]["official_authority_reference"]["exact_current_official_numeric_code_values_ingested"] is True
+    assert review["common_contract"]["official_authority_reference"]["exact_deleted_numeric_code_values_ingested"] is True
+    assert review["common_contract"]["official_authority_reference"]["date_effective_history_authority_filter_semantics_verified"] is False
+
+
+def test_official_authority_reference_tracks_current_and_deleted_exact_codes_without_overclaiming_history_semantics() -> None:
+    review = load_authority_domain_reference()
+    assert validate_authority_domain_reference(review) == []
+    assert review["official_reference"]["manual_claim_count"] == 245
+    assert review["official_reference"]["active_numeric_code_count"] == 244
+    assert review["official_reference"]["active_aggregate_token_count"] == 16
+    assert review["official_reference"]["deleted_numeric_code_count"] == 32
+    assert review["observed_current_snapshots"]["distinct_authority_count"] == 230
+    assert review["observed_current_snapshots"]["current_official_numeric_not_observed_count"] == 14
+    assert review["history_window_change_reference"]["current_plus_deleted_candidate_union_count"] == 276
+    assert review["ingestion_gate"]["exact_current_official_numeric_code_values_ingested"] is True
+    assert review["ingestion_gate"]["exact_deleted_numeric_code_values_ingested"] is True
+    assert review["ingestion_gate"]["current_reference_numeric_enumeration_ready"] is True
+    assert review["ingestion_gate"]["history_window_date_effective_numeric_enumeration_ready"] is False
+
+
+def test_redistribution_clarification_plan_is_prepared_but_not_executed() -> None:
+    plan = load_redistribution_clarification_plan()
+    assert validate_redistribution_clarification_plan(plan) == []
+    assert plan["confirmed_evidence"]["source_use_metadata_gate"] == "PASS_METADATA_CONFIRMED"
+    assert plan["confirmed_evidence"]["raw_external_mirror_permission_confirmed"] is False
+    assert len(plan["questions_for_written_clarification"]) == 4
+    assert plan["prepared_inquiry"]["status"] == "READY_NOT_SENT"
+    assert plan["prepared_inquiry"]["requested_response_form"] == "WRITTEN_SOURCE_SPECIFIC"
+    assert plan["prepared_inquiry"]["technical_minimization_is_not_claimed_as_legal_privacy_guarantee"] is True
+    assert plan["execution"]["outreach_performed"] is False
+    assert plan["execution"]["written_response_received"] is False
 
 
 def test_history_sample_plan_is_bounded_and_deterministic() -> None:
@@ -378,11 +419,12 @@ def test_bounded_episode_reconstructor_is_validated_but_production_remains_disab
 def test_history_observation_strategy_quantifies_cost_without_approving_nationwide_cadence() -> None:
     review = load_history_observation_strategy()
     assert validate_history_observation_strategy(review) == []
-    assert review["paging_basis"]["request_lower_bound_per_asof_date"] == 30_109
-    assert review["paging_basis"]["request_upper_bound_per_asof_date"] == 30_796
-    assert review["paging_basis"]["authority_domain_authoritatively_complete"] is False
+    assert review["paging_basis"]["request_lower_bound_per_asof_date"] == 30_247
+    assert review["paging_basis"]["request_upper_bound_per_asof_date"] == 30_934
+    assert review["paging_basis"]["current_official_numeric_domain_authoritatively_complete_for_reference_date"] is True
+    assert review["paging_basis"]["history_window_date_effective_numeric_enumeration_ready"] is False
     daily = next(item for item in review["scenarios"] if item["name"] == "DAILY")
-    assert daily["request_lower_bound"] == 7_497_141
-    assert daily["request_upper_bound"] == 7_668_204
+    assert daily["request_lower_bound"] == 7_531_503
+    assert daily["request_upper_bound"] == 7_702_566
     assert daily["approved_for_production"] is False
     assert review["scope"]["production_episode_reconstruction_enabled"] is False

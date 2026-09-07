@@ -120,7 +120,11 @@
     "bounded_episode_reconstruction": "provenance/bounded_episode_reconstruction.json",
     "bounded_episode_reconstruction_status": "IMPLEMENTED_SYNTHETIC_VALIDATED_PRODUCTION_DISABLED",
     "history_observation_strategy": "provenance/history_observation_strategy.json",
-    "history_observation_strategy_status": "COST_BOUNDED_NO_CADENCE_APPROVED",
-    "goal": "keep the verified aggregate candidate local while resolving redistribution; bounded episode tooling is available, but authoritative authority-domain verification and an explicit observation-cadence decision are required before nationwide production reconstruction"
+    "history_observation_strategy_status": "DATE_EFFECTIVE_AUTHORITY_SEMANTICS_PENDING_COST_BOUNDED_NO_CADENCE_APPROVED",
+    "authority_domain_reference": "provenance/authority_domain_reference.json",
+    "authority_domain_reference_status": "CURRENT_244_AND_DELETED_32_INGESTED_DATE_EFFECTIVE_HISTORY_SEMANTICS_PENDING",
+    "redistribution_clarification_plan": "provenance/redistribution_clarification_plan.json",
+    "redistribution_clarification_status": "PREPARED_WRITTEN_RESPONSE_PENDING",
+    "goal": "keep verified local artifacts private; verify date-effective history filtering for the exact deleted authority codes, obtain written source-specific redistribution clarification, and make an explicit observation-cadence decision before nationwide production reconstruction"
   }
 }

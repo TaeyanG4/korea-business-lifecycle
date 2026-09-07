@@ -7,6 +7,7 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `privacy_review.json`: observed v1 field inventory plus the still-blocked public allowlist decision.
 - `observed_snapshot_summary.json`: privacy-safe aggregate findings from the three acquired current snapshots; no row-level source values.
 - `history_review.json`: official authenticated history-query contract and remaining execution/completeness blockers.
+- `authority_domain_reference.json`: time-scoped authority-domain evidence: the January manual's documented 245 count, the latest official attachment's exact 244 current numeric codes plus 16 `_ALL` aggregate tokens, and the exact 32 deleted numeric change-reference codes; Jan–Sep date-effective history-filter semantics remain pending.
 - `reverse_transition_probe_plan.json`: the fixed six-snapshot follow-up plan for the two observed `03->01` cases.
 - `reverse_transition_findings.json`: aggregate-only confirmation of the two source-state reversals and the rejection of irreversible terminal-closure semantics.
 - `grain_decision.json`: frozen v1 parent/lifecycle row-grain decision, canonical-schema freeze state, full-snapshot-validated PERMIT transformer gate, and explicitly rejected alternatives.
@@ -23,7 +24,8 @@ This directory stores small, reviewable evidence metadata only. It must not cont
 - `public_permit_aggregate_plan.json`: local-only privacy-minimized aggregate candidate contract with k=10 cell suppression, now marked completed-pass-verified.
 - `public_permit_aggregate.json`: aggregate-only evidence for the verified local candidate: 3,010,802 source rows scanned, 67,267 released candidate cells, 229,928 suppressed cells, no row-level values tracked; publication remains unapproved and redistribution unresolved.
 - `bounded_episode_reconstruction.json`: deterministic bounded sparse-observation episode-reconstruction contract; synthetic validation is complete while nationwide production reconstruction remains disabled.
-- `history_observation_strategy.json`: network-free current-scale request bounds for endpoints/monthly/weekly/daily nationwide as-of scenarios; no cadence is approved and authority-domain completeness remains unresolved.
+- `history_observation_strategy.json`: network-free current-scale request planning for the conservative 276-code current-plus-deleted candidate union; no cadence is approved and deleted-code date-effective history-filter semantics remain unresolved.
+- `redistribution_clarification_plan.json`: source-specific written questions and official contact-route evidence required before any raw or aggregate external redistribution gate can change.
 - `release_readiness.json`: current product-track gate summary derived from the evidence above; local PERMIT, WGS84, and the privacy-minimized aggregate candidate are completed/verified, while lifecycle/publication gates remain separately blocked.
 - `feasibility.json`: current project gate state.
 

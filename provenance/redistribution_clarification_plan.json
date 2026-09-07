@@ -1,0 +1,62 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "WRITTEN_SOURCE_SPECIFIC_REDISTRIBUTION_CLARIFICATION_REQUIRED",
+  "scope": {
+    "sources": ["general_restaurants", "rest_cafes", "bakeries"],
+    "official_detail_pages": [
+      "https://www.data.go.kr/data/15154916/openapi.do",
+      "https://www.data.go.kr/data/15154921/openapi.do",
+      "https://www.data.go.kr/data/15155252/openapi.do"
+    ],
+    "portal_policy": "https://www.data.go.kr/ugs/selectPortalPolicyView.do"
+  },
+  "confirmed_evidence": {
+    "all_three_official_pages_show_no_restriction_on_permitted_use": true,
+    "source_use_metadata_gate": "PASS_METADATA_CONFIRMED",
+    "portal_policy_requires_permission_if_third_party_rights_are_included": true,
+    "source_specific_third_party_rights_absence_confirmed": false,
+    "raw_external_mirror_permission_confirmed": false,
+    "privacy_minimized_aggregate_external_redistribution_confirmed": false
+  },
+  "questions_for_written_clarification": [
+    "Does the '이용허락범위 제한 없음' label on these three APIs authorize redistribution or mirroring of the row-level source records on a third-party platform such as Kaggle?",
+    "Do these three datasets contain any third-party rights for which separate permission is required under the Public Data Portal policy?",
+    "If row-level mirroring is not authorized or is conditional, may a derived aggregate that excludes direct/linkable row fields and precise coordinates and suppresses cells below k=10 be redistributed externally?",
+    "What attribution, notice, KOGL designation, or other conditions must accompany any permitted external redistribution?"
+  ],
+  "prepared_inquiry": {
+    "status": "READY_NOT_SENT",
+    "language": "ko",
+    "subject_ko": "행정안전부 지방행정 인허가정보 3종 외부 재배포 가능 여부 서면 확인 요청",
+    "source_identifiers": [
+      "15154916 일반음식점",
+      "15154921 휴게음식점",
+      "15155252 제과점영업"
+    ],
+    "body_ko": "안녕하세요. 공공데이터포털에서 제공되는 행정안전부 지방행정 인허가정보 OpenAPI 3종(15154916 일반음식점, 15154921 휴게음식점, 15155252 제과점영업)의 외부 재배포 가능 범위를 서면으로 확인하고자 합니다. 세 상세페이지에는 '이용허락범위 제한 없음'이 표시되어 있습니다. (1) 이 표시가 Kaggle 등 제3자 플랫폼에 원천 row-level record를 재배포 또는 mirror하는 것까지 허용하는지, (2) 세 데이터에 별도 이용허락이 필요한 제3자 권리가 포함되어 있는지, (3) row-level 재배포가 불가하거나 조건부인 경우 사업장명·주소·관리번호·정밀좌표 등 직접/연결 가능 필드를 제외하고 날짜를 연도로 축약하며 k=10 미만 셀을 suppress한 derived aggregate를 외부 재배포할 수 있는지, (4) 허용 시 필요한 출처표시·공공누리 유형·notice 또는 기타 조건이 무엇인지 회신 부탁드립니다. k=10은 기술적 최소화 기준일 뿐 법적 개인정보 안전 보장으로 주장하지 않습니다. 가능하면 위 3종에 대한 source-specific 판단을 서면으로 회신 부탁드립니다.",
+    "requested_response_form": "WRITTEN_SOURCE_SPECIFIC",
+    "technical_minimization_is_not_claimed_as_legal_privacy_guarantee": true
+  },
+  "execution": {
+    "outreach_performed": false,
+    "written_response_received": false,
+    "publication_status_changed": false,
+    "recommended_channel": "official data.go.kr inquiry or the responsible MOIS data-management channel",
+    "automatic_email_or_message_sending_enabled": false
+  },
+  "contact_routes": {
+    "data_go_kr_inquiry_page": "https://www.data.go.kr/bbs/faq/selectFaqList.do",
+    "portal_support_email": "opendata_help@nia.or.kr",
+    "portal_support_phone": "1566-0025",
+    "provider": "행정안전부",
+    "management_department": "지역디지털협력과",
+    "note": "The portal support route can direct the question; source-specific written clarification should be archived before any gate changes."
+  },
+  "gates": {
+    "raw_external_mirror": "UNRESOLVED_THIRD_PARTY_RIGHTS_CLARIFICATION",
+    "privacy_minimized_aggregate_redistribution": "UNRESOLVED",
+    "row_level_public_release": "BLOCKED",
+    "aggregate_publication": "BLOCKED"
+  },
+  "next_gate": "obtain and archive a source-specific written clarification before changing any external redistribution or publication gate"
+}

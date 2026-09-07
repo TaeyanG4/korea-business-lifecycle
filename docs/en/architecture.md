@@ -41,13 +41,20 @@ official source evidence
       ↳ LEFT / INTERVAL / RIGHT censoring preserved
       ↳ nationwide production reconstruction: disabled
   → nationwide history observation cost gate
-      ↳ current-scale requests/as-of date: 30,109..30,796
-      ↳ daily 249-date scenario: 7,497,141..7,668,204 requests
-      ↳ authoritative authority domain: unresolved
+      ↳ current-scale 276-code candidate-union planning: 30,247..30,934 requests/as-of date
+      ↳ daily 249-date scenario: 7,531,503..7,702,566 requests
+      ↳ latest current numeric authority domain: exact 244 ingested/validated
+      ↳ exact deleted numeric change-reference codes: 32; current+deleted candidate union: 276
+      ↳ current observed authority count: 230; all are a subset of current 244
+      ↳ deleted-code date-effective history-filter semantics: unresolved
       ↳ approved cadence: none
+  → redistribution clarification gate
+      ↳ source-use metadata: PASS
+      ↳ written source-specific questions/contact routes: prepared
+      ↳ raw/aggregate external redistribution: unresolved
 ```
 
-The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified. A bounded sparse-observation episode reconstructor and a network-free nationwide history cost model are implemented as well. Current scale alone implies more than 30,000 requests per as-of date and roughly 7.50–7.67 million requests for the 249-date daily scenario. Because the authoritative authority domain and cadence are not approved, production reconstruction and public release remain blocked.
+The v1 parent and WGS84 sidecar are both production-materialized and independently verified across 3,010,802 rows. The publication-safety local aggregate candidate is also fully scanned and independently verified. A bounded sparse-observation episode reconstructor and a network-free nationwide history cost model are implemented as well. The latest July official attachment is now parsed reproducibly: the exact 244 current numeric authority codes and 32 deleted numeric change-reference codes are ingested, hashed, and validated. Production Jan–Sep enumeration remains blocked because the pre-change `BASE_DATE` filtering semantics of deleted codes are not yet established by official documentation or execution. Source-use metadata is PASS, but external redistribution remains blocked until source-specific written clarification is archived.
 
 ## Data storage rule
 

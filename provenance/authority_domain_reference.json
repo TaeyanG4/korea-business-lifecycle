@@ -1,0 +1,1257 @@
+{
+  "checked_at": "2026-09-07",
+  "cost_model_policy": {
+    "candidate_union_is_proven_date_effective_query_domain": false,
+    "current_official_numeric_authority_count": 244,
+    "current_plus_deleted_candidate_union_may_be_used_for_cost_planning": true,
+    "current_scale_candidate_union_absent_authority_count_per_source": 46,
+    "current_unobserved_authorities_may_be_assumed_historically_empty": false,
+    "current_unobserved_official_authority_probe_count_per_source": 14,
+    "deleted_authorities_may_be_assumed_unqueryable_for_prechange_dates": false,
+    "deleted_numeric_authority_count": 32,
+    "history_window_candidate_numeric_union_count": 276,
+    "manual_245_count_may_be_used_as_exact_current_query_domain": false,
+    "observed_nonempty_authority_count": 230
+  },
+  "decision": "CURRENT_244_AND_DELETED_32_AUTHORITY_CODES_INGESTED_HISTORY_WINDOW_SEMANTICS_PENDING",
+  "field": "OPN_ATMY_GRP_CD",
+  "history_window_change_reference": {
+    "change_effective_date": "2026-07-01",
+    "current_plus_deleted_candidate_union_count": 276,
+    "current_plus_deleted_candidate_union_sha256": "7c02762025310f754813dd54278033302d8d865dcf2ea1bb34e555563ce209a4",
+    "date_effective_history_authority_filter_semantics_verified": false,
+    "deleted_codes_confirmed_queryable_for_prechange_base_dates": false,
+    "deleted_numeric_authority_count": 32,
+    "exact_deleted_numeric_authority_codes_ingested": true,
+    "manual_245_count_reconciled_to_exact_window_domain": false,
+    "window_end": "2026-09-06",
+    "window_start": "2026-01-01"
+  },
+  "implementation": {
+    "current_snapshot_comparison_dependency": "pyarrow==21.0.0",
+    "module": "src/korea_business_lifecycle/authority_domain.py",
+    "network_required_after_reference_download": false,
+    "reference_parser_dependency": "openpyxl==3.1.5",
+    "reference_workbook_git_tracked": false,
+    "row_level_business_values_emitted": false,
+    "script": "scripts/authority_domain_reference.py"
+  },
+  "ingestion_gate": {
+    "aggregate_all_tokens_used_for_row_enumeration": false,
+    "current_official_numeric_domain_authoritatively_complete_for_reference_date": true,
+    "current_reference_numeric_enumeration_ready": true,
+    "exact_current_official_numeric_code_list_hash_recorded": true,
+    "exact_current_official_numeric_code_list_validated": true,
+    "exact_current_official_numeric_code_values_ingested": true,
+    "exact_deleted_numeric_code_values_ingested": true,
+    "future_reference_refresh_required": true,
+    "history_window_date_effective_numeric_enumeration_ready": false
+  },
+  "next_gate": "verify date-effective history filtering for deleted authority codes, then make an explicit history cadence/request-budget decision; current-reference enumeration itself is ready",
+  "observed_current_snapshots": {
+    "current_official_numeric_not_observed": [
+      {
+        "code": "6110000",
+        "name": "서울특별시"
+      },
+      {
+        "code": "6130000",
+        "name": "전남광주통합특별시"
+      },
+      {
+        "code": "6260000",
+        "name": "부산광역시"
+      },
+      {
+        "code": "6270000",
+        "name": "대구광역시"
+      },
+      {
+        "code": "6280000",
+        "name": "인천광역시"
+      },
+      {
+        "code": "6300000",
+        "name": "대전광역시"
+      },
+      {
+        "code": "6310000",
+        "name": "울산광역시"
+      },
+      {
+        "code": "6410000",
+        "name": "경기도"
+      },
+      {
+        "code": "6430000",
+        "name": "충청북도"
+      },
+      {
+        "code": "6440000",
+        "name": "충청남도"
+      },
+      {
+        "code": "6470000",
+        "name": "경상북도"
+      },
+      {
+        "code": "6480000",
+        "name": "경상남도"
+      },
+      {
+        "code": "6500000",
+        "name": "제주도"
+      },
+      {
+        "code": "6540000",
+        "name": "전북특별자치도"
+      }
+    ],
+    "current_official_numeric_not_observed_count": 14,
+    "distinct_authority_count": 230,
+    "format": "7-digit numeric strings",
+    "identical_across_three_v1_sources": true,
+    "observed_is_subset_of_current_official_numeric_domain": true,
+    "observed_new_numeric_code_count": 31,
+    "observed_not_in_current_official_numeric_domain_count": 0,
+    "permit_build_id": "permit-v1-9908225df465e2ff"
+  },
+  "official_current_numeric_authorities": [
+    {
+      "code": "3000000",
+      "name": "서울종로구"
+    },
+    {
+      "code": "3010000",
+      "name": "서울중구"
+    },
+    {
+      "code": "3020000",
+      "name": "서울용산구"
+    },
+    {
+      "code": "3030000",
+      "name": "서울성동구"
+    },
+    {
+      "code": "3040000",
+      "name": "서울광진구"
+    },
+    {
+      "code": "3050000",
+      "name": "서울동대문구"
+    },
+    {
+      "code": "3060000",
+      "name": "서울중랑구"
+    },
+    {
+      "code": "3070000",
+      "name": "서울성북구"
+    },
+    {
+      "code": "3080000",
+      "name": "서울강북구"
+    },
+    {
+      "code": "3090000",
+      "name": "서울도봉구"
+    },
+    {
+      "code": "3100000",
+      "name": "서울노원구"
+    },
+    {
+      "code": "3110000",
+      "name": "서울은평구"
+    },
+    {
+      "code": "3120000",
+      "name": "서울서대문구"
+    },
+    {
+      "code": "3130000",
+      "name": "서울마포구"
+    },
+    {
+      "code": "3140000",
+      "name": "서울양천구"
+    },
+    {
+      "code": "3150000",
+      "name": "서울강서구"
+    },
+    {
+      "code": "3160000",
+      "name": "서울구로구"
+    },
+    {
+      "code": "3170000",
+      "name": "서울금천구"
+    },
+    {
+      "code": "3180000",
+      "name": "서울영등포구"
+    },
+    {
+      "code": "3190000",
+      "name": "서울동작구"
+    },
+    {
+      "code": "3200000",
+      "name": "서울관악구"
+    },
+    {
+      "code": "3210000",
+      "name": "서울서초구"
+    },
+    {
+      "code": "3220000",
+      "name": "서울강남구"
+    },
+    {
+      "code": "3230000",
+      "name": "서울송파구"
+    },
+    {
+      "code": "3240000",
+      "name": "서울강동구"
+    },
+    {
+      "code": "3250000",
+      "name": "부산중구"
+    },
+    {
+      "code": "3260000",
+      "name": "부산서구"
+    },
+    {
+      "code": "3270000",
+      "name": "부산동구"
+    },
+    {
+      "code": "3280000",
+      "name": "부산영도구"
+    },
+    {
+      "code": "3290000",
+      "name": "부산부산진구"
+    },
+    {
+      "code": "3300000",
+      "name": "부산동래구"
+    },
+    {
+      "code": "3310000",
+      "name": "부산남구"
+    },
+    {
+      "code": "3320000",
+      "name": "부산북구"
+    },
+    {
+      "code": "3330000",
+      "name": "부산해운대구"
+    },
+    {
+      "code": "3340000",
+      "name": "부산사하구"
+    },
+    {
+      "code": "3350000",
+      "name": "부산금정구"
+    },
+    {
+      "code": "3360000",
+      "name": "부산강서구"
+    },
+    {
+      "code": "3370000",
+      "name": "부산연제구"
+    },
+    {
+      "code": "3380000",
+      "name": "부산수영구"
+    },
+    {
+      "code": "3390000",
+      "name": "부산사상구"
+    },
+    {
+      "code": "3400000",
+      "name": "부산기장군"
+    },
+    {
+      "code": "3410000",
+      "name": "대구중구"
+    },
+    {
+      "code": "3420000",
+      "name": "대구동구"
+    },
+    {
+      "code": "3430000",
+      "name": "대구서구"
+    },
+    {
+      "code": "3440000",
+      "name": "대구남구"
+    },
+    {
+      "code": "3450000",
+      "name": "대구북구"
+    },
+    {
+      "code": "3460000",
+      "name": "대구수성구"
+    },
+    {
+      "code": "3470000",
+      "name": "대구달서구"
+    },
+    {
+      "code": "3480000",
+      "name": "대구달성군"
+    },
+    {
+      "code": "3491000",
+      "name": "인천영종구"
+    },
+    {
+      "code": "3501000",
+      "name": "인천제물포구"
+    },
+    {
+      "code": "3510500",
+      "name": "인천미추홀구"
+    },
+    {
+      "code": "3520000",
+      "name": "인천연수구"
+    },
+    {
+      "code": "3530000",
+      "name": "인천남동구"
+    },
+    {
+      "code": "3540000",
+      "name": "인천부평구"
+    },
+    {
+      "code": "3550000",
+      "name": "인천계양구"
+    },
+    {
+      "code": "3561000",
+      "name": "인천서해구"
+    },
+    {
+      "code": "3565000",
+      "name": "인천검단구"
+    },
+    {
+      "code": "3570000",
+      "name": "인천강화군"
+    },
+    {
+      "code": "3580000",
+      "name": "인천옹진군"
+    },
+    {
+      "code": "3640000",
+      "name": "대전동구"
+    },
+    {
+      "code": "3650000",
+      "name": "대전중구"
+    },
+    {
+      "code": "3660000",
+      "name": "대전서구"
+    },
+    {
+      "code": "3670000",
+      "name": "대전유성구"
+    },
+    {
+      "code": "3680000",
+      "name": "대전대덕구"
+    },
+    {
+      "code": "3690000",
+      "name": "울산중구"
+    },
+    {
+      "code": "3700000",
+      "name": "울산남구"
+    },
+    {
+      "code": "3710000",
+      "name": "울산동구"
+    },
+    {
+      "code": "3720000",
+      "name": "울산북구"
+    },
+    {
+      "code": "3730000",
+      "name": "울산울주군"
+    },
+    {
+      "code": "3740000",
+      "name": "경기수원시"
+    },
+    {
+      "code": "3780000",
+      "name": "경기성남시"
+    },
+    {
+      "code": "3820000",
+      "name": "경기의정부시"
+    },
+    {
+      "code": "3830000",
+      "name": "경기안양시"
+    },
+    {
+      "code": "3860000",
+      "name": "경기부천시"
+    },
+    {
+      "code": "3900000",
+      "name": "경기광명시"
+    },
+    {
+      "code": "3910000",
+      "name": "경기평택시"
+    },
+    {
+      "code": "3920000",
+      "name": "경기동두천시"
+    },
+    {
+      "code": "3930000",
+      "name": "경기안산시"
+    },
+    {
+      "code": "3940000",
+      "name": "경기고양시"
+    },
+    {
+      "code": "3970000",
+      "name": "경기과천시"
+    },
+    {
+      "code": "3980000",
+      "name": "경기구리시"
+    },
+    {
+      "code": "3990000",
+      "name": "경기남양주시"
+    },
+    {
+      "code": "4000000",
+      "name": "경기오산시"
+    },
+    {
+      "code": "4010000",
+      "name": "경기시흥시"
+    },
+    {
+      "code": "4020000",
+      "name": "경기군포시"
+    },
+    {
+      "code": "4030000",
+      "name": "경기의왕시"
+    },
+    {
+      "code": "4040000",
+      "name": "경기하남시"
+    },
+    {
+      "code": "4050000",
+      "name": "경기용인시"
+    },
+    {
+      "code": "4060000",
+      "name": "경기파주시"
+    },
+    {
+      "code": "4070000",
+      "name": "경기이천시"
+    },
+    {
+      "code": "4080000",
+      "name": "경기안성시"
+    },
+    {
+      "code": "4090000",
+      "name": "경기김포시"
+    },
+    {
+      "code": "4140000",
+      "name": "경기연천군"
+    },
+    {
+      "code": "4160000",
+      "name": "경기가평군"
+    },
+    {
+      "code": "4170000",
+      "name": "경기양평군"
+    },
+    {
+      "code": "4181000",
+      "name": "강원춘천시"
+    },
+    {
+      "code": "4191000",
+      "name": "강원원주시"
+    },
+    {
+      "code": "4201000",
+      "name": "강원강릉시"
+    },
+    {
+      "code": "4211000",
+      "name": "강원동해시"
+    },
+    {
+      "code": "4221000",
+      "name": "강원태백시"
+    },
+    {
+      "code": "4231000",
+      "name": "강원속초시"
+    },
+    {
+      "code": "4241000",
+      "name": "강원삼척시"
+    },
+    {
+      "code": "4251000",
+      "name": "강원홍천군"
+    },
+    {
+      "code": "4261000",
+      "name": "강원횡성군"
+    },
+    {
+      "code": "4271000",
+      "name": "강원영월군"
+    },
+    {
+      "code": "4281000",
+      "name": "강원평창군"
+    },
+    {
+      "code": "4291000",
+      "name": "강원정선군"
+    },
+    {
+      "code": "4301000",
+      "name": "강원철원군"
+    },
+    {
+      "code": "4311000",
+      "name": "강원화천군"
+    },
+    {
+      "code": "4321000",
+      "name": "강원양구군"
+    },
+    {
+      "code": "4331000",
+      "name": "강원인제군"
+    },
+    {
+      "code": "4341000",
+      "name": "강원고성군"
+    },
+    {
+      "code": "4351000",
+      "name": "강원양양군"
+    },
+    {
+      "code": "4390000",
+      "name": "충북충주시"
+    },
+    {
+      "code": "4400000",
+      "name": "충북제천시"
+    },
+    {
+      "code": "4420000",
+      "name": "충북보은군"
+    },
+    {
+      "code": "4430000",
+      "name": "충북옥천군"
+    },
+    {
+      "code": "4440000",
+      "name": "충북영동군"
+    },
+    {
+      "code": "4450000",
+      "name": "충북진천군"
+    },
+    {
+      "code": "4460000",
+      "name": "충북괴산군"
+    },
+    {
+      "code": "4470000",
+      "name": "충북음성군"
+    },
+    {
+      "code": "4480000",
+      "name": "충북단양군"
+    },
+    {
+      "code": "4490000",
+      "name": "충남천안시"
+    },
+    {
+      "code": "4500000",
+      "name": "충남공주시"
+    },
+    {
+      "code": "4510000",
+      "name": "충남보령시"
+    },
+    {
+      "code": "4520000",
+      "name": "충남아산시"
+    },
+    {
+      "code": "4530000",
+      "name": "충남서산시"
+    },
+    {
+      "code": "4540000",
+      "name": "충남논산시"
+    },
+    {
+      "code": "4550000",
+      "name": "충남금산군"
+    },
+    {
+      "code": "4570000",
+      "name": "충남부여군"
+    },
+    {
+      "code": "4580000",
+      "name": "충남서천군"
+    },
+    {
+      "code": "4590000",
+      "name": "충남청양군"
+    },
+    {
+      "code": "4600000",
+      "name": "충남홍성군"
+    },
+    {
+      "code": "4610000",
+      "name": "충남예산군"
+    },
+    {
+      "code": "4620000",
+      "name": "충남태안군"
+    },
+    {
+      "code": "4641000",
+      "name": "전북전주시"
+    },
+    {
+      "code": "4671000",
+      "name": "전북군산시"
+    },
+    {
+      "code": "4681000",
+      "name": "전북익산시"
+    },
+    {
+      "code": "4691000",
+      "name": "전북정읍시"
+    },
+    {
+      "code": "4701000",
+      "name": "전북남원시"
+    },
+    {
+      "code": "4711000",
+      "name": "전북김제시"
+    },
+    {
+      "code": "4721000",
+      "name": "전북완주군"
+    },
+    {
+      "code": "4731000",
+      "name": "전북진안군"
+    },
+    {
+      "code": "4741000",
+      "name": "전북무주군"
+    },
+    {
+      "code": "4751000",
+      "name": "전북장수군"
+    },
+    {
+      "code": "4761000",
+      "name": "전북임실군"
+    },
+    {
+      "code": "4771000",
+      "name": "전북순창군"
+    },
+    {
+      "code": "4781000",
+      "name": "전북고창군"
+    },
+    {
+      "code": "4791000",
+      "name": "전북부안군"
+    },
+    {
+      "code": "5020000",
+      "name": "경북포항시"
+    },
+    {
+      "code": "5050000",
+      "name": "경북경주시"
+    },
+    {
+      "code": "5060000",
+      "name": "경북김천시"
+    },
+    {
+      "code": "5070000",
+      "name": "경북안동시"
+    },
+    {
+      "code": "5080000",
+      "name": "경북구미시"
+    },
+    {
+      "code": "5090000",
+      "name": "경북영주시"
+    },
+    {
+      "code": "5100000",
+      "name": "경북영천시"
+    },
+    {
+      "code": "5110000",
+      "name": "경북상주시"
+    },
+    {
+      "code": "5120000",
+      "name": "경북문경시"
+    },
+    {
+      "code": "5130000",
+      "name": "경북경산시"
+    },
+    {
+      "code": "5141000",
+      "name": "대구군위군"
+    },
+    {
+      "code": "5150000",
+      "name": "경북의성군"
+    },
+    {
+      "code": "5160000",
+      "name": "경북청송군"
+    },
+    {
+      "code": "5170000",
+      "name": "경북영양군"
+    },
+    {
+      "code": "5180000",
+      "name": "경북영덕군"
+    },
+    {
+      "code": "5190000",
+      "name": "경북청도군"
+    },
+    {
+      "code": "5200000",
+      "name": "경북고령군"
+    },
+    {
+      "code": "5210000",
+      "name": "경북성주군"
+    },
+    {
+      "code": "5220000",
+      "name": "경북칠곡군"
+    },
+    {
+      "code": "5230000",
+      "name": "경북예천군"
+    },
+    {
+      "code": "5240000",
+      "name": "경북봉화군"
+    },
+    {
+      "code": "5250000",
+      "name": "경북울진군"
+    },
+    {
+      "code": "5260000",
+      "name": "경북울릉군"
+    },
+    {
+      "code": "5310000",
+      "name": "경남진주시"
+    },
+    {
+      "code": "5330000",
+      "name": "경남통영시"
+    },
+    {
+      "code": "5340000",
+      "name": "경남사천시"
+    },
+    {
+      "code": "5350000",
+      "name": "경남김해시"
+    },
+    {
+      "code": "5360000",
+      "name": "경남밀양시"
+    },
+    {
+      "code": "5370000",
+      "name": "경남거제시"
+    },
+    {
+      "code": "5380000",
+      "name": "경남양산시"
+    },
+    {
+      "code": "5390000",
+      "name": "경남의령군"
+    },
+    {
+      "code": "5400000",
+      "name": "경남함안군"
+    },
+    {
+      "code": "5410000",
+      "name": "경남창녕군"
+    },
+    {
+      "code": "5420000",
+      "name": "경남고성군"
+    },
+    {
+      "code": "5430000",
+      "name": "경남남해군"
+    },
+    {
+      "code": "5440000",
+      "name": "경남하동군"
+    },
+    {
+      "code": "5450000",
+      "name": "경남산청군"
+    },
+    {
+      "code": "5460000",
+      "name": "경남함양군"
+    },
+    {
+      "code": "5470000",
+      "name": "경남거창군"
+    },
+    {
+      "code": "5480000",
+      "name": "경남합천군"
+    },
+    {
+      "code": "5530000",
+      "name": "경기화성시"
+    },
+    {
+      "code": "5540000",
+      "name": "경기광주시"
+    },
+    {
+      "code": "5570000",
+      "name": "충북증평군"
+    },
+    {
+      "code": "5580000",
+      "name": "충남계룡시"
+    },
+    {
+      "code": "5590000",
+      "name": "경기양주시"
+    },
+    {
+      "code": "5600000",
+      "name": "경기포천시"
+    },
+    {
+      "code": "5670000",
+      "name": "경남창원시"
+    },
+    {
+      "code": "5680000",
+      "name": "충남당진시"
+    },
+    {
+      "code": "5690000",
+      "name": "세종특별자치시"
+    },
+    {
+      "code": "5700000",
+      "name": "경기여주시"
+    },
+    {
+      "code": "5710000",
+      "name": "충북청주시"
+    },
+    {
+      "code": "5780000",
+      "name": "전남광주목포시"
+    },
+    {
+      "code": "5785000",
+      "name": "전남광주여수시"
+    },
+    {
+      "code": "5790000",
+      "name": "전남광주순천시"
+    },
+    {
+      "code": "5795000",
+      "name": "전남광주나주시"
+    },
+    {
+      "code": "5800000",
+      "name": "전남광주광양시"
+    },
+    {
+      "code": "5805000",
+      "name": "전남광주동구"
+    },
+    {
+      "code": "5810000",
+      "name": "전남광주서구"
+    },
+    {
+      "code": "5815000",
+      "name": "전남광주남구"
+    },
+    {
+      "code": "5820000",
+      "name": "전남광주북구"
+    },
+    {
+      "code": "5825000",
+      "name": "전남광주광산구"
+    },
+    {
+      "code": "5830000",
+      "name": "전남광주담양군"
+    },
+    {
+      "code": "5835000",
+      "name": "전남광주곡성군"
+    },
+    {
+      "code": "5840000",
+      "name": "전남광주구례군"
+    },
+    {
+      "code": "5845000",
+      "name": "전남광주고흥군"
+    },
+    {
+      "code": "5850000",
+      "name": "전남광주보성군"
+    },
+    {
+      "code": "5855000",
+      "name": "전남광주화순군"
+    },
+    {
+      "code": "5860000",
+      "name": "전남광주장흥군"
+    },
+    {
+      "code": "5865000",
+      "name": "전남광주강진군"
+    },
+    {
+      "code": "5870000",
+      "name": "전남광주해남군"
+    },
+    {
+      "code": "5875000",
+      "name": "전남광주영암군"
+    },
+    {
+      "code": "5880000",
+      "name": "전남광주무안군"
+    },
+    {
+      "code": "5885000",
+      "name": "전남광주함평군"
+    },
+    {
+      "code": "5890000",
+      "name": "전남광주영광군"
+    },
+    {
+      "code": "5895000",
+      "name": "전남광주장성군"
+    },
+    {
+      "code": "5900000",
+      "name": "전남광주완도군"
+    },
+    {
+      "code": "5905000",
+      "name": "전남광주진도군"
+    },
+    {
+      "code": "5910000",
+      "name": "전남광주신안군"
+    },
+    {
+      "code": "6110000",
+      "name": "서울특별시"
+    },
+    {
+      "code": "6130000",
+      "name": "전남광주통합특별시"
+    },
+    {
+      "code": "6260000",
+      "name": "부산광역시"
+    },
+    {
+      "code": "6270000",
+      "name": "대구광역시"
+    },
+    {
+      "code": "6280000",
+      "name": "인천광역시"
+    },
+    {
+      "code": "6300000",
+      "name": "대전광역시"
+    },
+    {
+      "code": "6310000",
+      "name": "울산광역시"
+    },
+    {
+      "code": "6410000",
+      "name": "경기도"
+    },
+    {
+      "code": "6430000",
+      "name": "충청북도"
+    },
+    {
+      "code": "6440000",
+      "name": "충청남도"
+    },
+    {
+      "code": "6470000",
+      "name": "경상북도"
+    },
+    {
+      "code": "6480000",
+      "name": "경상남도"
+    },
+    {
+      "code": "6500000",
+      "name": "제주도"
+    },
+    {
+      "code": "6510000",
+      "name": "제주제주시"
+    },
+    {
+      "code": "6520000",
+      "name": "제주서귀포시"
+    },
+    {
+      "code": "6540000",
+      "name": "전북특별자치도"
+    }
+  ],
+  "official_deleted_numeric_authorities": [
+    {
+      "code": "3490000",
+      "name": "인천중구"
+    },
+    {
+      "code": "3500000",
+      "name": "인천동구"
+    },
+    {
+      "code": "3560000",
+      "name": "인천서구"
+    },
+    {
+      "code": "3590000",
+      "name": "광주동구"
+    },
+    {
+      "code": "3600000",
+      "name": "광주서구"
+    },
+    {
+      "code": "3610000",
+      "name": "광주남구"
+    },
+    {
+      "code": "3620000",
+      "name": "광주북구"
+    },
+    {
+      "code": "3630000",
+      "name": "광주광산구"
+    },
+    {
+      "code": "4800000",
+      "name": "전남목포시"
+    },
+    {
+      "code": "4810000",
+      "name": "전남여수시"
+    },
+    {
+      "code": "4820000",
+      "name": "전남순천시"
+    },
+    {
+      "code": "4830000",
+      "name": "전남나주시"
+    },
+    {
+      "code": "4840000",
+      "name": "전남광양시"
+    },
+    {
+      "code": "4850000",
+      "name": "전남담양군"
+    },
+    {
+      "code": "4860000",
+      "name": "전남곡성군"
+    },
+    {
+      "code": "4870000",
+      "name": "전남구례군"
+    },
+    {
+      "code": "4880000",
+      "name": "전남고흥군"
+    },
+    {
+      "code": "4890000",
+      "name": "전남보성군"
+    },
+    {
+      "code": "4900000",
+      "name": "전남화순군"
+    },
+    {
+      "code": "4910000",
+      "name": "전남장흥군"
+    },
+    {
+      "code": "4920000",
+      "name": "전남강진군"
+    },
+    {
+      "code": "4930000",
+      "name": "전남해남군"
+    },
+    {
+      "code": "4940000",
+      "name": "전남영암군"
+    },
+    {
+      "code": "4950000",
+      "name": "전남무안군"
+    },
+    {
+      "code": "4960000",
+      "name": "전남함평군"
+    },
+    {
+      "code": "4970000",
+      "name": "전남영광군"
+    },
+    {
+      "code": "4980000",
+      "name": "전남장성군"
+    },
+    {
+      "code": "4990000",
+      "name": "전남완도군"
+    },
+    {
+      "code": "5000000",
+      "name": "전남진도군"
+    },
+    {
+      "code": "5010000",
+      "name": "전남신안군"
+    },
+    {
+      "code": "6290000",
+      "name": "광주광역시"
+    },
+    {
+      "code": "6460000",
+      "name": "전라남도"
+    }
+  ],
+  "official_reference": {
+    "active_aggregate_token_count": 16,
+    "active_numeric_code_count": 244,
+    "active_row_count": 260,
+    "attachment_filename": "개방자치단체코드_영업상태코드_행정체제개편반영_20260702.xlsx",
+    "attachment_sha256": "d032ff4bd63148238a8066afb7b62f96770d8a063bd6c632d4f7617e9cc407f8",
+    "change_effective_date": "2026-07-01",
+    "current_numeric_authority_list_sha256": "a666c5cb432c439f687064e3046ec2e9a84d2de708dfbe80817330e60b76ddad",
+    "deleted_aggregate_token_count": 2,
+    "deleted_numeric_authority_list_sha256": "4ebc3d7d7ca0b28528eaa1a236b6039211afb2dda7b9f7ac2619de75425de2fa",
+    "deleted_numeric_code_count": 32,
+    "deleted_row_count": 34,
+    "manual_claim_count": 245,
+    "manual_claim_is_current_enumeration_count": false,
+    "manual_count_differs_from_current_numeric_reference": true,
+    "manual_reference_filename": "개방자치단체코드.xlsx",
+    "manual_url": "https://www.localdata.go.kr/images/egovframework/portal/manual_260106.pdf",
+    "new_aggregate_token_count": 1,
+    "new_numeric_code_count": 32,
+    "new_row_count": 33,
+    "notice_date": "2026-07-03",
+    "notice_url": "https://www.data.go.kr/bbs/ntc/selectNotice.do?originId=NOTICE_0000000004824",
+    "sheet_name": "1. 개방자치단체코드",
+    "v1_detail_pages": [
+      "https://www.data.go.kr/data/15154916/openapi.do",
+      "https://www.data.go.kr/data/15154921/openapi.do",
+      "https://www.data.go.kr/data/15155252/openapi.do"
+    ],
+    "v1_detail_reference_filename": "개방자치단체코드_영업상태코드.xlsx"
+  }
+}

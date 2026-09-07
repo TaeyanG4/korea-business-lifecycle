@@ -14,7 +14,7 @@
 
 ## 공개 접근과 재배포
 
-2026-09-07 재검수에서 일반음식점·휴게음식점·제과점영업의 공식 행정안전부 OpenAPI 상세 페이지 모두 `이용허락범위 제한 없음`을 다시 확인했습니다. 따라서 **source-use metadata gate는 PASS**로 분리합니다. 다만 각 상세 페이지의 라이선스 섹션에서 제3자 권리 존재 여부를 별도로 확정하는 문구는 확인하지 못했고, 공공데이터포털 이용정책은 제3자 권리가 포함된 경우 권리자의 정당한 이용허락 확보를 요구합니다. 문구의 부재를 제3자 권리 부재의 증명으로 사용하지 않으므로 raw Kaggle mirror와 privacy-minimized aggregate의 외부 재배포 gate는 계속 `UNRESOLVED`입니다.
+2026-09-07 재검수에서 일반음식점·휴게음식점·제과점영업의 공식 행정안전부 OpenAPI 상세 페이지 모두 `이용허락범위 제한 없음`을 다시 확인했습니다. 따라서 **source-use metadata gate는 PASS**로 분리합니다. 다만 각 상세 페이지의 라이선스 섹션에서 제3자 권리 존재 여부를 별도로 확정하는 문구는 확인하지 못했고, 공공데이터포털 이용정책은 제3자 권리가 포함된 경우 권리자의 정당한 이용허락 확보를 요구합니다. 문구의 부재를 제3자 권리 부재의 증명으로 사용하지 않으므로 raw Kaggle mirror와 privacy-minimized aggregate의 외부 재배포 gate는 계속 `UNRESOLVED`입니다. 질문과 공식 문의 경로는 [Redistribution Written-Clarification Gate](redistribution-clarification.md)에 고정했으며 자동 문의/메일 전송은 하지 않습니다.
 
 ## 개인정보
 
