@@ -14,10 +14,14 @@ The current Ministry of the Interior and Safety inventory contains **195** local
 |---|---|---|---:|---|---|
 | General restaurants | `15154916` | file `15045016`, standard `15096283` | 2,129,830 | CSV, REST JSON+XML | EPSG:5174 |
 | Rest cafes | `15154921` | file `15006730` | 561,397 | CSV, REST JSON+XML | EPSG:5174 |
-| Bakeries | `15155252` | standard `15155672` + official bulk URL | 60,302 | CSV, REST JSON+XML | EPSG:5174 |
+| Bakeries | `15155252` | file `15006688`, standard `15155672` | 60,302 | CSV, REST JSON+XML | EPSG:5174 |
 
-For bakeries, standard page `15155672` currently exposes the bulk URL and file metadata. A separate direct numeric file-dataset ID was not established in this reconnaissance and remains `UNKNOWN` rather than inferred.
+The current nationwide bakery file dataset is identified by the Public Data Portal as `15006688`. The separate standard-dataset identifier is `15155672`.
 
 The official descriptions identify permit date, operating status, business name, and address concepts. Primary key, closure semantics, history retention lower bound/completeness, and X/Y field meanings remain unresolved.
 
 See `provenance/source_registry.json` for the machine-readable registry.
+
+## License-decision state
+
+All three API pages display `이용허락범위 제한 없음` (no restriction on the displayed permitted-use scope). The Public Data Portal policy separately states that legitimate permission is required when third-party rights are included. The project therefore keeps public accessibility and Kaggle raw redistribution as separate gates; `provenance/license_review.json` remains `UNRESOLVED` for Kaggle redistribution.

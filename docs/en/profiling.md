@@ -1,0 +1,32 @@
+# Bounded Source Profiling
+
+The first Phase 2 implementation does not download source data. It reproducibly inspects an **already approved CSV artifact stored outside Git**.
+
+## Safety rules
+
+- `KBL_DATA_ROOT` must resolve outside the Git repository.
+- The input artifact must live under `KBL_DATA_ROOT`.
+- Raw bytes are never modified.
+- SHA-256 is recorded.
+- UTF-8 / CP949 / EUC-KR candidates are tested with strict decoding; replacement decoding is prohibited.
+- CSV rows with a field count different from the header fail profiling.
+- Cardinality memory is capped per column. Once capped, the profiler reports a lower bound rather than pretending the count is exact.
+- Raw `top_values` are emitted only for status-like columns, not for address, business-name, or identifier-like fields.
+- Name-based column hints are profiling candidates, not semantic conclusions.
+
+## Example
+
+```bash
+python scripts/profile_artifact.py general_restaurants \
+  "$KBL_DATA_ROOT/raw/general_restaurants/source.csv"
+```
+
+Outputs are written outside Git:
+
+```text
+$KBL_DATA_ROOT/staging/profiles/<source_key>/<sha256>/
+  manifest.json
+  profile.json
+```
+
+The profile contains schema, row counts, null/blank counts, bounded cardinality, date parseability, numeric ranges, and name-based status/address/identifier/coordinate hints. It does not declare a primary key or lifecycle semantics.

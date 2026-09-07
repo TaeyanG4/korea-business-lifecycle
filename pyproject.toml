@@ -21,7 +21,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra --disable-socket"
+addopts = "-ra --disable-socket --basetemp=../.pytest-kbl"
 markers = [
   "real_data: opt-in tests requiring locally stored approved source artifacts",
 ]

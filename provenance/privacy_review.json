@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "PUBLIC_FIELD_ALLOWLIST_BLOCKED_PENDING_SCHEMA_PROFILE",
+  "scope": ["general_restaurants", "rest_cafes", "bakeries"],
+  "known_from_official_descriptions": [
+    {
+      "concept": "business_name",
+      "source_label": "사업장명",
+      "publication_status": "REVIEW",
+      "reason": "Public upstream availability does not by itself establish necessity or appropriateness for nationwide republication."
+    },
+    {
+      "concept": "premise_address",
+      "source_label": "소재지주소",
+      "publication_status": "REVIEW",
+      "reason": "Exact premise addresses may create aggregation/privacy risk and must be evaluated against analytical necessity."
+    }
+  ],
+  "required_schema_screen": [
+    "representative_or_proprietor_name",
+    "telephone_or_mobile",
+    "email",
+    "exact_road_or_lot_address",
+    "residential_looking_address",
+    "precise_coordinates",
+    "free_text",
+    "permit_holder_identifier"
+  ],
+  "field_inventory_complete": false,
+  "public_allowlist_approved": false,
+  "rule": "No row-level public build may be generated until an observed national schema is profiled and every intended public field is explicitly allowlisted."
+}

@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-09-07",
+  "decision": "KAGGLE_REDISTRIBUTION_UNRESOLVED",
+  "portal_policy": {
+    "url": "https://www.data.go.kr/ugs/selectPortalPolicyView.do",
+    "evidence": [
+      "The portal states that public data containing third-party rights requires legitimate permission from the rights holder.",
+      "The portal states that public data containing copyrighted works should display the applicable KOGL type."
+    ],
+    "interpretation": "Public download/API accessibility is not by itself a Kaggle raw-redistribution grant."
+  },
+  "categories": [
+    {
+      "source_key": "general_restaurants",
+      "official_license_label": "이용허락범위 제한 없음",
+      "official_license_url": "https://www.data.go.kr/data/15154916/openapi.do",
+      "public_accessibility": "CONFIRMED",
+      "kaggle_redistribution": "UNRESOLVED",
+      "third_party_rights": "REVIEW_REQUIRED",
+      "privacy_review": "REVIEW_REQUIRED"
+    },
+    {
+      "source_key": "rest_cafes",
+      "official_license_label": "이용허락범위 제한 없음",
+      "official_license_url": "https://www.data.go.kr/data/15154921/openapi.do",
+      "public_accessibility": "CONFIRMED",
+      "kaggle_redistribution": "UNRESOLVED",
+      "third_party_rights": "REVIEW_REQUIRED",
+      "privacy_review": "REVIEW_REQUIRED"
+    },
+    {
+      "source_key": "bakeries",
+      "official_license_label": "이용허락범위 제한 없음",
+      "official_license_url": "https://www.data.go.kr/data/15155252/openapi.do",
+      "public_accessibility": "CONFIRMED",
+      "kaggle_redistribution": "UNRESOLVED",
+      "third_party_rights": "REVIEW_REQUIRED",
+      "privacy_review": "REVIEW_REQUIRED"
+    }
+  ],
+  "publication_rule": "No raw or row-level Kaggle publication until every included source is PERMITTED or PERMITTED_WITH_CONDITIONS and the public field allowlist passes privacy review."
+}

@@ -40,6 +40,7 @@ pytest -v
 - [v1 데이터 소스](docs/ko/data-sources.md)
 - [데이터/개인정보 정책](docs/ko/data-policy.md)
 - [재현성](docs/ko/reproducibility.md)
+- [Bounded source profiling](docs/ko/profiling.md)
 - [첫 실행 feasibility](docs/ko/first-milestone.md)
 
 ## 라이선스

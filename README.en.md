@@ -40,6 +40,7 @@ Tests are offline and use synthetic fixtures only.
 - [v1 data sources](docs/en/data-sources.md)
 - [Data/privacy policy](docs/en/data-policy.md)
 - [Reproducibility](docs/en/reproducibility.md)
+- [Bounded source profiling](docs/en/profiling.md)
 - [First-milestone feasibility](docs/en/first-milestone.md)
 
 ## License
