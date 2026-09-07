@@ -208,6 +208,10 @@ def test_permit_parent_materialization_plan_is_local_private_and_not_executed() 
     assert plan["scope"]["public_row_level_release_approved"] is False
     assert plan["writer_contract"]["library_version"] == "21.0.0"
     assert plan["writer_contract"]["compression"] == "ZSTD"
+    assert plan["implementation"]["verification_module"] == (
+        "src/korea_business_lifecycle/canonical_materialization_verify.py"
+    )
+    assert plan["implementation"]["verification_script"] == "scripts/verify_permit_parent_build.py"
 
 
 def test_bounded_geospatial_axis_probe_prefers_source_x_easting_without_enabling_wgs84() -> None:

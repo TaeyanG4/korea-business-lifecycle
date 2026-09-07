@@ -43,8 +43,10 @@
   "implementation": {
     "module": "src/korea_business_lifecycle/canonical_materialization.py",
     "script": "scripts/materialize_permit_parent.py",
+    "verification_module": "src/korea_business_lifecycle/canonical_materialization_verify.py",
+    "verification_script": "scripts/verify_permit_parent_build.py",
     "default_mode": "PLAN_ONLY",
     "execute_flag": "--execute"
   },
-  "next_gate": "after implementation and bounded tests pass, user executes the long local production materialization and returns the local manifest summary for verification"
+  "next_gate": "user executes the long local production materialization, then runs the independent immutable-build verifier before the tracked materialization gate is marked complete"
 }

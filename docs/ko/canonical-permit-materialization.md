@@ -72,10 +72,18 @@ python scripts/materialize_permit_parent.py --execute \
 
 hashing/write 진행률은 stderr에 표시되고, 최종 local manifest summary JSON만 stdout으로 출력됩니다.
 
+생성 완료 후에는 materializer와 독립된 verifier로 manifest, Parquet SHA-256, row count, frozen Arrow schema, ZSTD compression, full-dry-run quality aggregate 일치를 다시 확인합니다.
+
+```bash
+python scripts/verify_permit_parent_build.py
+```
+
+verifier도 row-level 값을 출력하지 않고 aggregate 검증 결과만 출력합니다.
+
 ## 공개 경계
 
 생성되는 Parquet에는 사업장명, 주소, source 좌표 등 row-level 정보가 있으므로 **local private runtime artifact**입니다. public/Kaggle row-level allowlist와 redistribution gate가 통과하기 전에는 배포하지 않습니다.
 
 ## 현재 상태
 
-코드, synthetic Parquet round-trip, schema/압축 검증, immutable-output 보호, hash mismatch 실패 원자성 테스트, 실제 artifact plan 검증까지 완료했습니다. 실제 3,010,802행 production materialization은 아직 실행하지 않았습니다.
+코드, synthetic Parquet round-trip, schema/압축 검증, immutable-output 보호, hash mismatch 실패 원자성 테스트, 독립 사후 verifier, 실제 artifact plan 검증까지 완료했습니다. 실제 3,010,802행 production materialization은 아직 실행하지 않았습니다.

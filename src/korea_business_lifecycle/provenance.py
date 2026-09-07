@@ -698,6 +698,22 @@ def validate_permit_parent_materialization_plan(plan: dict[str, Any]) -> list[st
     ):
         if safety.get(key) is not False:
             errors.append(f"materialization safety control {key} must remain disabled")
+
+    implementation = plan.get("implementation", {})
+    if implementation.get("module") != "src/korea_business_lifecycle/canonical_materialization.py":
+        errors.append("materialization module reference changed")
+    if implementation.get("script") != "scripts/materialize_permit_parent.py":
+        errors.append("materialization script reference changed")
+    if implementation.get("verification_module") != (
+        "src/korea_business_lifecycle/canonical_materialization_verify.py"
+    ):
+        errors.append("materialization verification module reference changed")
+    if implementation.get("verification_script") != "scripts/verify_permit_parent_build.py":
+        errors.append("materialization verification script reference changed")
+    if implementation.get("default_mode") != "PLAN_ONLY":
+        errors.append("materialization default mode changed")
+    if implementation.get("execute_flag") != "--execute":
+        errors.append("materialization execute flag changed")
     return errors
 
 

@@ -72,10 +72,18 @@ python scripts/materialize_permit_parent.py --execute \
 
 Hash/write progress is emitted on stderr; only the final local manifest summary JSON is written to stdout.
 
+After the build completes, an independent verifier rechecks the manifest, Parquet SHA-256 values, row counts, frozen Arrow schema, ZSTD compression, and full-dry-run quality aggregates separately from the materializer.
+
+```bash
+python scripts/verify_permit_parent_build.py
+```
+
+The verifier also emits only aggregate verification results and never row-level values.
+
 ## Publication boundary
 
 The generated Parquet files contain row-level business names, addresses, and source coordinates, so they are **local private runtime artifacts**. They must not be distributed until the public/Kaggle row allowlist and redistribution gates pass separately.
 
 ## Current state
 
-Implementation, synthetic Parquet round trips, schema/compression validation, immutable-output protection, hash-mismatch atomic failure tests, and real-artifact plan validation are complete. The 3,010,802-row production materialization has not yet been executed.
+Implementation, synthetic Parquet round trips, schema/compression validation, immutable-output protection, hash-mismatch atomic failure tests, the independent post-build verifier, and real-artifact plan validation are complete. The 3,010,802-row production materialization has not yet been executed.
