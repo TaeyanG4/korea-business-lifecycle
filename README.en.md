@@ -21,12 +21,26 @@ A reproducible public-data project built from Korean Ministry of the Interior an
 - Canonical `PERMIT`: **3,010,802 rows / 165,176,236 bytes (~165.2 MB)**, production materialized and independently verified
 - WGS84 sidecar: **3,010,802 rows / 50,805,782 bytes (~50.8 MB)**, 2,811,767 coordinates transformed and independently verified
 - Main Kaggle product: canonical `PERMIT` **3,010,802 rows × 26 columns**, **1,398,626,208-byte CSV + 165,170,021-byte Parquet**, `PUBLIC / READY`
-- Kaggle usability maintenance: structured Overview, cover, tags, official source provenance, monthly update cadence, Quickstart v6, and Regional Market Map v1 are public and complete. All **8/8** Version 2 file descriptions and **56/56** Data Explorer column descriptions are live and exact-match the approved release metadata; the current web UI shows **10.00/10** Usability with no Pending Actions
+- Kaggle usability maintenance: structured Overview, cover, tags, official source provenance, monthly update cadence, and **three public notebooks** are maintained: Quickstart v6, Regional Market Map v1, and Business ML v1. All **8/8** Version 2 file descriptions and **56/56** Data Explorer column descriptions are live and exact-match the approved release metadata; the current web UI shows **10.00/10** Usability with no Pending Actions
 - Business ML: public v1 walk-forward notebook forecasts next-3-month administrative permit counts by `authority_code × source_key`. Mean WAPE improves from **21.13% seasonal naive to 18.72% (11.4% relative)**; the top 10% of ranked markets capture **43.9%** of actual permit volume, and the 2026Q2 out-of-time Tweedie WAPE is **17.83%**. The 2026-08 bakery drop and partial 2026-09 month are excluded from evaluation as freshness anomalies
 - Historical public aggregate: **67,267 cells** with k=10 suppression. The separate Kaggle dataset was retired after row-level publication to avoid duplicate products; the derived artifact and historical provenance remain preserved
 - Nationwide history/episodes: **not required for v1 completion**; runner, schema, and verifier remain available as optional tooling
 
 All real and derived runtime data stays under Git-ignored `data/local/`.
+
+## Business ML analysis
+
+The public [Korea F&B Permit Demand Forecasting with XGBoost](https://www.kaggle.com/code/taeyangg4/korea-f-b-permit-demand-forecasting-with-xgboost) notebook forecasts **next-three-month administrative permit counts** for each `authority_code × source_key`. Because the public release is a current snapshot rather than a monthly market-state panel, the model does not use present-day status or closure fields as historical features. It uses only time-safe features reconstructed from `permit_date`, including lags, rolling windows, YoY change, momentum, and seasonality.
+
+- Validation: 9 quarterly leakage-safe walk-forward folds
+- Models: seasonal naive, XGBoost Poisson, squared-error, Tweedie, and a seasonal/ML blend
+- Best mean performance: **18.72% WAPE** for `seasonal_ml_blend`, a **11.4% relative improvement** over the **21.13%** seasonal-naive baseline
+- Market ranking: the top 10% of predicted markets capture **43.9%** of subsequent permit volume, a **4.39× lift** over random 10% targeting
+- Latest out-of-time test: Tweedie reaches **17.83% WAPE** for 2026Q2 using information available through 2026-03
+- Uncertainty: the empirical 90% interval achieves **88.8%** coverage on the final holdout
+- Freshness guard: the 2026-08 bakery drop and partial 2026-09 month are excluded from evaluation
+
+The output is an **administrative permit-demand signal**, not a direct forecast of physical opening dates, sales, or business survival. It is a Business ML prototype for territory prioritization in POS/payments, food distribution, kitchen equipment, franchise expansion, and commercial real estate.
 
 ## Public release scope
 

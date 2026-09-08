@@ -21,12 +21,26 @@
 - Canonical `PERMIT`: **3,010,802행 / 165,176,236 bytes (~165.2 MB)**, production materialization 및 독립 검증 완료
 - WGS84 sidecar: **3,010,802행 / 50,805,782 bytes (~50.8 MB)**, 2,811,767건 좌표 변환, 독립 검증 완료
 - Kaggle 본체: canonical `PERMIT` **3,010,802행 × 26컬럼**, **CSV 1,398,626,208 bytes + Parquet 165,170,021 bytes**, `PUBLIC / READY`
-- Kaggle usability 관리: 구조화 Overview, cover, tags, 공식 source provenance, 월간 update cadence, Quickstart v6와 Regional Market Map v1 공개까지 완료. Version 2 Data Explorer의 파일 설명 **8/8**과 컬럼 설명 **56/56**이 승인된 release metadata와 exact match로 live 저장됐고, 현재 웹 UI Usability는 **10.00/10**이며 Pending Actions는 없음
+- Kaggle usability 관리: 구조화 Overview, cover, tags, 공식 source provenance, 월간 update cadence, Quickstart v6, Regional Market Map v1, Business ML v1까지 **공개 Notebook 3개**를 운영 중. Version 2 Data Explorer의 파일 설명 **8/8**과 컬럼 설명 **56/56**이 승인된 release metadata와 exact match로 live 저장됐고, 현재 웹 UI Usability는 **10.00/10**이며 Pending Actions는 없음
 - Business ML: `authority_code × source_key`별 향후 3개월 신규 행정 인허가 수를 예측하는 walk-forward Notebook v1 공개 완료. Seasonal naive 대비 평균 WAPE **21.13% → 18.72% (11.4% 개선)**, 상위 10% 시장은 실제 permit의 **43.9%**를 포착했으며 2026Q2 out-of-time Tweedie WAPE는 **17.83%**. 2026-08 제과점 급락과 2026-09 partial month는 freshness 이상으로 모델 평가에서 제외
 - 과거 공개 aggregate: **67,267 cells**, k=10 suppression 적용. Row-level 공개 후 중복 Kaggle 제품을 줄이기 위해 별도 dataset은 삭제했으며 로컬 파생물과 과거 provenance만 보존
 - 전국 history/episode: **v1 완료조건이 아님**. runner, schema, verifier는 optional 분석 도구로 유지
 
 실데이터와 derived runtime artifact는 모두 Git-ignored `data/local/` 아래에만 저장합니다.
+
+## Business ML 분석
+
+공개 [Korea F&B Permit Demand Forecasting with XGBoost](https://www.kaggle.com/code/taeyangg4/korea-f-b-permit-demand-forecasting-with-xgboost) Notebook은 `authority_code × source_key`별 **향후 3개월 신규 행정 인허가 건수**를 예측합니다. 현재 공개본이 monthly market snapshot이 아니라 current snapshot이므로, 과거 시점에 알 수 없었던 현재 status/closure 정보를 feature로 쓰지 않고 `permit_date`에서 재구성한 lag·rolling·YoY·momentum과 계절 feature만 사용합니다.
+
+- 검증: 9개 quarterly leakage-safe walk-forward fold
+- 비교: seasonal naive, XGBoost Poisson, squared-error, Tweedie, seasonal/ML blend
+- 최고 평균 성능: WAPE **18.72%** (`seasonal_ml_blend`), seasonal naive **21.13%** 대비 **11.4% 상대 개선**
+- 영업지역 ranking: 예측 상위 10% 시장이 실제 향후 permit volume의 **43.9%**를 포착, 무작위 10% 대비 **4.39× lift**
+- 최신 out-of-time 검증: 2026-03까지의 정보로 2026Q2를 예측했을 때 Tweedie WAPE **17.83%**
+- 불확실성: empirical 90% interval의 최종 holdout coverage **88.8%**
+- freshness guard: 2026-08 제과점 급락과 2026-09 partial month는 평가에서 제외
+
+이 결과는 **행정 인허가 수요 신호**이며 실제 개업일, 매출, 생존확률을 직접 예측하는 모델로 해석하지 않습니다. POS·결제·식자재·주방장비·프랜차이즈·상업용 부동산의 지역 우선순위 선정에 사용할 수 있는 Business ML prototype입니다.
 
 ## 공개 범위
 
