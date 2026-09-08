@@ -14,12 +14,15 @@
 
 **Regional Market Notebook** — [South Korea Food-Service Market Map](https://www.kaggle.com/code/taeyangg4/south-korea-food-service-market-map)
 
+**Business ML Notebook** — [Korea F&B Permit Demand Forecasting with XGBoost](https://www.kaggle.com/code/taeyangg4/korea-f-b-permit-demand-forecasting-with-xgboost)
+
 - 대상: 일반음식점, 휴게음식점, 제과점영업
 - 원본 current CSV: **3,010,802행 / 926,587,446 bytes (~926.6 MB)** 수집·검증 완료
 - Canonical `PERMIT`: **3,010,802행 / 165,176,236 bytes (~165.2 MB)**, production materialization 및 독립 검증 완료
 - WGS84 sidecar: **3,010,802행 / 50,805,782 bytes (~50.8 MB)**, 2,811,767건 좌표 변환, 독립 검증 완료
 - Kaggle 본체: canonical `PERMIT` **3,010,802행 × 26컬럼**, **CSV 1,398,626,208 bytes + Parquet 165,170,021 bytes**, `PUBLIC / READY`
 - Kaggle usability 관리: 구조화 Overview, cover, tags, 공식 source provenance, 월간 update cadence, Quickstart v6와 Regional Market Map v1 공개까지 완료. Version 2 Data Explorer의 파일 설명 **8/8**과 컬럼 설명 **56/56**이 승인된 release metadata와 exact match로 live 저장됐고, 현재 웹 UI Usability는 **10.00/10**이며 Pending Actions는 없음
+- Business ML: `authority_code × source_key`별 향후 3개월 신규 행정 인허가 수를 예측하는 walk-forward Notebook v1 공개 완료. Seasonal naive 대비 평균 WAPE **21.13% → 18.72% (11.4% 개선)**, 상위 10% 시장은 실제 permit의 **43.9%**를 포착했으며 2026Q2 out-of-time Tweedie WAPE는 **17.83%**. 2026-08 제과점 급락과 2026-09 partial month는 freshness 이상으로 모델 평가에서 제외
 - 과거 공개 aggregate: **67,267 cells**, k=10 suppression 적용. Row-level 공개 후 중복 Kaggle 제품을 줄이기 위해 별도 dataset은 삭제했으며 로컬 파생물과 과거 provenance만 보존
 - 전국 history/episode: **v1 완료조건이 아님**. runner, schema, verifier는 optional 분석 도구로 유지
 

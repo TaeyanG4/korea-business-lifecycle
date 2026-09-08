@@ -477,13 +477,37 @@ def compute_release_readiness() -> dict[str, Any]:
                 "regional_market_notebook_local_full_row_execution_verified": kaggle_maintenance_v2[
                     "regional_market_notebook"
                 ]["local_full_row_execution_verified"],
+                "permit_demand_forecast_notebook_status": kaggle_maintenance_v2["permit_demand_forecast_notebook"][
+                    "status"
+                ],
+                "permit_demand_forecast_notebook_ref": kaggle_maintenance_v2["permit_demand_forecast_notebook"][
+                    "ref"
+                ],
+                "permit_demand_forecast_notebook_version": kaggle_maintenance_v2["permit_demand_forecast_notebook"][
+                    "successful_version"
+                ],
+                "permit_demand_forecast_local_full_row_execution_verified": kaggle_maintenance_v2[
+                    "permit_demand_forecast_notebook"
+                ]["local_full_row_execution_verified"],
+                "permit_demand_forecast_walk_forward_folds": kaggle_maintenance_v2["permit_demand_forecast_notebook"][
+                    "walk_forward_folds"
+                ],
+                "permit_demand_forecast_best_average_model": kaggle_maintenance_v2["permit_demand_forecast_notebook"][
+                    "best_average_model"
+                ],
+                "permit_demand_forecast_best_average_wape": kaggle_maintenance_v2["permit_demand_forecast_notebook"][
+                    "best_average_wape"
+                ],
+                "permit_demand_forecast_top10_market_capture": kaggle_maintenance_v2[
+                    "permit_demand_forecast_notebook"
+                ]["top10_market_capture"],
                 "monthly_maintenance_cadence": kaggle_maintenance_v2["monthly_operations"]["cadence"],
                 "monthly_version_notes_required": "RECORD_VERSION_NOTES"
                 in kaggle_maintenance_v2["monthly_operations"]["required_checks"],
             },
         },
         "next_long_local_actions": [],
-        "next_product_action": "maintain the single 3,010,802-row canonical current-snapshot dataset on the monthly cadence: refresh and verify source/package evidence, recheck Version 2 Usability 10.00 and both public notebooks, and record Version Notes; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
+        "next_product_action": "maintain the single 3,010,802-row canonical current-snapshot dataset on the monthly cadence: refresh and verify source/package evidence, recheck Version 2 Usability 10.00 and all three public notebooks including the permit-demand ML analysis, and record Version Notes; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
         "hard_blocks": [
             "do not add WGS84 columns to the frozen 26-column PERMIT parent; use a separately versioned local enrichment",
             "if optional production lifecycle episodes are materialized, require all 7320 approved monthly history snapshot tasks complete uniquely; status 05 remains unmapped",

@@ -184,5 +184,12 @@ def test_local_parent_and_wgs84_enrichment_are_verified_while_publication_stays_
     assert readiness["tracks"]["public_kaggle"]["regional_market_notebook_status"] == "COMPLETE"
     assert readiness["tracks"]["public_kaggle"]["regional_market_notebook_version"] == 1
     assert readiness["tracks"]["public_kaggle"]["regional_market_notebook_local_full_row_execution_verified"] is True
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_notebook_status"] == "COMPLETE"
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_notebook_version"] == 1
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_local_full_row_execution_verified"] is True
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_walk_forward_folds"] == 9
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_best_average_model"] == "seasonal_ml_blend"
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_best_average_wape"] == pytest.approx(0.187175)
+    assert readiness["tracks"]["public_kaggle"]["permit_demand_forecast_top10_market_capture"] == pytest.approx(0.439379)
     assert readiness["tracks"]["public_kaggle"]["monthly_maintenance_cadence"] == "MONTHLY"
     assert readiness["tracks"]["public_kaggle"]["monthly_version_notes_required"] is True

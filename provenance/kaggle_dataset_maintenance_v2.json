@@ -145,6 +145,29 @@
     "status": "COMPLETE",
     "successful_version": 6
   },
+  "permit_demand_forecast_notebook": {
+    "best_average_model": "seasonal_ml_blend",
+    "best_average_wape": 0.187175,
+    "business_target": "NEXT_3_MONTH_ADMINISTRATIVE_PERMIT_COUNT_BY_AUTHORITY_AND_SOURCE",
+    "empirical_final_holdout_interval_coverage": 0.888,
+    "final_holdout": "2026Q2_FORECAST_FROM_2026_03",
+    "final_holdout_seasonal_naive_wape": 0.19248,
+    "final_holdout_tweedie_wape": 0.178324,
+    "freshness_exclusions": [
+      "2026-08_BAKERIES_SHARP_DROP",
+      "2026-09_PARTIAL_MONTH"
+    ],
+    "local_full_row_execution_verified": true,
+    "public": true,
+    "ref": "taeyangg4/korea-f-b-permit-demand-forecasting-with-xgboost",
+    "relative_wape_improvement_vs_seasonal": 0.1141,
+    "seasonal_naive_average_wape": 0.211279,
+    "status": "COMPLETE",
+    "successful_version": 1,
+    "top10_lift_vs_random": 4.3938,
+    "top10_market_capture": 0.439379,
+    "walk_forward_folds": 9
+  },
   "preserves_initial_row_publication_evidence": true,
   "published_files": [
     {
@@ -214,6 +237,7 @@
     "kaggle_status_ready": true,
     "parquet_rows_verified_locally": true,
     "payload_hashes_verified_locally": true,
+    "permit_demand_forecast_notebook_completed": true,
     "public_visibility_verified": true,
     "published_file_names_match_package_contract": true,
     "published_file_sizes_match_verified_package": true,

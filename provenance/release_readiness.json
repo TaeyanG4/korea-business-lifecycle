@@ -9,7 +9,7 @@
     "do not declare MNG_NO an official source primary key"
   ],
   "next_long_local_actions": [],
-  "next_product_action": "maintain the single 3,010,802-row canonical current-snapshot dataset on the monthly cadence: refresh and verify source/package evidence, recheck Version 2 Usability 10.00 and both public notebooks, and record Version Notes; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
+  "next_product_action": "maintain the single 3,010,802-row canonical current-snapshot dataset on the monthly cadence: refresh and verify source/package evidence, recheck Version 2 Usability 10.00 and all three public notebooks including the permit-demand ML analysis, and record Version Notes; keep the historical aggregate retired, the WGS84 sidecar private unless separately approved, and history/episode reconstruction optional",
   "tracks": {
     "core_v1": {
       "nationwide_history_required": false,
@@ -168,6 +168,14 @@
       "metadata_sync_write_attempted": true,
       "monthly_maintenance_cadence": "MONTHLY",
       "monthly_version_notes_required": true,
+      "permit_demand_forecast_best_average_model": "seasonal_ml_blend",
+      "permit_demand_forecast_best_average_wape": 0.187175,
+      "permit_demand_forecast_local_full_row_execution_verified": true,
+      "permit_demand_forecast_notebook_ref": "taeyangg4/korea-f-b-permit-demand-forecasting-with-xgboost",
+      "permit_demand_forecast_notebook_status": "COMPLETE",
+      "permit_demand_forecast_notebook_version": 1,
+      "permit_demand_forecast_top10_market_capture": 0.439379,
+      "permit_demand_forecast_walk_forward_folds": 9,
       "precise_wgs84_public_build_allowed": false,
       "privacy_minimized_aggregate_candidate": "COMPLETED_VERIFIED_RELEASE_APPROVED",
       "project_requires_source_attribution": true,

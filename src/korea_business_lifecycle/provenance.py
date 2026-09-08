@@ -601,6 +601,30 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         if regional_notebook.get(key) != expected:
             errors.append(f"Kaggle regional market notebook field changed: {key}")
 
+    demand_notebook = review.get("permit_demand_forecast_notebook", {})
+    expected_demand_notebook = {
+        "ref": "taeyangg4/korea-f-b-permit-demand-forecasting-with-xgboost",
+        "public": True,
+        "status": "COMPLETE",
+        "successful_version": 1,
+        "local_full_row_execution_verified": True,
+        "business_target": "NEXT_3_MONTH_ADMINISTRATIVE_PERMIT_COUNT_BY_AUTHORITY_AND_SOURCE",
+        "walk_forward_folds": 9,
+        "best_average_model": "seasonal_ml_blend",
+        "seasonal_naive_average_wape": 0.211279,
+        "best_average_wape": 0.187175,
+        "relative_wape_improvement_vs_seasonal": 0.1141,
+        "top10_market_capture": 0.439379,
+        "top10_lift_vs_random": 4.3938,
+        "final_holdout": "2026Q2_FORECAST_FROM_2026_03",
+        "final_holdout_tweedie_wape": 0.178324,
+        "final_holdout_seasonal_naive_wape": 0.19248,
+        "empirical_final_holdout_interval_coverage": 0.888,
+        "freshness_exclusions": ["2026-08_BAKERIES_SHARP_DROP", "2026-09_PARTIAL_MONTH"],
+    }
+    if demand_notebook != expected_demand_notebook:
+        errors.append("Kaggle permit-demand ML notebook evidence changed")
+
     historical = review.get("historical_aggregate", {})
     if historical != {
         "dataset_id": "taeyangg4/korea-food-service-permit-aggregate",
@@ -646,6 +670,7 @@ def validate_kaggle_dataset_maintenance_v2(review: dict[str, Any]) -> list[str]:
         "payload_hashes_verified_locally",
         "quickstart_notebook_completed",
         "regional_market_notebook_completed",
+        "permit_demand_forecast_notebook_completed",
         "data_explorer_8_file_descriptions_verified",
         "data_explorer_56_column_descriptions_verified",
         "version_2_pending_actions_cleared",

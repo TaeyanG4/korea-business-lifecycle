@@ -450,6 +450,13 @@ def test_kaggle_current_snapshot_maintenance_v2_tracks_usability_10_completion()
     assert review["regional_market_notebook"]["status"] == "COMPLETE"
     assert review["regional_market_notebook"]["successful_version"] == 1
     assert review["regional_market_notebook"]["local_full_row_execution_verified"] is True
+    assert review["permit_demand_forecast_notebook"]["status"] == "COMPLETE"
+    assert review["permit_demand_forecast_notebook"]["successful_version"] == 1
+    assert review["permit_demand_forecast_notebook"]["local_full_row_execution_verified"] is True
+    assert review["permit_demand_forecast_notebook"]["walk_forward_folds"] == 9
+    assert review["permit_demand_forecast_notebook"]["best_average_model"] == "seasonal_ml_blend"
+    assert review["permit_demand_forecast_notebook"]["best_average_wape"] == pytest.approx(0.187175)
+    assert review["permit_demand_forecast_notebook"]["top10_market_capture"] == pytest.approx(0.439379)
     assert review["monthly_operations"]["cadence"] == "MONTHLY"
     assert "RECORD_VERSION_NOTES" in review["monthly_operations"]["required_checks"]
     assert review["monthly_operations"]["dataset_payload_rule"] == (
