@@ -1,0 +1,63 @@
+{
+  "build_directory": "H:\\dev\\kaggle-data\\korea-business-lifecycle\\data\\local\\canonical\\permit\\v1\\permit-v1-9908225df465e2ff",
+  "build_id": "permit-v1-9908225df465e2ff",
+  "episode_reconstruction_performed": false,
+  "manifest_verified": true,
+  "output_bytes_total": 165176236,
+  "parquet_hashes_verified": true,
+  "parquet_schemas_verified": true,
+  "permit_schema_sha256": "d826a18b4d0c8928eef76408a85fb4ba75d75289060ff45609f03e5306971ac5",
+  "public_row_level_release_approved": false,
+  "quality_aggregates_match_full_dry_run": true,
+  "results": [
+    {
+      "output_bytes": 122363398,
+      "output_sha256": "15f11071b2dc6453707387a8b7aef013f1f991748c3b108397ce9345a269de03",
+      "parquet_row_groups": 46,
+      "quality_aggregates_match_full_dry_run": true,
+      "rows": 2295369,
+      "schema_verified": true,
+      "source_key": "general_restaurants",
+      "status": "PASS",
+      "zstd_verified": true
+    },
+    {
+      "output_bytes": 38467652,
+      "output_sha256": "8ae5d99499ac7efd5924e717e448e4be87f85ffc3229f2a94bca6d208987deb3",
+      "parquet_row_groups": 13,
+      "quality_aggregates_match_full_dry_run": true,
+      "rows": 645952,
+      "schema_verified": true,
+      "source_key": "rest_cafes",
+      "status": "PASS",
+      "zstd_verified": true
+    },
+    {
+      "output_bytes": 4345186,
+      "output_sha256": "be558165f1e1235e4b6eded1866df3d871e6ae9c2b339428f9c36b95858dee89",
+      "parquet_row_groups": 2,
+      "quality_aggregates_match_full_dry_run": true,
+      "rows": 69481,
+      "schema_verified": true,
+      "source_key": "bakeries",
+      "status": "PASS",
+      "zstd_verified": true
+    }
+  ],
+  "row_level_values_returned": false,
+  "rows_verified_total": 3010802,
+  "source_count": 3,
+  "status": "PASS",
+  "wgs84_generated": false,
+  "writer_contract": {
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "pyarrow_version": "21.0.0",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000
+  },
+  "zstd_verified": true
+}

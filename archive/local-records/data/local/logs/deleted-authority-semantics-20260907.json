@@ -1,0 +1,2324 @@
+{
+  "assessment": {
+    "complete_four_date_pairs": 96,
+    "pairs_with_count_growth_20260101_to_20260630": 81,
+    "pairs_with_equal_counts_20260630_20260701_20260906": 96,
+    "pairs_with_positive_20260630_count": 90,
+    "result_rows": 384,
+    "row_level_values_emitted": false,
+    "source_authority_pairs": 96
+  },
+  "mode": "EXECUTED",
+  "num_rows_per_request": 1,
+  "planned_tasks": 384,
+  "request_delay_seconds": 0.2,
+  "requests_executed": 384,
+  "requests_per_task": 1,
+  "results": [
+    {
+      "authority_code": "3490000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 308
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 314
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 314
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 314
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 8940
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 9151
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 9151
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 9151
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 2339
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 2410
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 2410
+    },
+    {
+      "authority_code": "3490000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 2410
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2385
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2402
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2402
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2402
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 472
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 481
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 481
+    },
+    {
+      "authority_code": "3500000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 481
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 543
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 569
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 569
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 569
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 18209
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 18531
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 18531
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 18531
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 4329
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 4461
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 4461
+    },
+    {
+      "authority_code": "3560000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 4461
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 213
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 229
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 229
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 229
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 8545
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 8669
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 8669
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 8669
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 2359
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 2455
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 2455
+    },
+    {
+      "authority_code": "3590000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 2455
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 480
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 525
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 525
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 525
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 12553
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 12744
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 12744
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 12744
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 3580
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 3688
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 3688
+    },
+    {
+      "authority_code": "3600000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 3688
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 247
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 248
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 248
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 248
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 7440
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 7523
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 7523
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 7523
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 1968
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 2009
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 2009
+    },
+    {
+      "authority_code": "3610000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 2009
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 502
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 508
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 508
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 508
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 17267
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 17400
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 17400
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 17400
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 4265
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 4346
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 4346
+    },
+    {
+      "authority_code": "3620000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 4346
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 472
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 479
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 479
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 479
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 13645
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 13859
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 13859
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 13859
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 3774
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 3847
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 3847
+    },
+    {
+      "authority_code": "3630000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 3847
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 328
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 332
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 332
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 332
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 14494
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 14601
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 14601
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 14601
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 2815
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 2856
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 2856
+    },
+    {
+      "authority_code": "4800000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 2856
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 271
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 277
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 277
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 277
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 14109
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 14288
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 14288
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 14288
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 3239
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 3295
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 3295
+    },
+    {
+      "authority_code": "4810000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 3295
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 337
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 346
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 346
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 346
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 13007
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 13146
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 13146
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 13146
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 4297
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 4380
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 4380
+    },
+    {
+      "authority_code": "4820000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 4380
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 127
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 132
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 132
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 132
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 5084
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 5168
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 5168
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 5168
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 1105
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 1156
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 1156
+    },
+    {
+      "authority_code": "4830000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 1156
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 187
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 190
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 190
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 190
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 7370
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 7472
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 7472
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 7472
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 1911
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 1975
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 1975
+    },
+    {
+      "authority_code": "4840000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 1975
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 53
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 54
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 54
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 54
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2102
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2160
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2160
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2160
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 714
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 740
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 740
+    },
+    {
+      "authority_code": "4850000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 740
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 39
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 39
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 39
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 39
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1289
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1312
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1312
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1312
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 348
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 353
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 353
+    },
+    {
+      "authority_code": "4860000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 353
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 33
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 35
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 35
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 35
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1356
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1387
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1387
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1387
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 331
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 339
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 339
+    },
+    {
+      "authority_code": "4870000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 339
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 59
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 59
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 59
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 59
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2596
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2673
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2673
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2673
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 514
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 537
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 537
+    },
+    {
+      "authority_code": "4880000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 537
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 36
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 36
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 36
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 36
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1778
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1821
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1821
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1821
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 341
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 343
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 343
+    },
+    {
+      "authority_code": "4890000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 343
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 90
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 92
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 92
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 92
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2726
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2761
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2761
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2761
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 801
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 815
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 815
+    },
+    {
+      "authority_code": "4900000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 815
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1679
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1692
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1692
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1692
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 419
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 422
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 422
+    },
+    {
+      "authority_code": "4910000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 422
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 16
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 16
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 16
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 16
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1538
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1561
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1561
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1561
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 335
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 359
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 359
+    },
+    {
+      "authority_code": "4920000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 359
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 61
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 63
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 63
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 63
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2828
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2862
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2862
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2862
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 757
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 772
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 772
+    },
+    {
+      "authority_code": "4930000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 772
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 44
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 45
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2690
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2745
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2745
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2745
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 544
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 557
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 557
+    },
+    {
+      "authority_code": "4940000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 557
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 88
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 89
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 89
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 89
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 3308
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 3371
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 3371
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 3371
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 913
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 936
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 936
+    },
+    {
+      "authority_code": "4950000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 936
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 21
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 23
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 23
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 23
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1076
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1087
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1087
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1087
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 453
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 472
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 472
+    },
+    {
+      "authority_code": "4960000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 472
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 50
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 50
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 50
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 50
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1789
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1812
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1812
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1812
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 411
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 420
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 420
+    },
+    {
+      "authority_code": "4970000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 420
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 35
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 37
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 37
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 37
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1498
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1523
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1523
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1523
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 399
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 412
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 412
+    },
+    {
+      "authority_code": "4980000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 412
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 52
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 52
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 52
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 52
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2440
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2478
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2478
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2478
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 590
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 598
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 598
+    },
+    {
+      "authority_code": "4990000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 598
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 21
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 22
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 22
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 22
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 2221
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 2265
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 2265
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 2265
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 323
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 343
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 343
+    },
+    {
+      "authority_code": "5000000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 343
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 31
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 1347
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 1379
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 1379
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 1379
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 262
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 272
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 272
+    },
+    {
+      "authority_code": "5010000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 272
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6290000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260101",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260630",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260701",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260906",
+      "source_key": "bakeries",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260101",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260630",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260701",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260906",
+      "source_key": "general_restaurants",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260101",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260630",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260701",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    },
+    {
+      "authority_code": "6460000",
+      "base_date": "20260906",
+      "source_key": "rest_cafes",
+      "total_count": 0
+    }
+  ],
+  "row_level_values_emitted": false
+}

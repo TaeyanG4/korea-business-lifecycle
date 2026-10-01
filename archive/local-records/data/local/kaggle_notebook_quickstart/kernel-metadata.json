@@ -1,0 +1,16 @@
+{
+  "id": "taeyangg4/korea-food-service-permits-3m-row-quickstart",
+  "title": "Korea Food-Service Permits: 3M-Row Quickstart",
+  "code_file": "korea_food_service_permits_quickstart.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": false,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": ["taeyangg4/korea-food-service-permits"],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
+

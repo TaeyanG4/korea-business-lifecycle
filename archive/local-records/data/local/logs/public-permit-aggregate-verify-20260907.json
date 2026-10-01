@@ -1,0 +1,19 @@
+{
+  "aggregate_cells_released_candidate": 67267,
+  "aggregate_publication_approved": false,
+  "build_id": "permit-public-agg-v1-bedd874de6619bee",
+  "manifest_verified": true,
+  "minimum_cell_count": 10,
+  "output_bytes": 108019,
+  "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+  "parquet_hash_verified": true,
+  "parquet_schema_verified": true,
+  "redistribution_status": "UNRESOLVED",
+  "released_source_rows": 2383689,
+  "row_level_values_returned": false,
+  "rows_scanned": 3010802,
+  "status": "PASS",
+  "suppressed_source_rows": 627113,
+  "suppression_invariants_verified": true,
+  "zstd_verified": true
+}

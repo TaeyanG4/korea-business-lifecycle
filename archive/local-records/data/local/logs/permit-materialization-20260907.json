@@ -1,0 +1,95 @@
+{
+  "build_id": "permit-v1-9908225df465e2ff",
+  "episode_reconstruction_performed": false,
+  "full_dry_run_evidence": "provenance/permit_parent_full_dry_run.json",
+  "grain": "PERMIT",
+  "manifest_version": 1,
+  "output_directory": "H:\\dev\\kaggle-data\\korea-business-lifecycle\\data\\local\\canonical\\permit\\v1\\permit-v1-9908225df465e2ff",
+  "permit_schema_sha256": "d826a18b4d0c8928eef76408a85fb4ba75d75289060ff45609f03e5306971ac5",
+  "production_materialization_performed": true,
+  "public_row_level_release_approved": false,
+  "results": [
+    {
+      "closure_date_quality": {
+        "MISSING": 676350,
+        "VALID": 1619019
+      },
+      "input_artifact_bytes": 696584488,
+      "input_artifact_sha256": "0cfae3c716d5bc61b63832308897d15ca1d7f25f3547bc7b146f933bff2d6fd8",
+      "input_retrieval_id": "20260907T022234Z-0cfae3c716d5",
+      "null_source_coordinate_x": 160923,
+      "null_source_coordinate_y": 160923,
+      "output_bytes": 122363398,
+      "output_file": "general_restaurants.parquet",
+      "output_sha256": "15f11071b2dc6453707387a8b7aef013f1f991748c3b108397ce9345a269de03",
+      "parquet_row_groups": 46,
+      "permit_date_quality": {
+        "INVALID": 4,
+        "VALID": 2295365
+      },
+      "rows": 2295369,
+      "source_key": "general_restaurants",
+      "status": "PASS",
+      "uniqueness_validation": "REUSED_EXACT_FULL_DRY_RUN_FOR_IDENTICAL_SHA256"
+    },
+    {
+      "closure_date_quality": {
+        "MISSING": 198753,
+        "VALID": 447199
+      },
+      "input_artifact_bytes": 207347981,
+      "input_artifact_sha256": "64b884979e1533d0672ed11060b9c0438c5124e0f8b66d804bd1bae54afa3082",
+      "input_retrieval_id": "20260907T021951Z-64b884979e15",
+      "null_source_coordinate_x": 34150,
+      "null_source_coordinate_y": 34150,
+      "output_bytes": 38467652,
+      "output_file": "rest_cafes.parquet",
+      "output_sha256": "8ae5d99499ac7efd5924e717e448e4be87f85ffc3229f2a94bca6d208987deb3",
+      "parquet_row_groups": 13,
+      "permit_date_quality": {
+        "VALID": 645952
+      },
+      "rows": 645952,
+      "source_key": "rest_cafes",
+      "status": "PASS",
+      "uniqueness_validation": "REUSED_EXACT_FULL_DRY_RUN_FOR_IDENTICAL_SHA256"
+    },
+    {
+      "closure_date_quality": {
+        "MISSING": 20015,
+        "VALID": 49466
+      },
+      "input_artifact_bytes": 22654977,
+      "input_artifact_sha256": "32e93fdc827bf8bb8066acbeaecc02e458d2b920957407dd00651c87243879c3",
+      "input_retrieval_id": "20260907T021916Z-32e93fdc827b",
+      "null_source_coordinate_x": 3962,
+      "null_source_coordinate_y": 3962,
+      "output_bytes": 4345186,
+      "output_file": "bakeries.parquet",
+      "output_sha256": "be558165f1e1235e4b6eded1866df3d871e6ae9c2b339428f9c36b95858dee89",
+      "parquet_row_groups": 2,
+      "permit_date_quality": {
+        "VALID": 69481
+      },
+      "rows": 69481,
+      "source_key": "bakeries",
+      "status": "PASS",
+      "uniqueness_validation": "REUSED_EXACT_FULL_DRY_RUN_FOR_IDENTICAL_SHA256"
+    }
+  ],
+  "rows_total": 3010802,
+  "schema": "schemas/permit_parent.v1.json",
+  "source_count": 3,
+  "status": "PASS",
+  "wgs84_generated": false,
+  "writer_contract": {
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "pyarrow_version": "21.0.0",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000
+  }
+}

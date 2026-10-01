@@ -1,0 +1,73 @@
+{
+  "axis_evidence": "provenance/geospatial_full_axis.json",
+  "build_id": "permit-geo-v1-c4af8799de0283bb",
+  "episode_reconstruction_performed": false,
+  "geospatial_schema_sha256": "585a2b7c04559b947f1d35a51f332b18488e9f263ce450464cf575251c9cb762",
+  "grain": "PERMIT_GEOSPATIAL_ENRICHMENT",
+  "manifest_version": 1,
+  "missing_source_coordinates_total": 199035,
+  "output_directory": "H:\\dev\\kaggle-data\\korea-business-lifecycle\\data\\local\\canonical\\permit_geospatial\\v1\\permit-geo-v1-c4af8799de0283bb",
+  "parent_build_verification": "PASS",
+  "parent_mutated": false,
+  "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+  "public_row_level_release_approved": false,
+  "results": [
+    {
+      "missing_source_coordinates": 160923,
+      "output_bytes": 38060311,
+      "output_file": "general_restaurants.parquet",
+      "output_sha256": "47d227eb376564100a24897782415d4e3e74ae493957bdd029c974c6569481a5",
+      "parent_parquet_sha256": "15f11071b2dc6453707387a8b7aef013f1f991748c3b108397ce9345a269de03",
+      "parquet_row_groups": 46,
+      "rows": 2295369,
+      "source_key": "general_restaurants",
+      "status": "PASS",
+      "transformed_coordinates": 2134446
+    },
+    {
+      "missing_source_coordinates": 34150,
+      "output_bytes": 11420027,
+      "output_file": "rest_cafes.parquet",
+      "output_sha256": "e3d7a8c23fcf4c8056ae4fa50481ec7243dd29861fe76494568af55875b19394",
+      "parent_parquet_sha256": "8ae5d99499ac7efd5924e717e448e4be87f85ffc3229f2a94bca6d208987deb3",
+      "parquet_row_groups": 13,
+      "rows": 645952,
+      "source_key": "rest_cafes",
+      "status": "PASS",
+      "transformed_coordinates": 611802
+    },
+    {
+      "missing_source_coordinates": 3962,
+      "output_bytes": 1325444,
+      "output_file": "bakeries.parquet",
+      "output_sha256": "7051316f6b8035715677de6ecaaf1802c3b74ba219c7238cd7cb3060f86dd492",
+      "parent_parquet_sha256": "be558165f1e1235e4b6eded1866df3d871e6ae9c2b339428f9c36b95858dee89",
+      "parquet_row_groups": 2,
+      "rows": 69481,
+      "source_key": "bakeries",
+      "status": "PASS",
+      "transformed_coordinates": 65519
+    }
+  ],
+  "rows_total": 3010802,
+  "schema": "schemas/permit_geospatial.v1.json",
+  "source_count": 3,
+  "source_crs": "EPSG:5174",
+  "source_x_interpretation": "EASTING",
+  "source_y_interpretation": "NORTHING",
+  "status": "PASS",
+  "target_crs": "EPSG:4326",
+  "transformed_coordinates_total": 2811767,
+  "writer_contract": {
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "proj_version": "9.5.1",
+    "pyarrow_version": "21.0.0",
+    "pyproj_version": "3.7.2",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000
+  }
+}

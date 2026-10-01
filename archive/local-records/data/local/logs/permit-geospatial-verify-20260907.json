@@ -1,0 +1,73 @@
+{
+  "build_directory": "H:\\dev\\kaggle-data\\korea-business-lifecycle\\data\\local\\canonical\\permit_geospatial\\v1\\permit-geo-v1-c4af8799de0283bb",
+  "build_id": "permit-geo-v1-c4af8799de0283bb",
+  "coordinate_invariants_verified": true,
+  "geospatial_schema_sha256": "585a2b7c04559b947f1d35a51f332b18488e9f263ce450464cf575251c9cb762",
+  "manifest_verified": true,
+  "missing_source_coordinates_total": 199035,
+  "output_bytes_total": 50805782,
+  "parent_build_verified": true,
+  "parent_permit_build_id": "permit-v1-9908225df465e2ff",
+  "parquet_hashes_verified": true,
+  "parquet_schemas_verified": true,
+  "public_row_level_release_approved": false,
+  "results": [
+    {
+      "coordinate_invariants_verified": true,
+      "missing_source_coordinates": 160923,
+      "output_bytes": 38060311,
+      "output_sha256": "47d227eb376564100a24897782415d4e3e74ae493957bdd029c974c6569481a5",
+      "parquet_row_groups": 46,
+      "rows": 2295369,
+      "schema_verified": true,
+      "source_key": "general_restaurants",
+      "status": "PASS",
+      "transformed_coordinates": 2134446,
+      "zstd_verified": true
+    },
+    {
+      "coordinate_invariants_verified": true,
+      "missing_source_coordinates": 34150,
+      "output_bytes": 11420027,
+      "output_sha256": "e3d7a8c23fcf4c8056ae4fa50481ec7243dd29861fe76494568af55875b19394",
+      "parquet_row_groups": 13,
+      "rows": 645952,
+      "schema_verified": true,
+      "source_key": "rest_cafes",
+      "status": "PASS",
+      "transformed_coordinates": 611802,
+      "zstd_verified": true
+    },
+    {
+      "coordinate_invariants_verified": true,
+      "missing_source_coordinates": 3962,
+      "output_bytes": 1325444,
+      "output_sha256": "7051316f6b8035715677de6ecaaf1802c3b74ba219c7238cd7cb3060f86dd492",
+      "parquet_row_groups": 2,
+      "rows": 69481,
+      "schema_verified": true,
+      "source_key": "bakeries",
+      "status": "PASS",
+      "transformed_coordinates": 65519,
+      "zstd_verified": true
+    }
+  ],
+  "row_level_values_returned": false,
+  "rows_verified_total": 3010802,
+  "source_count": 3,
+  "status": "PASS",
+  "transformed_coordinates_total": 2811767,
+  "writer_contract": {
+    "compression": "ZSTD",
+    "compression_level": 9,
+    "data_page_version": "2.0",
+    "format": "PARQUET",
+    "parquet_version": "2.6",
+    "proj_version": "9.5.1",
+    "pyarrow_version": "21.0.0",
+    "pyproj_version": "3.7.2",
+    "rows_per_batch": 50000,
+    "rows_per_row_group": 50000
+  },
+  "zstd_verified": true
+}

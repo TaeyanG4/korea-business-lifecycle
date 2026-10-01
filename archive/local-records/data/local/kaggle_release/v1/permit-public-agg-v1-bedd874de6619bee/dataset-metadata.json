@@ -1,0 +1,23 @@
+{
+  "description": "A privacy-minimized aggregate derived from the nationwide current snapshot of three Korean Ministry of the Interior and Safety local-government food-service permit categories: general restaurants, rest cafes, and bakeries. The verified parent contains 3,010,802 permit records. This release contains 67,267 aggregate cells after suppressing cells with fewer than 10 source rows. It excludes business names, exact addresses, management numbers, phone numbers, precise coordinates, and other row-level/linkable fields. Permit year is not claimed to be physical opening year; closure year is not claimed to be an irreversible terminal event. Status 03 is not treated as irreversible and status 05 remains unresolved. The official source pages display no restriction on the permitted-use scope. License metadata is therefore recorded as Other and the official source pages/terms are the controlling source-use reference; this project does not relicense upstream source records.",
+  "id": "taeyangg4/korea-food-service-permit-aggregate",
+  "keywords": [
+    "south-korea",
+    "public-data",
+    "business",
+    "restaurants"
+  ],
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "resources": [
+    {
+      "description": "Verified k=10 privacy-minimized aggregate. Columns: source_key, authority_code, source_status_code, source_detail_status_code, permit_year, closure_year, cell_count.",
+      "path": "korea_food_service_permit_aggregate.parquet"
+    }
+  ],
+  "subtitle": "Privacy-minimized nationwide local permit snapshot aggregate",
+  "title": "Korea Food-Service Permit Aggregate"
+}

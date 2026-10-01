@@ -1,0 +1,347 @@
+{
+  "title": "South Korea Food-Service Permits - Snapshot",
+  "subtitle": "3,010,802 restaurant, cafe and bakery permit records nationwide",
+  "description": "## What this dataset is\n\nA nationwide **current snapshot** of South Korean local-government food-service permits from Ministry of the Interior and Safety / LOCALDATA sources. It contains **3,010,802 records x 26 columns** across three categories: general restaurants, rest cafes, and bakeries. **This is not a historical time series or a lossless lifecycle event log.**\n\n## Coverage\n\n- General restaurants: **2,295,369** records\n- Rest cafes: **645,952** records\n- Bakeries: **69,481** records\n- Nationwide current snapshot: **3,010,802** records\n\n## Main files\n\n- `korea_food_service_permits.csv` - 1.40 GB UTF-8 CSV for broad compatibility\n- `korea_food_service_permits.parquet` - 165 MB typed ZSTD Parquet for fast analytics\n- Both files contain the **same 3,010,802 rows and the same 26 columns**\n- `DATA_DICTIONARY.md`, `schema.json`, `SOURCES.md`, and `release-manifest.json` document every field and the release lineage\n\n## Good starting points\n\nRegional restaurant-market mapping, permit-status analysis, business-type profiling, address/geospatial preprocessing, public-sector data engineering, and data-quality research.\n\nPublic Quickstart / EDA notebook: https://www.kaggle.com/code/taeyangg4/korea-food-service-permits-3m-row-quickstart\n\n## Important interpretation limits\n\n- `management_number` is a bounded continuity candidate, **not an asserted official primary key**.\n- `permit_date` is an administrative permit date, **not necessarily the physical opening date**.\n- `closure_date` is contextual and **not treated as an irreversible terminal event**.\n- Source status `03` is reversible in observed evidence; status `05` remains unresolved.\n- `source_coordinate_x` / `source_coordinate_y` use **EPSG:5174** for this verified snapshot.\n- The separately derived WGS84 sidecar and partial history are not included.\n\n## Provenance\n\nOfficial source identifiers and links are listed in `SOURCES.md`. The project repository is https://github.com/TaeyanG4/korea-business-lifecycle.\n\n## License / reuse\n\nKaggle license metadata is set to `Other` so this project does not claim to relicense upstream public records. The three official Public Data Portal source pages currently display `\uc774\uc6a9\ud5c8\ub77d\ubc94\uc704 \uc81c\ud55c \uc5c6\uc74c` (no restriction on the permitted-use scope). Attribution and source links are preserved in `SOURCES.md`.",
+  "id": "taeyangg4/korea-food-service-permits",
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "keywords": [
+    "business",
+    "restaurants",
+    "food",
+    "government",
+    "geospatial analysis"
+  ],
+  "expectedUpdateFrequency": "monthly",
+  "userSpecifiedSources": "Ministry of the Interior and Safety (MOIS), Republic of Korea, via Public Data Portal / LOCALDATA: [15154916 general restaurants](https://www.data.go.kr/data/15154916/openapi.do), [15154921 rest cafes](https://www.data.go.kr/data/15154921/openapi.do), and [15155252 bakeries](https://www.data.go.kr/data/15155252/openapi.do). The official source pages report \uc774\uc6a9\ud5c8\ub77d\ubc94\uc704 \uc81c\ud55c \uc5c6\uc74c. See `SOURCES.md` for attribution details.",
+  "resources": [
+    {
+      "path": "korea_food_service_permits.csv",
+      "description": "Primary compatibility file: UTF-8 CSV containing all 3,010,802 current-snapshot permit rows and all 26 canonical columns.",
+      "schema": {
+        "fields": [
+          {
+            "name": "source_key",
+            "description": "Dataset category key: general_restaurants, rest_cafes, or bakeries.",
+            "type": "string"
+          },
+          {
+            "name": "source_row_number",
+            "description": "1-based row number within the retrieved source CSV. Lineage aid only; not a stable business identifier.",
+            "type": "integer"
+          },
+          {
+            "name": "source_artifact_sha256",
+            "description": "SHA-256 of the exact retrieved source artifact used to create this record.",
+            "type": "string"
+          },
+          {
+            "name": "source_retrieved_at_utc",
+            "description": "UTC timestamp when the source artifact was retrieved for this snapshot.",
+            "type": "datetime"
+          },
+          {
+            "name": "authority_code",
+            "description": "Local-government authority code from the source field \uac1c\ubc29\uc790\uce58\ub2e8\uccb4\ucf54\ub4dc. Stored as text to preserve leading zeroes.",
+            "type": "string"
+          },
+          {
+            "name": "management_number",
+            "description": "Source management number (\uad00\ub9ac\ubc88\ud638). Useful as a bounded continuity candidate, but not asserted as an official primary key.",
+            "type": "string"
+          },
+          {
+            "name": "permit_date",
+            "description": "Source permit date (\uc778\ud5c8\uac00\uc77c\uc790). This is an administrative permit date, not necessarily the physical opening date.",
+            "type": "datetime"
+          },
+          {
+            "name": "permit_date_quality",
+            "description": "Parse-quality flag for permit_date: VALID, MISSING, or INVALID.",
+            "type": "string"
+          },
+          {
+            "name": "source_status_code",
+            "description": "Raw business-status code (\uc601\uc5c5\uc0c1\ud0dc\ucf54\ub4dc) from the source. No project-level active/closed mapping is imposed.",
+            "type": "string"
+          },
+          {
+            "name": "source_status_name",
+            "description": "Raw business-status name (\uc601\uc5c5\uc0c1\ud0dc\uba85) from the source.",
+            "type": "string"
+          },
+          {
+            "name": "source_detail_status_code",
+            "description": "Raw detailed business-status code (\uc0c1\uc138\uc601\uc5c5\uc0c1\ud0dc\ucf54\ub4dc) from the source.",
+            "type": "string"
+          },
+          {
+            "name": "source_detail_status_name",
+            "description": "Raw detailed business-status name (\uc0c1\uc138\uc601\uc5c5\uc0c1\ud0dc\uba85) from the source.",
+            "type": "string"
+          },
+          {
+            "name": "closure_date",
+            "description": "Source closure date (\ud3d0\uc5c5\uc77c\uc790), when present. It is not treated as proof of an irreversible terminal event.",
+            "type": "datetime"
+          },
+          {
+            "name": "closure_date_quality",
+            "description": "Parse-quality flag for closure_date: VALID, MISSING, or INVALID.",
+            "type": "string"
+          },
+          {
+            "name": "business_name",
+            "description": "Business or establishment name (\uc0ac\uc5c5\uc7a5\uba85) reported in the current source snapshot.",
+            "type": "string"
+          },
+          {
+            "name": "business_type_name",
+            "description": "Business-type label (\uc5c5\ud0dc\uad6c\ubd84\uba85) reported by the source.",
+            "type": "string"
+          },
+          {
+            "name": "hygiene_business_type_name",
+            "description": "Hygiene business-type label (\uc704\uc0dd\uc5c5\ud0dc\uba85) reported by the source.",
+            "type": "string"
+          },
+          {
+            "name": "lot_postal_code",
+            "description": "Postal code associated with the lot-address field (\uc18c\uc7ac\uc9c0\uc6b0\ud3b8\ubc88\ud638), stored as text.",
+            "type": "string"
+          },
+          {
+            "name": "road_postal_code",
+            "description": "Postal code associated with the road-name address (\ub3c4\ub85c\uba85\uc6b0\ud3b8\ubc88\ud638), stored as text.",
+            "type": "string"
+          },
+          {
+            "name": "lot_address",
+            "description": "Lot-based address (\uc9c0\ubc88\uc8fc\uc18c) reported in the source snapshot.",
+            "type": "string"
+          },
+          {
+            "name": "road_address",
+            "description": "Road-name address (\ub3c4\ub85c\uba85\uc8fc\uc18c) reported in the source snapshot.",
+            "type": "string"
+          },
+          {
+            "name": "source_coordinate_x",
+            "description": "Source X coordinate (\uc88c\ud45c\uc815\ubcf4(X)) in EPSG:5174; interpreted as easting for this verified snapshot.",
+            "type": "numeric"
+          },
+          {
+            "name": "source_coordinate_y",
+            "description": "Source Y coordinate (\uc88c\ud45c\uc815\ubcf4(Y)) in EPSG:5174; interpreted as northing for this verified snapshot.",
+            "type": "numeric"
+          },
+          {
+            "name": "source_data_update_type",
+            "description": "Raw source data-update classification (\ub370\uc774\ud130\uac31\uc2e0\uad6c\ubd84).",
+            "type": "string"
+          },
+          {
+            "name": "source_data_updated_at_raw",
+            "description": "Raw source data-update timestamp text (\ub370\uc774\ud130\uac31\uc2e0\uc2dc\uc810). Kept as source text because timezone semantics are not normalized.",
+            "type": "string"
+          },
+          {
+            "name": "source_last_modified_at_raw",
+            "description": "Raw source last-modified timestamp text (\ucd5c\uc885\uc218\uc815\uc2dc\uc810). Kept as source text because timezone semantics are not normalized.",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "korea_food_service_permits.parquet",
+      "description": "Primary analytics file: typed ZSTD Parquet containing the same 3,010,802 rows and 26 columns as the CSV, at much smaller size.",
+      "schema": {
+        "fields": [
+          {
+            "name": "source_key",
+            "description": "Dataset category key: general_restaurants, rest_cafes, or bakeries.",
+            "type": "string"
+          },
+          {
+            "name": "source_row_number",
+            "description": "1-based row number within the retrieved source CSV. Lineage aid only; not a stable business identifier.",
+            "type": "integer"
+          },
+          {
+            "name": "source_artifact_sha256",
+            "description": "SHA-256 of the exact retrieved source artifact used to create this record.",
+            "type": "string"
+          },
+          {
+            "name": "source_retrieved_at_utc",
+            "description": "UTC timestamp when the source artifact was retrieved for this snapshot.",
+            "type": "datetime"
+          },
+          {
+            "name": "authority_code",
+            "description": "Local-government authority code from the source field \uac1c\ubc29\uc790\uce58\ub2e8\uccb4\ucf54\ub4dc. Stored as text to preserve leading zeroes.",
+            "type": "string"
+          },
+          {
+            "name": "management_number",
+            "description": "Source management number (\uad00\ub9ac\ubc88\ud638). Useful as a bounded continuity candidate, but not asserted as an official primary key.",
+            "type": "string"
+          },
+          {
+            "name": "permit_date",
+            "description": "Source permit date (\uc778\ud5c8\uac00\uc77c\uc790). This is an administrative permit date, not necessarily the physical opening date.",
+            "type": "datetime"
+          },
+          {
+            "name": "permit_date_quality",
+            "description": "Parse-quality flag for permit_date: VALID, MISSING, or INVALID.",
+            "type": "string"
+          },
+          {
+            "name": "source_status_code",
+            "description": "Raw business-status code (\uc601\uc5c5\uc0c1\ud0dc\ucf54\ub4dc) from the source. No project-level active/closed mapping is imposed.",
+            "type": "string"
+          },
+          {
+            "name": "source_status_name",
+            "description": "Raw business-status name (\uc601\uc5c5\uc0c1\ud0dc\uba85) from the source.",
+            "type": "string"
+          },
+          {
+            "name": "source_detail_status_code",
+            "description": "Raw detailed business-status code (\uc0c1\uc138\uc601\uc5c5\uc0c1\ud0dc\ucf54\ub4dc) from the source.",
+            "type": "string"
+          },
+          {
+            "name": "source_detail_status_name",
+            "description": "Raw detailed business-status name (\uc0c1\uc138\uc601\uc5c5\uc0c1\ud0dc\uba85) from the source.",
+            "type": "string"
+          },
+          {
+            "name": "closure_date",
+            "description": "Source closure date (\ud3d0\uc5c5\uc77c\uc790), when present. It is not treated as proof of an irreversible terminal event.",
+            "type": "datetime"
+          },
+          {
+            "name": "closure_date_quality",
+            "description": "Parse-quality flag for closure_date: VALID, MISSING, or INVALID.",
+            "type": "string"
+          },
+          {
+            "name": "business_name",
+            "description": "Business or establishment name (\uc0ac\uc5c5\uc7a5\uba85) reported in the current source snapshot.",
+            "type": "string"
+          },
+          {
+            "name": "business_type_name",
+            "description": "Business-type label (\uc5c5\ud0dc\uad6c\ubd84\uba85) reported by the source.",
+            "type": "string"
+          },
+          {
+            "name": "hygiene_business_type_name",
+            "description": "Hygiene business-type label (\uc704\uc0dd\uc5c5\ud0dc\uba85) reported by the source.",
+            "type": "string"
+          },
+          {
+            "name": "lot_postal_code",
+            "description": "Postal code associated with the lot-address field (\uc18c\uc7ac\uc9c0\uc6b0\ud3b8\ubc88\ud638), stored as text.",
+            "type": "string"
+          },
+          {
+            "name": "road_postal_code",
+            "description": "Postal code associated with the road-name address (\ub3c4\ub85c\uba85\uc6b0\ud3b8\ubc88\ud638), stored as text.",
+            "type": "string"
+          },
+          {
+            "name": "lot_address",
+            "description": "Lot-based address (\uc9c0\ubc88\uc8fc\uc18c) reported in the source snapshot.",
+            "type": "string"
+          },
+          {
+            "name": "road_address",
+            "description": "Road-name address (\ub3c4\ub85c\uba85\uc8fc\uc18c) reported in the source snapshot.",
+            "type": "string"
+          },
+          {
+            "name": "source_coordinate_x",
+            "description": "Source X coordinate (\uc88c\ud45c\uc815\ubcf4(X)) in EPSG:5174; interpreted as easting for this verified snapshot.",
+            "type": "numeric"
+          },
+          {
+            "name": "source_coordinate_y",
+            "description": "Source Y coordinate (\uc88c\ud45c\uc815\ubcf4(Y)) in EPSG:5174; interpreted as northing for this verified snapshot.",
+            "type": "numeric"
+          },
+          {
+            "name": "source_data_update_type",
+            "description": "Raw source data-update classification (\ub370\uc774\ud130\uac31\uc2e0\uad6c\ubd84).",
+            "type": "string"
+          },
+          {
+            "name": "source_data_updated_at_raw",
+            "description": "Raw source data-update timestamp text (\ub370\uc774\ud130\uac31\uc2e0\uc2dc\uc810). Kept as source text because timezone semantics are not normalized.",
+            "type": "string"
+          },
+          {
+            "name": "source_last_modified_at_raw",
+            "description": "Raw source last-modified timestamp text (\ucd5c\uc885\uc218\uc815\uc2dc\uc810). Kept as source text because timezone semantics are not normalized.",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "source_summary.csv",
+      "description": "Three-row source inventory with per-category record counts and verified parent-artifact sizes/hashes.",
+      "schema": {
+        "fields": [
+          {
+            "name": "source_key",
+            "description": "Dataset category key.",
+            "type": "string"
+          },
+          {
+            "name": "rows",
+            "description": "Number of canonical records contributed by this source category.",
+            "type": "integer"
+          },
+          {
+            "name": "parent_parquet_bytes",
+            "description": "Byte size of the verified per-source canonical parent Parquet artifact.",
+            "type": "integer"
+          },
+          {
+            "name": "parent_parquet_sha256",
+            "description": "SHA-256 of the verified per-source canonical parent Parquet artifact.",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "path": "DATA_DICTIONARY.md",
+      "description": "Human-readable 26-column data dictionary and interpretation caveats."
+    },
+    {
+      "path": "README.md",
+      "description": "Quick overview of dataset shape, files, scope, and semantic limitations."
+    },
+    {
+      "path": "SOURCES.md",
+      "description": "Official MOIS/Public Data Portal source identifiers, links, attribution, and source-use notes."
+    },
+    {
+      "path": "schema.json",
+      "description": "Machine-readable release schema, row grain, geospatial metadata, and semantic limits."
+    },
+    {
+      "path": "release-manifest.json",
+      "description": "Release manifest with row counts, serialization guarantees, file hashes, sizes, and build lineage."
+    }
+  ],
+  "image": "dataset-cover-image.png"
+}

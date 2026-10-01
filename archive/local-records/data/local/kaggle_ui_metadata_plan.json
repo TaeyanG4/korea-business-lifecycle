@@ -1,0 +1,93 @@
+{
+  "korea_food_service_permits.csv": {
+    "description": "Primary compatibility file: UTF-8 CSV containing all 3,010,802 current-snapshot permit rows and all 26 canonical columns.",
+    "columns": {
+      "source_key": "Dataset category key: general_restaurants, rest_cafes, or bakeries.",
+      "source_row_number": "1-based row number within the retrieved source CSV. Lineage aid only; not a stable business identifier.",
+      "source_artifact_sha256": "SHA-256 of the exact retrieved source artifact used to create this record.",
+      "source_retrieved_at_utc": "UTC timestamp when the source artifact was retrieved for this snapshot.",
+      "authority_code": "Local-government authority code from the source field 개방자치단체코드. Stored as text to preserve leading zeroes.",
+      "management_number": "Source management number (관리번호). Useful as a bounded continuity candidate, but not asserted as an official primary key.",
+      "permit_date": "Source permit date (인허가일자). This is an administrative permit date, not necessarily the physical opening date.",
+      "permit_date_quality": "Parse-quality flag for permit_date: VALID, MISSING, or INVALID.",
+      "source_status_code": "Raw business-status code (영업상태코드) from the source. No project-level active/closed mapping is imposed.",
+      "source_status_name": "Raw business-status name (영업상태명) from the source.",
+      "source_detail_status_code": "Raw detailed business-status code (상세영업상태코드) from the source.",
+      "source_detail_status_name": "Raw detailed business-status name (상세영업상태명) from the source.",
+      "closure_date": "Source closure date (폐업일자), when present. It is not treated as proof of an irreversible terminal event.",
+      "closure_date_quality": "Parse-quality flag for closure_date: VALID, MISSING, or INVALID.",
+      "business_name": "Business or establishment name (사업장명) reported in the current source snapshot.",
+      "business_type_name": "Business-type label (업태구분명) reported by the source.",
+      "hygiene_business_type_name": "Hygiene business-type label (위생업태명) reported by the source.",
+      "lot_postal_code": "Postal code associated with the lot-address field (소재지우편번호), stored as text.",
+      "road_postal_code": "Postal code associated with the road-name address (도로명우편번호), stored as text.",
+      "lot_address": "Lot-based address (지번주소) reported in the source snapshot.",
+      "road_address": "Road-name address (도로명주소) reported in the source snapshot.",
+      "source_coordinate_x": "Source X coordinate (좌표정보(X)) in EPSG:5174; interpreted as easting for this verified snapshot.",
+      "source_coordinate_y": "Source Y coordinate (좌표정보(Y)) in EPSG:5174; interpreted as northing for this verified snapshot.",
+      "source_data_update_type": "Raw source data-update classification (데이터갱신구분).",
+      "source_data_updated_at_raw": "Raw source data-update timestamp text (데이터갱신시점). Kept as source text because timezone semantics are not normalized.",
+      "source_last_modified_at_raw": "Raw source last-modified timestamp text (최종수정시점). Kept as source text because timezone semantics are not normalized."
+    }
+  },
+  "korea_food_service_permits.parquet": {
+    "description": "Primary analytics file: typed ZSTD Parquet containing the same 3,010,802 rows and 26 columns as the CSV, at much smaller size.",
+    "columns": {
+      "source_key": "Dataset category key: general_restaurants, rest_cafes, or bakeries.",
+      "source_row_number": "1-based row number within the retrieved source CSV. Lineage aid only; not a stable business identifier.",
+      "source_artifact_sha256": "SHA-256 of the exact retrieved source artifact used to create this record.",
+      "source_retrieved_at_utc": "UTC timestamp when the source artifact was retrieved for this snapshot.",
+      "authority_code": "Local-government authority code from the source field 개방자치단체코드. Stored as text to preserve leading zeroes.",
+      "management_number": "Source management number (관리번호). Useful as a bounded continuity candidate, but not asserted as an official primary key.",
+      "permit_date": "Source permit date (인허가일자). This is an administrative permit date, not necessarily the physical opening date.",
+      "permit_date_quality": "Parse-quality flag for permit_date: VALID, MISSING, or INVALID.",
+      "source_status_code": "Raw business-status code (영업상태코드) from the source. No project-level active/closed mapping is imposed.",
+      "source_status_name": "Raw business-status name (영업상태명) from the source.",
+      "source_detail_status_code": "Raw detailed business-status code (상세영업상태코드) from the source.",
+      "source_detail_status_name": "Raw detailed business-status name (상세영업상태명) from the source.",
+      "closure_date": "Source closure date (폐업일자), when present. It is not treated as proof of an irreversible terminal event.",
+      "closure_date_quality": "Parse-quality flag for closure_date: VALID, MISSING, or INVALID.",
+      "business_name": "Business or establishment name (사업장명) reported in the current source snapshot.",
+      "business_type_name": "Business-type label (업태구분명) reported by the source.",
+      "hygiene_business_type_name": "Hygiene business-type label (위생업태명) reported by the source.",
+      "lot_postal_code": "Postal code associated with the lot-address field (소재지우편번호), stored as text.",
+      "road_postal_code": "Postal code associated with the road-name address (도로명우편번호), stored as text.",
+      "lot_address": "Lot-based address (지번주소) reported in the source snapshot.",
+      "road_address": "Road-name address (도로명주소) reported in the source snapshot.",
+      "source_coordinate_x": "Source X coordinate (좌표정보(X)) in EPSG:5174; interpreted as easting for this verified snapshot.",
+      "source_coordinate_y": "Source Y coordinate (좌표정보(Y)) in EPSG:5174; interpreted as northing for this verified snapshot.",
+      "source_data_update_type": "Raw source data-update classification (데이터갱신구분).",
+      "source_data_updated_at_raw": "Raw source data-update timestamp text (데이터갱신시점). Kept as source text because timezone semantics are not normalized.",
+      "source_last_modified_at_raw": "Raw source last-modified timestamp text (최종수정시점). Kept as source text because timezone semantics are not normalized."
+    }
+  },
+  "source_summary.csv": {
+    "description": "Three-row source inventory with per-category record counts and verified parent-artifact sizes/hashes.",
+    "columns": {
+      "source_key": "Dataset category key.",
+      "rows": "Number of canonical records contributed by this source category.",
+      "parent_parquet_bytes": "Byte size of the verified per-source canonical parent Parquet artifact.",
+      "parent_parquet_sha256": "SHA-256 of the verified per-source canonical parent Parquet artifact."
+    }
+  },
+  "DATA_DICTIONARY.md": {
+    "description": "Human-readable 26-column data dictionary and interpretation caveats.",
+    "columns": {}
+  },
+  "README.md": {
+    "description": "Quick overview of dataset shape, files, scope, and semantic limitations.",
+    "columns": {}
+  },
+  "SOURCES.md": {
+    "description": "Official MOIS/Public Data Portal source identifiers, links, attribution, and source-use notes.",
+    "columns": {}
+  },
+  "schema.json": {
+    "description": "Machine-readable release schema, row grain, geospatial metadata, and semantic limits.",
+    "columns": {}
+  },
+  "release-manifest.json": {
+    "description": "Release manifest with row counts, serialization guarantees, file hashes, sizes, and build lineage.",
+    "columns": {}
+  }
+}

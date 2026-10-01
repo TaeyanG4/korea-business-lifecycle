@@ -1,0 +1,133 @@
+{
+  "assessment_consistent_across_sources": true,
+  "assessments": [
+    "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED"
+  ],
+  "coordinate_axis_order_verified_nationwide": false,
+  "coordinate_pairs_total": 2811767,
+  "declared_crs": {
+    "area_of_use_bounds_wgs84": {
+      "east": 128.0,
+      "north": 38.33,
+      "south": 33.96,
+      "west": 126.0
+    },
+    "area_of_use_name": "Republic of Korea (South Korea) - between 126¡ÆE and 128¡ÆE - mainland and nearshore.",
+    "axis_info": [
+      {
+        "abbrev": "X",
+        "direction": "north",
+        "name": "Northing",
+        "unit_name": "metre"
+      },
+      {
+        "abbrev": "Y",
+        "direction": "east",
+        "name": "Easting",
+        "unit_name": "metre"
+      }
+    ],
+    "crs_authority": "EPSG:5174",
+    "crs_name": "Korean 1985 / Modified Central Belt",
+    "proj_version": "9.5.1",
+    "pyproj_version": "3.7.2"
+  },
+  "macro_region_candidate_a_match_total": 2630497,
+  "macro_region_candidate_b_match_total": 686673,
+  "macro_region_eligible_pairs_total": 2631605,
+  "method": "FULL_SNAPSHOT_AGGREGATE_AXIS_COMPARISON_WITH_COARSE_ADDRESS_MACRO_REGIONS",
+  "results": [
+    {
+      "artifact_sha256": "0cfae3c716d5bc61b63832308897d15ca1d7f25f3547bc7b146f933bff2d6fd8",
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "broad_korea_candidate_a_inside": 2134446,
+      "broad_korea_candidate_b_inside": 2134446,
+      "coordinate_pairs": 2134446,
+      "macro_region_both_match": 519354,
+      "macro_region_candidate_a_match": 1994178,
+      "macro_region_candidate_a_only_match": 1474824,
+      "macro_region_candidate_b_match": 519354,
+      "macro_region_candidate_b_only_match": 0,
+      "macro_region_eligible_pairs": 1995075,
+      "macro_region_neither_match": 897,
+      "missing_coordinate_pairs": 160923,
+      "partial_coordinate_pairs": 0,
+      "retrieval_id": "20260907T022234Z-0cfae3c716d5",
+      "row_level_address_values_returned": false,
+      "row_level_coordinate_values_returned": false,
+      "rows_examined": 2295369,
+      "software": {
+        "proj_version": "9.5.1",
+        "pyproj_version": "3.7.2"
+      },
+      "source_key": "general_restaurants",
+      "status": "PASS",
+      "wgs84_columns_generated": false
+    },
+    {
+      "artifact_sha256": "64b884979e1533d0672ed11060b9c0438c5124e0f8b66d804bd1bae54afa3082",
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "broad_korea_candidate_a_inside": 611802,
+      "broad_korea_candidate_b_inside": 611802,
+      "coordinate_pairs": 611802,
+      "macro_region_both_match": 151640,
+      "macro_region_candidate_a_match": 574663,
+      "macro_region_candidate_a_only_match": 423023,
+      "macro_region_candidate_b_match": 151640,
+      "macro_region_candidate_b_only_match": 0,
+      "macro_region_eligible_pairs": 574859,
+      "macro_region_neither_match": 196,
+      "missing_coordinate_pairs": 34150,
+      "partial_coordinate_pairs": 0,
+      "retrieval_id": "20260907T021951Z-64b884979e15",
+      "row_level_address_values_returned": false,
+      "row_level_coordinate_values_returned": false,
+      "rows_examined": 645952,
+      "software": {
+        "proj_version": "9.5.1",
+        "pyproj_version": "3.7.2"
+      },
+      "source_key": "rest_cafes",
+      "status": "PASS",
+      "wgs84_columns_generated": false
+    },
+    {
+      "artifact_sha256": "32e93fdc827bf8bb8066acbeaecc02e458d2b920957407dd00651c87243879c3",
+      "assessment": "SOURCE_X_AS_EASTING_Y_AS_NORTHING_STRONGLY_PREFERRED",
+      "broad_korea_candidate_a_inside": 65519,
+      "broad_korea_candidate_b_inside": 65519,
+      "coordinate_pairs": 65519,
+      "macro_region_both_match": 15679,
+      "macro_region_candidate_a_match": 61656,
+      "macro_region_candidate_a_only_match": 45977,
+      "macro_region_candidate_b_match": 15679,
+      "macro_region_candidate_b_only_match": 0,
+      "macro_region_eligible_pairs": 61671,
+      "macro_region_neither_match": 15,
+      "missing_coordinate_pairs": 3962,
+      "partial_coordinate_pairs": 0,
+      "retrieval_id": "20260907T021916Z-32e93fdc827b",
+      "row_level_address_values_returned": false,
+      "row_level_coordinate_values_returned": false,
+      "rows_examined": 69481,
+      "software": {
+        "proj_version": "9.5.1",
+        "pyproj_version": "3.7.2"
+      },
+      "source_key": "bakeries",
+      "status": "PASS",
+      "wgs84_columns_generated": false
+    }
+  ],
+  "row_level_address_values_returned": false,
+  "row_level_coordinate_values_returned": false,
+  "rows_examined_total": 3010802,
+  "scope": [
+    "general_restaurants",
+    "rest_cafes",
+    "bakeries"
+  ],
+  "status": "PASS",
+  "wgs84_columns_generated": false,
+  "wgs84_generation_approved": false
+}

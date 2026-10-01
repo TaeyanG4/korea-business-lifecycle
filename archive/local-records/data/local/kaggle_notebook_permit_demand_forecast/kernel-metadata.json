@@ -1,0 +1,15 @@
+{
+  "id": "taeyangg4/korea-fnb-permit-demand-forecasting",
+  "title": "Korea F&B Permit Demand Forecasting with XGBoost",
+  "code_file": "korea_fnb_permit_demand_forecast.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": false,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": ["taeyangg4/korea-food-service-permits"],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
